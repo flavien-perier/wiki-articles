@@ -165,8 +165,8 @@ Ce premier script possède 4 états :
 
 - `night`: Pendant la nuit le Bluetooth, et le WiFi sont coupés, la luminosité et à son minimum et le seul état vers lequel on peut aller depuis cet état est `day`.
 - `day`: État de transition permettant de réactiver Bluetooth et WiFi. Depuis cet état on peut aller vers `indoor` ou `outdoor`.
-- `indoor`: La montre est à proximité d'un réseau WiFi connu. Elle est donc en intérieur. L'affichage de l'heure se désactive et la luminosité et à son minimum.
-- `outdoor`: La montre n'est pas à proximité d'un réseau WiFi connu. Elle est donc en extérieur. L'affichage de l'heure et activé et la luminosité et à son maximum.
+- `indoor`: La montre est à proximité d'un réseau WiFi connu. Elle est donc en intérieur. La luminosité est à son minimum.
+- `outdoor`: La montre n'est pas à proximité d'un réseau WiFi connu. Elle est donc en extérieur. La luminosité est à son maximum.
 
 ```sh
 echo '#!/bin/sh
@@ -220,6 +220,7 @@ indoor)
   mcetool --set-display-brightness 1
   mcetool --set-power-saving-mode enabled
   mcetool --set-low-power-mode disabled
+  systemctl stop sensorfwd
   systemctl start sshd
 
   echo "indoor" > /tmp/alim-state
@@ -231,8 +232,9 @@ outdoor)
   fi
 
   mcetool --set-display-brightness 100
-  mcetool --set-power-saving-mode disabled
-  mcetool --set-low-power-mode enabled
+  mcetool --set-power-saving-mode enabled
+  mcetool --set-low-power-mode disabled
+  systemctl stop sensorfwd
   systemctl stop sshd
 
   echo "outdoor" > /tmp/alim-state
