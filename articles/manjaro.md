@@ -1,0 +1,1846 @@
+---
+title: Environnement Manjaro
+type: WIKI
+categories:
+  - system
+description: Installation d'un environnement de développement sous Manjaro.
+author: Flavien PERIER <perier@flavien.io>
+date: 2020-09-30 18:00
+---
+
+Nous allons dans cet article nous intéresser à la mise en place d'un environnement de développement sous Manjaro avec notamment une machine virtuelle Windows 10 portée par KVM.
+
+## Mise en place du système
+
+Pour ma part, je me base sur la version minimale de la distribution [Manjaro](https://manjaro.org/downloads/official/xfce/) avec l'environnement [XFCE](https://xfce.org/). Cet environnement est plus léger que [Gnome](https://www.gnome.org/) ou [KDE](https://kde.org/), mais présente néanmoins tous les avantages d'un véritable gestionnaire de bureau. Malgré sa légèreté, il n'y a pas de compromis sur les fonctionnalités.
+
+Quant au choix de Manjaro, il s'agit d'une distribution de type rolling, c'est-à-dire qu'elle est constamment mise à jour et qu'on n’aura donc pas de réinstallation complète du système à faire toutes les x années pour le passage à la version majeure suivante. Ce type de distribution est assez adapté à des configurations desktop, mais complètement inadapté à des configurations serveurs, car les paquets et le noyau du système d'exploitation étant constamment mis à jour vers les dernières versions, des instabilités peuvent fréquemment survenir. Inacceptable pour un système de production, mais rarement vraiment bloquant (du moins pas longtemps, jusqu’à la mise à jour suivante) sur un pc personnel.
+
+L'autre avantage de Manjaro, est qu'elle est basée sur la distribution [Arch Linux](https://archlinux.org/). Cette dernière disposant d'une communauté très importante mettant à jour un [Wiki](https://wiki.archlinux.org/) réputé comme étant très complet. Cette source de documentation peut donc servir à se débloquer dans de très nombreuses situations. À mon sens les avantages de Manjaro sur Arch sont la simplicité et la stabilité. En effet, Arch étant une base de système d'exploitation quasiment vierge, c'est à l'utilisateur d'installer les composants dont il aura besoin. Cela nécessite une bonne connaissance de tous ces modules (et beaucoup de temps à lire leur documentation) et cela résulte bien souvent sur des installations instables. Manjaro offre une base déjà installée et configurée et permet donc d'être utilisé par des personnes ayant une moindre connaissance des composants Linux. Il est néanmoins très enrichissant d'installer et de configurer une Arch, mais je réserve cela davantage à de l'expérimentation qu'à la mise en place d'un système d'exploitation destiné à être utilisé tous les jours.
+
+### Mise à jour de Manjaro
+
+Maintenant que Manjaro est installé, nous allons le mettre à jour grâce à l'un des gestionnaires de paquets intègres de la distribution. Pour ma part, j'utilise `pacman`, qui est le gestionnaire de paquet de la distribution Arch. Il est relativement difficile à utiliser et très peu intuitif, c'est pour cette raison que les développeurs de la distribution Manjaro ont rajouté un outil permettant de simplifier son utilisation `pamac`. Pour les utilisateurs venant d'une distribution basée sur [Debian](https://www.debian.org/), ou [RedHat](https://www.redhat.com/), il semblera sans aucun doute plus intuitif.
+
+La raison pour lequel j'utilise néanmoins `pacman` est qu'il offre beaucoup plus de possibilités que sa surcouche. Ce wiki peut néanmoins être suivi en recopiant les commandes `pacman` et par la suite utiliser à titre personnel `pamac`. Ce dernier étant simplement une surcouche, cela ne devrait pas poser de problème de compatibilité.
+
+#### Quelques commandes Pacman
+
+- Mise à jour de tous les paquets système :
+
+```bash
+sudo pacman -Syyu
+```
+
+- Installation d'un paquet :
+
+```bash
+sudo pacman -S <package_name>
+```
+
+- Suppression d'un paquet :
+
+```bash
+sudo pacman -Rs <package_name>
+```
+
+- Recherche de paquet dans les dépôts :
+
+```bash
+sudo pacman -Ss <package_name>
+```
+
+- Recherche de paquets installés :
+
+```bash
+pacman -Qs <package_name>
+```
+
+- Recherche de paquets orphelins :
+
+```bash
+sudo pacman -Qdt
+```
+
+- Nettoyage du cache pacman :
+
+```bash
+sudo pacman -Scc
+```
+
+### Gestionnaires de paquets
+
+La plupart des outils disposants d'une interface qui vont être installée dans ce wiki sont installés grâce à [Flatpak](https://www.flatpak.org/). Il s'agit d'un gestionnaire de paquets qui permet d'installer des applications avec un système d'isolation. Cela va permettre de garantir un certain niveau de sécurité pour des applications possédant une GUI.
+
+```bash
+sudo pacman -S flatpak
+flatpak remote-add --user flathub https://flathub.org/repo/flathub.flatpakrepo
+```
+
+À d'autres moments, il sera nécessaire d'utiliser des paquets provenant de la communauté (les [AUR d'Arch Linux](https://aur.archlinux.org/)). Pour ce faire, il faut installer `yay` qui est un gestionnaire de paquets qui prend la succession de `yaourt`.
+
+```bash
+cd /tmp
+sudo pacman -S --needed base-devel
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+
+yay -Syyu
+```
+
+Pour ceux qui voudraient utiliser leur système pour faire du pentest, il est possible d'installer les repos de [BlackArch](https://www.blackarch.org/). Grâce à ces derniers, il sera possible d'installer la plupart des outils disponibles sur d'autres distributions orientées sécurités telles que [KaliLinux](https://www.kali.org/).
+
+```bash
+curl -s https://blackarch.org/strap.sh | sudo bash -
+```
+
+### Installation des headers
+
+Parfois, certains logiciels vont avoir besoin des headers Linux afin d'être compilés. Il est donc bon d'avoir la dernière version de ces derniers installés sur ça machine.
+
+```bash
+sudo pacman -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
+```
+
+### Configuration du réseau
+
+Par défaut, Manjaro utilise [NetworkManager](https://networkmanager.dev/) qui permet de gérer automatiquement le démon est en règle générale plutôt efficace. Mon seul problème avec la configuration par défaut est que le DNS que l'on va inscrire dans le `resolve.conf` sera automatiquement remplacé par celui fourni par le DHCP. Je vais donc forcer manuellement l'utilisation des DNS [OpenDNS](https://www.opendns.com/), [Cloudflare](https://www.cloudflare.com/fr-fr/dns) et [OpenNIC](https://www.opennic.org/).
+
+```bash
+cat << EOL | sudo tee /etc/NetworkManager/conf.d/90-dns.conf
+[main]
+dns=none
+EOL
+
+cat << EOL | sudo tee /etc/resolv.conf
+nameserver 208.67.222.222
+nameserver 208.67.220.220
+nameserver 1.1.1.1
+nameserver 1.0.0.1
+nameserver 151.80.222.79
+EOL
+```
+
+### Mise en place d'un second disque chiffré
+
+Pour cette installation, nous allons utiliser une architecture assez classique dans le monde de Linux. Avoir un SSD pour accueillir le système (monté sur le `/`) et un second SSD pour accueillir les données (monté sur le `/home`).
+
+Pour maximiser la sécurité du système, nous allons également chiffrer le SSD contenant les données. De nombreuses distributions Linux modernes proposent lors de l'installation de chiffrer les données sur une partition [LVM](https://wiki.archlinux.fr/LVM) (Logical Volume Manager). Je ne suis personnellement pas entièrement convaincu par cette option, car LVM est une couche d'abstraction entre les volumes physiques et les volumes logiques. Cette solution permet par exemple de créer une unique partition reposant sur plusieurs disques physiques, ou de créer une partition avec des clusters non adjacents. À mon sens, cette technologie prend son intérêt sur une infrastructure serveur, car elle va offrir de la flexibilité sur le stockage. Cependant, je suis beaucoup plus sceptique quant à son utilisation dans un ordinateur personnel ou un volume physique va correspondre à un volume logique. C'est pour cette raison que je vais plutôt m'orienter sur l'utilisation de [LUKS](https://gitlab.com/cryptsetup/cryptsetup) (Linux Unified Key Setup) avec son utilitaire `cryptsetup`. L'avantage de cette technologie est qu'elle est directement intégrée dans le noyau Linux et va donc garantir un bon niveau de performance.
+
+- Dans un premier temps, il faut rechercher l'emplacement du second disque grâce à la commande `sudo fdisk -l`. Dans la plupart des cas, il sera localisé dans `/dev/sdb1`.
+
+- Par la suite, pour chiffrer le lecteur, il faudra utiliser la commande `sudo cryptsetup luksFormat --type luks2 /dev/sdb`. Lors de cette opération, toutes les données stockées sur le lecteur seront perdues, il faut donc être extrêmement vigilant lors de cette opération.
+
+- Maintenant que le lecteur est chiffré, nous allons pouvoir le formater et le monter à un endroit ou nous pourrons copier les fichiers que nous voudrons garder quand il sera en `/home`.
+
+```bash
+sudo mkdir -p /mnt/data
+sudo cryptsetup luksOpen /dev/sdb home
+sudo mkfs.ext4 /dev/mapper/home
+sudo mount /dev/mapper/home /mnt/data
+
+sudo cp -Rp $HOME /mnt/data
+```
+
+- Après avoir copié tous les éléments dont nous aurons besoin, nous pouvons démonter le lecteur.
+
+```bash
+sudo umount /mnt/data
+sudo cryptsetup luksClose home
+```
+
+- Nous allons à présent faire en sorte que le lecteur soit déchiffré automatiquement au démarrage de la machine. Pour ce faire, nous allons l'ajouter à la `crypttab` du système.
+
+```bash
+sudo su
+echo "home	/dev/sdb	none	luks2" >> /etc/crypttab
+```
+
+- Maintenant, nous avons plus qu'a ajouté le volume déchiffré à la `fstable`.
+
+```bash
+sudo su
+echo "/dev/mapper/home	/home	ext4	defaults 0 0" >> /etc/fstab
+```
+
+### Configuration du Shell
+
+Pour configurer mon shell j'ai développé un petit script que je maintiens sur github : [linux-shell-configuration](https://github.com/flavien-perier/linux-shell-configuration).
+
+Ce dernier introduit plusieurs raccourcis ainsi que des configurations pour les Shells [bash](https://www.gnu.org/software/bash/), [fish](https://fishshell.com/) et [zsh](https://www.zsh.org/).
+
+Pour l'installer, il suffit de taper la ligne de commande :
+
+```bash
+curl -s https://raw.githubusercontent.com/flavien-perier/linux-shell-configuration/master/linux-shell-configuration.sh | sudo bash -
+```
+
+### Apparence
+
+Sans plus entrer dans les détails, j'utilise personnellement le thème [Sweet Dark](https://www.xfce-look.org/p/1253385/) avec le pack d'icônes [Sweet Rainbow](https://www.opendesktop.org/p/1284047/) ainsi que les polices de caractères de [JetBrains](https://www.jetbrains.com/lp/mono/) qui ont été pensées pour être optimisées pour le développement.
+
+Pour installer le thème décompressez l'archive dans `~/.themes`, les icônes dans `~/.icons` et les polices dans `~/.fonts`.
+
+Le thème `Sweet Dark` étant un thème [GTK2](https://www.gtk.org/), les applications développées avec [QT](https://www.qt.io/) ne sont pas compatibles. Étant donné que les applications QT que j'utilise passent toutes par flatpak, j'installe simplement le thème [Adwaita](https://www.gnomelibre.fr/tag/adwaita/) sur cet environnement.
+
+```bash
+flatpak install --user org.kde.KStyle.Adwaita
+```
+
+### PC portable disposant de plusieurs GPUs
+
+Personnellement, je dispose actuellement d'un Asus ZenBook UX410UQK. Il s'agit d'un très bon PC disposant de deux cartes graphiques: un IGP Intel (Intel HD Graphics 620) et une carte graphique NVIDIA (NVIDIA GeForce 940MX). Le problème de cette configuration sous Linux, c'est que le système va surexploiter le GPU Nvidia qui est bien plus énergivore que le GPU Intel. L'autonomie de la machine va donc s’en trouver grandement affectée et la chauffe constante risque d'affecter la durée de vie de l'appareil...
+
+Dans cette configuration, c'est donc le logiciel `optimus-manager` qui va permettre de passer d'un GPU à l'autre.
+
+```bash
+sudo pacman -S intel-media-driver
+sudo mhwd -a pci nonfree 0300
+
+yay -S libsndio-61-compat
+sudo pacman -S libva-utils
+
+sudo pacman -S optimus-manager
+sudo systemctl enable optimus-manager
+```
+
+Par la suite, il n'y a plus qu'à redémarrer la machine et utiliser les commandes:
+
+- `sudo optimus-manager --switch nvidia`: Pour utiliser le GPU NVIDIA.
+- `sudo optimus-manager --switch integrated`: Pour utiliser IGP Intel.
+
+Il est à noter qu'à chaque fois que la carte graphique est changée, il faudra redémarrer l'interface avec `sudo systemctl restart lightdm`.
+
+### Installation de l'antivirus
+
+Pour garantir un niveau de sécurité minimal, la présence d'un antivirus est nécessaire (et oui même sous Linux). [Clamav](https://www.clamav.net/) n'est pas forcément le plus performant du marché, mais il est très léger, configurable et très utilisé par la communauté Linux :
+
+```bash
+sudo pacman -S clamav
+```
+
+Pour mettre la base de données du logiciel, tapez la commande :
+
+```bash
+sudo freshclam
+```
+
+Le script suivant va permettre à l'antivirus de passer tous les jours en ne consommant au maximum que 10% de la puissance CPU (ce qui va éviter de maltraiter le matériel) en analysant les fichiers les plus récemment modifiés en premier :
+
+```bash
+echo '#!/bin/bash
+
+mkdir -p /var/virus
+chmod -R 000 /var/virus
+
+freshclam
+if [ $? -ne 0 ]
+then
+    rm /var/log/clamav/freshclam.log
+    freshclam
+fi
+
+touch /var/log/clamav/scan.log
+
+find / -type f ! -size 0 -printf "%Ts,%p\n" | sort -nr | cut -f2- -d, > /tmp/antivirus-files
+clamscan -i -l /var/log/clamav/scan.log --move=/var/virus --file-list=/tmp/antivirus-files &
+
+cpulimit -l 10 -p `pgrep clamscan`
+
+rm /tmp/antivirus-files
+chmod -R 000 /var/virus' | sudo tee /etc/cron.daily/antivirus
+sudo chmod 544 /etc/cron.daily/antivirus
+```
+
+Ce dernier va permettre à l'antivirus de se mettre à jour toute les 24 heures puis d'effectuer une analyse. Dans l'hypothèse où un virus serait trouvé au sein de vos fichiers personnels, il serait transféré dans le dossier `/var/virus`.
+
+### Mise en place d'un pare-feu
+
+Autre composante importante de la politique de sécurité, le pare-feu. L'objectif va être ici de limiter au strict minimum les interactions avec le réseau. Malheureusement, certains logiciels tels que Discord ou Shadow nécessitent de grandes plages d'ouverture de port, ce qui réduit la sécurité du système. Un compromis, est de n'autoriser les connections à ces plages de port qu'à l'utilisateur principal. Il ne faut donc pas hésiter à supprimer ces règles si les programmes auxquels elles se rapportent ne sont pas installés.
+
+Pour faire cela, nous allons utiliser le proxy `iptables` intégré à la plupart des distributions Linux.
+
+```bash
+sudo su
+
+# Reset parameters
+iptables -t filter -F
+iptables -t filter -X
+
+# Traffic Blocking
+iptables -t filter -P INPUT DROP
+iptables -t filter -P FORWARD DROP
+iptables -t filter -P OUTPUT DROP
+
+# Authorization of already established connections
+iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+# Loopback authorization
+iptables -t filter -A INPUT -i lo -j ACCEPT
+iptables -t filter -A OUTPUT -o lo -j ACCEPT
+
+# Allow PING to user
+iptables -t filter -A OUTPUT -p icmp --icmp-type 8 -j ACCEPT -m owner --uid-owner 1000
+
+# Authorization to open port
+
+## dns
+iptables -t filter -A OUTPUT -p udp --dport 53 -d 208.67.222.222 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 53 -d 208.67.220.220 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 53 -d 1.1.1.1 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 53 -d 1.0.0.1 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 53 -d 151.80.222.79 -j ACCEPT
+
+## ntp
+iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT
+
+## whoIs
+iptables -t filter -A OUTPUT -p tcp --dport 43 -j ACCEPT
+
+## http/s
+iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
+
+## ssh
+iptables -t filter -A OUTPUT -p tcp --dport 22 -j ACCEPT
+
+## ftp
+iptables -t filter -A OUTPUT -p tcp --dport 21 -j ACCEPT
+
+## mail (Outlook)
+iptables -t filter -A OUTPUT -p tcp --dport 587 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p tcp --dport 993 -j ACCEPT -m owner --uid-owner 1000
+
+## Discord
+iptables -t filter -A OUTPUT -p udp --dport 50000:65535 -j ACCEPT -m owner --uid-owner 1000
+
+## Shadow
+iptables -t filter -A OUTPUT -p tcp --dport 8001:11299 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p udp --dport 8001:11299 -j ACCEPT -m owner --uid-owner 1000
+
+## Steam (Remote Play)
+iptables -t filter -A OUTPUT -p udp --dport 27000:27100 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A INPUT -p udp --dport 27031:27036 -j ACCEPT
+iptables -t filter -A INPUT -p tcp --dport 27036 -j ACCEPT
+
+## Sonos
+iptables -t filter -A INPUT -p tcp --dport 1400 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 1400 -j ACCEPT -m owner --uid-owner 1000
+
+### Sonos with Spotify
+iptables -t filter -A INPUT -p udp --dport 1900 -j ACCEPT
+iptables -t filter -A INPUT -p udp --dport 5353 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 5353 -j ACCEPT -m owner --uid-owner 1000
+
+# Barrier
+iptables -t filter -A INPUT -p tcp --dport 24800 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 24800 -j ACCEPT
+
+# Protections
+
+## DDos (https://javapipe.com/blog/iptables-ddos-protection/)
+
+### Drop invalid packets
+iptables -t mangle -A PREROUTING -m conntrack --ctstate INVALID -j DROP
+
+### Drop TCP packets that are new and are not SYN
+iptables -t mangle -A PREROUTING -p tcp ! --syn -m conntrack --ctstate NEW -j DROP
+
+### Drop SYN packets with suspicious MSS value
+iptables -t mangle -A PREROUTING -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP
+
+### Block packets with bogus TCP flags
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,RST FIN,RST -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,ACK FIN -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,URG URG -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,FIN FIN -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,PSH PSH -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL ALL -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL NONE -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP
+iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP
+
+### Drop fragments in all chains
+iptables -t mangle -A PREROUTING -f -j DROP
+
+### Limit connections per source IP
+iptables -A INPUT -p tcp -m connlimit --connlimit-above 111 -j REJECT --reject-with tcp-reset
+
+### Limit RST packets
+iptables -A INPUT -p tcp --tcp-flags RST RST -m limit --limit 2/s --limit-burst 2 -j ACCEPT
+iptables -A INPUT -p tcp --tcp-flags RST RST -j DROP
+
+### Limit new TCP connections per second per source IP
+iptables -A INPUT -p tcp -m conntrack --ctstate NEW -m limit --limit 60/s --limit-burst 20 -j ACCEPT
+iptables -A INPUT -p tcp -m conntrack --ctstate NEW -j DROP
+
+## Port scan
+iptables -N port-scanning
+iptables -A port-scanning -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/s --limit-burst 2 -j RETURN
+iptables -A port-scanning -j DROP
+
+# Save table
+iptables-save > /etc/iptables.rules
+
+cat << EOL > /etc/cron.d/firewall
+@reboot    root    iptables-restore < /etc/iptables.rules
+EOL
+```
+
+Enfin, nous allons ajouter quelques commandes :
+
+- `firewall stop`: Pour désactiver la protection.
+- `firewall start`: Pour réactiver la protection.
+
+```bash
+chmod 700 ~/bin
+
+echo '#!/bin/bash
+
+case $1 in
+start)
+	sudo iptables -t filter -P INPUT DROP
+	sudo iptables -t filter -P FORWARD DROP
+	sudo iptables -t filter -P OUTPUT DROP
+;;
+stop)
+	sudo iptables -t filter -P INPUT ACCEPT
+	sudo iptables -t filter -P FORWARD ACCEPT
+	sudo iptables -t filter -P OUTPUT ACCEPT
+;;
+full-start)
+	sudo iptables-restore < /etc/iptables.rules
+;;
+full-stop)
+	sudo iptables -t filter -F
+	sudo iptables -t filter -X
+;;
+*)
+	echo "Usage: firewall (start|stop|full-start|full-stop)"
+	exit -1
+;;
+esac' | tee ~/bin/firewall
+
+chmod 500 ~/bin/firewall
+chmod 500 ~/bin
+```
+
+## Outils de développement
+
+Je fais personnellement le choix d'installer mes différents outils directement au niveau de mon système et non pas dans des conteneurs Flatpak. S'agissant de mes outils de travail, je fais cela afin de réduire au maximum les désagréments que pourrait causer la non-accessibilité d'une ressource du système depuis un conteneur. Il est cependant possible d'installer la plupart de ces outils au travers de Flatpak.
+
+### Outils [JetBrains](https://www.jetbrains.com/)
+
+Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est possible d'installer les différents IDEs de l'entreprise à partir de la [JetBrains toolbox](https://www.jetbrains.com/toolbox-app/). C'est au travers de cette interface qu'il est par la suite possible d'installer [Intellij](https://www.jetbrains.com/idea/), [Clion](https://www.jetbrains.com/fr-fr/clion/), [PyCharm](https://www.jetbrains.com/pycharm/), [DataGrip](https://www.jetbrains.com/datagrip/)... et de les maintenir à jour.
+
+```bash
+cd /tmp
+wget https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.20.7940.tar.gz -O /tmp/toolbox.tar.gz
+tar xvf /tmp/toolbox.tar.gz
+mv jetbrains* jetbrains
+./jetbrains/jetbrains-toolbox
+```
+
+### [VisualStudio code](https://code.visualstudio.com/)
+
+Sur les dépôts pacman, il n'y a pas de trace de [Microsoft VisualStudio Code](https://code.visualstudio.com/). En revanche on peut trouver un fork nommé [Code OSS](https://appimage.github.io/Code_OSS/) sur lequel les traqueurs Microsoft ont été enlevés et les composants propriétaires remplacés (le logo par exemple). Ce fork est également compatible avec la plupart des extensions de l'IDE de base.
+
+```bash
+sudo pacman -S code
+
+code --install-extension ms-vscode.hexeditor
+
+code --install-extension ms-azuretools.vscode-docker
+code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+
+code --install-extension ms-python.python
+code --install-extension redhat.vscode-xml
+code --install-extension redhat.vscode-yaml
+code --install-extension efoerster.texlab
+code --install-extension janisdd.vscode-edit-csv
+```
+
+### Environnement Node.js
+
+Je déconseille personnellement d'installer [Node.js](https://nodejs.org/en/) directement sur ça machine. En effet quand on travaille sur différents projets développés en JavaScript on peut être amené à utiliser différentes versions de NodeJs en fonction des projets. Il est alors possible de passer par [NVM (Node Version Manager)](https://github.com/nvm-sh/nvm), qui va permettre de changer de version de Node.js en seulement quelques commandes.
+
+```bash
+sudo pacman -S nvm
+
+echo "source /usr/share/nvm/init-nvm.sh" >> ~/.bashrc
+echo "source /usr/share/nvm/init-nvm.sh" >> ~/.zshrc
+
+nvm install --lts
+nvm use stable
+```
+
+### Environnement Java/Kotlin
+
+De la même façon qu'avec Node.js, je déconseille d'installer [Open JDK](https://openjdk.java.net/) directement sur ça machine. Heureusement, de la même façon que dans un environnement Node.js avec NVM, il est possible d'utiliser un manageur de version nommé [Jabba](https://github.com/shyiko/jabba).
+
+```bash
+curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
+
+jabba install openjdk@1.17.0
+jabba use openjdk@1.17.0
+```
+
+Il est à noter que Jabba permet non seulement d'utiliser Open JDK, mais également d'autres implémentations de la JVM tel que [GraalVM](https://www.graalvm.org/).
+
+### Environnement [QT](https://www.qt.io/)
+
+Pour designer de petites interfaces en C++.
+
+```bash
+sudo pacman -S qtcreator 
+```
+
+### Autres langages
+
+Même si je ne code pas directement dans ces technologies, le [GO](https://golang.org/) de Google et le [Rust](https://www.rust-lang.org/) de Mozilla, sont deux langages de programmation de bas niveau qui sont en train de s'imposer. Je les installe afin d'avoir la possibilité de compiler différents projets quand c'est nécessaire.
+
+```bash
+sudo pacman -S go rust
+```
+
+### Android ADB
+
+Pour ceux qui travaillent de près ou de loin avec [Android](https://www.android.com/), l'outil [ADB](https://developer.android.com/studio/command-line/adb) est indispensable.
+
+```bash
+sudo pacman -S android-tools
+```
+
+## Installation de [Docker](https://www.docker.com/)
+
+Pour installer Docker et le rendre accessible à l'utilisateur principal :
+
+```bash
+sudo pacman -S docker
+
+sudo systemctl enable docker
+sudo systemctl start docker
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
+
+### Installation de [K3s](https://k3s.io/)
+
+
+K3s est une implémentation légère de [Kubernetes](https://kubernetes.io/). Elle va permettre d'effectuer des tests directement depuis un environnement de développement.
+
+```bash
+curl -sfL https://get.k3s.io | sh -
+
+sudo systemctl disable k3s
+```
+
+## Installation de [KVM](https://www.linux-kvm.org/page/Main_Page)
+
+Avant de commencer, il est indispensable de vérifier au préalable que la virtualisation est activée au niveau du BIOS de la machine hôte. Si c'est le cas, il sera alors possible d'utiliser [KVM](https://www.linux-kvm.org/page/Main_Page) (Kernel-based Virtual Machine).
+
+Il existe dans l'univers Linux de nombreuses solutions de virtualisation. Cependant, le choix de KVM plutôt qu'une autre repose sur le fait qu'il s'agisse d'un hyperviseur de niveau 1, ce qui signifie qu'il est directement intégré au niveau du noyau du système d'exploitation. Cette solution est donc particulièrement efficace dans un environnement Linux.
+
+```bash
+sudo pacman -S virt-manager qemu vde2 ebtables dnsmasq bridge-utils openbsd-netcat x11-ssh-askpass
+
+sudo systemctl enable libvirtd.service
+sudo systemctl start libvirtd.service
+
+sudo usermod -a -G libvirt $USER
+sudo usermod -a -G kvm $USER
+```
+
+Par la suite pour récupérer une image de Windows 10, il suffit de se rendre sur [le site officiel de Microsoft](https://www.microsoft.com/fr-fr/software-download/windows10ISO) et de télécharger l'image ISO du système d'exploitation.
+
+Il suffit à présent d'utiliser l'outil `virt-manager` fraichement installé, afin de manager nos différentes machines virtuelles directement au travers d'interface.
+
+Pour installer facilement d'autres VMs il est aussi possible d'utiliser le script [Quickemu](https://github.com/quickemu-project/quickemu) avec la commande suivante :
+
+```bash
+yay -S quickemu
+```
+
+Par la suite pour créer une machine virtuelle MacOsX il suffira de taper la commande :
+
+```bash
+quickget macos big-sur
+quickemu --fullscreen --display spice --vm macos-big-sur.conf
+```
+
+### Partage de dossier
+
+Personnellement, j'utilise ma propre instance [NextCloud](https://nextcloud.com/) afin de faire transiter des fichiers entre ma machine physique et ma VM. Cela a pour avantage de n'exposer aucun port de ma machine hôte et de concentrer la sécurité sur mon serveur.
+
+Cependant, cette méthode trouve ses limites quand nous souhaitons faire transiter des fichiers volumineux. Afin de remédier au problème, je profite de la présence de Docker sur ma machine hôte afin d'exposer temporairement un serveur Samba qui servira de pont entre les deux machines quand cela s'avère nécessaire.
+
+```bash
+chmod 700 ~/bin
+echo '#!/bin/bash
+
+case $1 in
+start)
+    sudo iptables -t filter -A OUTPUT -p udp --dport 137 -j ACCEPT
+    sudo iptables -t filter -A OUTPUT -p udp --dport 138 -j ACCEPT
+    sudo iptables -t filter -A OUTPUT -p tcp --dport 139 -j ACCEPT
+    sudo iptables -t filter -A OUTPUT -p tcp --dport 445 -j ACCEPT
+    sudo iptables -t filter -A OUTPUT -p udp --dport 445 -j ACCEPT
+
+    docker run --rm -d --name smb -p 137:137/udp -p 138:138/udp -p 139:139 -p 445:445 -p 445:445/udp -v $HOME/Public:/share/folder elswork/samba -u "1000:1000:$USER:$USER:password" -s "Public:/share/folder:rw:$USER"
+    docker logs smb
+;;
+stop)
+    sudo iptables -t filter -A OUTPUT -p udp --dport 137 -j DROP
+    sudo iptables -t filter -A OUTPUT -p udp --dport 138 -j DROP
+    sudo iptables -t filter -A OUTPUT -p tcp --dport 139 -j DROP
+    sudo iptables -t filter -A OUTPUT -p tcp --dport 445 -j DROP
+    sudo iptables -t filter -A OUTPUT -p udp --dport 445 -j DROP
+
+    docker rm -f smb
+;;
+*)
+    echo "Usage: smb (start|stop)"
+    exit -1
+;;
+esac' | tee ~/bin/smb
+```
+
+Avec ce script, il suffit de taper les commandes `smb start` ou `smb stop` afin d'activer ou désactiver le partage de fichier. De plus, le script va se charge d'ouvrir ou fermer dynamiquement les ports utilisés au niveau du firewall.
+
+### Intégration des applications Windows dans l'environnent Linux
+
+À présent, afin d'avoir un environnement le plus homogène possible, il est possible d'utiliser le script [WinApps](https://github.com/Osmium-Linux/winapps), qui permet d'utiliser des applications installées au sein d'une VM Windows depuis un environnement Linux. Pour ce faire, il utilise le protocole Microsoft RDP.
+
+```bash
+sudo pacman -S freerdp
+cd /tmp
+git clone https://github.com/Osmium-Linux/winapps.git
+cd winapps
+
+mkdir -p ~/.config/winapps/
+cat << EOL > ~/.config/winapps/winapps.conf
+RDP_USER="MyWindowsUser"
+RDP_PASS="MyWindowsPassword"
+RDP_IP="192.168.123.111"
+RDP_FLAGS="/audio-mode:1"
+MULTIMON="true"
+EOL
+```
+
+Une fois ces commandes exécutées sur la machine hôte, il suffit de copier et d'exécuter le script `/tmp/winapps/install/RDPApps.reg` dans la machine virtuelle Windows 10.
+
+Pour vérifier que l'environnement est paré à accueillir WinApp, il suffit d'utiliser la commande suivante :
+
+```bash
+bin/winapps check
+```
+
+Et enfin pour procéder à l'installation :
+
+```bash
+./installer.sh --user
+```
+
+## Logiciels
+
+### Désinstallation des logiciels inutiles
+
+Même en version lite, Manjaro contient de nombreux outils qui ne sont pas réellement utiles. Ce chapitre va se concentrer sur leur désinstallation.
+
+- Manjaro Hello est un menu au démarrage de l'OS qui présente la distribution Manjaro.
+
+```bash
+sudo pacman -Rs manjaro-hello manjaro-documentation-en
+```
+
+- Parole est lecteur de média installé par défaut avec la distribution. On installera VLC plus tard.
+
+```bash
+sudo pacman -Rs parole
+```
+
+- Qpdfview est un lecteur de fichier PDF. Vu le nombre de vulnérabilités relevées sur ce format de fichier je trouve personnellement plus sûr d'utiliser un logiciel isolé dans un conteneur Flatpak.
+
+```bash
+sudo pacman -Rs qpdfview
+```
+
+- Mousepad est un éditeur de texte. Inutile de rajouter de nouveaux éditeurs quand Vim, VScode et tous les outils JetBrains sont déjà installés.
+
+```bash
+sudo pacman -Rs mousepad
+```
+
+- Orage est un calendrier.
+
+```bash
+sudo pacman -Rs orage
+```
+
+- Gufw est un configurateur de firewall. Cet outil est complètement redondant avec les configurations `iptables` proposées plus haut. De plus, il propose des fonctionnalités beaucoup moins avancées que ce qu'il est possible de faire en ligne de commande.
+
+```bash
+sudo pacman -Rs gufw
+```
+
+- Gparted est un logiciel de gestion de partitions. Personnellement je préfère effectuer ce type de manipulations sur les lecteurs directement en ligne de commandes avec `fdisk` et `mkfs`.
+
+```bash
+sudo pacman -Rs gparted
+```
+
+- GTK hash est un outil en interface graphique permettant de calculer des hash. Personnellement, les outils en ligne de commande `md5sum` ou `sha256sum` me conviennent parfaitement.
+
+```bash
+sudo pacman -Rs gtkhash-thunar gtkhash
+```
+
+- Gcolor2 est un logiciel permettant d'afficher des codes couleur. La plupart des outils de gestion de code et de design embarquent déjà ce type de fonctionnalité.
+
+```bash
+sudo pacman -Rs gcolor2
+```
+
+- La surcouche Manjaro pour XFCE n'est pas nécessaire dans le cas où un autre thème est déjà installé. Cependant, certains éléments tels que le thème d'icônes `papirus-icon-theme` et le thème de pointeur `xcursor-breeze` peuvent être conservés.
+
+```bash
+sudo pacman -Rs manjaro-xfce-minimal-settings kvantum-theme-matchama kvantum-qt5
+sudo pacman -S papirus-icon-theme xcursor-breeze
+```
+
+### [KeePassXC](https://keepassxc.org/)
+
+KeePassXC est pour moi un composant central dans mon architecture de sécurité. Non seulement il stocke la totalité des mots de passe de mes comptes, mais il contient aussi mes différentes clés pour mes connexions SSH (GitHub et GitLab comprises). Le lien de démarrage que je propose permet donc de rajouter au logiciel l'autorisation d'accéder aux clés SSH du système.
+
+```bash
+flatpak install --user org.keepassxc.KeePassXC
+
+cat << EOL > ~/.local/share/applications/org.keepassxc.KeePassXC.desktop
+[Desktop Entry]
+Name=KeePassXC
+GenericName=Password Manager
+GenericName=Gestionnaire de mot de passe
+Comment=Community-driven port of the Windows application “KeePass Password Safe”
+Exec=/usr/bin/flatpak run --socket=ssh-auth --branch=stable --arch=x86_64 --command=keepassxc --file-forwarding org.keepassxc.KeePassXC @@ %f @@
+Icon=keepassxc
+StartupWMClass=keepassxc
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Utility;Security;Qt;
+MimeType=application/x-keepass2;
+X-Flatpak=org.keepassxc.KeePassXC
+EOL
+```
+
+### [Firefox](https://www.mozilla.org/fr/firefox/new/)
+
+Dans un premier temps, nous allons désinstaller Midori, le navigateur par défaut de la distribution. Puis nous allons le remplacer par Firefox.
+
+```bash
+sudo pacman -Rs midori
+flatpak install --user org.mozilla.firefox
+```
+
+### [Chromium](https://www.chromium.org/)
+
+La version open source du navigateur de Google. Je ne l'utilise personnellement pas comme navigateur principal, mais certains sites ne fonctionnant pas sous Firefox, l'avoir sur son poste peut bien souvent dépanner.
+
+```bash
+flatpak install --user org.chromium.Chromium
+```
+
+### [TorBrowser](https://www.torproject.org/)
+
+Pour accéder au réseau Tor.
+
+```bash
+flatpak install --user com.github.micahflee.torbrowser-launcher
+```
+
+### [W3m](http://w3m.sourceforge.net/)
+
+Parfois, il peut être pratique de disposer d'un navigateur en ligne de commande. Pour du scripting, ou tout simplement pour rechercher : "comment réparer ses drivers Nvidia sous Linux".
+
+```bash
+sudo pacman -S w3m
+```
+
+### [ProtonMail](https://protonmail.com/)
+
+Quand on utilise Linux, les notions de sécurité et de vie privée sont importantes. Donc, utiliser une boite e-mail sécurisée ça l'est tout autant. Le ProtonMailBridge permet de se connecter de manière sécurisée à son compte ProtonMail avec un client lourd de messagerie telle que Thunderbird.
+
+```bash
+flatpak install --user ch.protonmail.protonmail-bridge
+```
+
+Il est à noter que le ProtonMail Bridge peut démarrer en réduit. Pour ce faire, utilisez cette commande :
+
+```bash
+flatpak run --branch=stable --arch=x86_64 --command=protonmail-bridge ch.protonmail.protonmail-bridge  --no-window
+```
+
+### [ProtonVPN](https://protonvpn.com/)
+
+Sur Linux, il est possible d'utiliser ProtonVPN directement en ligne de commande ce qui est très pratique afin de scripter les connections/déconnections.
+
+```bash
+yay -S protonvpn-cli
+```
+
+Par la suite, il suffit de faire la commande suivante pour s'authentifier à son compte Proton :
+
+```bash
+protonvpn-cli login
+```
+
+Pour se connecter au serveur le plus rapide (si le besoin est de sécuriser sa connexion sur un hotspot public) :
+
+```bash
+protonvpn-cli c -f
+```
+
+Pour se connecter à un pays en particulier avec son [code pays](https://fr.wikipedia.org/wiki/Liste_des_codes_pays_UIC) (si le besoin est de contourner une géorestriction) :
+
+```bash
+protonvpn-cli c --cc CH
+```
+
+Pour se déconnecter du VPN :
+
+```bash
+protonvpn-cli d
+```
+
+### [Thunderbird](https://www.thunderbird.net/fr/)
+
+Pour les utilisateurs du ProtonMailBridge, il faut penser à désactiver la sécurité pour le SMTP entre Thunderbird et le bridge. Il semblerait que Thunderbird n'autorise plus du tout les certificats autosignés générés par le Bridge pour les messages sortants.
+
+```bash
+flatpak install --user org.mozilla.Thunderbird
+```
+
+### [Discord](https://discord.com/)
+
+Logiciel de chat communautaire.
+
+```bash
+flatpak install --user com.discordapp.Discord
+```
+
+Pour lancer Discord en mode réduit il est possible d'utiliser la ligne de commande suivante :
+
+```bash
+flatpak run --branch=stable --arch=x86_64 --command=discord com.discordapp.Discord --start-minimized
+```
+
+### [Tox](https://tox.chat/)
+
+Tox est un système de chat décentralisé et chiffré. Étant donné qu'il est open source, on peut trouver un grand nombre de clients. Pour ma part, j'utilise qTox, qui a l'avantage d'être disponible sur FlatHub.
+
+```bash
+flatpak install --user io.github.qtox.qTox
+```
+
+### [Eye of GNOME](https://github.com/GNOME/eog)
+
+La visionneuse d'image de Gnome. Elle est plutôt simple à utiliser et affiche les métdatas des images (heure, position GPS si disponible...).
+
+```bash
+flatpak install --user org.gnome.eog
+```
+
+### [Gimp](https://www.gimp.org/)
+
+Le célèbre éditeur d'images bitmap très complet et très adapté pour la retouche de photo. Mon seul problème avec ce logiciel est son ergonomie.
+
+```bash
+flatpak install --user org.gimp.GIMP
+```
+
+### [Krita](https://krita.org/)
+
+Tout comme GIMP, Krita est un éditeur d'image au format bitmap. Ce logiciel est cependant plus adapté pour le dessin.
+
+```bash
+flatpak install --user org.kde.krita
+```
+
+### [Inkscape](https://inkscape.org/)
+
+Un éditeur d'images vectorielles.
+
+```bash
+flatpak install --user org.inkscape.Inkscape
+```
+
+### [Blender](https://www.blender.org/)
+
+Rien de tel que Blender pour créer de magnifiques modèles 3D.
+
+```bash
+flatpak install --user org.blender.Blender
+```
+
+### [VLC](https://www.videolan.org/)
+
+Le célèbre lecteur de fichiers multimédias français.
+
+```bash
+flatpak install --user org.videolan.VLC
+```
+
+### [Audacity](https://www.audacityteam.org/)
+
+Un logiciel simple et efficace pour enregistrer et éditer du son.
+
+```bash
+flatpak install --user org.audacityteam.Audacity
+```
+
+### [Soundux](https://github.com/Soundux/Soundux)
+
+Soundux est un simple logiciel pour jouer des sons lors de conversations audio.
+
+```bash
+flatpak install --user io.github.Soundux
+```
+
+### [Spotify](https://www.spotify.com/fr/)
+
+Parce qu'on ne peut pas loger toute la musique du monde sur son petit SSD...
+
+```bash
+flatpak install --user com.spotify.Client
+```
+
+### [Noson](https://github.com/janbar/noson-app)
+
+Pour ceux, qui comme moi, possèdent du matériel [Sonos](https://www.sonos.com/fr-fr/home), l'application Noson permet de piloter les équipements de la marque. Ce logiciel va permettre en prime de streamer les musiques qui sont présentes sur le disque dur, chose qu'il n'est pas possible de faire aussi simplement sur Windows avec le client Sonos officielles.
+
+```bash
+flatpak install --user io.github.janbar.noson
+```
+
+Afin d'accélérer l'accès à l'enceinte au démarrage de l'application, j'ai configuré ma box avec un bail DHCP permanent afin que mon périphérique Sonos ait toujours la même adresse IP d'attribuée (dans mon cas `192.168.1.5`). Ensuite il ne reste plus qu'à modifier le raccourci de lancement de l'application pour lui appliquer le paramètre `--deviceurl=http://192.168.1.5:1400`. Avec cette configuration, l'application n'a pas besoin de découverte réseau étant donné qu'elle sait d'avance où se situe l'enceinte.
+
+```bash
+cat << EOL > ~/.local/share/applications/io.github.janbar.noson.desktop
+[Desktop Entry]
+Name=noson
+Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=noson-app io.github.janbar.noson --deviceurl=http://192.168.1.5:1400/
+Icon=io.github.janbar.noson
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;
+X-Flatpak=io.github.janbar.noson
+Comment=
+Path=
+StartupNotify=false
+```
+
+### [mpg123](https://mpg123.de/)
+
+Gérant ma bibliothèque musicale essentiellement  au format `mp3`, il m'arrive d'utiliser l'utilitaire mpg123 afin de lire une musique directement au sein d'une console. Cela peu être très utile dans l'optique de faire des scripts.
+
+```bash
+sudo pacman -S mpg123
+```
+
+### [NoiseTorch](https://github.com/noisetorch/NoiseTorch)
+
+Un logiciel pour filtrer les bruits parasites d'un micro :
+
+```bash
+yay -S noisetorch
+```
+
+### [NextCloud](https://nextcloud.com/)
+
+Pour ceux qui veulent déployer leur propre solution de stockage de fichier qui ne serait pas hébergé chez Google, Microsoft ou Amazon.
+
+```bash
+flatpak install --user com.nextcloud.desktopclient.nextcloud
+```
+
+### [LibreOffice](https://fr.libreoffice.org/)
+
+Pack Office gratuit pour Linux... Pour les gros utilisateurs des outils Microsoft Word, Excel et PowerPoint, je ne peux cependant pas en toute bonne foi prétendre que LibreOffice égale Microsoft 365. Si ces logiciels sont vos outils de travail principaux, ne passez pas sous Linux et continuez d'utiliser Microsoft 365 sur votre Windows ou sur votre Mac.
+
+```bash
+flatpak install --user org.libreoffice.LibreOffice
+```
+
+### [Evince](https://wiki.gnome.org/Apps/Evince)
+
+Un autre logiciel Gnome. Celui-ci permet simplement d'afficher des fichiers PDF. Il est très pratique puisqu'il embarque de la reconnaissance de caractère au sein des images. Ce qui permet de faire des copier-coller au sein de documents photocopiés.
+
+```bash
+flatpak install --user org.gnome.Evince
+```
+
+### [Scribus](https://www.scribus.net/)
+
+Scribus est un éditeur de PDF.
+
+```bash
+flatpak install --user net.scribus.Scribus
+```
+
+### [Calibre](https://calibre-ebook.com/)
+
+Calibre est un puissant outil de lecture/écriture d'e-book. Il accepte différents formats de fichiers, dont notamment les epub.
+
+```bash
+flatpak install --user com.calibre_ebook.calibre
+```
+
+Personnellement, je dispose d'une liseuse [Bookeen Diva HD](https://bookeen.com/products/diva-hd) (produit d'excellente qualité et Française au demeurant). Afin de centraliser mon catalogue de livre acquis sur différentes plateformes, je les stocke au format epub sans DRM. Pour cela, j'utilise Calibrea avec l'extension [DeDRM_tools](https://github.com/apprenticeharper/DeDRM_tools).
+
+### [Antidote](https://www.antidote.info/fr)
+
+Sans aucun doute le meilleur correcteur orthographique (payant) du marché.
+
+Téléchargez l'application Antidote [sur le site officiel](https://services.druide.com/client/).
+
+```bash
+cd /tmp
+tar xvf ~/Téléchargements/Antidote*
+mv Antidote* Antidote
+./Antidote/Installation.bash
+```
+
+### [Pandoc](https://pandoc.org/)
+
+Pandoc est un outil très puissant permettant de convertir de nombreux formats de fichier texte dans d'autres formats de fichier texte. Il est par exemple possible de transformer un fichier Markdown en document PDF en lui appliquant une feuille de style au format [LaTeX](https://www.latex-project.org/). Il est donc possible de rédiger des documents de qualité professionnelle simplement en Markdown et de les convertir plus tard dans le format que nous souhaitons exporter, pdf, doc, html, LaTex, epub...
+
+Je vois plusieurs avantages à cette solution par rapport au traditionnel Microsoft Word, mais la plus importante à mon sens est le découpage du flux de travail. En effet, je considère que lors de la rédaction d'un document nous avons 3 grandes phases de travail, l'écriture du contenu, une phase de relecture durant lesquelles nous pouvons corriger fautes d'orthographe et mauvaises tournures de phrases et enfin la mise en page. Le problème avec Microsoft Word est que nous devons gérer ces 3 phases simultanément, ce qui a pour inconvénient de nous rendre moins efficaces sur chacune d'entre elles et résulte sur des documents de moindre qualité. La plupart des universitaires ce sont donc tournés vers le format LaTex, mais le problème reste similaire, avec ses nombreuses annotations ce format reste lourd et nous devons donc gérer la rédaction et une partie de la mise en page simultanément. Le meilleur compromis à mon sens est le Markdown qui est très léger en écriture et surtout très intuitif.
+
+Ainsi avec les différents logiciels que j'utilise, je peux garantir un flux de travail efficace sur ces trois axes. Je commence par rédiger en Markdown le contenu de mon document dans un simple IDE (généralement Visual Studio Code ou VIM), puis je corrige les fautes grâce à Antidote et enfin j'utilise Pandoc pour la mise en page. J'ai créé [un projet GitHub](https://github.com/flavien-perier/pandoc-template) qui me sert de base pour mes nouveaux projets. Il utilise la feuille de style LaTex [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) afin de mettre en forme mes documents Markdown dans le format PDF.
+
+```bash
+pacman -Syyu pandoc pandoc-citeproc
+pacman -Syyu `pacman -Ss texlive | cut -f 1 -d " " | grep -v "^$"`
+```
+
+### [NewsFlash](https://gitlab.com/news-flash/news_flash_gtk)
+
+NewsFlash est un simple lecteur de flux RSS.
+
+```bash
+flatpak install --user com.gitlab.newsflash
+```
+
+### [SpeedRead](https://github.com/pasky/speedread)
+
+Basé sur la méthode de lecture [Spritz](https://spritz.com/), ce client en ligne de commandes permet de lire le contenu d'un fichier texte dans un terminal.
+
+```bash
+yay -S speedread-git
+```
+
+Par exemple, pour lire un document texte à 300 mots minute il faut simplement taper :
+
+```bash
+cat my-doc.txt | speedread -w 300
+```
+
+Maintenant il est également possible de rajouter l'outil `epub2txt` afin de lire un fichier au format epub.
+
+```bash
+yay -S epub2txt
+```
+
+Ainsi nous n'aurons qu'à taper la commande suivante afin de lire un fichier epub dans `speedread` :
+
+```bash
+epub2txt book.epub | speedread -w 300
+```
+
+### [OBS](https://obsproject.com/)
+
+Étant donné que les fonctionnalités de Stream de Discord ne fonctionnent qu'à moitié sous Linux (on a l'image, mais pas le son), il faut passer par de tierces solutions afin de pouvoir partager son écran.
+
+OBS présente l'avantage de permettre de streamer sur de nombreuses plateformes tel que [Twitch](https://www.twitch.tv/), [YouTube](https://www.youtube.com/) ou [PeerTube](https://sepiasearch.org/).
+
+```bash
+flatpak install --user com.obsproject.Studio
+```
+
+### [Steam](https://store.steampowered.com/)
+
+La célèbre plateforme de jeux. Actuellement, Valve (la société à l'origine de Steam) travail afin de rendre les jeux vidéos plus accessibles sur les systèmes d'exploitation Linux. Ils ont actuellement leur propre distribution [SteamOS](https://store.steampowered.com/steamos) basée sur Arch, qui utilise leur technologie [ProtonDB](https://www.protondb.com/) (basée sur [Wine](https://www.winehq.org/)) afin de lancer des jeux Windows sur Linux.
+
+```bash
+flatpak install --user com.valvesoftware.Steam
+```
+
+Par la suite pour activer ProtonDb il suffit de ce rendre dans l'application puis: `Steam` > `Paramètres` > `Steam Play` > `Activer Steam Play pour tous les autres titres` > `Proton 6.3-8`.
+
+### [Xpadneo](https://atar-axis.github.io/xpadneo/)
+
+Par défaut, les [manettes de Xbox](https://www.microsoft.com/fr-fr/store/b/xboxcontrollers) ne fonctionnent pas en Bluetooth sur Manjaro (ainsi que sur de nombreuses autres distributions). Il est toujours possible de les faire fonctionner en filaire, mais ce n'est pas toujours d'un confort absolu. Le logiciel Xpadneo va simplement être là pour patcher ce problème et permettre d'utiliser une manette sans avoir besoin de la brancher.
+
+```bash
+sudo pacman -S dkms
+yay -S xpadneo-dkms
+```
+
+### [AntiMicroX](https://github.com/AntiMicroX/antimicroX)
+
+Logiciel permettant de faire le mapping des touches d'une manette de Xbox sur les touches d'un clavier.
+
+```bash
+flatpak install --user io.github.antimicrox.antimicrox
+```
+
+### [Shadow](https://shadow.tech/frfr)
+
+Permet de bénéficier d'un ordinateur avec des ressources CPU / GPU importante directement dans le Cloud.
+
+Dans le cas où Shadow ne fonctionne pas par défaut avec les drivers déjà présents sur la machine, le site [Shadow on Linux](https://nicolasguilloux.github.io/blade-shadow-beta/setup) permet de trouver quelles sont les applications à installer en fonction du hardware.
+
+```bash
+sudo pacman -S libindicator-gtk2 libdbusmenu-gtk2
+sudo pacman -U https://archive.archlinux.org/packages/l/libldap/libldap-2.4.59-2-x86_64.pkg.tar.zst
+
+cat << EOL > ~/.drirc
+<!-- https://gitlab.com/NicolasGuilloux/shadow-live-os/raw/arch-master/airootfs/etc/drirc -->
+<driconf>
+  <device driver="radeonsi">
+    <application name="Shadow" executable="Shadow">
+      <option name="allow_rgb10_configs" value="false" />
+      <option name="radeonsi_clear_db_cache_before_clear" value="true" />
+    </application>
+  </device>
+  <device driver="radeon">
+    <application name="Shadow" executable="Shadow">
+      <option name="allow_rgb10_configs" value="false" />
+    </application>
+  </device>
+  <device driver="iris">
+    <application name="Shadow" executable="Shadow">
+      <option name="allow_rgb10_configs" value="false" />
+    </application>
+  </device>
+</driconf>
+EOL
+
+mkdir -p ~/.icons/
+
+chmod 700 ~/bin
+wget https://update.shadow.tech/launcher/prod/linux/ubuntu_18.04/Shadow.AppImage -O ~/bin/shadow
+wget https://shadow.tech/icons/icon-512x512.png -O ~/.icons/shadow.png
+chmod -R 500 ~/bin
+chmod 400 ~/.icons/shadow.png
+
+cat << EOL > ~/.local/share/applications/shadow.desktop
+[Desktop Entry]
+Name=Shadow
+Comment=Transforme tes appareils en PC Gaming
+Keywords=cloud;
+Exec=$HOME/bin/shadow
+Terminal=false
+Type=Application
+Icon=$HOME/.icons/shadow.png
+Categories=Game;
+EOL
+```
+
+### [Barrier](https://github.com/debauchee/barrier)
+
+Barrier est un logiciel permettant d'utiliser différents ordinateurs comme s'il s'agissait d'écrans. L'ordinateur principal (celui disposant d'un clavier et d'une souris) sera le serveur et tous les autres les clients. Cela me permet personnellement de connecter mon ordinateur professionnel (qui est sur Windows) à mon ordinateur personnel et ainsi de bénéficier des avantages d'un Linux tout en respectant les normes de mon entreprise. La configuration par défaut entre client sous Windows et serveur sous Linux peut poser des problèmes de mapping avec certaines touches. C'est pour cela que je préconise de faire sa configuration manuellement. Comme celle qui suit :
+
+```bash
+flatpak install --user com.github.debauchee.barrier
+
+cat << EOL > ~/.config/barrier.sgc
+section: screens
+        Windows:
+                halfDuplexCapsLock = false
+                halfDuplexNumLock = false
+                halfDuplexScrollLock = false
+                xtestIsXineramaUnaware = false
+                preserveFocus = false
+                switchCorners = none +bottom-left
+                switchCornerSize = 0
+                meta = altgr
+                altgr = shift
+        Linux:
+                halfDuplexCapsLock = false
+                halfDuplexNumLock = false
+                halfDuplexScrollLock = false
+                xtestIsXineramaUnaware = false
+                preserveFocus = false
+                switchCorners = none
+                switchCornerSize = 0
+end
+
+section: aliases
+end
+
+section: links
+        Windows:
+                down = Linux
+        Linux:
+                up = Windows
+end
+
+section: options
+        relativeMouseMoves = false
+        screenSaverSync = true
+        win32KeepForeground = false
+        clipboardSharing = true
+        switchCorners = none
+        switchCornerSize = 0
+end
+EOL
+```
+
+### [Solaar](https://pwr-solaar.github.io/Solaar/)
+
+Un logiciel permettant de gérer les claviers et souris [Logitech](https://www.logitech.com/) (personellement j'utilise un clavier [MX Mechanical Mini](https://www.logitech.com/fr-fr/products/keyboards/mx-mechanical.html) avec une souris [MX Master 3](https://www.logitech.com/fr-fr/products/mice/mx-master-3s.910-006559.html)).
+
+```bash
+sudo pacman -S solaar 
+```
+
+### [Tmux](https://github.com/tmux/tmux)
+
+J'ai utilisé pendant un grand moment [Terminator](https://github.com/janisozaur/terminator) comme émulateur de terminal afin de pouvoir multiplexer mes consoles. Cependant, XFCE dispose déjà d'un terminal codé en C et donc extrêmement performant et bien intégré avec le reste de l'environnement. Le seul défaut de ce dernier est qu'il ne gère pas le split d'écran. La solution que j'ai choisie, est donc de l'associer avec des logiciels de multiplexage plus bas niveau tel que [GNU Screen](https://www.gnu.org/software/screen/) ou [Tmux](https://github.com/tmux/tmux).
+
+```bash
+sudo pacman -S tmux xclip
+
+cat << EOL > ~/.tmux.conf
+set-option -g default-shell /usr/bin/fish
+
+set -g status off
+set -g history-limit 999999999
+set -g mouse on
+
+setw -g mode-keys vi
+
+set-option -s set-clipboard off
+
+bind P paste-buffer
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi y send-keys -X rectangle-toggle
+unbind -T copy-mode-vi Enter
+bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel 'xclip -se c -i'
+bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel 'xclip -se c -i'
+EOL
+
+tmux source-file ~/.tmux.conf
+```
+
+### [TLPUI](https://github.com/d4nj1/TLPUI)
+
+Sur Linux [TLP](https://github.com/linrunner/TLP) est un démon permettant de gérer au mieux l'autonomie de sa machine. Sur Manjaro cet outil est préinstallé dans le système d'exploitation. TLPUI est tout simplement une interface pour cet outil.
+
+```bash
+sudo pacman -S tlpui
+```
+
+### [Kleopatra](https://www.openpgp.org/software/kleopatra/)
+
+Une petite interface pour la gestion de nos clés privées OpenPGP.
+
+```bash
+sudo pacman -S kleopatra
+```
+
+### [Ghidra](https://ghidra-sre.org/)
+
+Le puissant outil de reverse engineering de la NSA pour faire de l'analyse approfondie sur du code compilé.
+
+```bash
+flatpak install --user org.ghidra_sre.Ghidra
+```
+
+### [WireShark](https://www.wireshark.org/)
+
+Un excellent analyseur de réseau pour ceux qui, comme moi, ne maitrisent pas toute la puissance de `tcpdump`.
+
+```bash
+flatpak install --user org.wireshark.Wireshark
+```
+
+### [MacChanger](https://www.kali.org/tools/macchanger/)
+
+Un simple script permettant de changer d'adresse mac. Cela peut-être relativement utile dans les lieux publics ou une limite de temps d'utilisation est imposée.
+
+```bash
+sudo pacman -S macchanger
+```
+
+Par exemple pour obtenir une nouvelle adresse mac sur la carte `eth0` on peut taper :
+
+```bash
+macchanger -a eth0
+```
+
+Pour revenir à l'adresse de base :
+
+```bash
+macchanger -p eth0
+```
+
+Enfin dans certains cas (en général des scénarios d'attaque) il peut-être utile de prendre une adresse mac spécifique :
+
+```bash
+macchanger --mac=XX:XX:XX:XX:XX:XX eth0
+```
+
+### [Nmap](https://nmap.org/)
+
+Un outil permettant de scanner un réseau et de déterminer pour chaque machine trouvée quels sont les services exposés.
+
+```bash
+sudo pacman -S nmap
+```
+
+### [Insomnia](https://insomnia.rest/)
+
+Pour permettre aux développeurs back-end de tester les APIs REST qu'ils développent. Le logiciel est assez similaire à [Postman](https://www.postman.com/), mais offre à mon sens une meilleure gestion des formats [Swagger](https://swagger.io/) et [OpenAPI](https://www.openapis.org/).
+
+```bash
+flatpak install --user rest.insomnia.Insomnia
+```
+
+### [Deluge](https://www.deluge-torrent.org/)
+
+Un client torrent complet.
+
+```bash
+flatpak install --user org.deluge_torrent.deluge
+```
+
+### [P7zip](http://p7zip.sourceforge.net/)
+
+Le `7z` est l'un, si ce n'est pas le format qui offre le meilleur taux de compression du moment, le rendant particulièrement efficace pour tout ce qui touche à l'archivage. Seul problème, 7zip n'existe que sur Windows. Heureusement, avec p7zip il est possible d'utiliser ce format en ligne de commande depuis son Linux.
+
+```bash
+sudo pacman -S p7zip
+```
+
+Par la suite, pour créer une archive avec un taux de compression maximal utilisez la commande :
+
+```bash
+7z a -mx=9 archive.7z file1 file2
+```
+
+Et pour la décompresser, utilisez la commande :
+
+```bash
+7z x archive.7z
+```
+
+### [JQ](https://stedolan.github.io/jq/)
+
+JQ est un outil permettant de traiter des fichiers json en ligne de commande.
+
+```bash
+sudo pacman -S jq
+```
+
+Voici un exemple simple visant à extraire les valeurs "a", "b" et "c" au sein du fichier JSON.
+
+```bash
+echo '{"values": [{"name": "a"}, {"name": "b"}, {"name": "c"}]}' | jq -cM ".values[].name"
+```
+
+### [bat](https://github.com/sharkdp/bat)
+
+Bat est un clone de la commande cat réécrit en Rust. Cette commande prend en charge la pagination, la coloration syntaxique, git et dispose de quelques paramètres qui peuvent s'avérer bien pratiques.
+
+```bash
+sudo pacman -S bat
+```
+
+Par exemple pour afficher seulement les lignes 2 à 5 d'un fichier :
+
+```bash
+bat -r 2:5 file.md
+```
+
+### [CpuLimit](https://github.com/opsengine/cpulimit)
+
+Un petit outil bien pratique permettant de limiter l'utilisation du processeur à un processus.
+
+```bash
+sudo pacman -S cpulimit
+```
+
+Les paramètres de `cpulimit` sont :
+
+- `-e`: Le nom d'un processus.
+- `-p`: Le PID d'un processus.
+- `-l`: La limite d'utilisation du processeur en pourcentage à appliquer au processus ciblé.
+
+### [Smartmontools](https://www.smartmontools.org/)
+
+Smartmontools est un outil permettant de récupérer [les données SMART](https://fr.wikipedia.org/wiki/Self-Monitoring,_Analysis_and_Reporting_Technology) concernant l'état de santé d'un disque dur ou SSD : Vitesse d'écriture, lecture si des secteurs ont été détectés comme défaillant... Faire des analyses de temps à autre peut s'avérer pertinent afin d'éventuellement faire passer un disque dur ou SSD interne en simple support de sauvegarde externe externe.
+
+Pour faire une analyse, il suffit de taper la commande (en remplaçant `sda` par le disque à analyser) :
+
+```bash
+sudo smartctl -H /dev/sda
+```
+
+Si tout va bien, le résultat du test devrait être `PASSED`.
+
+Pour avoir le rapport complet, il suffit de rajouter l'argument `-a` :
+
+```bash
+sudo smartctl -H /dev/sda -a
+```
+
+### [WhoIs](https://www.whois.com/)
+
+Permets de donner un certain nombre d'informations concernant une adresse IP (localisation, FAI...).
+
+```bash
+sudo pacman -S whois
+```
+
+### [Neofetch](https://github.com/dylanaraps/neofetch)
+
+Sans aucun doute l'outil le plus inutile de la sélection... Il permet d'afficher un certain nombre de caractéristiques de sa machine sous un format coloré. Un vrai Linuxien se doit de toujours laisser un Neofetch tourné dans un coin de terminale sur chaque capture d'écran qu'il envoie. Cela permet de prouver au reste de la communauté la supériorité de sa distribution.
+
+```bash
+sudo pacman -S neofetch
+```
+
+### [Conky](https://wiki.archlinux.org/title/Conky)
+
+Conky est un outil permettant de rajouter des informations personnalisées sur le bureau. On peut par exemple l'utiliser pour afficher son IP, la fréquence des différents coeurs du processeur, la consommation de RAM, la température de tel ou tel composant...
+
+```bash
+sudo pacman -S conky
+mkdir -p ~/.config/conky
+
+cat << EOL > ~/.config/conky/conky.conf
+conky.config = {
+    alignment = 'bottom_right',
+    background = false,
+    border_width = 1,
+    cpu_avg_samples = 2,
+    default_color = 'white',
+    default_outline_color = 'white',
+    default_shade_color = 'white',
+    double_buffer = true,
+    draw_borders = false,
+    draw_graph_borders = true,
+    draw_outline = false,
+    draw_shades = false,
+    extra_newline = false,
+    font = 'JetBrains Mono NL Medium:size=15',
+    gap_x = 60,
+    gap_y = 60,
+    minimum_height = 5,
+    minimum_width = 500,
+    net_avg_samples = 2,
+    no_buffers = true,
+    out_to_console = false,
+    out_to_ncurses = false,
+    out_to_stderr = false,
+    out_to_x = true,
+    own_window = true,
+    own_window_class = 'Conky',
+    own_window_transparent = false,
+    own_window_type = 'desktop',
+    own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+    own_window_argb_visual = true,
+    own_window_argb_value = 0,
+    show_graph_range = false,
+    show_graph_scale = false,
+    stippled_borders = 0,
+    update_interval = 3.0,
+    uppercase = false,
+    use_spacer = 'none',
+    use_xft = true,
+    xinerama_head = 1,
+}
+
+conky.text = [[
+${color grey}CPU:
+${color}${exec expr `sensors | grep 'Core 0' | cut -d+ -f2 | cut -d\( -f1 | cut -d. -f1`}°C${goto 85}1: ${cpubar cpu0 6,100} ${cpu cpu0}%${goto 300}3: ${cpubar cpu2 6,100} ${cpu cpu2}%
+${color}${exec expr `sensors | grep 'Core 1' | cut -d+ -f2 | cut -d\( -f1 | cut -d. -f1`}°C${goto 85}2: ${cpubar cpu1 6,100} ${cpu cpu1}%${goto 300}4: ${cpubar cpu3 6,100} ${cpu cpu3}%
+
+${color grey}Memory:
+${color}RAM${goto 120}${membar 6,100} ${memperc}%${goto 300}(${mem})
+${color}SWAP${goto 120}${swapbar 6,100} ${swapperc}%${goto 300}(${swap})
+
+${color grey}Storage:
+${color}/${color}${goto 120}${fs_bar 6,100 /} ${fs_used_perc /}%${goto 300}(${fs_used /})
+${color}/home${color}${goto 120}${fs_bar 6,100 /home} ${fs_used_perc /home}%${goto 300}(${fs_used /home})
+
+${color grey}System:
+${color}Kernel${goto 120}${exec uname -r}
+${color}Uptime${goto 120}${uptime}
+${color}Process${goto 120}${processes}
+${color}Docker${goto 120}${exec docker ps -q | wc -l}
+${color}KVM${goto 120}${exec pgrep -f -c qemu-system-x86_64}
+
+${color grey}Network:
+${if_existing /proc/net/route wlp2s0}${color}Local${goto 120}${addr wlp2s0}
+${color}Public${goto 120}${texeci 7200 curl -s ipinfo.io/ip}
+${color}Download${goto 120}${downspeedf wlp2s0}k/s
+${color}Upload${goto 120}${upspeedf wlp2s0}k/s
+${else}${if_existing /proc/net/route enp0s20f0u4u4}${color}Local${goto 120}${addr enp0s20f0u4u4}
+${color}Public${goto 120}${texeci 7200 curl -s ipinfo.io/ip}
+${color}Download${goto 120}${downspeedf enp0s20f0u4u4}}k/s
+${color}Upload${goto 120}${upspeedf enp0s20f0u4u4}k/s
+${else}${color}Local${goto 120}-
+${color}Public${goto 120}-
+${color}Download${goto 120}-k/s
+${color}Upload${goto 120}-k/s${endif}${endif}
+$hr
+
+${color grey}Name${goto 215}CPU${goto 305}MEM
+${color grey}${top name 1}${color}${goto 190}${top cpu 1}%${goto 280}${top mem 1}%
+${color grey}${top name 2}${color}${goto 190}${top cpu 2}%${goto 280}${top mem 2}%
+${color grey}${top name 3}${color}${goto 190}${top cpu 3}%${goto 280}${top mem 3}%
+${color grey}${top name 4}${color}${goto 190}${top cpu 4}%${goto 280}${top mem 4}%
+${color grey}${top name 5}${color}${goto 190}${top cpu 5}%${goto 280}${top mem 5}%
+]]
+EOL
+
+cat << EOL > ~/.config/autostart/conky.desktop
+[Desktop Entry]
+Type=Application
+Exec=sh -c "sleep 10; conky;"
+Name=Conky
+Comment=Autostart conky at login
+EOL
+```
+
+## Configuration de l'environnent applicatif
+
+### Faire en sorte que les applications Flatpak puissent utiliser le thème XFCE
+
+L'isolation proposée par Flatpak présente de nombreux avantages en termes de sécurité, mais peu également causés quelques désagréments en termes d'usage. L'un des problèmes, qui peut au premier abord paraitre anodin, est le fait d'avoir le même thème entre chacune de ses applications. En effet Flatpak n'ayant pas accès au dossier `~/.themes`, les applications auront tout le temps leur thème par défaut. Si vous êtes un utilisateur d'un thème standard tel qu'[Adwaita dark pour GTK](https://github.com/axxapy/Adwaita-dark-gtk2) et que ce thème est disponible dans le Flathub, vous pourrez simplement l'installer et Flatpak se chargera de l'activer (par exemple: `flatpak install --user org.gtk.Gtk3theme.Adwaita-dark`). Cependant, s’il s'agit d'un thème non présent dans le store ou custom, il n'est pas possible de l'utiliser dans les applications Flatpak. Une solution, est donc de copier les fichiers du thème utilisé dans les runtimes `freedesktop`, `kde` et `gnome` de Flatpak. Le problème est qu'il faut refaire les copies à chaque nouvelle version de ces runtimes. L'avantage est qu'avec cette solution il n'est pas nécessaire de modifier les configurations par défaut de Flatpak ni réduire le niveau d'isolation.
+
+```bash
+for PLATFORM in `ls $HOME/.local/share/flatpak/runtime | grep "Platform$"`
+do
+    for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
+    do
+        cp -R $HOME/.themes/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/themes
+        cp -R $HOME/.icons/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/icons
+        cp -R $HOME/.fonts/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/fonts
+    done
+done
+```
+
+### Activation des programmes par défaut
+
+Sur Linux, il ne suffit pas forcément qu'un programme soit installé pour qu'il soit utilisé par défaut pour ouvrir certains types de fichiers depuis l'explorateur de fichier (`thunar`) ou avec la commande `exo-open`. Pour utiliser la plupart des programmes précédemment installés comme programme par défaut il suffit de mettre à jour le fichier `~/.config/mimeapps.list` :
+
+```bash
+cat << EOL > ~/.config/mimeapps.list
+[Default Applications]
+
+application/octet-stream=code-oss.desktop;
+application/x-gettext-translation=code-oss.desktop;
+application/xml=code-oss.desktop;
+application/x-wine-extension-ini=code-oss.desktop;
+application/pdf=org.gnome.Evince.desktop;
+
+application/vnd.oasis.opendocument.text=org.libreoffice.LibreOffice.desktop;
+application/vnd.oasis.opendocument.spreadsheet=org.libreoffice.LibreOffice.desktop;
+application/vnd.oasis.opendocument.presentation=org.libreoffice.LibreOffice.desktop;
+application/vnd.oasis.opendocument.graphics=org.libreoffice.LibreOffice.desktop;
+application/vnd.ms-excel=org.libreoffice.LibreOffice.desktop;
+application/vnd.ms-powerpoint=org.libreoffice.LibreOffice.desktop;
+application/msword=org.libreoffice.LibreOffice.desktop;
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=org.libreoffice.LibreOffice.desktop;
+application/vnd.openxmlformats-officedocument.presentationml.presentation=org.libreoffice.LibreOffice.desktop;
+iapplication/vnd.openxmlformats-officedocument.wordprocessingml.document=org.libreoffice.LibreOffice.desktop;
+
+text/plain=code-oss.desktop;
+
+x-scheme-handler/jetbrains=jetbrains-toolbox.desktop;
+
+image/jpeg=org.gnome.eog.desktop;
+image/png=org.gnome.eog.desktop;
+image/webp=org.gnome.eog.desktop;
+image/gif=org.gnome.eog.desktop;
+image/bmp=org.gnome.eog.desktop;
+image/svg+xml=org.gnome.eog.desktop;
+
+video/mpeg=org.videolan.VLC.desktop;
+video/mp4=org.videolan.VLC.desktop;
+
+audio/mpeg=org.videolan.VLC.desktop;
+
+x-scheme-handler/http=org.mozilla.firefox.desktop;
+x-scheme-handler/https=org.mozilla.firefox.desktop;
+x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop;
+EOL
+```
+
+### Ajout de modèles de fichiers
+
+Les utilisateurs de Windows connaissent tous l'option "clic droit + créer un document + nouveau document Word" très pratique quand on a besoin de manipuler beaucoup de fichiers sans passer nécessairement par les logiciels. Heureusement, XFCE propose une option assez similaire, il est donc possible directement depuis thunar de créer des templates de fichier à instancier avec un simple "clic droit + créer un document".
+
+Dans l'exemple suivant, les templates vont servir à instancier différentes bases de code dans plusieurs langages :
+
+```bash
+cat << EOL > ~/Modèles/bash.sh
+#!/bin/bash
+
+echo Hello world !
+
+exit 0
+EOL
+
+cat << EOL > ~/Modèles/c.c
+#include <stdlib.h>
+#include <stdio.h>
+
+int main(int arcc, char *argv[]) {
+	printf("Hello world!\n");
+	return 0;
+}
+EOL
+
+cat << EOL > ~/Modèles/c++.cpp
+#include <iostream>
+
+using namespace std;
+
+int main(int arcc, char *argv[]) {
+	cout << "Hello world !" << endl;
+	return 0;
+}
+EOL
+
+cat << EOL > ~/Modèles/html.html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8" />
+	<title>Title</title>
+	<link href="./style.css" />
+</head>
+<body>
+	<nav>
+	</nav>
+
+	<header>
+	</header>
+
+	<section>
+    <h1>Section</h1>
+
+		<article>
+			Hello world!
+		</article>
+	</section>
+
+	<footer>
+	</footer>
+
+	<script src="./script.js"></script>
+</body>
+</html>
+EOL
+
+cat << EOL > ~/Modèles/markdown.md
+---
+title: Title
+description: Description
+author: Flavien PERIER <perier@flavien.io>
+date: 2020-09-27 18:00
+---
+
+## Title
+
+Content
+EOL
+
+chmod 440 ~/Modèles/*
+chmod 550 ~/Modèles
+```
+
+### Quelques scripts
+
+Voici quelques scripts à rajouter dans `~/bin` qui peuvent s'avérer utiles.
+
+#### update
+
+Un petit script qui met à jour toutes nos applications avec les différents gestionnaires de paquets installés sur l'OS et qui injecte les thèmes dans les différentes plateformes Flatpak :
+
+```bash
+#!/bin/bash
+
+sudo pacman --noconfirm -Syyu
+yay --noconfirm -Syyu
+flatpak update -y
+
+sudo pacman --noconfirm -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
+
+docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 docker pull
+
+for PLATFORM in `ls $HOME/.local/share/flatpak/runtime | grep "Platform$"`
+do
+    for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
+    do
+        cp -Rf $HOME/.themes/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/themes
+        cp -Rf $HOME/.icons/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/icons
+        cp -Rf $HOME/.fonts/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/fonts
+    done
+done
+```
+
+#### clean
+
+Comme son nom l'indique, ce script permet de nettoyer différents éléments du système d'exploitation :
+
+```bash
+#!/bin/bash
+
+# Clean up the package manager
+yes o | sudo pacman -Scc
+yes o | yay -Scc
+sudo pip cache purge
+pip cache purge
+flatpak uninstall --unused -y
+yes o | sudo pamac remove --orphans
+
+# Cleans up Docker
+yes | docker container prune
+yes | docker volume prune
+yes | docker network prune
+yes | docker system prune
+
+# Cleans up the user session
+rm -Rf $HOME/.cache/*
+rm -f $HOME/.wget-hsts
+rm -Rf $HOME/Téléchargements/*
+rm -Rf $HOME/.local/share/.Trash
+rm -f $HOME/.xsession-errors*
+find $HOME -type f -iname "*.old" -delete
+
+# Cleans up the system
+sudo rm -Rf /var/cache/*
+sudo find /etc -iname "*.old" -delete
+sudo find /etc -iname "*-" -delete
+sudo find /etc -iname "*~" -delete
+
+# Delete unused logs
+find $HOME -type f -iname "*.log" -delete
+find $HOME -type f -iname "*.log.[0-9]" -delete
+sudo journalctl --vacuum-time=1d
+sudo find /var/log -type f -iname "*.[0-9]" -delete
+sudo find /var/log -type f -iname "*.[0-9].log" -delete
+sudo find /var/log -type f -iname "*.old" -delete
+sudo rm -f /var/log/optimus-manager/daemon/*.log
+sudo rm -f /var/log/optimus-manager/switch/*.log
+
+# Delete history
+sudo rm -f /root/.bash_history
+rm -f ~/.bash_history
+yes all | sudo fish -c "history delete all"
+
+yes all | fish -c "history delete --prefix 'sudo pacman'"
+yes all | fish -c "history delete --prefix yay"
+yes all | fish -c "history delete --prefix flatpak"
+
+yes all | fish -c "history delete --prefix clear"
+yes all | fish -c "history delete --prefix ls"
+yes all | fish -c "history delete --prefix ll"
+yes all | fish -c "history delete --prefix 'rm '"
+yes all | fish -c "history delete --prefix 'mv '"
+yes all | fish -c "history delete --prefix 'rmdir '"
+yes all | fish -c "history delete --prefix 'touch '"
+yes all | fish -c "history delete --prefix 'vi '"
+yes all | fish -c "history delete --prefix 'cat '"
+yes all | fish -c "history delete --prefix 'bat '"
+
+yes all | fish -c "history delete --prefix tar"
+yes all | fish -c "history delete --prefix 7z"
+yes all | fish -c "history delete --prefix unzip"
+yes all | fish -c "history delete --prefix unrar"
+```
+
+#### Spotify-diff
+
+Un script un peu particulier puisqu'il permet d'afficher la différence entre les musiques présententes dans le dossier `~/Musique` et une playlist [Spotify](https://www.spotify.com/). Quand comme moi la playlist est un peu longue et qu'on essaye de récupérer les fichiers de chacune de ces musiques, ce script est bien pratique. Pour l'utiliser, il suffit de mettre sa playlist en public et de remplacer les `**********` de `SPOTIFY_PLAYLIST_ID` par l'identifiant de la playlist en question.
+
+```bash
+#!/bin/bash
+
+SPOTIFY_PLAYLIST_ID=************
+SPOTIFY_BEARER=`curl 'https://open.spotify.com/get_access_token?reason=transport&productType=web_player' | jq -cM ".accessToken" | sed s/\"//g`
+
+BREAK=0
+OFFSET=0
+
+IFS=$'\n'
+while [ $BREAK -eq 0 ]
+do
+        COUNT=0
+
+        for LINE in `curl "https://api.spotify.com/v1/playlists/$SPOTIFY_PLAYLIST_ID/tracks?offset=$OFFSET&limit=100" -H "authorization: Bearer $SPOTIFY_BEARER" | jq -cM ".items[].track"`
+        do
+                ARTISTS=`echo $LINE | jq -cM .artists[].name | sed s/\"//g | tr "\n" ";" | sed -e "s/;/, /g" -e "s/, \$//g"`
+                TITLE=`echo $LINE | jq -cM .name | sed s/\"//g`
+                echo "$ARTISTS : $TITLE"
+                COUNT=`expr $COUNT + 1`
+        done
+
+        if [ $COUNT -eq 100 ]
+        then
+                OFFSET=`expr $OFFSET + 100`
+        else
+                BREAK=1
+        fi
+done | sort > /tmp/spotify-music.txt
+
+IFS=$';'
+for FILE in `ls ~/Musique | tr "\n" ";"`
+do
+        ARTISTS=`ffprobe ~/Musique/$FILE 2>&1 | grep artist | sed "s/ *artist *: //g"`
+        TITLE=`ffprobe ~/Musique/$FILE 2>&1 | grep title | head -n 1 | sed "s/ *title *: //g"`
+        echo "$ARTISTS : $TITLE"
+done | sort > /tmp/local-music.txt
+
+diff -iyd /tmp/spotify-music.txt /tmp/local-music.txt
+```
+
+## Conclusion
+
+Je pense que la principale différence entre un utilisateur de Windows ou de Mac par rapport à un utilisateur de Linux et que l'un adapte son usage à ce que lui propose son système et l'autre adapte son système à son besoin. L'installation que je propose dans cet article n'est pas une installation orientée légèreté, beaucoup de logiciels sont installés, mais ils répondent tous à un besoin et aucun d'entre eux n'est superflux (sauf peut-être neofetch). Libre à vous à présent de vous inspirer (ou non) de mon installation et de construire la vôtre, qui répondra à votre besoin.
+
+Il est à noter que cette page est régulièrement mise à jour et que par extension, des paragraphes puissent être incomplets à un instant donné.
+
+Si vous rencontrez des problèmes, n'hésitez pas à me contacter par mail sur [perier@flavien.io](mailto:perier@flavien.io).
+
+## Sources
+
+- [Arch wiki - Documentation pacman](https://wiki.archlinux.fr/Pacman)
+- [Arch wiki - Discord](https://wiki.archlinux.org/index.php/Discord)
+- [Manjaro wiki - Optimus Manager](https://wiki.manjaro.org/index.php?title=Optimus_Manager)
+- [Manjaro wiki - Configure Graphics Cards](https://wiki.manjaro.org/index.php/Configure_Graphics_Cards)
+- [Manjaro wiki - Networking](https://wiki.manjaro.org/index.php/Networking)
+- [Documentation Ubuntu - cryptsetup](https://doc.ubuntu-fr.org/cryptsetup)
+- [Shadow on Linux](https://nicolasguilloux.github.io/blade-shadow-beta/setup)
+- [How to install Virtual Machine Manager (KVM) in Manjaro and Arch Linux](https://www.fosslinux.com/2484/how-to-install-virtual-machine-manager-kvm-in-manjaro-and-arch-linux.htm)
+- [Adding Custom Themes to Flatpak Apps](https://forums.linuxmint.com/viewtopic.php?t=284418)
+- [Unable to connect to Browser Plugin or SSH Agent](https://github.com/flathub/org.keepassxc.KeePassXC/issues/19)
+- [[HOW TO] Run Firefox *and* KeePassXC in a flatpak and get the KeePassXC-Browser add-on to work](https://discussion.fedoraproject.org/t/how-to-run-firefox-and-keepassxc-in-a-flatpak-and-get-the-keepassxc-browser-add-on-to-work/19452?u=rugk)
+- [KVM - Fix Missing Default Network](https://blog.programster.org/kvm-missing-default-network)
+- [DDoS Protection With IPtables: The Ultimate Guide](https://javapipe.com/blog/iptables-ddos-protection/)
+- [Copy and Paste in Tmux](https://www.rockyourcode.com/copy-and-paste-in-tmux/)
+- [Configure your firewall to work with Sonos](https://support.sonos.com/s/article/688)
+- [Ports nécessaires à Steam](https://help.steampowered.com/fr/faqs/view/2EA8-4D75-DA21-31EB)
