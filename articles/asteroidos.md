@@ -186,8 +186,8 @@ LAST_STATE=`cat /tmp/alim-state`
 case $1 in
 day)
   mcetool --set-display-brightness 100
-  mcetool --set-power-saving-mode disabled
-  mcetool --set-low-power-mode enabled
+  mcetool --set-power-saving-mode enabled
+  mcetool --set-low-power-mode disabled
   ifconfig wlan0 up
   systemctl start sensorfwd
   systemctl start ofono
@@ -316,7 +316,7 @@ echo '#!/bin/sh
 
 if [ ! -f /tmp/network-state ]
 then
-  echo "init" > /tmp/network-state
+  echo "online" > /tmp/network-state
 fi
 
 STATE=`connmanctl state | grep State | tr -d " " | cut -f2 -d=`
@@ -324,7 +324,7 @@ LAST_STATE=`cat /tmp/network-state`
 
 if [ $STATE = "online" ]
 then
-  ping -q -c 1 flavien.io
+  ping -q -c 1.1.1.1
   if [ $? -ne 0 ]
   then
     STATE="offline"
