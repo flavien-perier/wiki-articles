@@ -196,7 +196,7 @@ day)
   systemctl start sshd
 
   echo "day" > /tmp/alim-state
-  echo "init" > /tmp/network-state
+  echo "ready" > /tmp/network-state
 ;;
 night)
   mcetool --set-display-brightness 1
@@ -316,15 +316,15 @@ echo '#!/bin/sh
 
 if [ ! -f /tmp/network-state ]
 then
-  echo "online" > /tmp/network-state
+  echo "ready" > /tmp/network-state
 fi
 
 STATE=`connmanctl state | grep State | tr -d " " | cut -f2 -d=`
 LAST_STATE=`cat /tmp/network-state`
 
-if [ $STATE = "online" ]
+if [ $STATE = "ready" ]
 then
-  ping -q -c 1.1.1.1
+  ping -q -c 1 1.1.1.1
   if [ $? -ne 0 ]
   then
     STATE="offline"
@@ -336,7 +336,7 @@ then
   exit
 fi
 
-if [ $STATE = "online" ]
+if [ $STATE = "ready" ]
 then
   /home/root/alim indoor
 
@@ -344,7 +344,7 @@ then
   su -l ceres -c "notificationtool -o add --icon=ios-wifi --application=\"System\" --urgency=3 --hint=\"x-nemo-preview-summary WiFi\" --hint=\"x-nemo-preview-body IP: $IP\" \"WiFi\" \"IP: $IP\""
 fi
 
-if [ $LAST_STATE = "online" ]
+if [ $LAST_STATE = "ready" ]
 then
   /home/root/alim outdoor
 fi
