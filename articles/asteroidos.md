@@ -234,7 +234,7 @@ outdoor)
   mcetool --set-display-brightness 100
   mcetool --set-power-saving-mode enabled
   mcetool --set-low-power-mode disabled
-  systemctl stop sensorfwd
+  systemctl start sensorfwd
   systemctl stop sshd
 
   echo "outdoor" > /tmp/alim-state
