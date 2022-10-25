@@ -711,7 +711,11 @@ sudo pacman -Rs gcolor2
 - La surcouche Manjaro pour XFCE n'est pas nécessaire dans le cas où un autre thème est déjà installé. Cependant, certains éléments tels que le thème d'icônes `papirus-icon-theme` et le thème de pointeur `xcursor-breeze` peuvent être conservés.
 
 ```bash
-sudo pacman -Rs manjaro-xfce-minimal-settings kvantum-theme-matchama kvantum-qt5
+sudo pacman -Rs manjaro-xfce-minimal-settings manjaro-application-utility manjaro-browser-settings kvantum-theme-matchama kvantum-qt5
+sudo pacman -Rs matcha-gtk-theme gnome-icon-theme
+sudo pacman -Rs xcursor-simpleandsoft xcursor-vanilla-dmz-aa
+sudo pacman -Rs noto-fonts noto-fonts-cjk terminus-font texlive-fontsextra texlive-langchinese texlive-langcyrillic texlive-langgreek texlive-langjapanese texlive-langkorean
+
 sudo pacman -S papirus-icon-theme xcursor-breeze
 ```
 
@@ -1709,6 +1713,17 @@ Comme son nom l'indique, ce script permet de nettoyer différents éléments du 
 ```bash
 #!/bin/bash
 
+CLEAN_CACHE=0
+
+if [[ $* == "-c" ]] || [[ $* == "--cache" ]]
+then
+    CLEAN_CACHE=1
+elif [[ $* == "-h" ]] || [[ $* == "--help" ]]
+then
+    echo "-c, --cache           Clean cache"
+    exit 0
+fi
+
 # Clean up the package manager
 yes o | sudo pacman -Scc
 yes o | yay -Scc
@@ -1724,15 +1739,43 @@ yes | docker network prune
 yes | docker system prune
 
 # Cleans up the user session
-rm -Rf $HOME/.cache/*
-rm -f $HOME/.wget-hsts
 rm -Rf $HOME/Téléchargements/*
 rm -Rf $HOME/.local/share/.Trash
 rm -f $HOME/.xsession-errors*
 find $HOME -type f -iname "*.old" -delete
 
+# Cleans up cache
+if [ $CLEAN_CACHE -eq 1 ]
+then
+    sudo rm -Rf /var/cache/*
+    sudo rm -Rf /root/.cache/*
+    rm -Rf $HOME/.cache/*
+    find $HOME/.var/app/ -type d -name "cache" -exec rm -Rf {}/* \;
+fi
+
+# Configuration of user rights
+sudo chmod -R go-rwx $HOME
+sudo find . ! -user $USER -exec chown $USER {} \;
+sudo find . ! -group $USER -exec chgrp $USER {} \;
+sudo find $HOME -type d ! -perm 700 -exec chmod 700 {} \;
+chmod -R 500 $HOME/bin
+chmod 777 $HOME/Public
+chmod 750 $HOME
+setfacl -R --remove-all $HOME
+setfacl -m g:libvirt-qemu:rx $HOME
+find $HOME/Modèles -type d ! -perm 500 -exec chmod 500 {} \;
+find $HOME/Modèles -type f ! -perm 400 -exec chmod 400 {} \;
+find $HOME/Images -type d ! -perm 500 -exec chmod 500 {} \;
+find $HOME/Images -type f ! -perm 400 -exec chmod 400 {} \;
+find $HOME/Vidéos -type d ! -perm 500 -exec chmod 500 {} \;
+find $HOME/Vidéos -type f ! -perm 400 -exec chmod 400 {} \;
+find $HOME/Musique -type d ! -perm 500 -exec chmod 500 {} \;
+find $HOME/Musique -type f ! -perm 400 -exec chmod 400 {} \;
+find $HOME/Vms -type d ! -perm 550 -exec chmod 550 {} \;
+find $HOME/Vms -type f ! -perm 770 -exec chmod 770 {} \;
+sudo chgrp -R libvirt-qemu $HOME/Vms
+
 # Cleans up the system
-sudo rm -Rf /var/cache/*
 sudo find /etc -iname "*.old" -delete
 sudo find /etc -iname "*-" -delete
 sudo find /etc -iname "*~" -delete
@@ -1749,7 +1792,11 @@ sudo rm -f /var/log/optimus-manager/switch/*.log
 
 # Delete history
 sudo rm -f /root/.bash_history
-rm -f ~/.bash_history
+rm -f $HOME/.bash_history
+rm -f $HOME/.python_history
+rm -f $HOME/.node_repl_history
+rm -f $HOME/.wget-hsts
+rm -f $HOME/.lesshst
 yes all | sudo fish -c "history delete all"
 
 yes all | fish -c "history delete --prefix 'sudo pacman'"
@@ -1763,7 +1810,6 @@ yes all | fish -c "history delete --prefix 'rm '"
 yes all | fish -c "history delete --prefix 'mv '"
 yes all | fish -c "history delete --prefix 'rmdir '"
 yes all | fish -c "history delete --prefix 'touch '"
-yes all | fish -c "history delete --prefix 'vi '"
 yes all | fish -c "history delete --prefix 'cat '"
 yes all | fish -c "history delete --prefix 'bat '"
 

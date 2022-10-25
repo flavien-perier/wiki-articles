@@ -283,10 +283,11 @@ Voici le XML de configuration que j'utilise :
       <target chassis="5" port="0x14"/>
       <address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x4"/>
     </controller>
-    <interface type="bridge">
+    <interface type="network">
       <mac address="52:54:00:7b:3d:2f"/>
-      <source bridge="virbr0"/>
+      <source network="default"/>
       <model type="e1000e"/>
+      <link state="up"/>
       <address type="pci" domain="0x0000" bus="0x01" slot="0x00" function="0x0"/>
     </interface>
     <input type="mouse" bus="ps2"/>
