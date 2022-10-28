@@ -1724,6 +1724,8 @@ then
     exit 0
 fi
 
+PROTECTED_FOLDER=".ssh .themes .icons .fonts Modèles Images Vidéos Musique"
+
 # Clean up the package manager
 yes o | sudo pacman -Scc
 yes o | yay -Scc
@@ -1763,17 +1765,14 @@ chmod 777 $HOME/Public
 chmod 750 $HOME
 setfacl -R --remove-all $HOME
 setfacl -m g:libvirt-qemu:rx $HOME
-find $HOME/Modèles -type d ! -perm 500 -exec chmod 500 {} \;
-find $HOME/Modèles -type f ! -perm 400 -exec chmod 400 {} \;
-find $HOME/Images -type d ! -perm 500 -exec chmod 500 {} \;
-find $HOME/Images -type f ! -perm 400 -exec chmod 400 {} \;
-find $HOME/Vidéos -type d ! -perm 500 -exec chmod 500 {} \;
-find $HOME/Vidéos -type f ! -perm 400 -exec chmod 400 {} \;
-find $HOME/Musique -type d ! -perm 500 -exec chmod 500 {} \;
-find $HOME/Musique -type f ! -perm 400 -exec chmod 400 {} \;
 find $HOME/Vms -type d ! -perm 550 -exec chmod 550 {} \;
 find $HOME/Vms -type f ! -perm 770 -exec chmod 770 {} \;
 sudo chgrp -R libvirt-qemu $HOME/Vms
+for FOLDER in $PROTECTED_FOLDER
+do
+    find $HOME/$FOLDER -type d ! -perm 500 -exec chmod 500 {} \;
+    find $HOME/$FOLDER -type f ! -perm 400 -exec chmod 400 {} \;
+done
 
 # Cleans up the system
 sudo find /etc -iname "*.old" -delete

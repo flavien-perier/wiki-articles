@@ -140,9 +140,11 @@ Cette application open source permet d'analyser les éléments d'un site web qui
 
 Ecosia est un métamoteur basé sur Bing qui utilise l'argent généré par nos recherches pour planter des arbres. Il s'agit donc d'une application à bilan carbone compensé, c'est-à-dire qu'elle tente de compenser la pollution engendrée par leur serveur en plantant des arbres qui vont absorber ce CO2. En plus de cela, l'application respecte la vie privée des utilisateurs et l'entreprise s'engage à ne pas revendre de données.
 
-#### [I don't care about cookies](https://addons.mozilla.org/fr/firefox/addon/i-dont-care-about-cookies/)
+#### [I still don't care about cookies](https://addons.mozilla.org/en-US/firefox/addon/istilldontcareaboutcookies/)
 
-![I don't care about cookies logo](https://medias.flavien.io/articles/firefox/i-dont-care-about-cookies.webp)
+![I still don't care about cookies logo](https://medias.flavien.io/articles/firefox/i-still-dont-care-about-cookies.webp)
+
+Cette application est un fork en open source de [I don't care about cookies](https://addons.mozilla.org/fr/firefox/addon/i-dont-care-about-cookies/) qui avait été racheté par Avast.
 
 Si vous en avez marre de tous les bandeaux "Acceptez les cookies", cette application se charge automatiquement de cliquer sur "J'accepte" (ce n’est pas comme si on nous laissez vraiment le choix d'un autre côté) et de nous cacher les bandeaux en question. Simple et efficace pour une navigation sans encombre.
 
