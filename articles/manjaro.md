@@ -517,9 +517,9 @@ Pour ceux qui travaillent de près ou de loin avec [Android](https://www.android
 sudo pacman -S android-tools
 ```
 
-## Installation de [Docker](https://www.docker.com/)
+## Installation de [Docker](https://www.docker.com/) et [Podman](https://podman.io/)
 
-Pour installer Docker et le rendre accessible à l'utilisateur principal :
+Pour installer Docker :
 
 ```bash
 sudo pacman -S docker
@@ -528,7 +528,18 @@ sudo systemctl enable docker
 sudo systemctl start docker
 
 sudo groupadd docker
-sudo usermod -aG docker $USER
+
+echo 'alias docker="sudo docker"' >> $HOME/.alias
+```
+
+Pour installer Podamn :
+
+```bash
+sudo pacman -S podman
+
+sudo usermod --add-subuids 100000-165535 --add-subgids 100000-165535 $USER
+
+podman system migrate
 ```
 
 ### Installation de [K3s](https://k3s.io/)
@@ -593,8 +604,8 @@ start)
     sudo iptables -t filter -A OUTPUT -p tcp --dport 445 -j ACCEPT
     sudo iptables -t filter -A OUTPUT -p udp --dport 445 -j ACCEPT
 
-    docker run --rm -d --name smb -p 137:137/udp -p 138:138/udp -p 139:139 -p 445:445 -p 445:445/udp -v $HOME/Public:/share/folder elswork/samba -u "1000:1000:$USER:$USER:password" -s "Public:/share/folder:rw:$USER"
-    docker logs smb
+    sudo docker run --rm -d --name smb -p 137:137/udp -p 138:138/udp -p 139:139 -p 445:445 -p 445:445/udp -v $HOME/Public:/share/folder elswork/samba -u "1000:1000:$USER:$USER:password" -s "Public:/share/folder:rw:$USER"
+    sudo docker logs smb
 ;;
 stop)
     sudo iptables -t filter -A OUTPUT -p udp --dport 137 -j DROP
@@ -603,7 +614,7 @@ stop)
     sudo iptables -t filter -A OUTPUT -p tcp --dport 445 -j DROP
     sudo iptables -t filter -A OUTPUT -p udp --dport 445 -j DROP
 
-    docker rm -f smb
+    sudo docker rm -f smb
 ;;
 *)
     echo "Usage: smb (start|stop)"
@@ -1693,7 +1704,7 @@ flatpak update -y
 
 sudo pacman --noconfirm -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 
-docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 docker pull
+sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 sudo docker pull
 
 for PLATFORM in `ls $HOME/.local/share/flatpak/runtime | grep "Platform$"`
 do
@@ -1734,11 +1745,15 @@ pip cache purge
 flatpak uninstall --unused -y
 yes o | sudo pamac remove --orphans
 
-# Cleans up Docker
-yes | docker container prune
-yes | docker volume prune
-yes | docker network prune
-yes | docker system prune
+# Cleans up Docker and Podman
+yes | sudo docker container prune
+yes | sudo docker volume prune
+yes | sudo docker network prune
+yes | sudo docker system prune
+yes | podman container prune
+yes | podman volume prune
+yes | podman network prune
+yes | podman system prune
 
 # Cleans up the user session
 rm -Rf $HOME/Téléchargements/*
@@ -1798,9 +1813,10 @@ rm -f $HOME/.wget-hsts
 rm -f $HOME/.lesshst
 yes all | sudo fish -c "history delete all"
 
-yes all | fish -c "history delete --prefix 'sudo pacman'"
-yes all | fish -c "history delete --prefix yay"
-yes all | fish -c "history delete --prefix flatpak"
+yes all | fish -c "history delete --prefix 'sudo pacman '"
+yes all | fish -c "history delete --prefix 'pacman '"
+yes all | fish -c "history delete --prefix 'yay '"
+yes all | fish -c "history delete --prefix 'flatpak '"
 
 yes all | fish -c "history delete --prefix clear"
 yes all | fish -c "history delete --prefix ls"
@@ -1809,13 +1825,11 @@ yes all | fish -c "history delete --prefix 'rm '"
 yes all | fish -c "history delete --prefix 'mv '"
 yes all | fish -c "history delete --prefix 'rmdir '"
 yes all | fish -c "history delete --prefix 'touch '"
-yes all | fish -c "history delete --prefix 'cat '"
-yes all | fish -c "history delete --prefix 'bat '"
 
-yes all | fish -c "history delete --prefix tar"
-yes all | fish -c "history delete --prefix 7z"
-yes all | fish -c "history delete --prefix unzip"
-yes all | fish -c "history delete --prefix unrar"
+yes all | fish -c "history delete --prefix 'tar '"
+yes all | fish -c "history delete --prefix '7z '"
+yes all | fish -c "history delete --prefix 'unzip '"
+yes all | fish -c "history delete --prefix 'unrar '"
 ```
 
 #### Spotify-diff
@@ -1875,6 +1889,7 @@ Si vous rencontrez des problèmes, n'hésitez pas à me contacter par mail sur [
 
 - [Arch wiki - Documentation pacman](https://wiki.archlinux.fr/Pacman)
 - [Arch wiki - Discord](https://wiki.archlinux.org/index.php/Discord)
+- [Arch wiki - Podman](https://wiki.archlinux.org/title/Podman)
 - [Manjaro wiki - Optimus Manager](https://wiki.manjaro.org/index.php?title=Optimus_Manager)
 - [Manjaro wiki - Configure Graphics Cards](https://wiki.manjaro.org/index.php/Configure_Graphics_Cards)
 - [Manjaro wiki - Networking](https://wiki.manjaro.org/index.php/Networking)
