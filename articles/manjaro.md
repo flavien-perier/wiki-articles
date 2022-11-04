@@ -1108,6 +1108,14 @@ sudo pacman -S dkms
 yay -S xpadneo-dkms
 ```
 
+### [Moonlight](https://moonlight-stream.org/)
+
+Moonlight est un logiciel de streaming pour pouvoir récupérer le flux vidéo de la technologie de streaming Nvidia.
+
+```bash
+flatpak install com.moonlight_stream.Moonlight
+```
+
 ### [AntiMicroX](https://github.com/AntiMicroX/antimicroX)
 
 Logiciel permettant de faire le mapping des touches d'une manette de Xbox sur les touches d'un clavier.
@@ -1502,7 +1510,8 @@ ${color grey}System:
 ${color}Kernel${goto 120}${exec uname -r}
 ${color}Uptime${goto 120}${uptime}
 ${color}Process${goto 120}${processes}
-${color}Docker${goto 120}${exec docker ps -q | wc -l}
+${color}Podman${goto 120}${exec podman ps -q | wc -l}
+${color}Docker${goto 120}${exec pgrep -f -U 0 -c "docker run"}
 ${color}KVM${goto 120}${exec pgrep -f -c qemu-system-x86_64}
 
 ${color grey}Network:
