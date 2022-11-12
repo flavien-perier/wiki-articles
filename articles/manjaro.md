@@ -1714,6 +1714,7 @@ flatpak update -y
 sudo pacman --noconfirm -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 
 sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 sudo docker pull
+podman images --format "{{.Repository}}:{{.Tag}}" | xargs  -L1 podman pull
 
 for PLATFORM in `ls $HOME/.local/share/flatpak/runtime | grep "Platform$"`
 do
