@@ -420,6 +420,9 @@ full-start)
 full-stop)
 	sudo iptables -t filter -F
 	sudo iptables -t filter -X
+  sudo iptables -t filter -P INPUT ACCEPT
+	sudo iptables -t filter -P FORWARD ACCEPT
+	sudo iptables -t filter -P OUTPUT ACCEPT
 ;;
 *)
 	echo "Usage: firewall (start|stop|full-start|full-stop)"

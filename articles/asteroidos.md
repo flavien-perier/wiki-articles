@@ -151,6 +151,18 @@ EOL
 systemctl reload sshd
 ```
 
+## Watchface
+
+J'utilise une watchface custom pour la montre. Pour l'installer, il suffit de taper les commandes depuis un pc :
+
+```bash
+cd /tmp
+git clone https://github.com/flavien-perier/asteroid-watchface.git
+cd asteroid-watchface
+adb push usr/ /
+adb shell systemctl restart user@1000
+```
+
 ## System
 
 Le gestionnaire de paquet de la distribution est `opkg`. Il s'utilise globalement comme `apt-get` sur les systèmes [Debian](https://www.debian.org/).

@@ -183,12 +183,44 @@ echo VIRSH_GPU_VIDEO=pci_0000_`lspci | grep -i nvidia | grep -i vga | cut -f1 -d
 echo VIRSH_GPU_AUDIO=pci_0000_`lspci | grep -i nvidia | grep -i audio | cut -f1 -d ' ' | tr ':' '_' | tr '.' '_'` >> /etc/libvirt/hooks/kvm.conf
 ```
 
+### Installation d'un bridge
+
+```bash
+ip link add virbr0 type bridge
+
+ip link set enp4s0 master virbr0
+ip address add 192.168.1.3/24 dev br0
+```
+
 #### XML de configuration de la vm Windows 10
 
 J'utilise [Virt manager](https://virt-manager.org/) depuis mon pc personnel que je connecte à mon serveur par ssh. Depuis l'interface, je peux donc configurer ma VM à distance.
 
+Voici le XML de configuration utilisé pour l'interface réseau :
 
-Voici le XML de configuration que j'utilise :
+```xml
+<network>
+  <name>host-network</name>
+  <uuid>32c75e86-61ae-4357-8029-dd90db2812c1</uuid>
+  <forward dev="enp4s0" mode="nat">
+    <nat>
+      <port start="1024" end="65535"/>
+    </nat>
+    <interface dev="enp4s0"/>
+  </forward>
+  <bridge name="virbr1" stp="on" delay="0"/>
+  <mac address="52:54:00:2a:e1:56"/>
+  <domain name="host-network"/>
+  <ip address="192.168.2.1" netmask="255.255.255.0">
+    <dhcp>
+      <range start="192.168.2.1" end="192.168.2.254"/>
+    </dhcp>
+  </ip>
+</network>
+```
+
+
+Voici le XML de configuration utilisé pour la machine Windows 10 :
 
 ```xml
 <domain type="kvm">
@@ -285,7 +317,7 @@ Voici le XML de configuration que j'utilise :
     </controller>
     <interface type="network">
       <mac address="52:54:00:7b:3d:2f"/>
-      <source network="default"/>
+      <source network="host-network"/>
       <model type="e1000e"/>
       <link state="up"/>
       <address type="pci" domain="0x0000" bus="0x01" slot="0x00" function="0x0"/>
@@ -338,6 +370,7 @@ sudo systemctl restart cockpit
 
 ## Sources
 
+- [Arch Wiki - QEMU](https://wiki.archlinux.org/title/QEMU)
 - [How to Install or Upgrade Nvidia Drivers on Rocky Linux 8](https://www.linuxcapable.com/how-to-install-or-upgrade-nvidia-drivers-on-rocky-linux-8/)
 - [nvidia-docker Installation Guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html)
 - [Comprehensive guide to performance optimizations for gaming on virtual machines with KVM/QEMU and PCI passthrough](https://mathiashueber.com/performance-tweaks-gaming-on-virtual-machines/)
@@ -350,3 +383,4 @@ sudo systemctl restart cockpit
 - [Installing Tensorflow on Fedora 34](https://rickycorte.medium.com/installing-tensorflow-on-fedora-34-6d2f97651e60)
 - [cgroup issue with nvidia container runtime on Debian testing](https://github.com/NVIDIA/nvidia-docker/issues/1447)
 - [Docker plugin for Cockpit](https://github.com/mrevjd/cockpit-docker)
+- [Bridged Host-VM Network](https://briantward.github.io/bridge-host-vm/)
