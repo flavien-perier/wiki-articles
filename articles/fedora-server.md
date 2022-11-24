@@ -56,13 +56,23 @@ EOL
 
 ### Base
 
+Pour éviter les problèmes de compatibilité des drivers avec des versions trop ressente du kernel, on freeze sur une LTS (la 5.17 présentement) :
+
+```bash
+dnf install 'dnf-command(versionlock)'
+dnf install kernel-5.17.5-300.fc36 kernel-devel-5.17.5-300.fc36 kernel-headers-5.17.0-300.fc36
+dnf versionlock add kernel-5.17.5-300.fc36 kernel-devel-5.17.5-300.fc36 kernel-headers-5.17.0-300.fc36 kernel-core-5.17.5-300.fc36 kernel-modules-5.17.5-300.fc36
+
+grubby --info=ALL | grep -E "^kernel|^index"
+grubby --set-default-index=1 # Regarder l'identifiant du kernel correspondant.
+```
+
 Installation des drivers Nvidia et configuration minimale du serveur :
 
 ```bash
 curl -s https://raw.githubusercontent.com/flavien-perier/linux-shell-configuration/master/linux-shell-configuration.sh | bash -
 
 dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/fedora36/x86_64/cuda-fedora36.repo
-dnf install kernel-devel kernel-headers
 dnf install nvidia-driver nvidia-settings cuda-driver
 ```
 
@@ -171,9 +181,9 @@ mkdir -p /etc/libvirt/hooks/qemu.d/Windows10/release/end
 
 wget https://raw.githubusercontent.com/PassthroughPOST/VFIO-Tools/master/libvirt_hooks/qemu -O /etc/libvirt/hooks/qemu
 
-wget https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/start.sh -O /tmp/start-quem.sh
+wget https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/start.sh -O /tmp/start-qemu.sh
 
-/tmp/start-quem.sh| sed 's/youruser/admin/g' > /etc/libvirt/hooks/qemu.d/Windows10/prepare/begin/start.sh
+cat /tmp/start-qemu.sh | sed 's/youruser/admin/g' > /etc/libvirt/hooks/qemu.d/Windows10/prepare/begin/start.sh
 
 wget https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/revert.sh -O /etc/libvirt/hooks/qemu.d/Windows10/release/end/revert.sh
 
@@ -181,15 +191,6 @@ find /etc/libvirt/hooks/ -name "*.sh" -exec chmod 750 {} \;
 
 echo VIRSH_GPU_VIDEO=pci_0000_`lspci | grep -i nvidia | grep -i vga | cut -f1 -d ' ' | tr ':' '_' | tr '.' '_'` > /etc/libvirt/hooks/kvm.conf
 echo VIRSH_GPU_AUDIO=pci_0000_`lspci | grep -i nvidia | grep -i audio | cut -f1 -d ' ' | tr ':' '_' | tr '.' '_'` >> /etc/libvirt/hooks/kvm.conf
-```
-
-### Installation d'un bridge
-
-```bash
-ip link add virbr0 type bridge
-
-ip link set enp4s0 master virbr0
-ip address add 192.168.1.3/24 dev br0
 ```
 
 #### XML de configuration de la vm Windows 10
@@ -225,7 +226,7 @@ Voici le XML de configuration utilisé pour la machine Windows 10 :
 ```xml
 <domain type="kvm">
   <name>Windows10</name>
-  <uuid>6883f62c-5cb9-448d-8935-04db9e090f8f</uuid>
+  <uuid>c541445e-0721-4207-b672-a060b04d1da6</uuid>
   <metadata>
     <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
       <libosinfo:os id="http://microsoft.com/win/10"/>
@@ -384,3 +385,4 @@ sudo systemctl restart cockpit
 - [cgroup issue with nvidia container runtime on Debian testing](https://github.com/NVIDIA/nvidia-docker/issues/1447)
 - [Docker plugin for Cockpit](https://github.com/mrevjd/cockpit-docker)
 - [Bridged Host-VM Network](https://briantward.github.io/bridge-host-vm/)
+- [Enabling the RPM Fusion repositories](https://docs.fedoraproject.org/en-US/quick-docs/setup_rpmfusion/)
