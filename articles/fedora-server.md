@@ -56,18 +56,14 @@ EOL
 
 ### Base
 
-Instalaltion de ma configuration de base :
-
-```bash
-curl -s https://raw.githubusercontent.com/flavien-perier/linux-shell-configuration/master/linux-shell-configuration.sh | bash -
-```
-
 Installation des drivers Nvidia et configuration minimale du serveur :
 
 ```bash
+curl -s https://raw.githubusercontent.com/flavien-perier/linux-shell-configuration/master/linux-shell-configuration.sh | bash -
+
 dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
-dnf install nvidia-driver nvidia-settings cuda-driver
-dnf install kkernel-devel kernel-headers
+dnf install kernel-devel kernel-headers
+dnf module install nvidia-driver
 dnf remove plymouth*
 ```
 
@@ -158,18 +154,14 @@ setfacl -m g:qemu:rx /home/admin
 Pour que le GPU Passtrough puisse fonctionner :
 
 ```bash
-cat << EOL > /etc/default/grub
-GRUB_TIMEOUT=3
+echo 'GRUB_TIMEOUT=3
 GRUB_DISTRIBUTOR=Fedora
 GRUB_DEFAULT=saved
 GRUB_DISABLE_SUBMENU=true
-GRUB_TERMINAL_OUTPUT=console
-GRUB_TERMINAL=console
+GRUB_TERMINAL_OUTPUT="console"
 GRUB_CMDLINE_LINUX="rhgb quiet amd_iommu=on amd_iommu=pt iommu=1 rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nvidia-drm.modeset=1 initcall_blacklist=simpledrm_platform_driver_init"
-GRUB_DISABLE_RECOVERY=true
-GRUB_DISABLE_OS_PROBER=true
-GRUB_ENABLE_BLSCFG=true
-EOL
+GRUB_DISABLE_RECOVERY="true"
+GRUB_ENABLE_BLSCFG=true' | tee /etc/default/grub
 
 grub2-mkconfig -o /boot/grub2/grub.cfg
 mkdir -p /etc/libvirt/hooks/qemu.d/Windows10/prepare/begin
