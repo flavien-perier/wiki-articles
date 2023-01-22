@@ -400,7 +400,7 @@ systemctl start notification-wifi.timer
 systemctl daemon-reload
 ```
 
-## Source
+## Sources
 
 - [AsteroidOS](https://asteroidos.org/)
 - [AsteroidOS LG G Watch Urbane](https://asteroidos.org/install/bass/)

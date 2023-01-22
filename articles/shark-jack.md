@@ -3,12 +3,13 @@ title: Shark Jack
 type: WIP
 categories:
   - system
+  - security
 description: Configuration d'un équipement Shark Jack.
 author: Flavien PERIER <perier@flavien.io>
 date: 2021-11-10 18:00
 ---
 
-Je tiens avant toute chose à préciser que cet article est rédigé uniquement à but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous couter jusqu'a deux ans d'emprisonnement et 60 000 € d'amende. En sachant cela, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
+Je tiens avant toute chose à préciser que cet article est rédigé uniquement à but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous couter jusqu'a deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
 
 La [Shark Jack](https://shop.hak5.org/products/shark-jack) est un dispositif d'attaque physique vendu par [Hak5](https://hak5.org/). Elle permet d'effectuer des attaques réseau assez simplement. D'un point de vue physique, elle mesure seulement 6cm de long et possède une prise RJ45 mâle. D'un point de vue plus logiciel elle dispose d'un système d'exploitation Linux fortement alléger, un espace disque de quelques méga-octets et quelques outils tels que [nmap](https://nmap.org/) ou [tcpdump](https://www.tcpdump.org/).
 
@@ -21,6 +22,8 @@ La Shark Jack est un dispositif de petite taille et donc facile à dissimuler qu
 Ses inconvénients sont pour moi liés à sa conception minimaliste, le stockage est très limité, le processeur ridicule et l'autonomie de 10 à 15 minutes en fonction des tâches effectuées. Les limites de stockage rendent impossible lefait de rajouter des paquets. Il pourrait par exemple être intéressant sur ce genre de dispositif de disposer de [Python](https://www.python.org/) avec [Scapy](https://scapy.net/) afin d'analyser les trames qui transitent sur le réseau et de les réécrire à la volée. D'un point de vue processeur, la faible puissance nous dissuade rapidement d'utiliser des outils tel que [arpspoof](https://github.com/alandau/arpspoof) afin de créer une attaque [MITM](https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu) (le processeur aurait trop de mal à faire transiter les paquets entre le client et le routeur, du coup la navigation serait fortement ralentie et la victime devrait vite suspicieuse, même si elle n'est pas sensibilisée à la sécurité) et de toute façon, `tcpdump` ne pourrait pas enregistrer des heures de navigations vu les limitations de stockage et de batterie.
 
 Autre point, je pense personnellement qu'utiliser ce dispositif afin de se connecter à un serveur distant afin d'y déposer par exemple le résultat d'un nmap me semble être une mauvaise idée. Déjà parce que la plupart des réseaux d'entreprises ne nous laisseront pas contacter une machine située à l'extérieur du réseau sans passer par un proxy et ensuite dans l'hypothèse où cette connexion aboutisse, cela laisserait une trace facile à remonter... Celle de notre serveur. Cela nous oblige donc à utiliser uniquement les ressources limitées du dispositif afin de faire des analyse légères ou de modifier furtivement la configuration réseau à notre avantage afin d'y accèder plus tard de l'extérieur.
+
+À cela il faut rajouter que la conception en plus d'être minimaliste est très low cost. La batterie de mon dispositif ayant explosé après seulement quelques minutes d'utilisation... Cela étant surement lié à l'absence de limiteur de charge ou simplement que la batterie est d'une référence douteuse... Bref le concept est assez intéressent, mais la concertions du dispositif assez douteux.
 
 ## Vecteur d'attaque
 

@@ -188,6 +188,32 @@ Le thème `Sweet Dark` étant un thème [GTK2](https://www.gtk.org/), les applic
 flatpak install --user org.kde.KStyle.Adwaita
 ```
 
+### Nommage des dossiers
+
+Pour des questions d'habitude, il est souvent plus simple d'utiliser la convention de nommage des dossiers en anglais. Pour les renommer dans XFCE, il d'utiliser les commandes suivantes :
+
+```bash
+echo "en_EN" > ~/.config/user-dirs.locale
+
+mv ~/Bureau ~/Desktop
+mv ~/Téléchargements ~/Downloads
+mv ~/Modèles ~/Templates
+mv ~/Public ~/Public
+mv ~/Documents ~/Documents
+mv ~/Musique ~/Music
+mv ~/Images ~/Pictures
+mv ~/Vidéos ~/Videos
+
+echo 'XDG_DESKTOP_DIR="$HOME/Desktop"
+XDG_DOWNLOAD_DIR="$HOME/Downloads"
+XDG_TEMPLATES_DIR="$HOME/Templates"
+XDG_PUBLICSHARE_DIR="$HOME/Public"
+XDG_DOCUMENTS_DIR="$HOME/Documents"
+XDG_MUSIC_DIR="$HOME/Music"
+XDG_PICTURES_DIR="$HOME/Pictures"
+XDG_VIDEOS_DIR="$HOME/Videos"' | tee ~/.config/user-dirs.dirs
+```
+
 ### PC portable disposant de plusieurs GPUs
 
 Personnellement, je dispose actuellement d'un Asus ZenBook UX410UQK. Il s'agit d'un très bon PC disposant de deux cartes graphiques: un IGP Intel (Intel HD Graphics 620) et une carte graphique NVIDIA (NVIDIA GeForce 940MX). Le problème de cette configuration sous Linux, c'est que le système va surexploiter le GPU Nvidia qui est bien plus énergivore que le GPU Intel. L'autonomie de la machine va donc s’en trouver grandement affectée et la chauffe constante risque d'affecter la durée de vie de l'appareil...
@@ -220,13 +246,114 @@ Pour garantir un niveau de sécurité minimal, la présence d'un antivirus est n
 sudo pacman -S clamav
 ```
 
+Certains considèrent que la base de signature par défaut n'est pas suffisante. C'est pour cela qu'il est possible de l'étendre avec une base non officielle. La base de [Fangfrisch](https://rseichter.github.io/fangfrisch/) est censé être plutôt efficace dans son genre et a l'avantage d'être disponible en AUR.
+
+```bash
+yay -S python-fangfrisch
+
+echo '[DEFAULT]
+db_url = sqlite:////var/lib/fangfrisch/db.sqlite
+local_directory = /var/lib/fangfrisch/signatures
+log_level = WARNING
+max_size = 100MB
+
+[malwarepatrol]
+enabled = no
+receipt = you_forgot_to_configure_receipt
+interval = 1d
+integrity_check = disabled
+product = 8
+prefix = https://lists.malwarepatrol.net/cgi/getfile?product=${product}&receipt=${receipt}&list=
+url_clamav_basic = ${prefix}clamav_basic
+filename_clamav_basic = malwarepatrol.db
+
+[sanesecurity]
+enabled = yes
+interval = 2h
+prefix = http://ftp.swin.edu.au/sanesecurity/
+!url_foxhole_all_cdb = ${prefix}foxhole_all.cdb
+!url_foxhole_all_ndb = ${prefix}foxhole_all.ndb
+!url_foxhole_mail = ${prefix}foxhole_mail.cdb
+!url_scamnailer = ${prefix}scamnailer.ndb
+!url_winnow_phish_complete = ${prefix}winnow_phish_complete.ndb
+url_badmacro = ${prefix}badmacro.ndb
+url_blurl = ${prefix}blurl.ndb
+url_bofhland_cracked_url = ${prefix}bofhland_cracked_URL.ndb
+url_bofhland_malware_attach = ${prefix}bofhland_malware_attach.hdb
+url_bofhland_malware_url = ${prefix}bofhland_malware_URL.ndb
+url_bofhland_phishing_url = ${prefix}bofhland_phishing_URL.ndb
+url_foxhole_filename = ${prefix}foxhole_filename.cdb
+url_foxhole_generic = ${prefix}foxhole_generic.cdb
+url_foxhole_js_cdb = ${prefix}foxhole_js.cdb
+url_foxhole_js_ndb = ${prefix}foxhole_js.ndb
+url_hackingteam = ${prefix}hackingteam.hsb
+url_junk = ${prefix}junk.ndb
+url_jurlbl = ${prefix}jurlbl.ndb
+url_jurlbla = ${prefix}jurlbla.ndb
+url_lott = ${prefix}lott.ndb
+url_malwareexpert_fp = ${prefix}malware.expert.fp
+url_malwareexpert_hdb = ${prefix}malware.expert.hdb
+url_malwareexpert_ldb = ${prefix}malware.expert.ldb
+url_malwareexpert_ndb = ${prefix}malware.expert.ndb
+url_malwarehash = ${prefix}malwarehash.hsb
+url_phish = ${prefix}phish.ndb
+url_phishtank = ${prefix}phishtank.ndb
+url_porcupine = ${prefix}porcupine.ndb
+url_rogue = ${prefix}rogue.hdb
+url_scam = ${prefix}scam.ndb
+url_shelter = ${prefix}shelter.ldb
+url_spamattach = ${prefix}spamattach.hdb
+url_spamimg = ${prefix}spamimg.hdb
+url_spear = ${prefix}spear.ndb
+url_spearl = ${prefix}spearl.ndb
+url_winnow_attachments = ${prefix}winnow.attachments.hdb
+url_winnow_bad_cw = ${prefix}winnow_bad_cw.hdb
+url_winnow_extended_malware = ${prefix}winnow_extended_malware.hdb
+url_winnow_extended_malware_links = ${prefix}winnow_extended_malware_links.ndb
+url_winnow_malware = ${prefix}winnow_malware.hdb
+url_winnow_malware_links = ${prefix}winnow_malware_links.ndb
+url_winnow_phish_complete_url = ${prefix}winnow_phish_complete_url.ndb
+url_winnow_spam_complete = ${prefix}winnow_spam_complete.ndb
+
+[securiteinfo]
+enabled = no
+customer_id = you_forgot_to_configure_customer_id
+interval = 1h
+max_size = 20MB
+prefix = https://www.securiteinfo.com/get/signatures/${customer_id}/
+!url_0hour = ${prefix}securiteinfo0hour.hdb
+!url_old = ${prefix}securiteinfoold.hdb
+!url_securiteinfo_mdb = ${prefix}securiteinfo.mdb
+!url_spam_marketing = ${prefix}spam_marketing.ndb
+url_android = ${prefix}securiteinfoandroid.hdb
+url_ascii = ${prefix}securiteinfoascii.hdb
+url_html = ${prefix}securiteinfohtml.hdb
+url_javascript = ${prefix}javascript.ndb
+url_pdf = ${prefix}securiteinfopdf.hdb
+url_securiteinfo = ${prefix}securiteinfo.hdb
+url_securiteinfo_ign2 = ${prefix}securiteinfo.ign2
+
+[urlhaus]
+enabled = yes
+interval = 10m
+url_urlhaus = https://urlhaus.abuse.ch/downloads/urlhaus.ndb'  | sudo tee /etc/fangfrisch/fangfrisch.conf
+
+sudo chown root:clamav /etc/fangfrisch/fangfrisch.conf
+sudo chmod 640 /etc/fangfrisch/fangfrisch.conf
+
+sudo -u clamav fangfrisch --conf /etc/fangfrisch/fangfrisch.conf initdb
+
+sudo systemctl enable fangfrisch.timer
+sudo systemctl start fangfrisch.timer
+```
+
 Pour mettre la base de données du logiciel, tapez la commande :
 
 ```bash
 sudo freshclam
 ```
 
-Le script suivant va permettre à l'antivirus de passer tous les jours en ne consommant au maximum que 10% de la puissance CPU (ce qui va éviter de maltraiter le matériel) en analysant les fichiers les plus récemment modifiés en premier :
+Le script suivant va permettre à l'antivirus de passer tous les jours en ne consommant que 10% de la puissance d'un coeur du CPU au maximum (ce qui va éviter de maltraiter le matériel) en analysant les fichiers les plus récemment modifiés en premier :
 
 ```bash
 echo '#!/bin/bash
@@ -1030,7 +1157,7 @@ Téléchargez l'application Antidote [sur le site officiel](https://services.dru
 
 ```bash
 cd /tmp
-tar xvf ~/Téléchargements/Antidote*
+tar xvf ~/Downloads/Antidote*
 mv Antidote* Antidote
 ./Antidote/Installation.bash
 ```
@@ -1622,7 +1749,7 @@ Les utilisateurs de Windows connaissent tous l'option "clic droit + créer un do
 Dans l'exemple suivant, les templates vont servir à instancier différentes bases de code dans plusieurs langages :
 
 ```bash
-cat << EOL > ~/Modèles/bash.sh
+cat << EOL > ~/Templates/bash.sh
 #!/bin/bash
 
 echo Hello world !
@@ -1630,7 +1757,7 @@ echo Hello world !
 exit 0
 EOL
 
-cat << EOL > ~/Modèles/c.c
+cat << EOL > ~/Templates/c.c
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -1640,7 +1767,7 @@ int main(int arcc, char *argv[]) {
 }
 EOL
 
-cat << EOL > ~/Modèles/c++.cpp
+cat << EOL > ~/Templates/c++.cpp
 #include <iostream>
 
 using namespace std;
@@ -1651,7 +1778,7 @@ int main(int arcc, char *argv[]) {
 }
 EOL
 
-cat << EOL > ~/Modèles/html.html
+cat << EOL > ~/Templates/html.html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -1682,7 +1809,7 @@ cat << EOL > ~/Modèles/html.html
 </html>
 EOL
 
-cat << EOL > ~/Modèles/markdown.md
+cat << EOL > ~/Templates/markdown.md
 ---
 title: Title
 description: Description
@@ -1695,8 +1822,8 @@ date: 2020-09-27 18:00
 Content
 EOL
 
-chmod 440 ~/Modèles/*
-chmod 550 ~/Modèles
+chmod 440 ~/Templates/*
+chmod 550 ~/Templates
 ```
 
 ### Quelques scripts
@@ -1748,7 +1875,7 @@ then
     exit 0
 fi
 
-PROTECTED_FOLDER=".ssh .themes .icons .fonts Modèles Images Vidéos Musique"
+PROTECTED_FOLDER=".ssh .themes .icons .fonts Templates Pictures Videos Music"
 
 # Clean up the package manager
 yes o | sudo pacman -Scc
@@ -1769,7 +1896,7 @@ yes | podman network prune
 yes | podman system prune
 
 # Cleans up the user session
-rm -Rf $HOME/Téléchargements/*
+rm -Rf $HOME/Downloads/*
 rm -Rf $HOME/.local/share/.Trash
 rm -f $HOME/.xsession-errors*
 find $HOME -type f -iname "*.old" -delete
@@ -1847,7 +1974,7 @@ yes all | fish -c "history delete --prefix 'unrar '"
 
 #### Spotify-diff
 
-Un script un peu particulier puisqu'il permet d'afficher la différence entre les musiques présententes dans le dossier `~/Musique` et une playlist [Spotify](https://www.spotify.com/). Quand comme moi la playlist est un peu longue et qu'on essaye de récupérer les fichiers de chacune de ces musiques, ce script est bien pratique. Pour l'utiliser, il suffit de mettre sa playlist en public et de remplacer les `**********` de `SPOTIFY_PLAYLIST_ID` par l'identifiant de la playlist en question.
+Un script un peu particulier puisqu'il permet d'afficher la différence entre les musiques présententes dans le dossier `~/Music` et une playlist [Spotify](https://www.spotify.com/). Quand comme moi la playlist est un peu longue et qu'on essaye de récupérer les fichiers de chacune de ces musiques, ce script est bien pratique. Pour l'utiliser, il suffit de mettre sa playlist en public et de remplacer les `**********` de `SPOTIFY_PLAYLIST_ID` par l'identifiant de la playlist en question.
 
 ```bash
 #!/bin/bash
@@ -1880,10 +2007,10 @@ do
 done | sort > /tmp/spotify-music.txt
 
 IFS=$';'
-for FILE in `ls ~/Musique | tr "\n" ";"`
+for FILE in `ls ~/Music | tr "\n" ";"`
 do
-        ARTISTS=`ffprobe ~/Musique/$FILE 2>&1 | grep artist | sed "s/ *artist *: //g"`
-        TITLE=`ffprobe ~/Musique/$FILE 2>&1 | grep title | head -n 1 | sed "s/ *title *: //g"`
+        ARTISTS=`ffprobe ~/Music/$FILE 2>&1 | grep artist | sed "s/ *artist *: //g"`
+        TITLE=`ffprobe ~/Music/$FILE 2>&1 | grep title | head -n 1 | sed "s/ *title *: //g"`
         echo "$ARTISTS : $TITLE"
 done | sort > /tmp/local-music.txt
 

@@ -164,7 +164,7 @@ Android étant un système d'exploitation particulièrement vulnérable, il est 
 
 J'ai personnellement utilisé l'Antivirus [Kaspersky Internet Security](https://www.kaspersky.fr/internet-security) pendant plusieurs années. Cependant ce dernier étant conçu en Russie par d’anciens membres des services de renseignement, plusieurs entreprises et organismes conseillent d'éviter son utilisation dans le contexte de [guerre entre la Russie et l'Ukraine](https://fr.wikipedia.org/wiki/Guerre_du_Donbass). Un [article de Zataz](https://www.zataz.com/kaspersky-dangereux-ou-pas/) détail la situation en pesant les arguments pour et contre l'utilisation de Kapersky.
 
-Même si je n'ai aucune preuve tangible que cet antivirus est néfaste (et au demeurant je ne pense personnellement pas qu'il le soit), il vaut mieux s'appuyer sur une solution sur laquelle on peut avoir toute confiance. C'est pourquoi je me suis orienté vers [Bitdefender Antivirus Free pour Android](https://www.bitdefender.fr/solutions/antivirus-free-for-android.html).
+Même si je n'ai aucune preuve tangible que cet antivirus est néfaste (et au demeurant je ne pense personnellement pas qu'il le soit), il vaut mieux s'appuyer sur une solution sur laquelle on peut avoir toute confiance. C'est pourquoi je me suis orienté vers [Avira security](https://www.avira.com/fr/free-antivirus-android).
 
 De manière générale les performances des antivirus sont changeantes d'une année sur l'autre. Il peut donc être pertinent de consulter fréquemment le site [AV-Test](https://www.av-test.org/fr/antivirus/portables/) afin de voir les derniers comparatifs de ces solutions de sécurité.
 
