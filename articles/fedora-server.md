@@ -22,9 +22,9 @@ Le serveur est doté d'un [AMD Ryzen 9 5900X](https://www.amd.com/fr/products/cp
 
 Pour ce type de serveur, je pense personnellement qu'une distribution basée sur [RedHat](https://www.redhat.com/) sera avantageuse. En effet, cette famille de distribution Linux étant initialement destinée aux entreprises, qui sont elles-mêmes de grandes utilisatrices de virtualisation et de conteneurisation, on peut s'attendre à avoir une meilleure prise en charge de nos logiciels.
 
-Après un premier essai sous [RockyLinux](https://rockylinux.org/) (distribution succédant à [CentOS](https://www.centos.org/)), il s'est avéré que la version du noyau Linux implémenté dans les distributions basées sur [RHEL 8](https://www.redhat.com/fr/technologies/linux-platforms/enterprise-linux) (à savoir la 4.18) ne prenaient pas en charge toutes les fonctionnalitées du Ryzen 9 5900X, ce qui déclenchait des crashs du système hôte après le lancement de certains jeux utilisant [Easy Anti-Cheat](https://www.easy.ac/fr-fr/) dans la machine virtuelle Windows.
+Après un premier essai sous [RockyLinux](https://rockylinux.org/) (distribution succédant à [CentOS](https://www.centos.org/)), il s'est avéré que la version du noyau Linux implémenté dans les distributions basées sur [RHEL 8](https://www.redhat.com/fr/technologies/linux-platforms/enterprise-linux) (à savoir la 4.18) ne prenaient pas en charge toutes les fonctionnalités du Ryzen 9 5900X, ce qui déclenchait des crashs du système hôte après le lancement de certains jeux utilisant [Easy Anti-Cheat](https://www.easy.ac/fr-fr/) dans la machine virtuelle Windows.
 
-Afin de bénéficier des dernières mises à jour du noyau Linux je me suis donc tourné vers [Fedora Server](https://getfedora.org/fr/server/) (en version 36) avec une installation minimale sans environnement de bureau.
+Afin de bénéficier des dernières mises à jour du noyau Linux, je me suis donc tourné vers [Fedora Server](https://getfedora.org/fr/server/) (en version 36) avec une installation minimale sans environnement de bureau.
 
 ## Installation
 
@@ -415,7 +415,7 @@ systemctl restart cockpit
 - [Passthrough Helper for Manjaro](https://github.com/pavolelsig/passthrough_helper_manjaro)
 - [Single GPU Passthrough (VFIO) for Nvidia + Ryzen CPU [Arch-based]](https://www.reddit.com/r/VFIO/comments/ir58fi/single_gpu_passthrough_vfio_for_nvidia_ryzen_cpu/)
 - [Installing Tensorflow on Fedora 34](https://rickycorte.medium.com/installing-tensorflow-on-fedora-34-6d2f97651e60)
-- [cgroup issue with nvidia container runtime on Debian testing](https://github.com/NVIDIA/nvidia-docker/issues/1447)
+- [cgroup issue with Nadia container runtime on Debian testing](https://github.com/NVIDIA/nvidia-docker/issues/1447)
 - [Docker plugin for Cockpit](https://github.com/mrevjd/cockpit-docker)
 - [Bridged Host-VM Network](https://briantward.github.io/bridge-host-vm/)
 - [Enabling the RPM Fusion repositories](https://docs.fedoraproject.org/en-US/quick-docs/setup_rpmfusion/)

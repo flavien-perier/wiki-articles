@@ -25,19 +25,22 @@ Autre point, je pense personnellement qu'utiliser ce dispositif afin de se conne
 
 À cela il faut rajouter que la conception en plus d'être minimaliste est très low cost. La batterie de mon dispositif ayant explosé après seulement quelques minutes d'utilisation... Cela étant surement lié à l'absence de limiteur de charge ou simplement que la batterie est d'une référence douteuse... Bref le concept est assez intéressent, mais la concertions du dispositif assez douteux.
 
-## Vecteur d'attaque
+## Vecteurs d'attaque
 
-Les attaques effectuées par ce dispositif sont limitées dans le temps. Il n'est donc pas pertinent de l'utiliser lui-même comme backdoor (avec ouverture d'une session reverse SSH par exemple). Il faut donc concevoir des attaques courtes et ça tombe bien il y a de nombreuses possibilités.
+Les attaques effectuées par ce dispositif sont limitées dans le temps. Il n'est donc pas pertinent de l'utiliser lui-même comme backdoor (avec ouverture d'une session, reverse SSH par exemple). Il faut donc concevoir des attaques courtes et ça tombe bien il y a de nombreuses possibilités.
 
-Tous les vecteurs d'attaque avec ce dispositif ont pour point commun que le hacker devra réussir à accéder à une zone ou se trouve des prises RJ45 apparentes reliant au réseau cible. Pour ce faire, il va bien souvent devoir user d'ingénierie sociale pour y arriver.
+Tous les vecteurs d'attaque avec ce dispositif ont pour point commun que le hacker devra réussir à accéder à une zone où se trouve des prises RJ45 apparentes reliant au réseau cible. Pour ce faire, il va bien souvent devoir user d'ingénierie sociale pour y arriver.
 
-- Le cas d'utilisation le plus évident (et celui qui est déjà préchargé dans la clé à l'achat) est de faire un nmap sur le réseau et de sauvegarder le résultat dans la mémoire. De cette façon nous pourrons l'analyser plus tard. Pour gagner du temps sur l'exécution de notre script, on peut éventuellement essayer de chercher uniquement quelques ports (comme le 22 pour le ssh, le 80 et le 443 pour les dispositifs disposant d'une interface de configuration, le 21 pour le telnet sur les vieux appareils...). Le problème de nmap est qu'il laisse une trace assez visible sur le réseau. Mais son avantage est qu'il est rapide et précis. Une variante peut être d'utiliser tcpdump afin d'écouter les paquets émit en brodcast et de dresser une carte de la topologie du réseau en relisant les trames capturées. Le problème de cette seconde approche est qu'elle est moins précise (on peut identifier les machines, mais pas la plupart des protocoles qu'elles utilisent) et plus lente.
+- Le cas d'utilisation le plus évident (et celui qui est déjà préchargé dans le dispositif à l'achat) est de faire un nmap sur le réseau et de sauvegarder le résultat dans la mémoire. De cette façon nous pourrons l'analyser plus tard. Pour gagner du temps sur l'exécution de notre script, on peut éventuellement essayer de chercher uniquement quelques ports (comme le 22 pour le ssh, le 80 et le 443 pour les dispositifs disposant d'une interface de configuration, le 21 pour le telnet sur les vieux appareils...). Le problème de nmap est qu'il laisse une trace assez visible sur le réseau. Mais son avantage est qu'il est rapide et précis. Une variante peut être d'utiliser tcpdump afin d'écouter les paquets émis en brodcast et de dresser une carte de la topologie du réseau en relisant les trames capturées. Le problème de cette seconde approche est qu'elle est moins précise (on peut identifier les machines, mais pas la plupart des protocoles qu'elles utilisent) et plus lente.
 
-- Les équipements de la marque [Cisco](https://www.cisco.com/) disposent d'une prise RJ45 spécifique pour la configuration de l'équipement. Il serait alors possible de brancher le dispositif à cet endroit afin de reconfigurer l'équipement et de mettre en place une attaque de l'homme du milieu directement au niveau de l'appareil.
+- Les équipements de la marque [Cisco](https://www.cisco.com/) (et autre) disposent généralement d'une prise RJ45 spécifique pour la configuration de l'équipement. Il serait alors possible de brancher le dispositif à cet endroit afin de reconfigurer l'équipement et de mettre en place une attaque de l'homme du milieu directement au niveau d'un routeur. Dans ce cas d'usage la Shark Jack ne sert qu'à déployer rapidement la configuration frauduleuse.
+
 
 ## Comment s'en défendre
 
-La seule protection efficace contre ce genre d'attaque est un contrôle strict des accès à votre réseau physique. Une personne non habilitée n'est pas sensée resté dans les locaux d'une entreprise sans surveillance. Et surtout les équipements réseaux doivent demeurer dans des baies sécurisées (la plus classique fermée par une clé) et encore une foi seule les employés habilités doivent pouvoir les approcher.
+La seule protection efficace contre ce genre d'attaque est un contrôle strict des accès au réseau autant physique, que numérique. Les équipements doivent être placés dans baies sécurisées dont seuls les employés habilités peuvent s'approcher. Et leur mot de passe d'accès ne doit pas être celui par défaut.
+
+Etant donné qu'un utilisateur qui se branche physiquement à un réseau n'a pas besoin de mot de passe pour y accèder, il faut faire en sorte que les prises RJ45 soient le moins accèssible possible. Donc ne pas en mettre ailleur que dans les bureaux.
 
 ## Comment s'en servir
 
@@ -50,7 +53,6 @@ Le dispositif va alors créer un réseau virtuel par lequel il sera possible d'a
 ```bash
 ssh root@172.16.24.1
 ```
-
 
 ### Quelques exemples de scripts
 

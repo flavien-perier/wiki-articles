@@ -16,7 +16,7 @@ En préambule, je tiens à préciser que je vois personnellement d'un assez mauv
 
 AsteroidOS est un système d'exploitation pour montre connectée basé sur Linux. Les interfaces sont développées en [QT](https://www.qt.io/) et sont affichées grâce à [Wayland](https://wayland.freedesktop.org/).
 
-Si on veut être honnête ce système d'exploitation est très en retard par rapport à ce que peux proposer [Google WearOS](https://wearos.google.com/) ou une [Apple Watch](https://www.apple.com/fr/watch/) et ne propose que très peu d'options supplémentaires par rapport à une montre non connectée. Néanmoins le projet est intéressent et les montres qui le supporte étant assez anciennes, il est possible de s'en procurais à moindre cout d'occasion (et donc à moindre impacte environnementale).
+Si on veut être honnête, ce système d'exploitation est très en retard par rapport à ce que peut proposer [Google WearOS](https://wearos.google.com/) ou une [Apple Watch](https://www.apple.com/fr/watch/) et ne propose que très peu d'options supplémentaires par rapport à une montre non connectée. Néanmoins, le projet est intéressent et les montres qui le supporte étant assez anciennes, il est possible de s'en procurais à moindre cout d'occasion (et donc à moindre impacte environnemental).
 
 On trouve comme fonctionnalités intégrées :
 
@@ -39,13 +39,13 @@ Ayant acheté une montre connectée dans l'unique objectif d'essayer cet OS, je 
 
 Elle a notamment l'énorme l'avantage d'être connectable directement à un ordinateur sans devoir faire de bricolage au niveau du hardware.
 
-Son bracelet est facilement changeable puisqu'il s'agit d'attache standard pour montre. Et en cas de problème au niveau hardware, il semblerait que les équipes de [iFixit](https://fr.ifixit.com/News/7178/lg-watch-urbane) ait réussi à la démonter sans trop de difficultés.
+Son bracelet est facilement changeable puisqu'il s'agit d'attache standard pour montre. Et en cas de problème au niveau hardware, il semblerait que les équipes de [iFixit](https://fr.ifixit.com/News/7178/lg-watch-urbane) aient réussi à la démonter sans trop de difficultés.
 
 ## Installation
 
-Pour l'installation il faut au préalable vérifier qu'[ADB](https://www.flavien.io/wiki/manjaro.md#android-adb) est bien installé sur son ordinateur.
+Pour l'installation, il faut au préalable vérifier qu'[ADB](https://www.flavien.io/wiki/manjaro.md#android-adb) est bien installé sur son ordinateur.
 
-Pour la suite [le tutoriel présent sur le site](https://asteroidos.org/install/bass/) suffit pour installer facilement l'OS.
+Pour la suite, [le tutoriel présent sur le site](https://asteroidos.org/install/bass/) suffit pour installer facilement l'OS.
 
 Je détaille néanmoins ici les étapes d'installation :
 
@@ -73,7 +73,7 @@ fastboot oem lock
 fastboot continue
 ```
 
-## Connection Wi-Fi
+## Connexion Wi-Fi
 
 Pour se connecter à la montre, il faut aller dans les paramètres de la montre puis configurer le mode USB sur `Mode ADB`, puis tapant les commandes sur un pc pendant que la montre est connectée :
 
@@ -82,7 +82,7 @@ adb usb
 adb shell
 ```
 
-Ensuite pour ce connecter en WiFi il faut taper les commandes : 
+Ensuite pour se connecter en WiFi il faut taper les commandes : 
 
 ```sh
 WIFI_SSID=*********

@@ -18,7 +18,7 @@ Il est respectueux de la vie privée. Contrairement à son concurrent Google Chr
 
 ## Configuration
 
-D'un point de vue configuration, le seul menu dont je vais parler est celui se nommant "Vie privée et sécurité".
+D'un point de vue de la configuration, le seul menu dont je vais parler est celui se nommant "Vie privée et sécurité".
 
 ![Configuration "Vie privée et sécurité"](https://medias.flavien.io/articles/firefox/configuration-privacy.webp)
 
@@ -74,7 +74,7 @@ Il existe cependant au sein du logiciel une option nommée "Définir temporairem
 
 ![ClearURLs logo](https://medias.flavien.io/articles/firefox/clearurls.webp)
 
-Une autre extension ayant pour but de renforcer la vie privée. Cette dernière nettoie les URLs des informations superflux qui pourrait donner des informations aux sites quant au chemin que l'utilisateur à emprunter dans ça navigation.
+Une autre extension ayant pour but de renforcer la vie privée. Cette dernière nettoie les URLs des informations superflues qui pourrait donner des informations aux sites quant au chemin que l'utilisateur à emprunter dans sa navigation.
 
 Dans les paramètres de cette application, je désactive l'option `Filtrer ETag`. En effet les [ETag](https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/ETag) sont une composante importante de la mécanique de cache de nos navigateurs, les désactiver revient à rendre cette mécanique inopérante. Ce que je trouve personnellement très dommage.
 

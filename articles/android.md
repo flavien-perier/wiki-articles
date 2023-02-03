@@ -22,6 +22,14 @@ L'autre aspect du Fairphone qui va plus nous intéresser dans cet article, c'est
 
 L'inconveignet souvent répété de ce téléphone est sa puissance jugée trop faible pour un téléphone de ce prix (plus ou moins 450 €). Mais soyons réalistes, si vous ne jouez pas à des jeux 3D, son processeur [Snapdragon 632](https://www.qualcomm.com/products/snapdragon-632-mobile-platform) et ses 4Go de RAM devraient être largement suffisants pour tous vos usages. Quant au niveau du prix, il faut bien mettre dans la balance le fait que le téléphone étant fait pour durer le support des mises à jour sera poussé tant que possible (5 ans minimum) contrairement à la plupart des constructeurs (hors Apple) qui partent sur une base de 18 mois. Pour ceux qui se disent qu'ils peuvent continuer à utiliser leur téléphone sans mise à jour de sécurité, je tiens simplement à rappeler qu'Android est aujourd'hui l'un des systèmes d'exploitation les plus attaqués et que par conséquent, ne pas le mettre revient à mettre en péril les données qu'on y stocke, notamment quand on sait que beaucoup d'utilisateurs n'hésitent pas à installer leurs applications bancaires favorites sur leur téléphone.
 
+## Le système d'exploitation
+
+Comme je l'ai dit précédemment, le Fairphone est compatible avec d'autres variantes d'Android que celle qui nous est généreusement fournie par Google.
+
+La variante d'Android la plus connue est [Lineage OS](https://lineageos.org/) (anciennement [Cyanogen Mod](https://fr.wikipedia.org/wiki/CyanogenMod)) qui nous propose un Android sans couche Google installée par défaut. Comme le projet est open source, il existe d'autres distributions qui s'appuient sur cette dernière et notamment celle qui va nous intéresser, [/e/](https://e.foundation/).
+
+Le slogan de /e/ est "Your data is YOUR data!" (Vos données sont vos données). L'objectif est ici de mettre en place un certain nombre de mécaniques qui vont permettre de garantir au mieux la vie privée de l'utilisateur. L'autre avantage de cette distribution est qu'elle se trouve en [partenariat](https://www.fairphone.com/fr/2020/04/30/keeping-your-data-safe-with-e-os/) direct avec l'entreprise Fairphone et que par conséquent les développeurs s'appliquent à ce que le système soit le plus stable possible sur cet équipement. Il est donc possible d'[installer](https://doc.e.foundation/devices/FP3/install) facilement ce système sur un téléphone, ou tout simplement en [acheter](https://esolutions.shop/fr/shop/murena-fairphone-3-plus-fr/) un déjà préinstallé.
+
 ## Faire une sauvegarde
 
 Si le téléphone est actuellement utilisé, il est possible de sauvegarder une grande partie des données déjà en place grâce à des commandes ADB. Pour ce faire, je conseille cette page [GitHub d'AnatomicJC](https://gist.github.com/AnatomicJC/e773dd55ae60ab0b2d6dd2351eb977c1).
@@ -30,7 +38,7 @@ Tout d'abord, il faut vérifier qu'[ADB](https://www.flavien.io/wiki/manjaro.md#
 
 Ensuite il faut activer le mode développeur sur le téléphone (aller dans les paramètres, puis dans "À propos du téléphone" et cliquer 7 fois sur le numéro du build). Une fois le menu développeur visible s'y rendre et activer le "debogage USB".
 
-Pour la suite, j'ai écrit un petit script `android-backup` grâce aux informations trouvées sur le précédent repos GitHub :
+Pour la suite, il est possible d'écrire un script `android-backup` grâce aux informations trouvées sur le précédent repos GitHub :
 
 ```bash
 #!/bin/bash
@@ -112,13 +120,24 @@ fastboot flash boot_b magisk_patched-*.img
 
 Remarque : Avec le root le bootloader ne devra jamais être reverrouillé. Visiblement une vérification d'intégrité est effectuée à ce moment-là et le root est considéré comme une anomalie.
 
-## Le système d'exploitation
+## Installation des polices de caractères
 
-Comme je l'ai dit précédemment, le Fairphone est compatible avec d'autres variantes d'Android que celle qui nous est généreusement fournie par Google.
+Cette manipulation n'est pas vraiment utile, elle consiste simplement à rajouter une police de caractère ([JetBrains mono](https://www.jetbrains.com/lp/mono/) dans le cas présent) dans l'os.
 
-La variante d'Android la plus connue est [Lineage OS](https://lineageos.org/) (anciennement [Cyanogen Mod](https://fr.wikipedia.org/wiki/CyanogenMod)) qui nous propose un Android sans couche Google installée par défaut. Comme le projet est open source, il existe d'autres distributions qui s'appuient sur cette dernière et notamment celle qui va nous intéresser, [/e/](https://e.foundation/).
+- Vérifier que le "Débogage usb" et le "Déboggage rooté" sont activés dans les "Options pour les développeurs".
+- On connecte le téléphone à l'ordinateur.
+- On tape les commandes suivantes :
 
-Le slogan de /e/ est "Your data is YOUR data!" (Vos données sont vos données). L'objectif est ici de mettre en place un certain nombre de mécaniques qui vont permettre de garantir au mieux la vie privée de l'utilisateur. L'autre avantage de cette distribution est qu'elle se trouve en [partenariat](https://www.fairphone.com/fr/2020/04/30/keeping-your-data-safe-with-e-os/) direct avec l'entreprise Fairphone et que par conséquent les développeurs s'appliquent à ce que le système soit le plus stable possible sur cet équipement. Il est donc possible d'[installer](https://doc.e.foundation/devices/FP3/install) facilement ce système sur un téléphone, ou tout simplement en [acheter](https://esolutions.shop/fr/shop/murena-fairphone-3-plus-fr/) un déjà préinstallé.
+```bash
+adb usb
+adb root
+cd /tmp
+wget https://download.jetbrains.com/fonts/JetBrainsMono-2.304.zip
+unzip JetBrainsMono-2.304.zip
+cd fonts/ttf
+adb push * /system/fonts
+adb reboot
+```
 
 ### Applications Par Default
 
@@ -126,7 +145,7 @@ Par défaut le système d'exploitation contient un minimum d'applications pour �
 
 #### [MicroG](https://microg.org/download.html)
 
-Comme dit plus tôt, ce système d'exploitation est conçu pour communiquer le moins possible avec Google. Seul hic, Android et son Framework sont développés par Google. Des interactions avec les serveurs de la société, il y en a donc beaucoup et toutes les coupés causeraient de grave dysfonctionnement pour de très nombreuses applications.
+Comme dit plus tôt, ce système d'exploitation est conçu pour communiquer le moins possible avec Google. Seul problème, Android et son Framework sont développés par Google. Les interactions avec les serveurs de la société sont donc nombreuses et toutes les coupés causeraient de grave dysfonctionnement pour de très nombreuses applications.
 
 Heureusement, des développeurs se sont penchés sur le sujet et ont conçu MicroG. Ce dernier simule le comportement des composants Google sur un téléphone utilisant un système Android natif en envoyant le moins d'informations possible sur internet. Cette application est donc un très bon équilibre entre téléphone fonctionnel et vie privée.
 
@@ -222,10 +241,6 @@ Une application permettant d'exploiter les différents capteurs présents dans u
 
 Cette application permet de faire une boucle VPN en local afin d'analyser tous les flux sortants. Cela permet de mettre en évidence qu’elles sont les applications qui envoient des informations vers de tierces entreprises et de bloquer ces flux non désirés.
 
-### [Acode](https://acode.foxdebug.com/)
-
-Acode est un IDE minimaliste et open source supportant la coloration syntaxique pour de nombreux langages.
-
 ### [Termux](https://termux.com/)
 
 Termux est une application permettant d'utiliser différents outils Linux directement sur un téléphone. Pour ce faire, l'environnement est isolé du reste du système (Android étant lui-même un Linux) dans lequel il est possible d'utiliser le gestionnaire de paquets `pkg` afin d'installer divers packages. Il est cependant important de noter qu'il ne s'agit ni de virtualisation ni de conteneurisation, mais bien d'une installation dans un emplacement réservé de l'application. Cela signifie qu'il n'est pas non plus possible de tout faire dans cette application (il est notamment impossible d'accéder à l'utilisateur root).
@@ -248,17 +263,9 @@ Permets d'installer un conteneur Linux sur un téléphone portable. Plusieurs di
 
 Contrairement à Termux, s'agissant de véritable conteneurisation, il est possible d'utiliser toutes les fonctionnalités d'un véritable Linux.
 
-### [Android IMSI-Catcher Detector](https://github.com/CellularPrivacy/Android-IMSI-Catcher-Detector)
-
-Ce projet ne marche actuellement plus sur les dernières versions d'Android. Cependant un refactoring est visiblement en cours. Il est donc bon de suivre ce projet.
-
-Les [IMSI catcher](https://fr.wikipedia.org/wiki/IMSI-catcher) sont des dispositifs (souvent très onéreux) permettant de faire une attaque de l'homme du milieu directement sur le protocole GSM. Pour le dire plus simplement, ces dispositifs permettent d'intercepter les communications des téléphones présents dans leur rayon d'action. Pour fonctionner, l'application calcule avec la position GPS le taux de réception qu'on devrait avoir auprès des différentes antennes relais. Si le mobile reçoit trop de signaux pour ça position actuelle c'est qu'une antenne n'est pas la ou elle devrait ce placer... En d'autres termes, c'est qu'un dispositif se fait passer pour une antenne.
-
-Pour fonctionner, cette application aura besoin d'une clé api [OpenCellId](https://unwiredlabs.com/).
-
 ### [NetHunter Store](https://store.nethunter.com/)
 
-Développé par les équipes de [Kali Linux](https://www.kali.org/), la distribution [NetHunter](https://www.kali.org/docs/nethunter/) contient un grand nombre d'outils de pentest.
+Développée par les équipes de [Kali Linux](https://www.kali.org/), la distribution [NetHunter](https://www.kali.org/docs/nethunter/) contient un grand nombre d'outils de pentest.
 
 Cette distribution n'étant disponible que pour un nombre restreint d'appareils (et parce qu'un téléphone sert à autre chose que rechercher des vulnérabilités sur un réseau), nous pouvons seulement installer le store de NetHunter sur leur site. Une fois cette application installée, on pourra installer les autres composants de NetHunter.
 

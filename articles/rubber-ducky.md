@@ -17,9 +17,9 @@ La [Rubber Ducky](https://www.usbrubberducky.com/) est un dispositif d'attaque p
 
 ## Avantage de la conception
 
-Le principal avantage de la Rubber Ducky est qu'elle n'exploite pas des vulnérabilités logicielles, mais s'appuie sur la simulation du hardware d'un clavier physique. Le système d'exploitation n'a donc aucune façon de différencier ce périphérique de n'importe quel autre clavier. La Rubber Ducky est donc complètement indexable par les antivirus. 
+Le principal avantage de la Rubber Ducky est qu'elle n'exploite pas des vulnérabilités logicielles, mais s'appuie sur la simulation du hardware d'un clavier physique. Le système d'exploitation n'a donc aucune façon de différencier ce périphérique de n'importe quel autre clavier. La Rubber Ducky est donc complètement indétectable par les antivirus. 
 
-## Vecteur d'attaque
+## Vecteurs d'attaque
 
 Il existe de nombreux scénarios d'attaque imaginables avec ce type d'appareil. En voici deux petits exemples :
 

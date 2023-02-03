@@ -22,7 +22,7 @@ L'autre avantage de Manjaro, est qu'elle est basée sur la distribution [Arch Li
 
 Maintenant que Manjaro est installé, nous allons le mettre à jour grâce à l'un des gestionnaires de paquets intègres de la distribution. Pour ma part, j'utilise `pacman`, qui est le gestionnaire de paquet de la distribution Arch. Il est relativement difficile à utiliser et très peu intuitif, c'est pour cette raison que les développeurs de la distribution Manjaro ont rajouté un outil permettant de simplifier son utilisation `pamac`. Pour les utilisateurs venant d'une distribution basée sur [Debian](https://www.debian.org/), ou [RedHat](https://www.redhat.com/), il semblera sans aucun doute plus intuitif.
 
-La raison pour lequel j'utilise néanmoins `pacman` est qu'il offre beaucoup plus de possibilités que sa surcouche. Ce wiki peut néanmoins être suivi en recopiant les commandes `pacman` et par la suite utiliser à titre personnel `pamac`. Ce dernier étant simplement une surcouche, cela ne devrait pas poser de problème de compatibilité.
+La raison pour lequel j'utilise néanmoins `pacman` est qu'il offre beaucoup plus de possibilités que sa surcouche. Ce wiki peut néanmoins être suivi en recopiant les commandes `pacman` et par la suite utilisé à titre personnel `pamac`. Ce dernier étant simplement une surcouche, cela ne devrait pas poser de problème de compatibilité.
 
 #### Quelques commandes Pacman
 
@@ -532,28 +532,28 @@ echo '#!/bin/bash
 
 case $1 in
 start)
-	sudo iptables -t filter -P INPUT DROP
-	sudo iptables -t filter -P FORWARD DROP
-	sudo iptables -t filter -P OUTPUT DROP
+  sudo iptables -t filter -P INPUT DROP
+  sudo iptables -t filter -P FORWARD DROP
+  sudo iptables -t filter -P OUTPUT DROP
 ;;
 stop)
-	sudo iptables -t filter -P INPUT ACCEPT
-	sudo iptables -t filter -P FORWARD ACCEPT
-	sudo iptables -t filter -P OUTPUT ACCEPT
+  sudo iptables -t filter -P INPUT ACCEPT
+  sudo iptables -t filter -P FORWARD ACCEPT
+  sudo iptables -t filter -P OUTPUT ACCEPT
 ;;
 full-start)
-	sudo iptables-restore < /etc/iptables.rules
+  sudo iptables-restore < /etc/iptables.rules
 ;;
 full-stop)
-	sudo iptables -t filter -F
-	sudo iptables -t filter -X
+  sudo iptables -t filter -F
+  sudo iptables -t filter -X
   sudo iptables -t filter -P INPUT ACCEPT
-	sudo iptables -t filter -P FORWARD ACCEPT
-	sudo iptables -t filter -P OUTPUT ACCEPT
+  sudo iptables -t filter -P FORWARD ACCEPT
+  sudo iptables -t filter -P OUTPUT ACCEPT
 ;;
 *)
-	echo "Usage: firewall (start|stop|full-start|full-stop)"
-	exit -1
+  echo "Usage: firewall (start|stop|full-start|full-stop)"
+  exit -1
 ;;
 esac' | tee ~/bin/firewall
 
@@ -1359,7 +1359,7 @@ EOL
 
 ### [Solaar](https://pwr-solaar.github.io/Solaar/)
 
-Un logiciel permettant de gérer les claviers et souris [Logitech](https://www.logitech.com/) (personellement j'utilise un clavier [MX Mechanical Mini](https://www.logitech.com/fr-fr/products/keyboards/mx-mechanical.html) avec une souris [MX Master 3](https://www.logitech.com/fr-fr/products/mice/mx-master-3s.910-006559.html)).
+Un logiciel permettant de gérer les claviers et souris [Logitech](https://www.logitech.com/) (personnellement, j'utilise un clavier [MX Mechanical Mini](https://www.logitech.com/fr-fr/products/keyboards/mx-mechanical.html) avec une souris [MX Master 3](https://www.logitech.com/fr-fr/products/mice/mx-master-3s.910-006559.html)).
 
 ```bash
 sudo pacman -S solaar 
@@ -1762,8 +1762,8 @@ cat << EOL > ~/Templates/c.c
 #include <stdio.h>
 
 int main(int arcc, char *argv[]) {
-	printf("Hello world!\n");
-	return 0;
+  printf("Hello world!\n");
+  return 0;
 }
 EOL
 
@@ -1773,8 +1773,8 @@ cat << EOL > ~/Templates/c++.cpp
 using namespace std;
 
 int main(int arcc, char *argv[]) {
-	cout << "Hello world !" << endl;
-	return 0;
+  cout << "Hello world !" << endl;
+  return 0;
 }
 EOL
 
@@ -1782,29 +1782,29 @@ cat << EOL > ~/Templates/html.html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-	<meta charset="utf-8" />
-	<title>Title</title>
-	<link href="./style.css" />
+  <meta charset="utf-8" />
+  <title>Title</title>
+  <link href="./style.css" />
 </head>
 <body>
-	<nav>
-	</nav>
+  <nav>
+  </nav>
 
-	<header>
-	</header>
+  <header>
+  </header>
 
-	<section>
+  <section>
     <h1>Section</h1>
 
-		<article>
-			Hello world!
-		</article>
-	</section>
+    <article>
+      Hello world!
+    </article>
+  </section>
 
-	<footer>
-	</footer>
+  <footer>
+  </footer>
 
-	<script src="./script.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>
 EOL
@@ -1974,7 +1974,7 @@ yes all | fish -c "history delete --prefix 'unrar '"
 
 #### Spotify-diff
 
-Un script un peu particulier puisqu'il permet d'afficher la différence entre les musiques présententes dans le dossier `~/Music` et une playlist [Spotify](https://www.spotify.com/). Quand comme moi la playlist est un peu longue et qu'on essaye de récupérer les fichiers de chacune de ces musiques, ce script est bien pratique. Pour l'utiliser, il suffit de mettre sa playlist en public et de remplacer les `**********` de `SPOTIFY_PLAYLIST_ID` par l'identifiant de la playlist en question.
+Un script un peu particulier puisqu'il permet d'afficher la différence entre les musiques présentes dans le dossier `~/Music` et une playlist [Spotify](https://www.spotify.com/). Quand comme moi la playlist est un peu longue et qu'on essaye de récupérer les fichiers de chacune de ces musiques, ce script est bien pratique. Pour l'utiliser, il suffit de mettre sa playlist en public et de remplacer les `**********` de `SPOTIFY_PLAYLIST_ID` par l'identifiant de la playlist en question.
 
 ```bash
 #!/bin/bash
