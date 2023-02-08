@@ -165,7 +165,7 @@ Par défaut /e/ propose la possibilité de ce connecter à une instance [NextClo
 
 #### Le navigateur
 
-Forcément pas de Google Chrome en vue, mais du [Chromium](https://www.chromium.org/) (la version open-source du navigateur). Quant au moteur de recherche par défaut, là encore, pas de Google, mais un métamoteur aux couleurs de /e/ localisé à l'URL [spot.ecloud.global](https://spot.ecloud.global/). Ce dernier nous restitue une agrégation des résultats trouvée sur d'autres moteurs de recherches tels que [Qwant](https://www.qwant.com/), [DuckDuckGo](https://duckduckgo.com/), [Wikipédia](https://fr.wikipedia.org/)... Toutes les requêtes envoyées par ce métamoteur à des tiers sont routées à travers le réseau [Tor](https://www.torproject.org/). L'architecture de ce moteur semble donc très confidentielle et même si je ne l'utilise pas personnellement je trouve sa conception très intéressante.
+Forcément pas de Google Chrome en vue, mais du [Chromium](https://www.chromium.org/) (la version open source du navigateur). Quant au moteur de recherche par défaut, là encore, pas de Google, mais un métamoteur aux couleurs de /e/ localisé à l'URL [spot.ecloud.global](https://spot.ecloud.global/). Ce dernier nous restitue une agrégation des résultats trouvée sur d'autres moteurs de recherches tels que [Qwant](https://www.qwant.com/), [DuckDuckGo](https://duckduckgo.com/), [Wikipédia](https://fr.wikipedia.org/)... Toutes les requêtes envoyées par ce métamoteur à des tiers sont routées à travers le réseau [Tor](https://www.torproject.org/). L'architecture de ce moteur semble donc très confidentielle et même si je ne l'utilise pas personnellement je trouve sa conception très intéressante.
 
 #### [Magic Earth](https://www.magicearth.com/)
 
