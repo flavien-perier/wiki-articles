@@ -53,13 +53,38 @@ Le firmware de base de l'appareil peut être assez limité. En effet, il existe 
 
 Le firmware [unleashed-firmware](https://github.com/DarkFlippers/unleashed-firmware) semble assez populaire. Il ne change pas radicalement le fonctionnement de l'appareil, mais se charge d'embarquer de nombreux outils que l'utilisateur n'aura pas à intégrer lui-même.
 
-### 
-
 ### Utilisation en tant que clé de sécurité
 
 Dans ce cas précis, l'objectif est d'utiliser le Flipper Zero non pas comme un appareil offensif, mais défensif. Parmi les nombreux cas d'utilisation de l'appareil, il est possible de le connecter à un ordinateur afin de chiffrer ou signer des documents, ou encore l'utiliser comme moyen d'authentification. La clé privée utilisée est stockée sur la mémoire de l'appareil.
 
 ### Quelques exemples de scripts
 
-- [Awesome Flipper Zero](https://github.com/djsime1/awesome-flipperzero)
+Le repo git [Awesome Flipper Zero](https://github.com/djsime1/awesome-flipperzero) liste un certain nombre de projets intéréssents.
 
+Voici quelques liste de ressources que je trouve intéréssentes :
+
+- [FlipperIRDB](https://github.com/logickworkshop/Flipper-IRDB): Un catalogue de payload pour simuler de nombreuses télécommandes en infra rouge.
+- [FlipperMusicRTTTL](https://github.com/neverfa11ing/FlipperMusicRTTTL.git): Une liste de musiques à jouer avec le synthé du Flipper Zero.
+
+Voici un script à jouer à la racine de la carte microSD afin d'avoir accès a quelques catalogues de ressources.
+
+```bash
+#!/bin/bash
+
+rm -Rf ./infrared/Flipper-IRDB
+mkdir -p ./infrared
+git clone https://github.com/logickworkshop/Flipper-IRDB.git ./infrared/Flipper-IRDB
+
+rm -Rf ./music_player/FlipperMusicRTTTL
+mkdir -p ./music_player
+git clone https://github.com/neverfa11ing/FlipperMusicRTTTL.git ./music_player/FlipperMusicRTTTL
+mkdir -p ./music_player/FlipperMusicRTTTL/Other
+unzip ./music_player/FlipperMusicRTTTL/Unsorted\ 10k\ Song\ Archive.zip -d ./music_player/FlipperMusicRTTTL/Other
+rm -Rf ./music_player/FlipperMusicRTTTL/Unsorted\ 10k\ Song\ Archive.zip
+
+
+find . -type f -name "*.md" -delete
+find . -type f -name ".git*" -delete
+find . -type d -name ".git" -exec rm -Rf {} \;
+find . -type d -name ".github" -exec rm -Rf {} \;
+```
