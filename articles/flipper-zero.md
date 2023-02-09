@@ -37,7 +37,7 @@ De très nombreux scénarios peuvent être imaginés avec cet appareil.
 
 Le principal scénario à mon sens concerne les intrusions physiques dans des bâtiments. Le Flipper Zero peut permettre de cloner le badge d'accès à un bâtiment d'un employé, ou encore la télécommande d'accès à un parking de l'entreprise.
 
-Une fois dans le bâtiment il est possible de se servir du Flipper Zero comme d'un moyen d'exécuter rapidement des instructions sur un poste qui n'aurait pas été verrouillé.
+Une fois dans le bâtiment il est possible de se servir du Flipper Zero comme d'un moyen d'exécuter rapidement des instructions sur un poste qui n'aurait pas été verrouillé avec les fonctionalitées de BadUSB.
 
 ## Comment s'en défendre
 
@@ -61,30 +61,46 @@ Dans ce cas précis, l'objectif est d'utiliser le Flipper Zero non pas comme un 
 
 Le repo git [Awesome Flipper Zero](https://github.com/djsime1/awesome-flipperzero) liste un certain nombre de projets intéréssents.
 
-Voici quelques liste de ressources que je trouve intéréssentes :
+Voici quelques ressources que je trouve intéréssentes à installer sur l'appareil :
 
-- [FlipperIRDB](https://github.com/logickworkshop/Flipper-IRDB): Un catalogue de payload pour simuler de nombreuses télécommandes en infra rouge.
+- [Flipper-IRDB](https://github.com/logickworkshop/Flipper-IRDB): Un catalogue de payload pour simuler de nombreuses télécommandes en infra rouge.
+- [flipperzero-bruteforce](https://github.com/tobiabocchi/flipperzero-bruteforce): Des scripts de bruteforce pour quelques protocoles radio.
 - [FlipperMusicRTTTL](https://github.com/neverfa11ing/FlipperMusicRTTTL.git): Une liste de musiques à jouer avec le synthé du Flipper Zero.
+
 
 Voici un script à jouer à la racine de la carte microSD afin d'avoir accès a quelques catalogues de ressources.
 
 ```bash
 #!/bin/bash
 
-rm -Rf ./infrared/Flipper-IRDB
+# Controls the structure of the SD card
 mkdir -p ./infrared
+mkdir -p ./subghz
+mkdir -p ./music_player
+
+# Install Flipper-IRDB
+rm -Rf ./infrared/Flipper-IRDB
 git clone https://github.com/logickworkshop/Flipper-IRDB.git ./infrared/Flipper-IRDB
 
+# Install flipperzero-bruteforce
+rm -Rf ./subghz/flipperzero-bruteforce
+git clone https://github.com/tobiabocchi/flipperzero-bruteforce.git ./subghz/flipperzero-bruteforce
+mv ./subghz/flipperzero-bruteforce/sub_files/* ./subghz/flipperzero-bruteforce
+rmdir ./subghz/flipperzero-bruteforce/sub_files
+
+# Install FlipperMusicRTTTL
 rm -Rf ./music_player/FlipperMusicRTTTL
-mkdir -p ./music_player
 git clone https://github.com/neverfa11ing/FlipperMusicRTTTL.git ./music_player/FlipperMusicRTTTL
 mkdir -p ./music_player/FlipperMusicRTTTL/Other
 unzip ./music_player/FlipperMusicRTTTL/Unsorted\ 10k\ Song\ Archive.zip -d ./music_player/FlipperMusicRTTTL/Other
 rm -Rf ./music_player/FlipperMusicRTTTL/Unsorted\ 10k\ Song\ Archive.zip
 
-
+# Delete unused files
 find . -type f -name "*.md" -delete
 find . -type f -name ".git*" -delete
+find . -type f -name "*.exe" -delete
+find . -type f -name "*.py" -delete
+
 find . -type d -name ".git" -exec rm -Rf {} \;
 find . -type d -name ".github" -exec rm -Rf {} \;
 ```
