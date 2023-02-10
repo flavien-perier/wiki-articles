@@ -10,6 +10,10 @@ date: 2020-09-30 18:00
 
 Nous allons dans cet article nous intéresser à la mise en place d'un environnement de développement sous Manjaro avec notamment une machine virtuelle Windows 10 portée par KVM.
 
+![Desktop](https://medias.flavien.io/articles/manjaro/desktop.webp)
+
+![Desktop Neofetch](https://medias.flavien.io/articles/manjaro/desktop-neofetch.webp)
+
 ## Mise en place du système
 
 Pour ma part, je me base sur la version minimale de la distribution [Manjaro](https://manjaro.org/downloads/official/xfce/) avec l'environnement [XFCE](https://xfce.org/). Cet environnement est plus léger que [Gnome](https://www.gnome.org/) ou [KDE](https://kde.org/), mais présente néanmoins tous les avantages d'un véritable gestionnaire de bureau. Malgré sa légèreté, il n'y a pas de compromis sur les fonctionnalités.
