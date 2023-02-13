@@ -8,7 +8,7 @@ author: Flavien PERIER <perier@flavien.io>
 date: 2020-09-30 18:00
 ---
 
-Nous allons dans cet article nous intéresser à la mise en place d'un environnement de développement sous Manjaro avec notamment une machine virtuelle Windows 10 portée par KVM.
+Cet article traite de la mise en place d'un poste de développeur sous Manjaro. L'objectif consiste à avoir un système d'exploitation stable et sécurisé qui réponde à un maximum d'usage.
 
 ![Desktop](https://medias.flavien.io/articles/manjaro/desktop.webp)
 

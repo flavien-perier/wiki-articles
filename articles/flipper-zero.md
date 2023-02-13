@@ -39,15 +39,13 @@ Le principal scénario à mon sens concerne les intrusions physiques dans des b�
 
 Une fois dans le bâtiment il est possible de se servir du Flipper Zero comme d'un moyen d'exécuter rapidement des instructions sur un poste qui n'aurait pas été verrouillé avec les fonctionalitées de BadUSB.
 
-Un autre scénario semble concerner les réplications de carte de crédit. Il serait possible avec certains firmware de répliquer une carte bancaire, et ensuite de payer en sans contact avec.
-
 ## Comment s'en défendre
 
 Pour les zones vraiment sensibles d'une infrastructure (par exemple l'accès à un data center), il peut être bon de privilégier l'utilisation de système d'accès basé sur de la biométrie et non sur des supports physiques tel que des badges.
 
 Dans les grosses structures, demander à des employés de garder en évidence constamment des badges avec leur matricule peut permettre de repérer plus facilement un intrus.
 
-Il est possible de protéger ses cartes bancaires et potentiellement ses autres cartes grâce à des étuis spécialisés. Ces derniers contiennent de fins filaments de cuivre qui font cage de faraday et empêchent donc la lecture de la carte, en sans contact, tant qu'elle est dans son étui.
+Il est possible de protéger ses cartes sans contact grâce à des étuis spécialisés. Ces derniers contiennent de fins filaments de cuivre qui font cage de faraday et empêchent donc la lecture de la carte en sans contact, tant qu'elle est dans leur étui.
 
 ## Comment s'en servir
 
@@ -67,9 +65,12 @@ Dans ce cas précis, l'objectif est d'utiliser le Flipper Zero non pas comme un 
 
 ### Quelques exemples de scripts
 
-Le repo git [Awesome Flipper Zero](https://github.com/djsime1/awesome-flipperzero) liste un certain nombre de projets intéréssents.
+Il existe plusieurs repos git assez généralistes qui listent des ressources pour le Flipper Zero. En voici quelques-uns :
 
-Voici quelques ressources que je trouve intéréssentes à installer sur l'appareil :
+- [Awesome Flipper Zero](https://github.com/djsime1/awesome-flipperzero)
+- [Frogg Master FlipperZero](https://github.com/FroggMaster/FlipperZero)
+
+Voici quelques ressources qui peuvent être intéressantes à installer sur l'appareil :
 
 - [Flipper-IRDB](https://github.com/logickworkshop/Flipper-IRDB): Un catalogue de payload pour simuler de nombreuses télécommandes en infra rouge.
 - [flipperzero-bruteforce](https://github.com/tobiabocchi/flipperzero-bruteforce): Des scripts de bruteforce pour quelques protocoles radio.
