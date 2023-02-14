@@ -57,8 +57,6 @@ EOL
 Par la suite, il faut modifier la configuration du serveur ssh avec la commande :
 
 ```sh
-passwd
-su
 cat << EOL > /etc/ssh/sshd_config
 PermitRootLogin no
 PubkeyAuthentication yes
