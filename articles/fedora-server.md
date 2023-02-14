@@ -54,6 +54,27 @@ Host flavien-serveur
 EOL
 ```
 
+Par la suite, il faut modifier la configuration du serveur ssh avec la commande :
+
+```sh
+passwd
+su
+cat << EOL > /etc/ssh/sshd_config
+PermitRootLogin no
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+PasswordAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+UsePAM yes
+Compression no
+ClientAliveInterval 15
+ClientAliveCountMax 4
+Subsystem       sftp    /usr/libexec/sftp-server
+EOL
+systemctl reload sshd
+```
+
 ### Base
 
 Installation des drivers Nvidia et configuration minimale du serveur :
