@@ -33,7 +33,7 @@ Comme nous l'avons vu, une attaque effectuée par une Rubber Ducky est indétect
 
 La plupart des entreprises interdisent à leurs employés de connecter des clés USB à leurs ordinateurs, mais ne les empêchent pas non plus de le faire... Conclusion, ils ne se privent pas.
 
-Il existe de nombreuses sociétés commercialisant des dispositifs permettant de bloquer l'accès à un port USB comme par exemple, [Lindy](https://lindy.com/fr/technologie/bloqueurs-de-ports/). Ce type de protection permet d'éviter qu'un employé ou un attaquant connecte un périphérique USB non désiré. D'autres, plus extrémistes, détruisent tout simplement les ports USB non utilisés (ce qui est dommage à mon sens quand on peut simplement les verrouiller). Il reste cependant un certain nombre de ports USB qu'on ne peut pas condamner, car utilisés (clavier, souris, webcam...). Si aucun port n'est libre, il est assez peu probable qu'un employé prenne le temps de débrancher un périphérique dont il a besoin afin de connecter la clé USB qu'il vient de trouver. Cependant cela ne va très certainement pas arrêter un hacker s'il en a le temps. Une solution pourrait consister à souder les périphériques branchés au châssis.
+Il existe de nombreuses sociétés commercialisant des dispositifs permettant de bloquer l'accès à un port USB comme par exemple, [Lindy](https://lindy.com/fr/technologie/bloqueurs-de-ports/). Ce type de protection permet d'éviter qu'un employé ou un attaquant connecte un périphérique USB non désiré. D'autres, plus extrémistes, détruisent tout simplement les ports USB non utilisés (ce qui est dommage à mon sens quand on peut simplement les verrouiller). Il reste cependant un certain nombre de ports USB qu'on ne peut pas condamner, car utilisé (clavier, souris, webcam...). Si aucun port n'est libre, il est assez peu probable qu'un employé prenne le temps de débrancher un périphérique dont il a besoin afin de connecter la clé USB qu'il vient de trouver. Cependant cela ne va très certainement pas arrêter un hacker s'il en a le temps. Une solution pourrait consister à souder les périphériques branchés au châssis.
 
 Il est cependant évident qu'il n'est pas forcément nécessaire d'en arriver là. Cela dépend de la criticité des informations auxquelles l'employé a accès et du réseau sur lequel il se trouve.
 
@@ -57,7 +57,7 @@ Une fois notre code compilé d'une façon ou d'une autre, il suffit de le mettre
 
 ### Quelques exemples de scripts
 
-Il existe plusieurs sites qui proposent des scripts déjà tout fait. Il est intéréssent de passer par la afin de s'en inspirer :
+Il existe plusieurs sites qui proposent des scripts déjà tout faits. Il est intéressent de passer par la afin de s'en inspirer :
 
 - [GitHub de Hak5](https://github.com/hak5/usbrubberducky-payloads)
 - [Hacktoday](https://thehacktoday.com/60-best-rubber-ducky-usb-payloads/)
@@ -72,7 +72,7 @@ Il existe plusieurs sites qui proposent des scripts déjà tout fait. Il est int
 
 - Terminer le script par un exit afin de fermer le terminal après le méfait et donc passer plus facilement inaperçu.
 
-#### Partage des disques dur sur le réseau
+#### Partage des disques durs sur le réseau
 
 Un premier petit payload, qui est en réalité assez inoffensif pour les entreprises dans la mesure ou le script demande un accès administrateur (qui n'est en général pas offert aux employés).
 

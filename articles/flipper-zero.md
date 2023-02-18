@@ -1,6 +1,6 @@
 ---
 title: Flipper Zero
-type: WIP
+type: WIKI
 categories:
   - system
   - security
@@ -37,7 +37,7 @@ De très nombreux scénarios peuvent être imaginés avec cet appareil.
 
 Le principal scénario à mon sens concerne les intrusions physiques dans des bâtiments. Le Flipper Zero peut permettre de cloner le badge d'accès à un bâtiment d'un employé, ou encore la télécommande d'accès à un parking de l'entreprise.
 
-Une fois dans le bâtiment il est possible de se servir du Flipper Zero comme d'un moyen d'exécuter rapidement des instructions sur un poste qui n'aurait pas été verrouillé avec les fonctionalitées de BadUSB.
+Une fois dans le bâtiment il est possible de se servir du Flipper Zero comme d'un moyen d'exécuter rapidement des instructions sur un poste qui n'aurait pas été verrouillé avec les fonctionnalités de BadUSB.
 
 ## Comment s'en défendre
 
@@ -47,21 +47,23 @@ Dans les grosses structures, demander à des employés de garder en évidence co
 
 Il est possible de protéger ses cartes sans contact grâce à des étuis spécialisés. Ces derniers contiennent de fins filaments de cuivre qui font cage de faraday et empêchent donc la lecture de la carte en sans contact, tant qu'elle est dans leur étui.
 
+Il est malheureux de noter que cet appareil peu également permette de s'introduire dans des immeubles d'habitations. Il est possible de répliquer une télécommande radio ou un badge d'accès. Ça, cumulé au fait, qu'il est aujourd'hui possible de ce procurer facilement et légalement un jeu de clés PTT (utilisées pour la distribution du courrier afin de rentrer dans les bâtiments et ouvrir les boites aux lettres). Une personne mal intentionnée et bien préparée n'aura donc aucune difficulté à rentrer dans un immeuble dit "sécurisé". La seule sécurité restante est donc la serrure de son appartement. C'est pourquoi investir dans une serrure 3 points ou posséder un ou plusieurs verrous peut être une bonne solution. L'idéale étant d'avoir une serrure conçue pour ne pas être crochetée facilement, comme celles proposées par la marque française [Point Fort Fichet](https://www.fichet-pointfort.com/fr/fr/products/serrure-de-securite).
+
 ## Comment s'en servir
 
-La première étape est d'installer [l'application Android](https://apkpure.com/fr/flipper-mobile-app/com.flipperdevices.app) sur son téléphone et d'y connecter le Flipper Zero. À travers cette interface, il sera notamment possible de mettre à jour l'appareil, ou de changer le Firmware par défaut.
+La première étape est d'installer [l'application Android](https://apkpure.com/fr/flipper-mobile-app/com.flipperdevices.app) sur son téléphone et d'y connecter le Flipper Zero. À travers cette interface, il sera notamment possible de mettre à jour l'appareil, ou de changer le Firmware.
 
 ![Android application](https://medias.flavien.io/articles/flipper-zero/android-app.webp)
 
 ### Changement du firmware
 
-Le firmware de base de l'appareil peut être assez limité. En effet, il existe des firmwares opens sources incluant par défaut de nombreux outils communautaires et débloquant certains protocoles. Il faut cependant faire très attention, car pour respecter la réglementation, le logiciel de base limite l'accès à certaines bandes de fréquences en fonction des pays, ce que ne font pas les firmwares communautaires. C'est pourquoi même si je conseille (tout comme les créateurs de l'appareil) de ne pas se limiter au logiciel de base, il faut faire très attention de ne pas émettre sur ces fréquences (et de préférence ne pas écouter non plus, même si c'est moins grave).
+Le firmware de base de l'appareil peut être assez limité. En effet, il existe des firmwares opens sources incluant par défaut de nombreux outils communautaires et débloquant certains protocoles. Il faut cependant faire très attention, car pour respecter la réglementation, le logiciel de base limite l'accès à certaines bandes de fréquences en fonction des pays, ce que ne font pas les firmwares communautaires. C'est pourquoi, même si je conseille (tout comme les créateurs de l'appareil) de ne pas se limiter au logiciel de base, il faut faire très attention de ne pas émettre sur ces fréquences (et de préférence ne pas écouter non plus, même si c'est moins grave).
 
-Le firmware [unleashed-firmware](https://github.com/DarkFlippers/unleashed-firmware) semble assez populaire. Il ne change pas radicalement le fonctionnement de l'appareil, mais se charge d'embarquer de nombreux outils que l'utilisateur n'aura pas à intégrer lui-même.
+Le firmware [unleashed-firmware](https://github.com/DarkFlippers/unleashed-firmware) est assez populaire. Il ne change pas radicalement le fonctionnement de l'appareil, mais se charge d'embarquer de nombreux outils que l'utilisateur n'aura pas à intégrer lui-même.
 
 ### Utilisation en tant que clé de sécurité
 
-Dans ce cas précis, l'objectif est d'utiliser le Flipper Zero non pas comme un appareil offensif, mais défensif. Parmi les nombreux cas d'utilisation de l'appareil, il est possible de le connecter à un ordinateur afin de chiffrer ou signer des documents, ou encore l'utiliser comme moyen d'authentification. La clé privée utilisée est stockée sur la mémoire de l'appareil.
+Dans ce cas précis, l'objectif est d'utiliser le Flipper Zero non pas comme un appareil offensif, mais défensif. Parmi les nombreux cas d'utilisation de l'appareil, il est possible de le connecter à un ordinateur afin de chiffrer ou signer des documents, ou encore l'utiliser comme moyen d'authentification. La clé privée utilisée est stockée sur la carte micro-sd de l'appareil et peut donc facilement être sauvegardée.
 
 ### Quelques exemples de scripts
 
@@ -113,3 +115,7 @@ find . -type f -name "*.py" -delete
 find . -type d -name ".git" -exec rm -Rf {} \;
 find . -type d -name ".github" -exec rm -Rf {} \;
 ```
+
+## Sources
+
+- [Lockpicking France](https://lockpickingfrance.org/#victime)
