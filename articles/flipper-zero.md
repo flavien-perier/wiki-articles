@@ -65,6 +65,17 @@ Le firmware [unleashed-firmware](https://github.com/DarkFlippers/unleashed-firmw
 
 Dans ce cas précis, l'objectif est d'utiliser le Flipper Zero non pas comme un appareil offensif, mais défensif. Parmi les nombreux cas d'utilisation de l'appareil, il est possible de le connecter à un ordinateur afin de chiffrer ou signer des documents, ou encore l'utiliser comme moyen d'authentification. La clé privée utilisée est stockée sur la carte micro-sd de l'appareil et peut donc facilement être sauvegardée.
 
+L'exemple suivant permet d'installer le dispositif sur une distribution [Manjaro Linux](https://manjaro.org/). Il faut avant tout brancher le Flipper Zero sur la machine et activer l'U2F.
+
+```bash
+sudo pacman -S libfido2 pam-u2f
+mkdir -p ~/.config/Yubico
+
+pamu2fcfg >> ~/.config/Yubico/u2f_keys
+```
+
+Il est maintenant possible d'utiliser le Flipper Zero afin de se connecter à des sites. Cependant, il n'est pas conseillé d'aller plus loin avec ce dispositif ni de protéger des comptes trop importants avec (comme une banque par exemple), étant donné que contrairement à d'autres dispositifs [FIDO](https://www.yubico.com/authentication-standards/fido2/) il n'est pas certifié pour cet usage.
+
 ### Quelques exemples de scripts
 
 Il existe plusieurs repos git assez généralistes qui listent des ressources pour le Flipper Zero. En voici quelques-uns :
@@ -119,3 +130,5 @@ find . -type d -name ".github" -exec rm -Rf {} \;
 ## Sources
 
 - [Lockpicking France](https://lockpickingfrance.org/#victime)
+- [USB-Dongle Authentication](https://www.dongleauth.com/)
+- [Easy Setup Yubikey on Manjaro Linux](https://credibledev.com/easy-setup-yubikey-on-manjaro-linux/)
