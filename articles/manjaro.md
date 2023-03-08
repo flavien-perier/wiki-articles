@@ -1880,6 +1880,7 @@ then
 fi
 
 PROTECTED_FOLDER=".ssh .themes .icons .fonts Templates Pictures Videos Music"
+PROTECTED_FILETYPE="pdf zip tar gz 7z wav mp3 mp4 mkv mov"
 
 # Clean up the package manager
 yes o | sudo pacman -Scc
@@ -1931,6 +1932,10 @@ for FOLDER in $PROTECTED_FOLDER
 do
     find $HOME/$FOLDER -type d ! -perm 500 -exec chmod 500 {} \;
     find $HOME/$FOLDER -type f ! -perm 400 -exec chmod 400 {} \;
+done
+for FILETYPE in $PROTECTED_FILETYPE
+do
+    find $HOME -type f -name "*.$FILETYPE" -exec chmod ugo-wx {} \;
 done
 
 # Cleans up the system
