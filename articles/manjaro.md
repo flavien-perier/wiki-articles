@@ -1882,6 +1882,12 @@ fi
 PROTECTED_FOLDER=".ssh .themes .icons .fonts Templates Pictures Videos Music"
 PROTECTED_FILETYPE="pdf zip tar gz 7z wav mp3 mp4 mkv mov"
 
+get-used-space() {
+   df | tr -s " " | cut -f3 -d " " | tail -n +2 | sed -z 's/\n/+/g;s/+$/\n/' | bc
+}
+
+USED_SPACE_BEFORE=`get-used-space`
+
 # Clean up the package manager
 yes o | sudo pacman -Scc
 yes o | yay -Scc
@@ -1919,14 +1925,14 @@ fi
 sudo chmod -R go-rwx $HOME
 sudo find . ! -user $USER -exec chown $USER {} \;
 sudo find . ! -group $USER -exec chgrp $USER {} \;
-sudo find $HOME -type d ! -perm 700 -exec chmod 700 {} \;
+sudo find $HOME -type d ! -perm 700 -exec chmod 700 {} \; 
 chmod -R 500 $HOME/bin
 chmod 777 $HOME/Public
 chmod 750 $HOME
 setfacl -R --remove-all $HOME
 setfacl -m g:libvirt-qemu:rx $HOME
-find $HOME/Vms -type d ! -perm 550 -exec chmod 550 {} \;
-find $HOME/Vms -type f ! -perm 770 -exec chmod 770 {} \;
+find $HOME/Vms -type d ! -perm 550 -exec chmod 550 {} \; 
+find $HOME/Vms -type f ! -perm 770 -exec chmod 770 {} \; 
 sudo chgrp -R libvirt-qemu $HOME/Vms
 for FOLDER in $PROTECTED_FOLDER
 do
@@ -1979,6 +1985,12 @@ yes all | fish -c "history delete --prefix 'tar '"
 yes all | fish -c "history delete --prefix '7z '"
 yes all | fish -c "history delete --prefix 'unzip '"
 yes all | fish -c "history delete --prefix 'unrar '"
+
+USED_SPACE_AFTER=`get-used-space`
+
+RECOVERED_SPACE=`echo "scale=3; ($USED_SPACE_BEFORE - $USED_SPACE_AFTER) / 1000000" | bc`
+
+echo "Recovered space: $RECOVERED_SPACE Go"
 ```
 
 #### Spotify-diff
