@@ -1213,6 +1213,16 @@ Ainsi nous n'aurons qu'à taper la commande suivante afin de lire un fichier epu
 epub2txt book.epub | speedread -w 300
 ```
 
+### [Valent](https://valent.andyholmes.ca/)
+
+Interface ce basant sur [KDE Connect](https://kdeconnect.kde.org/) permettant d'utiliser son téléphone depuis son ordinateur à travers le réseau local. Il est ainsi possible d'envoyer et de recevoir des SMS sur son PC, ou encore de partager son presse-papier entre les deux appareils.
+
+```bash
+flatpak install --user https://valent.andyholmes.ca/valent.flatpakref
+```
+
+Pour pouvoir utiliser l'application, il faudra également installer sur son appareil Android l'application [KDE Connect](https://www.flavien.io/wiki/android.md#kde-connect).
+
 ### [OBS](https://obsproject.com/)
 
 Étant donné que les fonctionnalités de Stream de Discord ne fonctionnent qu'à moitié sous Linux (on a l'image, mais pas le son), il faut passer par de tierces solutions afin de pouvoir partager son écran.

@@ -207,6 +207,16 @@ J'ai donc utilisé pendant une assez grande période utilisée [Nova Launcher](h
 
 J'utilise actuellement Lawnchair, car j'ai pu recréer exactement le même environnement que celui que je m'étais mis en place avec Nova, mais en plus léger et open source.
 
+### [KDE Connect](https://kdeconnect.kde.org/)
+
+Logiciel permettant d'utiliser son téléphone depuis son ordinateur à travers le réseau local. Il est ainsi possible d'envoyer et de recevoir des SMS sur son PC, ou encore de partager son presse-papier entre les deux appareils.
+
+En fonction de l'environnement de bureau installé sur l'ordinateur de l'utilisateur, il sera possible d'opter pour une implémentation ou une autre.
+
+- Pour les utilisateurs sous [KDE](https://kde.org/), c'est bien évidemment l'implémentation officielle qui est recommandée.
+- Sous [Gnome](https://www.gnome.org/), il sera possible d'utiliser [GSConnect](https://github.com/GSConnect/gnome-shell-extension-gsconnect).
+- Enfin pour les utilisateurs de [XFCE](https://xfce.org/), il sera possible d'utiliser [Valent](https://valent.andyholmes.ca/). Un paragraphe est dédié à ce logiciel dans [la section du wiki consacré à Manjaro](https://www.flavien.io/wiki/manjaro.md#valent).
+
 ### [NewPipe](https://newpipe.schabi.org/)
 
 Aujourd'hui je peux affirmer que je me passe de tous les services Google à une exception près, YouTube. Heureusement sur mobile il existe une application qui me permet d'accéder au contenu de YouTube sans installer l'application YouTube officielle. Il est possible de regarder les vidéos en arrière-plan (pour écouter de la musique, même si je déconseille de le faire, car écouter de la musique sur YouTube n'est pas un acte écoresponsable en termes de GreenIt), de les télécharger, de ne pas avoir les pubs et de faire des playlists locales (qui ne sont pas sauvegardées sur les serveurs de Google).
