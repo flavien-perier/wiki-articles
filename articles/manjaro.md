@@ -239,6 +239,7 @@ Par la suite, il n'y a plus qu'à redémarrer la machine et utiliser les command
 
 - `sudo optimus-manager --switch nvidia`: Pour utiliser le GPU NVIDIA.
 - `sudo optimus-manager --switch integrated`: Pour utiliser IGP Intel.
+- `sudo optimus-manager --switch hybrid`: Un fonctionnement similaire à Windows ou le GPU Nvidia sera utilisé pour les taches gourmandes en ressources et l'IGP Intel le reste du temps.
 
 Il est à noter qu'à chaque fois que la carte graphique est changée, il faudra redémarrer l'interface avec `sudo systemctl restart lightdm`.
 
