@@ -468,7 +468,13 @@ iptables -t filter -A OUTPUT -p udp --dport 5353 -j ACCEPT -m owner --uid-owner 
 
 # Barrier
 iptables -t filter -A INPUT -p tcp --dport 24800 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 24800 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 24800 -j ACCEPT -m owner --uid-owner 1000
+
+# Valent
+iptables -t filter -A INPUT -p tcp --dport 1714:1764 -j ACCEPT
+iptables -t filter -A INPUT -p udp --dport 1714:1764 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 1714:1764 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p udp --dport 1714:1764 -j ACCEPT -m owner --uid-owner 1000
 
 # Protections
 
@@ -756,6 +762,9 @@ stop)
     exit -1
 ;;
 esac' | tee ~/bin/smb
+
+chmod 500 ~/bin/smb
+chmod 500 ~/bin
 ```
 
 Avec ce script, il suffit de taper les commandes `smb start` ou `smb stop` afin d'activer ou désactiver le partage de fichier. De plus, le script va se charge d'ouvrir ou fermer dynamiquement les ports utilisés au niveau du firewall.

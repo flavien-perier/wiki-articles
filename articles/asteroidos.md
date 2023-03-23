@@ -73,6 +73,12 @@ fastboot oem lock
 fastboot continue
 ```
 
+## Application téléphone
+
+Par défaut, il est possible d'utiliser [l'application mobile officielle d'AsteroidOs](https://f-droid.org/fr/packages/org.asteroidos.sync/). Elle fonctionne plutôt bien, mais reste assez minimaliste.
+
+Pour aller plus loin, il est également possible d'utiliser [GadgetBridge](https://f-droid.org/fr/packages/nodomain.freeyourgadget.gadgetbridge/) qui est une alternative plus complète et qui est également en mesure de piloter des montres qui ne fonctionnent pas sous AsteroidOs. Il manque cependant actuellement plusieurs fonctionnalités mineures comme la capture d'écrans (ce qui n'est certainement pas la fonctionnalité principale). 
+
 ## Connexion Wi-Fi
 
 Pour se connecter à la montre, il faut aller dans les paramètres de la montre puis configurer le mode USB sur `Mode ADB`, puis tapant les commandes sur un pc pendant que la montre est connectée :
