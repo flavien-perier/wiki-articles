@@ -86,6 +86,21 @@ dnf module install nvidia-driver
 dnf remove plymouth*
 ```
 
+### Wake on Lan
+
+La configuration [Wake on Lan](https://fr.wikipedia.org/wiki/Wake-on-LAN) permet à un ordinateur d'être démarré par le réseau. Une fois en place, le seul prérequis pour pouvoir allumer un ordinateur dont le WoL est actif et de posséder son adresse mac et d'être sur le même réseau que lui.
+
+Une partie de la carte réseau de la machine écoutera donc constamment le réseau même quand l'ordinateur est éteint. Si elle reçoit un paque contenant les octets FF FF FF FF FF FF suivi de 16 répétitions de l'adresse mac, le reste de la machine va démarrer (magic packet).
+
+Il faut préalable activer le démarrage par le réseau dans le bios de la machine (configuration différente d'un constructeur à l'autre).
+
+Puis au niveau de Linux, mettre les configurations suivantes :
+
+```bash
+ethtool -s enp4s0 wol g
+echo 'ETHTOOL_OPTS="wol g"' > /etc/sysconfig/network-scripts/ifcfg-enp4s0
+```
+
 ### Docker
 
 Installation de Docker et de nvidia-docker :

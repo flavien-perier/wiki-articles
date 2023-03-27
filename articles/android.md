@@ -77,19 +77,19 @@ rm -Rf $TMP_LOCATION
 
 ## Configuration de l'APN Bouygues Telecom
 
-L'[APN](https://fr.wikipedia.org/wiki/Access_Point_Name) est une configuration permettant de se connecter au réseau mobile de l'opérateur afin de pouvoir envoyer et recevoir des SMS ainsi que d'accéder à internet au travers de la 3G/4G/5G.
+L'[APN](https://fr.wikipedia.org/wiki/Access_Point_Name) est une configuration permettant de se connecter au réseau mobile de l'opérateur afin de pouvoir envoyer et recevoir des MMS ainsi que d'accéder à internet au travers de la 3G/4G/5G.
 
-Cependant dans leur infinie sagesse les opérateurs peuvent nous passer en IPv6. Le futur d'internet plus sécurisé sur lequel on pourra brancher plus d'appareils... Et sur lequel de nombreux services ne sont pas compatibles : [Discord](https://discord.com/), [ProtonVPN](https://protonvpn.com/) et biens d'autres.
+Cependant dans leur infinie sagesse les opérateurs peuvent nous passer en IPv6. Le futur d'internet, plus sécurisé, sur lequel on pourra brancher plus d'appareils... Et sur lequel de nombreux services ne fonctionnent pas encore : [Discord](https://discord.com/), [ProtonVPN](https://protonvpn.com/) et biens d'autres.
 
 Si on utilise ces services, il faut repasser en IPv4 pour que ca fonctionne et pour cela il faut la configuration APN adéquate :
 
 - Nom : `Bouygues`
 - APN : `mms.bouygtel.com`
-- Proxy : ``
-- Port : ``
-- User : ``
-- Mot de passe : ``
-- Serveur : ``
+- Proxy :
+- Port :
+- User :
+- Mot de passe :
+- Serveur :
 - MMSC : `mms.bouyguestelecom.fr/mms/wapenc`
 - Proxy mms : `62.201.129.226`
 - Port MMS : `8080`
@@ -99,7 +99,7 @@ Si on utilise ces services, il faut repasser en IPv4 pour que ca fonctionne et p
 - Type d'APN : `default,supl,mms`
 - Protocole : `IPv4`
 - protocole itinérance : `IPv4`
-- Porteur : ``
+- Porteur :
 - Type MVNO : `SPN`
 - Valeur MVNO : `Bouygues Telecom`
 
