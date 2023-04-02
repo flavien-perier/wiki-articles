@@ -1894,7 +1894,7 @@ do
     done
 done
 
-sudo systemctl restart xfce4-panel
+sudo pkill -9 xfce4-panel
 ```
 
 #### clean
