@@ -1484,6 +1484,20 @@ Un outil permettant de scanner un réseau et de déterminer pour chaque machine 
 sudo pacman -S nmap
 ```
 
+### [TrID](https://en.kali.tools/?p=1652)
+
+Un petit logiciel permettant d'identifier un type de fichier (utile quand on a un fichier sans extension).
+
+```bash
+sudo pacman -S trid
+```
+
+Quand on utilise le logiciel, on peut avoir une petite exception. Il est possible de la régler en tapant la ligne de commande suivante avant `trid`.
+
+```bash
+export LC_ALL=C
+```
+
 ### [Insomnia](https://insomnia.rest/)
 
 Pour permettre aux développeurs back-end de tester les APIs REST qu'ils développent. Le logiciel est assez similaire à [Postman](https://www.postman.com/), mais offre à mon sens une meilleure gestion des formats [Swagger](https://swagger.io/) et [OpenAPI](https://www.openapis.org/).
@@ -1879,6 +1893,8 @@ do
         cp -Rf $HOME/.fonts/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/fonts
     done
 done
+
+sudo systemctl restart xfce4-panel
 ```
 
 #### clean
