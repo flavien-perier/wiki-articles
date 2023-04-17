@@ -803,6 +803,14 @@ Et enfin pour procéder à l'installation :
 ./installer.sh --user
 ```
 
+### Copie de disque
+
+Les disques utilisés par qemu sont par default au format `qcow2` ce format à l'avantage d'adapté sa taille sur disque en focntion de ce qu'il va contenir. Cependant, dans le cas ou on supprime des fichiers volumineux dans le disque virtuel, sa taille réservé sur le disque physique ne diminue pas. Il peut alors être bon de réecrir le disque afin de réoptimiser sa structure. Pour se faire il suffit d'utiliser la commande :
+
+```bash
+qemu-img convert -O qcow2 old.qcow2 new.qcow2
+```
+
 ## Logiciels
 
 ### Désinstallation des logiciels inutiles
