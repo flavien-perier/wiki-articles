@@ -426,20 +426,22 @@ iptables -t filter -A OUTPUT -p udp --dport 53 -d 1.0.0.1 -j ACCEPT
 iptables -t filter -A OUTPUT -p udp --dport 53 -d 151.80.222.79 -j ACCEPT
 
 ## ntp
-iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT
-
-## whoIs
-iptables -t filter -A OUTPUT -p tcp --dport 43 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT -m owner --uid-owner 0
 
 ## http/s
-iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 0
+iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 0
+iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 1000
 
 ## ssh
-iptables -t filter -A OUTPUT -p tcp --dport 22 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 22 -j ACCEPT -m owner --uid-owner 1000
 
 ## ftp
-iptables -t filter -A OUTPUT -p tcp --dport 21 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 21 -j ACCEPT -m owner --uid-owner 1000
+
+## whoIs
+iptables -t filter -A OUTPUT -p tcp --dport 43 -j ACCEPT -m owner --uid-owner 1000
 
 ## mail (Outlook)
 iptables -t filter -A OUTPUT -p tcp --dport 587 -j ACCEPT -m owner --uid-owner 1000
@@ -453,9 +455,9 @@ iptables -t filter -A OUTPUT -p tcp --dport 8001:11299 -j ACCEPT -m owner --uid-
 iptables -t filter -A OUTPUT -p udp --dport 8001:11299 -j ACCEPT -m owner --uid-owner 1000
 
 ## Steam (Remote Play)
-iptables -t filter -A OUTPUT -p udp --dport 27000:27100 -j ACCEPT -m owner --uid-owner 1000
 iptables -t filter -A INPUT -p udp --dport 27031:27036 -j ACCEPT
 iptables -t filter -A INPUT -p tcp --dport 27036 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 27000:27100 -j ACCEPT -m owner --uid-owner 1000
 
 ## Sonos
 iptables -t filter -A INPUT -p tcp --dport 1400 -j ACCEPT
@@ -526,9 +528,6 @@ iptables -A port-scanning -j DROP
 # Save table
 iptables-save > /etc/iptables.rules
 
-cat << EOL > /etc/cron.d/firewall
-@reboot    root    iptables-restore < /etc/iptables.rules
-EOL
 ```
 
 Enfin, nous allons ajouter quelques commandes :
