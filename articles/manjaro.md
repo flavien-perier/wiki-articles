@@ -447,6 +447,10 @@ iptables -t filter -A OUTPUT -p tcp --dport 43 -j ACCEPT -m owner --uid-owner 10
 iptables -t filter -A OUTPUT -p tcp --dport 587 -j ACCEPT -m owner --uid-owner 1000
 iptables -t filter -A OUTPUT -p tcp --dport 993 -j ACCEPT -m owner --uid-owner 1000
 
+## protonvpn
+iptables -t filter -A OUTPUT -p udp --dport 1194 -j ACCEPT -m owner --uid-owner 0
+iptables -A OUTPUT -o tun+ -j ACCEPT -m owner --uid-owner 0
+
 ## Discord
 iptables -t filter -A OUTPUT -p udp --dport 50000:65535 -j ACCEPT -m owner --uid-owner 1000
 
@@ -527,7 +531,6 @@ iptables -A port-scanning -j DROP
 
 # Save table
 iptables-save > /etc/iptables.rules
-
 ```
 
 Enfin, nous allons ajouter quelques commandes :
@@ -693,9 +696,9 @@ curl -sfL https://get.k3s.io | sh -
 sudo systemctl disable k3s
 ```
 
-## Installation de [KVM](https://www.linux-kvm.org/page/Main_Page)
+## Utilisation de [KVM](https://www.linux-kvm.org/page/Main_Page)
 
-Avant de commencer, il est indispensable de vérifier au préalable que la virtualisation est activée au niveau du BIOS de la machine hôte. Si c'est le cas, il sera alors possible d'utiliser [KVM](https://www.linux-kvm.org/page/Main_Page) (Kernel-based Virtual Machine).
+Avant de commencer, il est indispensable de vérifier au préalable que la virtualisation est activée au niveau du BIOS de la machine hôte. Si ce n'est pas le cas, il sera impossible d'utiliser [KVM](https://www.linux-kvm.org/page/Main_Page) (Kernel-based Virtual Machine).
 
 Il existe dans l'univers Linux de nombreuses solutions de virtualisation. Cependant, le choix de KVM plutôt qu'une autre repose sur le fait qu'il s'agisse d'un hyperviseur de niveau 1, ce qui signifie qu'il est directement intégré au niveau du noyau du système d'exploitation. Cette solution est donc particulièrement efficace dans un environnement Linux.
 
@@ -709,11 +712,11 @@ sudo usermod -a -G libvirt $USER
 sudo usermod -a -G kvm $USER
 ```
 
-Par la suite pour récupérer une image de Windows 10, il suffit de se rendre sur [le site officiel de Microsoft](https://www.microsoft.com/fr-fr/software-download/windows10ISO) et de télécharger l'image ISO du système d'exploitation.
+Par la suite pour récupérer une image Windows, il faut se rendre sur [le site officiel de Microsoft](https://www.microsoft.com/en-us/software-download/windows11) et télécharger l'image ISO du système d'exploitation.
 
-Il suffit à présent d'utiliser l'outil `virt-manager` fraichement installé, afin de manager nos différentes machines virtuelles directement au travers d'interface.
+L'outil `virt-manager` va permettre de manager les différentes machines virtuelles au travers d'une interface. Il fourni également un certain nombre de profils déjà configuré pour faciliter la mise en place de Machines virtuelles avec des configurations complexes (comme c'est le cas d'un Windows 11 avec son TPM).
 
-Pour installer facilement d'autres VMs il est aussi possible d'utiliser le script [Quickemu](https://github.com/quickemu-project/quickemu) avec la commande suivante :
+Pour installer facilement des Machines virtuelles en ligne de commande, il est aussi possible d'utiliser le script [Quickemu](https://github.com/quickemu-project/quickemu) avec la commande suivante :
 
 ```bash
 yay -S quickemu
@@ -728,9 +731,9 @@ quickemu --fullscreen --display spice --vm macos-big-sur.conf
 
 ### Partage de dossier
 
-Personnellement, j'utilise ma propre instance [NextCloud](https://nextcloud.com/) afin de faire transiter des fichiers entre ma machine physique et ma VM. Cela a pour avantage de n'exposer aucun port de ma machine hôte et de concentrer la sécurité sur mon serveur.
+SMB avec son implémentation [Samba](https://www.samba.org/) est une solution bien pratique quand il s'agit de transférer des fichiers d'une machine à l'autre. Cependant, ce protocole très utilisé est très prisé par les hackers. Installer un serveur Samba directement sur ça machine hôte afin de partager des fichiers avec une machine virtuelle ne semble donc pas être une bonne solution. Une alternative plus sécurisée consiste simplement à utiliser une implémentation de Samba pour Docker. De cette façon, en cas de vulnérabilité, le système hôte n'est pas exposé, son arborescence non plus et pas même les utilisateurs. 
 
-Cependant, cette méthode trouve ses limites quand nous souhaitons faire transiter des fichiers volumineux. Afin de remédier au problème, je profite de la présence de Docker sur ma machine hôte afin d'exposer temporairement un serveur Samba qui servira de pont entre les deux machines quand cela s'avère nécessaire.
+Le script suivant permet d'exposer facilement le dossier `~/Public` sur un lecteur Samba :
 
 ```bash
 chmod 700 ~/bin
@@ -768,43 +771,9 @@ chmod 500 ~/bin
 
 Avec ce script, il suffit de taper les commandes `smb start` ou `smb stop` afin d'activer ou désactiver le partage de fichier. De plus, le script va se charge d'ouvrir ou fermer dynamiquement les ports utilisés au niveau du firewall.
 
-### Intégration des applications Windows dans l'environnent Linux
-
-À présent, afin d'avoir un environnement le plus homogène possible, il est possible d'utiliser le script [WinApps](https://github.com/Osmium-Linux/winapps), qui permet d'utiliser des applications installées au sein d'une VM Windows depuis un environnement Linux. Pour ce faire, il utilise le protocole Microsoft RDP.
-
-```bash
-sudo pacman -S freerdp
-cd /tmp
-git clone https://github.com/Osmium-Linux/winapps.git
-cd winapps
-
-mkdir -p ~/.config/winapps/
-cat << EOL > ~/.config/winapps/winapps.conf
-RDP_USER="MyWindowsUser"
-RDP_PASS="MyWindowsPassword"
-RDP_IP="192.168.123.111"
-RDP_FLAGS="/audio-mode:1"
-MULTIMON="true"
-EOL
-```
-
-Une fois ces commandes exécutées sur la machine hôte, il suffit de copier et d'exécuter le script `/tmp/winapps/install/RDPApps.reg` dans la machine virtuelle Windows 10.
-
-Pour vérifier que l'environnement est paré à accueillir WinApp, il suffit d'utiliser la commande suivante :
-
-```bash
-bin/winapps check
-```
-
-Et enfin pour procéder à l'installation :
-
-```bash
-./installer.sh --user
-```
-
 ### Copie de disque
 
-Les disques utilisés par qemu sont par default au format `qcow2` ce format à l'avantage d'adapté sa taille sur disque en focntion de ce qu'il va contenir. Cependant, dans le cas ou on supprime des fichiers volumineux dans le disque virtuel, sa taille réservé sur le disque physique ne diminue pas. Il peut alors être bon de réecrir le disque afin de réoptimiser sa structure. Pour se faire il suffit d'utiliser la commande :
+Les disques utilisés par Qemu sont par default au format `qcow2` ce format à l'avantage d'adapté sa taille sur disque en focntion de ce qu'il va contenir. Cependant, dans le cas ou on supprime des fichiers volumineux dans le disque virtuel, sa taille réservé sur le disque physique ne diminue pas. Il peut alors être bon de réecrir le disque afin de réoptimiser sa structure. Pour se faire il suffit d'utiliser la commande :
 
 ```bash
 qemu-img convert -O qcow2 old.qcow2 new.qcow2
