@@ -531,6 +531,23 @@ iptables -A port-scanning -j DROP
 
 # Save table
 iptables-save > /etc/iptables.rules
+
+cat << EOL > /etc/systemd/system/custom-firewall.service
+[Unit]
+Description=Custom firewall
+After=network.target
+
+[Service]
+ExecStart=iptables-restore < /etc/iptables.rules
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+systemctl daemon-reload
+systemctl enable custom-firewall
+systemctl start custom-firewall
 ```
 
 Enfin, nous allons ajouter quelques commandes :

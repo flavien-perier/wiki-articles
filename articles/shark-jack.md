@@ -35,7 +35,6 @@ Tous les vecteurs d'attaque avec ce dispositif ont pour point commun que le hack
 
 - Les équipements de la marque [Cisco](https://www.cisco.com/) (et autre) disposent généralement d'une prise RJ45 spécifique pour la configuration de l'équipement. Il serait alors possible de brancher le dispositif à cet endroit afin de reconfigurer l'équipement et de mettre en place une attaque de l'homme du milieu directement au niveau d'un routeur. Dans ce cas d'usage la Shark Jack ne sert qu'à déployer rapidement la configuration frauduleuse.
 
-
 ## Comment s'en défendre
 
 La seule protection efficace contre ce genre d'attaque est un contrôle strict des accès au réseau autant physique, que numérique. Les équipements doivent être placés dans baies sécurisées dont seuls les employés habilités peuvent s'approcher. Et leur mot de passe d'accès ne doit pas être celui par défaut.
