@@ -538,7 +538,7 @@ Description=Custom firewall
 After=network.target
 
 [Service]
-ExecStart=iptables-restore < /etc/iptables.rules
+ExecStart=iptables-restore /etc/iptables.rules
 Type=oneshot
 
 [Install]
@@ -572,7 +572,7 @@ stop)
   sudo iptables -t filter -P OUTPUT ACCEPT
 ;;
 full-start)
-  sudo iptables-restore < /etc/iptables.rules
+  sudo iptables-restore /etc/iptables.rules
 ;;
 full-stop)
   sudo iptables -t filter -F
