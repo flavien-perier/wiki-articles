@@ -434,6 +434,10 @@ iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 0
 iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 1000
 iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 1000
 
+## QUIC
+iptables -t filter -A OUTPUT -p udp --dport 80 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p udp --dport 443 -j ACCEPT -m owner --uid-owner 1000
+
 ## ssh
 iptables -t filter -A OUTPUT -p tcp --dport 22 -j ACCEPT -m owner --uid-owner 1000
 
@@ -1979,6 +1983,7 @@ yes | podman system prune
 rm -Rf $HOME/Downloads/*
 rm -Rf $HOME/.local/share/.Trash
 rm -f $HOME/.xsession-errors*
+rm -f $HOME/.local/share/recently-used.xbel*
 find $HOME -type f -iname "*.old" -delete
 
 # Cleans up cache
