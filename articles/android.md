@@ -179,7 +179,7 @@ Heureusement, des développeurs se sont penchés sur le sujet et ont conçu Micr
 
 #### Le store
 
-/e/ ayant pour objectif de préserver la vie privée de ses utilisateurs, l'implémentation du Google Play Store aurait été un très mauvais choix... C'est pour cette raison que le système d'exploitation possède son propre métastore.
+/e/ ayant pour objectif de préserver la vie privée de ses utilisateurs, l'implémentation du Google Play Store aurait été un très mauvais choix... C'est pour cette raison que le système d'exploitation possède son propre métastore nommé App Lounge.
 
 Pourquoi un métastore et pas un store ? Parce que l'entreprise ne stocke pas elle-même les applications, mais nous les fournit en allant les chercher directement sur le [Google Play Store](https://play.google.com/) ou sur [F-Droid](https://f-droid.org/).
 
@@ -194,6 +194,10 @@ Par défaut /e/ propose la possibilité de ce connecter à une instance [NextClo
 #### Le navigateur
 
 Forcément pas de Google Chrome en vue, mais du [Chromium](https://www.chromium.org/) (la version open source du navigateur). Quant au moteur de recherche par défaut, là encore, pas de Google, mais un métamoteur aux couleurs de /e/ localisé à l'URL [spot.ecloud.global](https://spot.ecloud.global/). Ce dernier nous restitue une agrégation des résultats trouvée sur d'autres moteurs de recherches tels que [Qwant](https://www.qwant.com/), [DuckDuckGo](https://duckduckgo.com/), [Wikipédia](https://fr.wikipedia.org/)... Toutes les requêtes envoyées par ce métamoteur à des tiers sont routées à travers le réseau [Tor](https://www.torproject.org/). L'architecture de ce moteur semble donc très confidentielle et même si je ne l'utilise pas personnellement je trouve sa conception très intéressante.
+
+#### Le launcher
+
+Appelé Bliss Lancher, le lanceur d'application de la distribution est une copie de l'interface Apple, avec des fonctionnalités en moins et des bugs en plus. Pour avoir testé beaucoup d'autre launchers tel que [NovaLauncher](https://novalauncher.com/) ou [Lawnchair](https://lawnchair.app/), je peux affirmer qu'il manque beaucoup de fonctionnalités comme la gestion des gestes, un tiroir et des paramètres de manière générale. Cependant, contrairement à d'autres lanceurs d'applications tels que [Mikcrosoft Launcher](https://apkpure.com/fr/microsoft-launcher/com.microsoft.launcher) celui-ci a les immenses avantages de respecter notre vie privée, de ne passe pas son temps à interagir avec le réseau, d'être open source et économe en batterie pour une application de ce type. Il ne s'agit donc clairement pas de l'application de l'année, mais à l'avantage de faire ce qu'on lui demande.
 
 #### [Magic Earth](https://www.magicearth.com/)
 
@@ -227,14 +231,6 @@ Le second conseil que je peux donner est de privilégier quand c'est possible le
 - [Messenger lite](https://apkpure.com/fr/messenger-lite/com.facebook.mlite)
 - [Instagram lite](https://apkpure.com/fr/instagram-lite/com.instagram.lite)
 
-### [Lawnchair](https://lawnchair.app/)
-
-Personnellement j'ai du mal avec [Bliss Launcher](https://f-droid.org/fr/packages/foundation.e.blisslauncher/) (Le launcher par défaut de /e/). Il s'agit d'une copie d'iOS sans tiroir. Ce qui est assez peu ergonomique à mon sens.
-
-J'ai donc utilisé pendant une assez grande période utilisée [Nova Launcher](https://novalauncher.com/) qui a l'avantage d'être ultra personnalisable et qui dispose de la possibilité d'organiser ses applications par catégorie dans le tiroir.
-
-J'utilise actuellement Lawnchair, car j'ai pu recréer exactement le même environnement que celui que je m'étais mis en place avec Nova, mais en plus léger et open source.
-
 ### [KDE Connect](https://kdeconnect.kde.org/)
 
 Logiciel permettant d'utiliser son téléphone depuis son ordinateur à travers le réseau local. Il est ainsi possible d'envoyer et de recevoir des SMS sur son PC, ou encore de partager son presse-papier entre les deux appareils.
@@ -259,6 +255,12 @@ Un lecteur de flux RSS léger et open source.
 
 Leur application permet simplement de reprendre la lecture sur téléphone la ou on l'a laissé sur liseuse, ou simplement d'ouvrir un fichier ePub. 
 
+### [Collabora Office](https://www.collaboraoffice.com/)
+
+Pendant assez longtemps, la distribution possédait son implémentation d'une visionneuse de document office. Cependant, étant donné qu'il n'y a pas d'implémentation officielle, cela semble compliqué à maintenir dans le temps (d'autant plus que l'implémentation qui avait été choisie n'était pas des plus efficaces).
+
+Cependant, Collabora semble [avoir le soutient de la fondation Libre Office](https://fr.libreoffice.org/download/android-et-ios/) et ce trouve être basé sur leur solution. Il s'agit donc pour moi de la meilleure solution pour le moment.
+
 ### [Aegis](https://getaegis.app/)
 
 Aegis est une application de calcul des seconds facteurs d'authentification complètement open source. Elle à l'avantage de ne comporter aucun traqueur et de la possibilité d'être déverrouillé par empreinte digitale. Il est possible d'importer facilement les données d'une autre application 2FA tel que [AndOTP](https://github.com/andOTP/andOTP), [Google Authentificator](https://apkpure.com/fr/google-authenticator/com.google.android.apps.authenticator2), [Microsoft Authentificator](https://apkpure.com/fr/microsoft-authenticator/com.azure.authenticator) et bien d'autres.
@@ -266,10 +268,6 @@ Aegis est une application de calcul des seconds facteurs d'authentification comp
 ### [KeePassDX](https://www.keepassdx.com/)
 
 KeePassDX est comme son nom l'indique une application permettant de gérer des fichiers KeePass. Elle est légère, et comme très autres outils de cette sélection, open source.
-
-### [La calculatrice graphique Desmos](https://apkpure.com/fr/desmos-graphing-calculator/com.desmos.calculator)
-
-Une calculatrice graphique relativement similaire à [GeoGebra](https://apkpure.com/geogebra-graphing-calculator/org.geogebra.android).
 
 ### [PhyPhox](https://phyphox.org/)
 
