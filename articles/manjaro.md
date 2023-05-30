@@ -540,6 +540,8 @@ cat << EOL > /etc/systemd/system/custom-firewall.service
 [Unit]
 Description=Custom firewall
 After=network.target
+Before=docker.service
+Before=libvirtd.service
 
 [Service]
 ExecStart=iptables-restore /etc/iptables.rules
