@@ -1972,14 +1972,14 @@ flatpak uninstall --unused -y
 yes o | sudo pamac remove --orphans
 
 # Cleans up Docker and Podman
-yes | sudo docker container prune
-yes | sudo docker volume prune
-yes | sudo docker network prune
-yes | sudo docker system prune
-yes | podman container prune
-yes | podman volume prune
-yes | podman network prune
-yes | podman system prune
+sudo docker container prune -f
+sudo docker volume prune -f
+sudo docker network prune -f
+sudo docker system prune -f
+podman container prune -f
+podman volume prune -f
+podman network prune -f
+podman system prune -f
 
 # Cleans up the user session
 rm -Rf $HOME/Downloads/*
