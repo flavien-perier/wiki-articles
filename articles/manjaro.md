@@ -1349,7 +1349,7 @@ mkdir -p ~/.icons
 chmod 700 ~/bin
 chmod 700 ~/.icons
 
-wget https://update.shadow.tech/launcher/prod/linux/ubuntu_18.04/Shadow.AppImage -O ~/bin/shadow
+curl 'https://update.shadow.tech/launcher/prod/linux/ubuntu_18.04/ShadowPC.AppImage' --output ~/bin/shadow
 wget https://shadow.tech/icons/icon-512x512.png -O ~/.icons/shadow.png
 
 chmod 500 ~/bin
