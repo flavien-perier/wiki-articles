@@ -191,6 +191,12 @@ Parmi les fonctionnalités amusantes de ce store, il y a la possibilité d'affic
 
 Par défaut /e/ propose la possibilité de ce connecter à une instance [NextCloud](https://nextcloud.com/) afin d'y synchroniser ses données. Il est donc possible d'y sauvegarder des photos, agenda, contacts... sans passer par un GAFAM, voir, sauvegarder toutes ses données sur une instance auto hébergée. Heureusement, pour les utilisateurs ne souhaitant pas consacrer du temps à la mise en place d'une instance, la fondation propose son propre cloud (ce dernier n'offre malheureusement que quelques mégaoctets). Suffisant néanmoins pour synchroniser des contacts et agendas (il faudra laisser de côté la sauvegarde des photos).
 
+En cas de problème de synchronisation, il est possible d'utiliser la commande suivante depuis un ordinateur afin de la forcer.
+
+```bash
+adb shell am broadcast -a foundation.e.drive.action.FORCE_SYNC --receiver-include-background
+```
+
 #### Le navigateur
 
 Forcément pas de Google Chrome en vue, mais du [Chromium](https://www.chromium.org/) (la version open source du navigateur). Quant au moteur de recherche par défaut, là encore, pas de Google, mais un métamoteur aux couleurs de /e/ localisé à l'URL [spot.ecloud.global](https://spot.ecloud.global/). Ce dernier nous restitue une agrégation des résultats trouvée sur d'autres moteurs de recherches tels que [Qwant](https://www.qwant.com/), [DuckDuckGo](https://duckduckgo.com/), [Wikipédia](https://fr.wikipedia.org/)... Toutes les requêtes envoyées par ce métamoteur à des tiers sont routées à travers le réseau [Tor](https://www.torproject.org/). L'architecture de ce moteur semble donc très confidentielle et même si je ne l'utilise pas personnellement je trouve sa conception très intéressante.
@@ -321,3 +327,4 @@ Le terminal qui va permettre d'accéder en ligne de commande à Android et au sy
 - [/e/ ROM latest dev build downloads](https://images.ecloud.global/dev/FP3/)
 - [Installation Magisk](https://topjohnwu.github.io/Magisk/install.html)
 - [Support Bouygues: Impossibilité d'accéder à la 4G en ipv4](https://www.assistance.bouyguestelecom.fr/s/forum/question/0D5080000BVfeTSCQZ/impossibilit%C3%A9-dacc%C3%A9der-%C3%A0-la-4g-en-ipv4-)
+- [eDrive](https://gitlab.e.foundation/e/os/eDrive)

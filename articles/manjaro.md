@@ -1553,6 +1553,14 @@ Un client torrent complet.
 flatpak install --user org.deluge_torrent.deluge
 ```
 
+### [Free Download Manager](https://www.freedownloadmanager.org/)
+
+Derrière un nom qui n'inspire pas très confiance, se cache un puissant logiciel permettant de télécharger aussi bien des torrents que des fichiers en téléchargements directs. Ce logiciel contrairement à nos navigateurs gère la reprise. Il est donc possible de suspendre un téléchargement pour le reprendre plus tard.
+
+```bash
+flatpak install --user org.freedownloadmanager.Manager
+```
+
 ### [P7zip](http://p7zip.sourceforge.net/)
 
 Le `7z` est l'un, si ce n'est pas le format qui offre le meilleur taux de compression du moment, le rendant particulièrement efficace pour tout ce qui touche à l'archivage. Seul problème, 7zip n'existe que sur Windows. Heureusement, avec p7zip il est possible d'utiliser ce format en ligne de commande depuis son Linux.
