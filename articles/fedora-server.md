@@ -58,17 +58,14 @@ Par la suite, il faut modifier la configuration du serveur ssh avec la commande 
 
 ```sh
 cat << EOL > /etc/ssh/sshd_config
-PermitRootLogin no
 PubkeyAuthentication yes
-AuthorizedKeysFile .ssh/authorized_keys
 PasswordAuthentication no
-PermitEmptyPasswords no
 ChallengeResponseAuthentication no
 UsePAM yes
-Compression no
-ClientAliveInterval 15
-ClientAliveCountMax 4
-Subsystem       sftp    /usr/libexec/sftp-server
+X11Forwarding no
+PrintMotd no
+AcceptEnv LANG LC_*
+Subsystem       sftp    /usr/libexec/openssh/sftp-server
 EOL
 systemctl reload sshd
 ```
