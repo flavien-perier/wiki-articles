@@ -45,7 +45,7 @@ sudo pacman -S <package_name>
 - Suppression d'un paquet :
 
 ```bash
-sudo pacman -Rs <package_name>
+sudo pacman -Rsn <package_name>
 ```
 
 - Recherche de paquet dans les dépôts :
@@ -664,7 +664,7 @@ Il est à noter que Jabba permet non seulement d'utiliser Open JDK, mais égalem
 Pour designer de petites interfaces en C++.
 
 ```bash
-sudo pacman -S qtcreator 
+sudo pacman -S qtcreator
 ```
 
 ### Autres langages
@@ -811,64 +811,65 @@ Même en version lite, Manjaro contient de nombreux outils qui ne sont pas réel
 - Manjaro Hello est un menu au démarrage de l'OS qui présente la distribution Manjaro.
 
 ```bash
-sudo pacman -Rs manjaro-hello manjaro-documentation-en
+sudo pacman -Rsn manjaro-hello manjaro-documentation-en
 ```
 
 - Parole est lecteur de média installé par défaut avec la distribution. On installera VLC plus tard.
 
 ```bash
-sudo pacman -Rs parole
+sudo pacman -Rsn parole
 ```
 
 - Qpdfview est un lecteur de fichier PDF. Vu le nombre de vulnérabilités relevées sur ce format de fichier je trouve personnellement plus sûr d'utiliser un logiciel isolé dans un conteneur Flatpak.
 
 ```bash
-sudo pacman -Rs qpdfview
+sudo pacman -Rsn qpdfview
 ```
 
 - Mousepad est un éditeur de texte. Inutile de rajouter de nouveaux éditeurs quand Vim, VScode et tous les outils JetBrains sont déjà installés.
 
 ```bash
-sudo pacman -Rs mousepad
+sudo pacman -Rsn mousepad
 ```
 
 - Orage est un calendrier.
 
 ```bash
-sudo pacman -Rs orage
+sudo pacman -Rsn orage
 ```
 
 - Gufw est un configurateur de firewall. Cet outil est complètement redondant avec les configurations `iptables` proposées plus haut. De plus, il propose des fonctionnalités beaucoup moins avancées que ce qu'il est possible de faire en ligne de commande.
 
 ```bash
-sudo pacman -Rs gufw
+sudo pacman -Rsn gufw
 ```
 
 - Gparted est un logiciel de gestion de partitions. Personnellement je préfère effectuer ce type de manipulations sur les lecteurs directement en ligne de commandes avec `fdisk` et `mkfs`.
 
 ```bash
-sudo pacman -Rs gparted
+sudo pacman -Rsn gparted
 ```
 
 - GTK hash est un outil en interface graphique permettant de calculer des hash. Personnellement, les outils en ligne de commande `md5sum` ou `sha256sum` me conviennent parfaitement.
 
 ```bash
-sudo pacman -Rs gtkhash-thunar gtkhash
+sudo pacman -Rsn gtkhash-thunar gtkhash
 ```
 
 - Gcolor2 est un logiciel permettant d'afficher des codes couleur. La plupart des outils de gestion de code et de design embarquent déjà ce type de fonctionnalité.
 
 ```bash
-sudo pacman -Rs gcolor2
+sudo pacman -Rsn gcolor2
 ```
 
 - La surcouche Manjaro pour XFCE n'est pas nécessaire dans le cas où un autre thème est déjà installé. Cependant, certains éléments tels que le thème d'icônes `papirus-icon-theme` et le thème de pointeur `xcursor-breeze` peuvent être conservés.
 
 ```bash
-sudo pacman -Rs manjaro-xfce-minimal-settings manjaro-application-utility manjaro-browser-settings kvantum-theme-matchama kvantum-qt5
-sudo pacman -Rs matcha-gtk-theme gnome-icon-theme
-sudo pacman -Rs xcursor-simpleandsoft xcursor-vanilla-dmz-aa
-sudo pacman -Rs noto-fonts noto-fonts-cjk terminus-font texlive-fontsextra texlive-langchinese texlive-langcyrillic texlive-langgreek texlive-langjapanese texlive-langkorean
+sudo pacman -Rsn manjaro-xfce-minimal-settings manjaro-application-utility manjaro-browser-settings kvantum-theme-matchama kvantum-qt5
+sudo pacman -Rsn matcha-gtk-theme gnome-icon-theme
+sudo pacman -Rsn xcursor-simpleandsoft xcursor-vanilla-dmz-aa
+sudo pacman -Rsn noto-fonts noto-fonts-cjk terminus-font
+sudo pacman -Rsn `pacman -Qsq texlive`
 
 sudo pacman -S papirus-icon-theme xcursor-breeze
 ```
@@ -903,7 +904,7 @@ EOL
 Dans un premier temps, nous allons désinstaller Midori, le navigateur par défaut de la distribution. Puis nous allons le remplacer par Firefox.
 
 ```bash
-sudo pacman -Rs midori
+sudo pacman -Rsn midori
 flatpak install --user org.mozilla.firefox
 ```
 
