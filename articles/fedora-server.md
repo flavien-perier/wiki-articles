@@ -32,6 +32,13 @@ Utilisateur principal: admin
 
 Toutes les commandes sont à exécuter en tant que root.
 
+Pour une mise a jour de l'os vers une nouvelle version de Fedora :
+
+```bash
+dnf system-upgrade download --releasever=38
+dnf system-upgrade reboot
+```
+
 ### Connection SSH
 
 Pour accéder au serveur à distance il est important de commencer par créer une clé SSH afin de s'y connecter.

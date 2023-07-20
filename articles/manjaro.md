@@ -754,7 +754,7 @@ quickemu --fullscreen --display spice --vm macos-big-sur.conf
 
 ### Partage de dossier
 
-SMB avec son implémentation [Samba](https://www.samba.org/) est une solution bien pratique quand il s'agit de transférer des fichiers d'une machine à l'autre. Cependant, ce protocole très utilisé est très prisé par les hackers. Installer un serveur Samba directement sur ça machine hôte afin de partager des fichiers avec une machine virtuelle ne semble donc pas être une bonne solution. Une alternative plus sécurisée consiste simplement à utiliser une implémentation de Samba pour Docker. De cette façon, en cas de vulnérabilité, le système hôte n'est pas exposé, son arborescence non plus et pas même les utilisateurs. 
+SMB avec son implémentation [Samba](https://www.samba.org/) est une solution qui peut s'avérer indispensable quand il s'agit de transférer des fichiers d'une machine à l'autre. Cependant, ce protocole très utilisé est très prisé par les hackers. Installer un serveur Samba directement sur ça machine hôte afin de partager des fichiers avec une machine virtuelle ne semble donc pas être une bonne solution. Une alternative plus sécurisée consiste simplement à utiliser une implémentation de Samba pour Docker. De cette façon, en cas de vulnérabilité, le système hôte n'est pas exposé, son arborescence non plus et pas même les utilisateurs. 
 
 Le script suivant permet d'exposer facilement le dossier `~/Public` sur un lecteur Samba :
 
@@ -983,7 +983,7 @@ flatpak run --branch=stable --arch=x86_64 --command=protonmail-bridge ch.protonm
 
 ### [ProtonVPN](https://protonvpn.com/)
 
-Sur Linux, il est possible d'utiliser ProtonVPN directement en ligne de commande ce qui est très pratique afin de scripter les connections/déconnections.
+Sur Linux, il est possible d'utiliser ProtonVPN directement en ligne de commande ce qui peut permettre de scripter les connections/déconnections.
 
 ```bash
 yay -S protonvpn-cli
@@ -1174,7 +1174,7 @@ flatpak install --user org.libreoffice.LibreOffice
 
 ### [Evince](https://wiki.gnome.org/Apps/Evince)
 
-Un autre logiciel Gnome. Celui-ci permet simplement d'afficher des fichiers PDF. Il est très pratique puisqu'il embarque de la reconnaissance de caractère au sein des images. Ce qui permet de faire des copier-coller au sein de documents photocopiés.
+Un autre logiciel Gnome. Celui-ci permet simplement d'afficher des fichiers PDF. Il embarque notamment de la reconnaissance de caractère au sein des images. Ce qui permet de faire des copier-coller de documents photocopiés.
 
 ```bash
 flatpak install --user org.gnome.Evince
@@ -1230,32 +1230,6 @@ NewsFlash est un simple lecteur de flux RSS.
 
 ```bash
 flatpak install --user com.gitlab.newsflash
-```
-
-### [SpeedRead](https://github.com/pasky/speedread)
-
-Basé sur la méthode de lecture [Spritz](https://spritz.com/), ce client en ligne de commandes permet de lire le contenu d'un fichier texte dans un terminal.
-
-```bash
-yay -S speedread-git
-```
-
-Par exemple, pour lire un document texte à 300 mots minute il faut simplement taper :
-
-```bash
-cat my-doc.txt | speedread -w 300
-```
-
-Maintenant il est également possible de rajouter l'outil `epub2txt` afin de lire un fichier au format epub.
-
-```bash
-yay -S epub2txt
-```
-
-Ainsi nous n'aurons qu'à taper la commande suivante afin de lire un fichier epub dans `speedread` :
-
-```bash
-epub2txt book.epub | speedread -w 300
 ```
 
 ### [Valent](https://valent.andyholmes.ca/)
@@ -1524,20 +1498,6 @@ Un outil permettant de scanner un réseau et de déterminer pour chaque machine 
 sudo pacman -S nmap
 ```
 
-### [TrID](https://en.kali.tools/?p=1652)
-
-Un petit logiciel permettant d'identifier un type de fichier (utile quand on a un fichier sans extension).
-
-```bash
-sudo pacman -S trid
-```
-
-Quand on utilise le logiciel, on peut avoir une petite exception. Il est possible de la régler en tapant la ligne de commande suivante avant `trid`.
-
-```bash
-export LC_ALL=C
-```
-
 ### [Insomnia](https://insomnia.rest/)
 
 Pour permettre aux développeurs back-end de tester les APIs REST qu'ils développent. Le logiciel est assez similaire à [Postman](https://www.postman.com/), mais offre à mon sens une meilleure gestion des formats [Swagger](https://swagger.io/) et [OpenAPI](https://www.openapis.org/).
@@ -1598,7 +1558,7 @@ echo '{"values": [{"name": "a"}, {"name": "b"}, {"name": "c"}]}' | jq -cM ".valu
 
 ### [bat](https://github.com/sharkdp/bat)
 
-Bat est un clone de la commande cat réécrit en Rust. Cette commande prend en charge la pagination, la coloration syntaxique, git et dispose de quelques paramètres qui peuvent s'avérer bien pratiques.
+Bat est un clone de la commande `cat` réécrit en Rust. Cette commande prend en charge la pagination, la coloration syntaxique, git et dispose de quelques paramètres qui peuvent s'avérer bien utiles.
 
 ```bash
 sudo pacman -S bat
@@ -1612,7 +1572,7 @@ bat -r 2:5 file.md
 
 ### [CpuLimit](https://github.com/opsengine/cpulimit)
 
-Un petit outil bien pratique permettant de limiter l'utilisation du processeur à un processus.
+Un petit outil permettant de limiter l'utilisation du processeur à un processus.
 
 ```bash
 sudo pacman -S cpulimit
@@ -2080,7 +2040,7 @@ echo "Recovered space: $RECOVERED_SPACE Go"
 
 #### Spotify-diff
 
-Un script un peu particulier puisqu'il permet d'afficher la différence entre les musiques présentes dans le dossier `~/Music` et une playlist [Spotify](https://www.spotify.com/). Quand comme moi la playlist est un peu longue et qu'on essaye de récupérer les fichiers de chacune de ces musiques, ce script est bien pratique. Pour l'utiliser, il suffit de mettre sa playlist en public et de remplacer les `**********` de `SPOTIFY_PLAYLIST_ID` par l'identifiant de la playlist en question.
+Un script un peu particulier puisqu'il permet d'afficher la différence entre les musiques présentes dans le dossier `~/Music` et une playlist [Spotify](https://www.spotify.com/). Ce script exploite d'un côté les métadonnées des fichiers et de l'autre l'API public Spotify pour fonctionner. Pour l'utiliser, il suffit de mettre la playlist en public et de remplacer les `**********` de `SPOTIFY_PLAYLIST_ID` par l'identifiant de la playlist en question.
 
 ```bash
 #!/bin/bash
