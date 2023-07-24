@@ -173,7 +173,9 @@ adb shell systemctl restart user@1000
 
 Le gestionnaire de paquet de la distribution est `opkg`. Il s'utilise globalement comme `apt-get` sur les systèmes [Debian](https://www.debian.org/).
 
-La seule notre très importante est de ne pas faire d'`opkg dist-upgrade`. Cela pose un problème au moment de la mise à jour de la [BusyBox](https://www.busybox.net/) et casse complètement l'OS... Donc obligé de tout réinstaller.
+Il faut cependant être attentif à ne pas faire d'`opkg dist-upgrade`. Cela pose un problème au moment de la mise à jour de la [BusyBox](https://www.busybox.net/) et casse complètement l'OS... Donc obligé de tout réinstaller.
+
+De même, des upgrades globaux (`opkg upgrade`) peuvent introduire des instabilités plus ou moins graves... Chose malheureusement symptomatique des distributions mal ou insuffisamment testées. Il est donc recommandé de mettre à jour uniquement les paquets les plus sensibles tels qu'OpenSSH.
 
 ## Script d'optimisation de la batterie
 
@@ -362,7 +364,7 @@ then
   su -l ceres -c "notificationtool -o add --icon=ios-wifi --application=\"System\" --urgency=3 --hint=\"x-nemo-preview-summary WiFi\" --hint=\"x-nemo-preview-body IP: $IP\" \"WiFi\" \"IP: $IP\""
 
   opkg update
-  opkg upgrade
+  opkg upgrade asteroid-* openssh
 fi
 
 if [ $LAST_STATE = "ready" ]

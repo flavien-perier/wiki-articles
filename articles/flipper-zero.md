@@ -57,9 +57,11 @@ La première étape est d'installer [l'application Android](https://apkpure.com/
 
 ### Changement du firmware
 
-Le firmware de base de l'appareil peut être assez limité. En effet, il existe des firmwares opens sources incluant par défaut de nombreux outils communautaires et débloquant certains protocoles. Il faut cependant faire très attention, car pour respecter la réglementation, le logiciel de base limite l'accès à certaines bandes de fréquences en fonction des pays, ce que ne font pas les firmwares communautaires. C'est pourquoi, même si je conseille (tout comme les créateurs de l'appareil) de ne pas se limiter au logiciel de base, il faut faire très attention de ne pas émettre sur ces fréquences (et de préférence ne pas écouter non plus, même si c'est moins grave).
+Le firmware de base de l'appareil peut être assez limité. En effet, il existe des firmwares opens sources incluant par défaut de nombreux outils communautaires et débloquant certains protocoles. Il faut cependant faire très attention, car pour respecter la réglementation, le logiciel de base limite l'accès à certaines bandes de fréquences en fonction des pays, ce que ne font pas les firmwares communautaires. C'est pourquoi, même si je conseille de ne pas se limiter au logiciel de base, il faut faire très attention de ne pas émettre sur ces fréquences (et de préférence ne pas écouter non plus, même si c'est moins grave dans la mesure où les communications sont normalement chiffrées).
 
 Le firmware [unleashed-firmware](https://github.com/DarkFlippers/unleashed-firmware) est assez populaire. Il ne change pas radicalement le fonctionnement de l'appareil, mais se charge d'embarquer de nombreux outils que l'utilisateur n'aura pas à intégrer lui-même.
+
+Au moment du téléchargement plusieurs versions du firmware sont proposées. La `n` ne contient que le firmware modifié, tandis que la `e` contient le firmware et [la plupart des outils communautaires](https://github.com/xMasterX/all-the-plugins). Il est donc bien plus intéressent de télécharger cette seconde version.
 
 ### Utilisation en tant que clé de sécurité
 
