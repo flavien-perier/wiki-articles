@@ -261,9 +261,28 @@ Voici le XML de configuration utilisé pour la machine Windows 10 :
   </metadata>
   <memory unit="KiB">20971520</memory>
   <currentMemory unit="KiB">20971520</currentMemory>
+  <memoryBacking>
+    <source type="memfd"/>
+    <access mode="shared"/>
+  </memoryBacking>
   <vcpu placement="static">16</vcpu>
+  <iothreads>2</iothreads>
+  <cputune>
+    <vcpupin vcpu="0" cpuset="12"/>
+    <vcpupin vcpu="1" cpuset="13"/>
+    <vcpupin vcpu="2" cpuset="14"/>
+    <vcpupin vcpu="3" cpuset="15"/>
+    <vcpupin vcpu="4" cpuset="16"/>
+    <vcpupin vcpu="5" cpuset="17"/>
+    <vcpupin vcpu="6" cpuset="18"/>
+    <vcpupin vcpu="7" cpuset="19"/>
+    <emulatorpin cpuset="0-1"/>
+    <iothreadpin iothread="1" cpuset="0-1"/>
+    <iothreadpin iothread="2" cpuset="2-3"/>
+  </cputune>
   <os>
     <type arch="x86_64" machine="pc-q35-6.1">hvm</type>
+    <boot dev="hd"/>
   </os>
   <features>
     <acpi/>
@@ -304,15 +323,17 @@ Voici le XML de configuration utilisé pour la machine Windows 10 :
   </pm>
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
-    <disk type="file" device="disk">
-      <driver name="qemu" type="qcow2"/>
-      <source file="/home/admin/vms/win10.qcow2"/>
-      <target dev="sda" bus="sata"/>
-      <boot order="1"/>
-      <address type="drive" controller="0" bus="0" target="0" unit="0"/>
+    <disk type="block" device="disk">
+      <driver name="qemu" type="raw" cache="none" io="native" discard="unmap"/>
+      <source dev="/dev/nvme1n1"/>
+      <target dev="sdb" bus="sata"/>
+      <address type="drive" controller="0" bus="0" target="0" unit="1"/>
     </disk>
-    <controller type="usb" index="0" model="qemu-xhci" ports="15">
+    <controller type="usb" index="0" model="qemu-xhci">
       <address type="pci" domain="0x0000" bus="0x02" slot="0x00" function="0x0"/>
+    </controller>
+    <controller type="sata" index="0">
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x1f" function="0x2"/>
     </controller>
     <controller type="pci" index="0" model="pcie-root"/>
     <controller type="pci" index="1" model="pcie-root-port">
@@ -350,43 +371,12 @@ Voici le XML de configuration utilisé pour la machine Windows 10 :
       <target chassis="7" port="0x16"/>
       <address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x6"/>
     </controller>
-    <controller type="pci" index="8" model="pcie-root-port">
-      <model name="pcie-root-port"/>
-      <target chassis="8" port="0x17"/>
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x7"/>
+    <controller type="pci" index="8" model="pcie-to-pci-bridge">
+      <model name="pcie-pci-bridge"/>
+      <address type="pci" domain="0x0000" bus="0x06" slot="0x00" function="0x0"/>
     </controller>
-    <controller type="pci" index="9" model="pcie-root-port">
-      <model name="pcie-root-port"/>
-      <target chassis="9" port="0x18"/>
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x0" multifunction="on"/>
-    </controller>
-    <controller type="pci" index="10" model="pcie-root-port">
-      <model name="pcie-root-port"/>
-      <target chassis="10" port="0x19"/>
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x1"/>
-    </controller>
-    <controller type="pci" index="11" model="pcie-root-port">
-      <model name="pcie-root-port"/>
-      <target chassis="11" port="0x1a"/>
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x2"/>
-    </controller>
-    <controller type="pci" index="12" model="pcie-root-port">
-      <model name="pcie-root-port"/>
-      <target chassis="12" port="0x1b"/>
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x3"/>
-    </controller>
-    <controller type="pci" index="13" model="pcie-root-port">
-      <model name="pcie-root-port"/>
-      <target chassis="13" port="0x1c"/>
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x4"/>
-    </controller>
-    <controller type="pci" index="14" model="pcie-root-port">
-      <model name="pcie-root-port"/>
-      <target chassis="14" port="0x1d"/>
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x5"/>
-    </controller>
-    <controller type="sata" index="0">
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x1f" function="0x2"/>
+    <controller type="scsi" index="0" model="lsilogic">
+      <address type="pci" domain="0x0000" bus="0x08" slot="0x01" function="0x0"/>
     </controller>
     <interface type="network">
       <mac address="52:54:00:e5:75:75"/>
@@ -409,15 +399,15 @@ Voici le XML de configuration utilisé pour la machine Windows 10 :
     </video>
     <hostdev mode="subsystem" type="pci" managed="yes">
       <source>
-        <address domain="0x0000" bus="0x08" slot="0x00" function="0x0"/>
+        <address domain="0x0000" bus="0x09" slot="0x00" function="0x0"/>
       </source>
-      <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
+      <address type="pci" domain="0x0000" bus="0x03" slot="0x00" function="0x0"/>
     </hostdev>
     <hostdev mode="subsystem" type="pci" managed="yes">
       <source>
-        <address domain="0x0000" bus="0x08" slot="0x00" function="0x1"/>
+        <address domain="0x0000" bus="0x09" slot="0x00" function="0x1"/>
       </source>
-      <address type="pci" domain="0x0000" bus="0x06" slot="0x00" function="0x0"/>
+      <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
     </hostdev>
     <memballoon model="virtio">
       <address type="pci" domain="0x0000" bus="0x04" slot="0x00" function="0x0"/>
