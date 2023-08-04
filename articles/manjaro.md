@@ -426,7 +426,7 @@ iptables -t filter -A OUTPUT -p udp --dport 53 -d 1.0.0.1 -j ACCEPT
 iptables -t filter -A OUTPUT -p udp --dport 53 -d 151.80.222.79 -j ACCEPT
 
 ## ntp
-iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT -m owner --uid-owner 0
+iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT -m owner --uid-owner 979
 
 ## http/s
 iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 0
