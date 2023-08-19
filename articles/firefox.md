@@ -54,11 +54,16 @@ Enfin pour le "Mode HTTPS uniquement" je vous conseillerais de cocher la case "A
 
 Cette extension permet de bloquer les pubs que l'on peut trouver sur différents sites internet, ou avant les vidéos YouTube.
 
-#### [Disconnect](https://addons.mozilla.org/fr/firefox/addon/disconnect/)
+#### [Privacy Badger](https://addons.mozilla.org/fr/firefox/addon/privacy-badger17/)
 
-![Disconnect logo](https://medias.flavien.io/articles/firefox/disconnect.webp)
+![Privacy Badger logo](https://medias.flavien.io/articles/firefox/privacy-badger.webp)
 
-Disconnect a pour objectif de bloquer les différents traqueurs implémentés au sein des sites web. Cette extension rend donc le pistage des utilisateurs plus difficile.
+Cette extension permet de bloquer les traqueurs présents sur le web. Cela va par exemple empêcher les modules [Google Analytics](https://fr.wikipedia.org/wiki/Google_Analytics) de s'exécuter.
+
+Il existe actuellement de nombreuses extensions permettant d'améliorer la vie privée. Mais les trois principales qui ont pour objectif de limiter le champ d'action des traqueurs sont :
+- [Ghostery](https://addons.mozilla.org/fr/firefox/addon/ghostery) qui est également un AdBlock, mais qui cause de nombreux dysfonctionnements, car trop agressifs.
+- [Disconnect](https://addons.mozilla.org/fr/firefox/addon/disconnect/) qui est plutôt efficace, mais moins populaire que les deux autres.
+- [Privacy Badger](https://addons.mozilla.org/fr/firefox/addon/privacy-badger17/) qui se base sur des méthodes d'apprentissage pour bloquer les contenus indésirables.
 
 #### [NoScript](https://addons.mozilla.org/fr/firefox/addon/noscript/)
 
