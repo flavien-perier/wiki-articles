@@ -53,6 +53,8 @@ Je détaille néanmoins ici les étapes d'installation :
 
 - Puis les fichiers d'AsteroidOS : [Les données utilisateur](https://release.asteroidos.org/nightlies/bass/asteroid-image-bass.ext4) et [La ROM](https://release.asteroidos.org/nightlies/bass/zImage-dtb-bass.fastboot).
 
+- La stabilité de distribution étant ce qu'elle est, il peut-être bon de remplacer le recovery par [TWRP](https://dl.twrp.me/bass/). Cela peut permettre d'effectuer des backups.
+
 - Ensuite, il faut accéder au bootloader de l'appareil. Pour ce faire, il suffit d'éteindre la montre puis de la rallumer. Au démarrage quand le logo "LG" apparait il faut faire glisser son doigt du coin supérieur gauche de l'écran au coin inférieur droit.
 
 - Ensuite il faut brancher l'appareil à un ordinateur via le câble USB.
@@ -65,6 +67,10 @@ fastboot oem unlock
 fastboot flash system MM-system-ext4-*.img
 fastboot flash boot Skin1980-boot-*.img
 
+fastboot continue
+# Attendre que l'os de base ait fini de s'installer avant de revenir sur fastboot et continuer.
+
+fastboot flash recovery twrp-*-bass.img
 fastboot flash userdata asteroid-image-bass.ext4
 fastboot flash boot zImage-dtb-bass.fastboot
 
