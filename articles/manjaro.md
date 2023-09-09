@@ -1890,19 +1890,29 @@ flatpak update -y
 sudo pacman --noconfirm -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 
 sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 sudo docker pull
-podman images --format "{{.Repository}}:{{.Tag}}" | xargs  -L1 podman pull
+podman images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 podman pull
 
 for PLATFORM in `ls $HOME/.local/share/flatpak/runtime | grep "Platform$"`
 do
     for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
     do
-        cp -Rf $HOME/.themes/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/themes
-        cp -Rf $HOME/.icons/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/icons
-        cp -Rf $HOME/.fonts/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/fonts
+        THEMES=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/themes
+        ICONS=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/icons
+        FONTS=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/fonts
+        chmod -R 700 $THEMES
+        chmod -R 700 $ICONS
+        chmod -R 700 $FONTS
+        rm -Rf $THEMES/*
+        rm -Rf $ICONS/*
+        rm -Rf $FONTS/*
+        cp -Rf $HOME/.themes/* $THEMES
+        cp -Rf $HOME/.icons/* $ICONS
+        cp -Rf $HOME/.fonts/* $FONTS
     done
 done
 
 sudo pkill -9 xfce4-panel
+
 ```
 
 #### clean

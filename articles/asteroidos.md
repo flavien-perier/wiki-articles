@@ -214,12 +214,13 @@ day)
   mcetool --set-display-brightness 100
   mcetool --set-power-saving-mode enabled
   mcetool --set-low-power-mode disabled
-  ifconfig wlan0 up
   systemctl start sensorfwd
   systemctl start ofono
   systemctl start connman
   systemctl start bluetooth
   systemctl start sshd
+  connmanctl enable wifi
+  ifconfig wlan0 up
 
   echo "day" > /tmp/alim-state
   echo "ready" > /tmp/network-state
@@ -229,6 +230,7 @@ night)
   mcetool --set-power-saving-mode enabled
   mcetool --set-low-power-mode disabled
   ifconfig wlan0 down
+  connmanctl disable wifi
   systemctl stop sensorfwd
   systemctl stop ofono
   systemctl stop connman
