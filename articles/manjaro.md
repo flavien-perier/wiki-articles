@@ -916,41 +916,6 @@ La version open source du navigateur de Google. Je ne l'utilise personnellement 
 flatpak install --user org.chromium.Chromium
 ```
 
-### [ChatGPT](https://openai.com/blog/chatgpt)
-
-Il n'est plus vraiment possible d'ignorer la puissance de ChatGPT. Le système n'est pas parfait et il n'est pas (encore) aussi disruptif que le laissent sous-entendre beaucoup de médias. Néanmoins, il fournit une véritable assistance dans de nombreux domaines. Il peut donc être agréable de bénéficier d'une application de bureau permettant de discuter avec cette IA.
-
-```bash
-mkdir -p ~/.icons
-
-chmod 700 ~/bin
-chmod 700 ~/.icons
-
-cd /tmp
-wget https://github.com/lencx/ChatGPT/releases/download/v0.12.0/ChatGPT_0.12.0_linux_x86_64.AppImage.tar.gz -O /tmp/chatgpt.tar.gz
-wget https://openai.com/favicon.ico -O  ~/.icons/chatgpt.ico
-tar xvf /tmp/chatgpt.tar.gz
-
-mv chat-gpt*.AppImage ~/bin/chatgpt
-
-chmod 500 ~/bin
-chmod 500 ~/bin/chatgpt
-chmod 500 ~/.icons
-chmod 400 ~/.icons/chatgpt.ico
-
-cat << EOL > ~/.local/share/applications/shadow.desktop
-[Desktop Entry]
-Name=ChatGPT
-Comment=Agent conversationnel ChatGPT
-Keywords=Network;
-Exec=$HOME/bin/chatgpt
-Terminal=false
-Type=Application
-Icon=$HOME/.icons/chatgpt.ico
-Categories=Network;
-EOL
-```
-
 ### [TorBrowser](https://www.torproject.org/)
 
 Pour accéder au réseau Tor.
