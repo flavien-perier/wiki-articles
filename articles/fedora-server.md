@@ -39,6 +39,27 @@ dnf system-upgrade download --releasever=38
 dnf system-upgrade reboot
 ```
 
+## Nommage du serveur
+
+Pour donner un nom à une machine, il suffit d'exécuter la commande :
+
+```bash
+echo "flavien-server" > /etc/hostname
+```
+
+### Base
+
+Installation des drivers Nvidia et configuration minimale du serveur :
+
+```bash
+curl -s https://raw.githubusercontent.com/flavien-perier/linux-shell-configuration/master/linux-shell-configuration.sh | bash -
+
+dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
+dnf install kernel-devel kernel-headers
+dnf module install nvidia-driver
+dnf remove plymouth*
+```
+
 ### Connection SSH
 
 Pour accéder au serveur à distance il est important de commencer par créer une clé SSH afin de s'y connecter.
@@ -46,17 +67,17 @@ Pour accéder au serveur à distance il est important de commencer par créer un
 Depuis une machine client (autre que le serveur), il faut utiliser les commandes suivantes afin de générer les clés :
 
 ```bash
-SERVEUR_IP=192.168.X.X
+SERVER_IP=192.168.X.X
 
-ssh-keygen -f ~/.ssh/flavien-serveur -t rsa -b 4096
-ssh-copy-id -i ~/.ssh/flavien-serveur admin@$SERVEUR_IP
+ssh-keygen -f ~/.ssh/flavien-server -t rsa -b 4096
+ssh-copy-id -i ~/.ssh/flavien-server admin@$SERVER_IP
 
 cat << EOL >> ~/.ssh/config
-Host flavien-serveur
-    HostName $SERVEUR_IP
+Host flavien-server
+    HostName $SERVER_IP
     User admin
     Port 22
-    IdentityFile ~/.ssh/flavien-serveur
+    IdentityFile ~/.ssh/flavien-server
     IdentitiesOnly yes
 EOL
 ```
@@ -77,17 +98,133 @@ EOL
 systemctl reload sshd
 ```
 
-### Base
-
-Installation des drivers Nvidia et configuration minimale du serveur :
+### Connection VPN
 
 ```bash
-curl -s https://raw.githubusercontent.com/flavien-perier/linux-shell-configuration/master/linux-shell-configuration.sh | bash -
+SERVER_IP=`ip route get 1.1.1.1 | awk 'NR==1 {print $(NF-2)}'`
 
-dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
-dnf install kernel-devel kernel-headers
-dnf module install nvidia-driver
-dnf remove plymouth*
+echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+sysctl -p
+
+cd /tmp
+wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.1.6/EasyRSA-3.1.6.tgz
+tar xvf EasyRSA-*.tgz
+rm EasyRSA-*.tgz
+mv EasyRSA-* /etc/openvpn/easy-rsa
+cd /etc/openvpn/easy-rsa
+echo 'set_var EASYRSA                 "$PWD"
+set_var EASYRSA_PKI             "$EASYRSA/pki"
+set_var EASYRSA_DN              "cn_only"
+set_var EASYRSA_REQ_COUNTRY     "France"
+set_var EASYRSA_REQ_PROVINCE    "France"
+set_var EASYRSA_REQ_CITY        "Limoges"
+set_var EASYRSA_REQ_ORG         "Flavien"
+set_var EASYRSA_REQ_EMAIL       "perier@flavien.io"
+set_var EASYRSA_REQ_OU          "Flavien"
+set_var EASYRSA_KEY_SIZE        4096
+set_var EASYRSA_ALGO            rsa
+set_var EASYRSA_CA_EXPIRE       7500
+set_var EASYRSA_CERT_EXPIRE     365
+set_var EASYRSA_NS_SUPPORT      "no"
+set_var EASYRSA_NS_COMMENT      "Flavien CA"
+set_var EASYRSA_EXT_DIR         "$EASYRSA/x509-types"
+set_var EASYRSA_SSL_CONF        "$EASYRSA/openssl-easyrsa.cnf"
+set_var EASYRSA_DIGEST          "sha256"' | tee /etc/openvpn/easy-rsa/vars
+
+# Server certificates
+./easyrsa init-pki
+./easyrsa build-ca
+./easyrsa gen-req flavien-server nopass
+./easyrsa sign-req server flavien-server
+./easyrsa gen-dh
+cp /etc/openvpn/easy-rsa/pki/ca.crt /etc/openvpn/server/
+cp /etc/openvpn/easy-rsa/pki/dh.pem /etc/openvpn/server/
+cp /etc/openvpn/easy-rsa/pki/private/flavien-server.key /etc/openvpn/server/
+cp /etc/openvpn/easy-rsa/pki/issued/flavien-server.crt /etc/openvpn/server/
+openvpn --genkey secret /etc/openvpn/server/ta.key
+
+# Client certificates
+./easyrsa gen-req client nopass
+./easyrsa sign-req client client
+cp /etc/openvpn/easy-rsa/pki/ca.crt /etc/openvpn/client/
+cp /etc/openvpn/easy-rsa/pki/issued/client.crt /etc/openvpn/client/
+cp /etc/openvpn/easy-rsa/pki/private/client.key /etc/openvpn/client/
+
+# Verify CA validity
+openssl verify -CAfile /etc/openvpn/server/ca.crt /etc/openvpn/server/flavien-server.crt
+openssl verify -CAfile /etc/openvpn/client/ca.crt /etc/openvpn/client/client.crt
+
+# Add firewall rules
+firewall-cmd --permanent --add-service=openvpn
+firewall-cmd --permanent --zone=trusted --add-service=openvpn
+firewall-cmd --permanent --zone=trusted --add-interface=tun0
+firewall-cmd --add-masquerade
+firewall-cmd --permanent --add-masquerade
+firewall-cmd --permanent --direct --passthrough ipv4 -t nat -A POSTROUTING -s 10.8.0.0/24 -o $SERVER_IP -j MASQUERADE
+firewall-cmd --reload
+
+# OpenVPN configuratiuon
+echo 'port 1194
+server 10.8.0.0 255.255.255.0
+proto udp
+dev tun
+
+ca /etc/openvpn/server/ca.crt
+cert /etc/openvpn/server/flavien-server.crt
+key /etc/openvpn/server/flavien-server.key
+dh /etc/openvpn/server/dh.pem
+
+push "redirect-gateway def1"
+push "dhcp-option DNS 208.67.222.222"
+push "dhcp-option DNS 208.67.220.220"
+push "dhcp-option DNS 1.1.1.1"
+push "dhcp-option DNS 1.0.0.1"
+push "dhcp-option DNS 151.80.222.79"
+
+daemon
+user nobody
+group nobody
+keepalive 20 120
+log-append /var/log/openvpn.log
+verb 3' > /etc/openvpn/server/server.conf
+
+# Start OpenVPN
+systemctl enable openvpn-server@server
+systemctl start openvpn-server@server
+```
+
+Par la suite il est possible de générer le fichier `ovpn` qui sera transmis au client afin qu'il puisse ce connecter :
+
+```bash
+cat << EOL > ~/clien.ovpn
+client
+remote $SEREVER_IP 1194
+proto udp
+dev tun
+
+resolv-retry infinite
+remote-cert-tls server
+nobind
+verb 3
+
+<ca>
+$(cat /etc/openvpn/server/ca.crt)
+</ca>
+
+<cert>
+$(cat /etc/openvpn/client/client.crt)
+</cert>
+
+<key>
+$(cat /etc/openvpn/client/client.key)
+</key>
+EOL
+```
+
+Il suffit alors de récupérer le fichier `~/clien.ovpn` sur ca machine à l'aide de scp et de l'exécuter avec :
+
+```bash
+sudo sudo openvpn --config client.ovpn
 ```
 
 ### Wake on Lan
@@ -120,7 +257,7 @@ systemctl start docker
 
 usermod -aG docker admin
 
-cat << EOF > /etc/nvidia-container-runtime/config.toml
+cat << EOL > /etc/nvidia-container-runtime/config.toml
 disable-require = false
 #swarm-resource = "DOCKER_RESOURCE_GPU"
 #accept-nvidia-visible-devices-envvar-when-unprivileged = true
@@ -139,7 +276,7 @@ ldconfig = "@/sbin/ldconfig"
 
 [nvidia-container-runtime]
 #debug = "/var/log/nvidia-container-runtime.log"
-EOF
+EOL
 ```
 
 Par la suite pour lancer le conteneur il suffit de créer le fichier [docker-compose](https://docs.docker.com/compose/) avec les paramètres suivants :
@@ -447,3 +584,7 @@ systemctl restart cockpit
 - [Docker plugin for Cockpit](https://github.com/mrevjd/cockpit-docker)
 - [Bridged Host-VM Network](https://briantward.github.io/bridge-host-vm/)
 - [Enabling the RPM Fusion repositories](https://docs.fedoraproject.org/en-US/quick-docs/setup_rpmfusion/)
+- [Launch OpenVPN Access Server On Red Hat](https://openvpn.net/vpn-software-packages/redhat/)
+- [How To Install OpenVPN on CentOS/RHEL 8](https://tecadmin.net/install-openvpn-centos-8/)
+- [Arch Wiki - Easy-RSA](https://wiki.archlinux.org/title/Easy-RSA)
+- [Fedora Wiki - OpenVPN](https://fedoraproject.org/wiki/OpenVPN)
