@@ -177,6 +177,9 @@ dh /etc/openvpn/server/dh.pem
 
 cipher AES-256-CBC
 
+route-nopull
+route 192.168.1.254
+
 push "redirect-gateway def1"
 push "dhcp-option DNS 208.67.222.222"
 push "dhcp-option DNS 208.67.220.220"
