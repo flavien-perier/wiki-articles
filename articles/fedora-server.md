@@ -147,8 +147,9 @@ openvpn --genkey secret /etc/openvpn/server/ta.key
 ./easyrsa gen-req client nopass
 ./easyrsa sign-req client client
 cp /etc/openvpn/easy-rsa/pki/ca.crt /etc/openvpn/client/
-cp /etc/openvpn/easy-rsa/pki/issued/client.crt /etc/openvpn/client/
-cp /etc/openvpn/easy-rsa/pki/private/client.key /etc/openvpn/client/
+cp /etc/openvpn/easy-rsa/pki/issued/*.crt /etc/openvpn/client/
+cp /etc/openvpn/easy-rsa/pki/private/*.key /etc/openvpn/client/
+rm /etc/openvpn/client/flavien-server.*
 
 # Verify CA validity
 openssl verify -CAfile /etc/openvpn/server/ca.crt /etc/openvpn/server/flavien-server.crt
@@ -166,13 +167,15 @@ firewall-cmd --reload
 # OpenVPN configuratiuon
 echo 'port 1194
 server 10.8.0.0 255.255.255.0
-proto udp
-dev tun
+proto udp4
+dev tap
 
 ca /etc/openvpn/server/ca.crt
 cert /etc/openvpn/server/flavien-server.crt
 key /etc/openvpn/server/flavien-server.key
 dh /etc/openvpn/server/dh.pem
+
+cipher AES-256-CBC
 
 push "redirect-gateway def1"
 push "dhcp-option DNS 208.67.222.222"
@@ -182,11 +185,16 @@ push "dhcp-option DNS 1.0.0.1"
 push "dhcp-option DNS 151.80.222.79"
 
 daemon
+max-clients 5
+client-to-client
 user nobody
 group nobody
 keepalive 20 120
 log-append /var/log/openvpn.log
 verb 3' > /etc/openvpn/server/server.conf
+
+# SeLinux
+restorecon -Rv /etc/openvpn
 
 # Start OpenVPN
 systemctl enable openvpn-server@server
@@ -196,11 +204,13 @@ systemctl start openvpn-server@server
 Par la suite il est possible de générer le fichier `ovpn` qui sera transmis au client afin qu'il puisse ce connecter :
 
 ```bash
-cat << EOL > ~/clien.ovpn
+cat << EOL > ~/vm-jeux.ovpn
 client
 remote $SEREVER_IP 1194
-proto udp
-dev tun
+proto udp4
+dev tap
+
+cipher AES-256-CBC
 
 resolv-retry infinite
 remote-cert-tls server
