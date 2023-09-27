@@ -1,6 +1,6 @@
 ---
 title: Docker
-type: WIP
+type: WIKI
 categories:
   - system
   - development
@@ -86,10 +86,6 @@ docker rm -f container-test
 docker rmi -f image-test
 ```
 
-### Les Dockerfiles
-
-Nous venons de voir qu'il est possible de créer une Image Docker à la main en injectant des commandes dans un conteneur. Cependant, cette technique n'est pas entièrement satisfaisante, car elle obligerait les développeurs d'application soit à repackager leurs applications d'une version sur l'autre, soit à développer des scripts shell complexes pour automatiser ces actions. Un langage WSL a donc été mis à disposition dans le but d'automatiser l'enchainement des actions menant à la création d'une image. Ce langage est utilisé au sein du [Dockerfile](https://docs.docker.com/engine/reference/builder/).
-
 ### La registry
 
 Une [registry Docker](https://docs.docker.com/registry/) est un service accessible depuis le réseau sur lequel des images vont pouvoir être mises à disposition. Par défaut, la plupart des images que nous utilisons sont stockées sur le [Docker hub](https://hub.docker.com/). Les images qui y sont stockées ne portent aucun préfixe. Comme par exemple `postgres`.
@@ -124,6 +120,129 @@ docker pull postgres:alpine3.17
 
 C'est ce dernier tag qui serait le plus approprié dans une infrastructure. En effet, il est souvent préférable d'utiliser `Alpine` quand il est proposé par les éditeurs aux autres distributions, car bien adapté à Docker et surtout très léger. Ensuite, il faut surtout favoriser les tags qui donnent le plus de détail sur le numéro de version. Cela évite quand on met à jour son infrastructure d'avoir la mauvaise surprise d'une base de données plus compatible avec l'application qu'elle a en face.
 
+Si on souhaite visualiser les métadonnées d'une image, il est possible de les afficher avec la commande :
+
+```bash
+docker inspect debian
+```
+
+### Les Dockerfiles
+
+Nous venons de voir qu'il est possible de créer une Image Docker à la main en injectant des commandes dans un conteneur. Cependant, cette technique n'est pas entièrement satisfaisante, car elle obligerait les développeurs d'application soit à repackager leurs applications d'une version sur l'autre, soit à développer des scripts shell complexes pour automatiser ces actions. Un langage WSL a donc été mis à disposition dans le but d'automatiser l'enchainement des actions menant à la création d'une image. Ce langage est utilisé au sein du [Dockerfile](https://docs.docker.com/engine/reference/builder/).
+
+Il est important de noter qu'a la suite de chaque instruction, un layer va être créé. Cela permet de recréer rapidement l'image en cas de modifications mineures. Par exemple pour un projet de développement, seul le layer avec les sources sera modifié entre chaque modification. Cependant, la contrepartie est que pour réduire la taille de l'image il peut-être préférable de limiter le nombre d'instructions. 
+
+Voici les instructions de base pour construire un Dockerfile :
+
+- `FROM`: Cette première instruction permet de définir la base sur laquelle va être construite notre image. En général il s'agit d'un système d'exploitation ou d'une distribution sur laquelle un langage est déjà déployé. Ça peut être par exemple `alpine:3.18.3`, `debian:trixie`, `node:lts-hydrogen`, `openjdk:22-slim`. Il est possible d'utiliser plusieurs instructions FROM dans le même Dockerfile. Cette technique permet de créer une première image qui va en général effectuer un build afin de fournir le résultat de ce build à une seconde image qui va l'utiliser.
+
+- `LABEL`: Cette instruction permet de rajouter des métadonnées à l'image.
+
+- `ARG`: Cette instruction permet de déclarer une variable d'environnement au moment du build de l'image.
+
+- `ENV`: Cette instruction permet de déclarer une variable d'environnement au moment du runtime du conteneur.
+
+- `COPY`: Cette instruction permet de copier un fichier présent à côté du Dockerfile directement au sein de l'image. Il est possible de rajouter des paramètres `chown` ou `chmod`. Il est également possible de rajouter un fichier `.dockerignore` dans le cas ou on souhaite copier l'intégralité d'un dossier à l'exception de certains fichiers.
+
+- `RUN`: Cette instruction permet d'exécuter une commande au moment de la création de l'image. Il est préférable de chainer un maximum les instructions afin de ne pas créer trop d'instructions. Il faut aussi faire en sorte de supprimer le cache à la suite de l'installation d'un programme. Et ne jamais mettre à jour la distribution (sinon l'image va contenir différentes versions de chaque programme réparti sur plusieurs layers).
+
+Par exemple pour installer bind9 sur Alpine ou Debian :
+
+```Dockerfile
+FROM alpine:3.18.3
+RUN apk --update --no-cache add bind
+```
+
+```Dockerfile
+FROM debian:11.7
+RUN apt-get update && apt-get install -y bind && rm -rf /var/lib/apt/lists/*
+```
+
+- `USER`: Cette instruction permet de changer l'utilisateur (elle ne permet pas de le créer).
+
+Dans l'exemple suivant on créer un utilisateur `my-user` sur une image Alpine et sur une image Debian. Il peut être préférable de fixer l'UID et le GID de l'utilisateur étant donné que la première valeur est 1000 sur la plupart des distributions, mais pas Alpine ou la première valeur est 100.
+
+```Dockerfile
+FROM alpine:3.18.3
+
+ARG DOCKER_UID="500" \
+    DOCKER_GID="500"
+
+RUN addgroup -g $DOCKER_GID my-user && \
+    adduser -G my-user -D -H -h /opt/my-user -u $DOCKER_UID my-user
+
+USER my-user
+```
+
+```Dockerfile
+FROM debian:11.7
+
+ARG DOCKER_UID="500" \
+    DOCKER_GID="500"
+
+RUN groupadd -g $DOCKER_GID my-user && \
+    useradd -g my-user -M -d /opt/my-user -u $DOCKER_UID my-user
+
+USER my-user
+```
+
+- `EXPOSE`: Cette instruction permet d'exposer un port.
+
+- `VOLUME`: Cette instruction permet de décrire l'emplacement des volumes de l'image. Ça permet essentiellement à ceux qui vont l'utiliser de savoir ou positionner les volumes au moment de l'instanciation en tant que conteneur.
+
+- `CMD`: Ce qui suit cette instruction décrit la commande qui va être exécutée au lancement du conteneur. Lorsqu'elle prendra fin, le conteneur sera arrêté.
+
+Pour exemple voici le Dockerfile de ce site :
+
+```Dockerfile
+FROM node:lts-alpine as builder
+
+WORKDIR /opt/flavien
+
+COPY --chown=root:root . .
+
+RUN apk add --no-cache build-base g++ python3 libpng-dev jpeg-dev giflib-dev pango-dev cairo-dev git ca-certificates wget && \
+    npm ci && \
+    npm run build && \
+    chmod -R 750 /opt/flavien && \
+    rm -Rf node_modules && \
+    npm install --production && \
+    rm -Rf src public postcss.config.js vue.config.js tsconfig.json .env*
+
+FROM node:lts-alpine
+
+LABEL maintainer="Flavien PERIER <perier@flavien.io>" \
+    version="1.0.0" \
+    description="Flavien website"
+
+ARG DOCKER_UID="500" \
+    DOCKER_GID="500"
+
+WORKDIR /opt/flavien
+
+RUN apk add --no-cache libpng-dev jpeg-dev giflib-dev pango-dev cairo-dev && \
+    addgroup -g $DOCKER_GID flavien && \
+    adduser -G flavien -D -H -h /opt/flavien -u $DOCKER_UID flavien && \
+    mkdir /var/log/flavien && \
+    chown flavien:flavien /var/log/flavien
+
+COPY --chown=flavien:flavien --from=builder /opt/flavien .
+
+USER flavien
+
+EXPOSE 8080
+
+CMD yarn start
+```
+
+Pour builder un Dockerfile comme celui-ci, il suffit de taper la commande :
+
+```bash
+docker build -t flavienperier/flavien-website:latest .
+```
+
+Il est également possible d'utiliser le module [buildx](https://github.com/docker/buildx) qui va remplacer la commande `docker build` dans le futur. Ce module permet notamment pour une même image d'avoir plusieurs architectures de processeur supporté. 
+
 ### Débogage d'environnement
 
 #### Visualiser les logs
@@ -134,7 +253,7 @@ Les conteneurs exposent les logs du programme qui est exécuté en premier plan.
 docker logs container-test
 ```
 
-Avec cette commande le retour va contenir tous les logs depuis le lancement du conteneur. Cependant, il peut être utile d'écouter les logs au fur et à mesure qu'elles arrivent (pour déboguer un serveur web par exemple) :
+Avec cette commande, le retour va contenir tous les logs depuis le lancement du conteneur. Cependant, il peut être utile d'écouter les logs au fur et à mesure qu'elles arrivent (pour déboguer un serveur web par exemple) :
 
 ```bash
 docker logs -f container-test
@@ -158,6 +277,198 @@ docker exec -it container-test sh
 
 Docker compose est une application développer par la communauté Docker. Elle permet de décrire une infrastructure basée sur Docker. On va donc pouvoir décrire l'ordre de lancement des conteneurs, les réseaux sur lesquels ils vont être connectés, les volumes auxquels ils auront accès...
 
+Les commandes de base sont :
+
+- `docker-compose up -d`: Pour démarrer l'application.
+- `docker-compose down`: Pour arrêter l'infrastructure.
+- `docker-compose logs -f`: Pour afficher les logs de l'application.
+
+Chacune de ces commandes peut être suivie par le nom d'un d'un conteneur pour n'appliquer l'opération qu'a lui seul.
+
+Voici un exemple simple qui permet d'instancier une application Nextcloud avec sa base de données PostgreSQL derrière un reverse proxy Nginx exposé sur la machine hôte.
+
+```yaml
+version: "3.8"
+services:
+  openssl:
+    image: flavienperier/openssl
+    container_name: openssl
+    volumes:
+      - ./data/certificates:/certificates
+    environment:
+      DOMAIN: local
+      CERTIFICATES: nc
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    depends_on:
+      - cloud
+      - openssl
+    volumes:
+      - ./data/certificates:/etc/certificates:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 80:80
+      - 443:443
+    logging:
+      driver: json-file
+      options:
+        max-size: "2g"
+        max-file: "100"
+
+  cloud:
+    image: nextcloud
+    container_name: cloud
+    restart: always
+    depends_on:
+      - db-cloud
+    volumes:
+      - ./data/nextcloud/custom_apps:/var/www/html/custom_apps
+      - ./data/nextcloud/config:/var/www/html/config
+      - ./data/nextcloud/data:/var/www/html/data
+      - ./data/nextcloud/themes:/var/www/html/themes
+      - ./data/nextcloud/version.php:/tmp/version.php
+    environment:
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=${NEXTCLOUD_DB_PASSWORD}
+      - POSTGRES_HOST=db-cloud
+      - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
+      - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
+      - NEXTCLOUD_TRUSTED_DOMAINS=nc.local
+
+  db-cloud:
+    image: postgres:12-alpine
+    container_name: db-cloud
+    restart: always
+    volumes:
+      - ./data/nextcloud/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=${NEXTCLOUD_DB_PASSWORD}
+```
+
+Il y a plusieurs variables qui sont exposées de la façon suivante `${...}`. Elles vont chercher leurs valeurs au moment de l'exécution de la commande `docker-compose up -d` dans un fichier `.env` qui doit se trouver à côté.
+
+```ini
+NEXTCLOUD_DB_PASSWORD=password
+NEXTCLOUD_ADMIN_USER=admin
+NEXTCLOUD_ADMIN_PASSWORD=password
+```
+
+Et voici le contenu de la configuration nginx.conf :
+
+```conf
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+}
+
+http {
+  server_tokens off;
+  sendfile on;
+  tcp_nopush on;
+  tcp_nodelay on;
+  keepalive_timeout 65;
+  types_hash_max_size 2048;
+  client_body_buffer_size 1k;
+  client_header_buffer_size 1k;
+  large_client_header_buffers 2 1k;
+
+  default_type application/octet-stream;
+
+  log_format csv '"$time_local";"$host";"$request";$status;$body_bytes_sent;"$remote_addr";"$remote_user";"$http_referer";"$http_user_agent"';
+  log_format log '$host $remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent"';
+
+  access_log /var/log/nginx/access.csv csv;
+  access_log /var/log/nginx/access.log log;
+
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+  server {
+    listen 80;
+    listen [::]:80;
+
+    location /.well-known/acme-challenge/ {
+      root /var/www/certbot;
+    }
+
+    location / {
+      return 301 https://$host$request_uri;
+    }
+  }
+
+  server {
+    server_name nc.local;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    ssl_certificate /etc/certificates/nc/nc.pem;
+    ssl_certificate_key /etc/certificates/nc/nc.key;
+
+    add_header Strict-Transport-Security "max-age=15768000";
+    add_header X-Content-Type-Options nosniff;
+    add_header X-Frame-Options SAMEORIGIN;
+    add_header X-XSS-Protection "1;mode=block";
+    add_header X-Robots-Tag none;
+    add_header X-Download-Options noopen;
+    add_header X-Permitted-Cross-Domain-Policies none;
+
+    client_max_body_size 4096M;
+    fastcgi_buffers 64 4K;
+
+    fastcgi_hide_header X-Powered-By;
+
+    location / {
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto https;
+
+      proxy_read_timeout 3600;
+      proxy_connect_timeout 3600;
+      proxy_send_timeout 3600;
+      send_timeout 3600;
+
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
+
+      proxy_pass http://cloud:80;
+    }
+
+    location /.well-known/carddav {
+      return 301 $scheme://$host/remote.php/dav;
+    }
+
+    location /.well-known/caldav {
+      return 301 $scheme://$host/remote.php/dav;
+    }
+
+    gzip on;
+    gzip_vary on;
+    gzip_comp_level 4;
+    gzip_min_length 256;
+    gzip_proxied expired no-cache no-store private no_last_modified no_etag auth;
+    gzip_types application/atom+xml application/javascript application/json application/ld+json application/manifest+json application/rss+xml application/vnd.geo+json application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml application/xml font/opentype image/bmp image/svg+xml image/x-icon text/cache-manifest text/css text/plain text/vcard text/vnd.rim.location.xloc text/vtt text/x-component text/x-cross-domain-policy;
+  }
+}
+```
+
+Voici l'architecture des fichiers :
+
+```text
+folder
+├── .env
+├── docker-compose.yaml
+└── nginx.conf
+```
+
+Pour lancer cette application il suffit de lancer la commande `docker-compose up -d` et de rajouter `127.0.0.1    nc.local`.
+
+Dans cet exemple, on peut noter que toutes les machines peuvent se joindre directement avec leur nom de conteneur. Cela est lié au fait que Docker déploie son propre DNS dans l'infrastructure.
+
 ## Impacte sur les développements
 
 ### Applications Statless
@@ -179,7 +490,7 @@ Le problème est que tous les développeurs ne sont pas formés au système. De 
 Sans entrer plus dans le détail, [Kubernetes](https://kubernetes.io/) est une solution développée pas Google et maintenu par la [Cloud Native Computing Foundation](https://www.cncf.io/) permettant d'orchestrer des conteneurs dans une infrastructure distribuée, c'est-à-dire composée de plusieurs machines physiques ou virtuelles. La solution propose de très nombreuses options :
 
 - Gestion de l'autoscaling: L'infrastructure est capable d'augmenter ou de diminuer le nombre d'instances d'une application en fonction de critères comme la charge moyenne des instances déjà en place. Il est possible d'éditer de très nombreuses règles et donc de définir très précisément une stratégie.
-- Ingress: Dans Kubernetes, les Ingres sont les points d'entrées vers l'application. Ce sont eux qui vont servir de revers-proxy et s'occuper du load-balancing. En fonction des instances Kubernetes ils peuvent être sous [Nginx](https://nginx.org/) ou plus généralement sous [Traefik](https://traefik.io/traefik/).
+- Ingress: Dans Kubernetes, les Ingres sont les points d'entrées vers l'application. Ce sont eux qui vont servir de reverse-proxy et s'occuper du load-balancing. En fonction des instances Kubernetes ils peuvent être sous [Nginx](https://nginx.org/) ou plus généralement sous [Traefik](https://traefik.io/traefik/).
 - Mise à jour à chaud: Quand les applications le permettent (le point bloquant étant souvent le schéma de la base de données), il est possible d'effectuer des mises à jour des applications sur l'infrastructure sans même que les utilisateurs ne le remarquent. Pour ce faire il existe diverses stratégies de redirection de flux.
 - Readiness probe: commence à utiliser une application uniquement au moment ou elle a complètement fini de démarrer. L'application ne prendra donc pas de trafic entrant durant son démarrage.
 - Liveness probe: Vérifie à interval régulier que l'application est bien lancée. En cas de dysfonctionnement l'infrastructure est capable de réagir en fonction de scénario. Redémarrer l'application, faire une nouvelle instance...
@@ -191,7 +502,7 @@ Dans Kubernetes un [pod](https://kubernetes.io/fr/docs/concepts/workloads/pods/p
 
 Toujours dans Kubernetes, un [node](https://kubernetes.io/docs/concepts/architecture/nodes/) décrit une machine appartenant au réseau Kubernetes. En fonction de l'architecture du cloud sous-jacent, il peut s'agir d'une machine physique, ou d'une machine virtuelle.
 
-Kubernetes possède des mécaniques qui lui permettent de répartir au mieux la charge au sein des différents nodes qui constituent son infrastructure. Il sera donc capable de créer de nouvelles instances de pod afin d'utiliser au mieux les ressources mises à sa disposition et éviter les dégradations de services. Pour les fournisseurs de cloud, cela permet également d'éviter d'allouer trop de ressources à des applications qui ne serait pas ou peu utilisé. Cette technologie permet donc de faire tourner plus d'applications sur moins de machines, à condition que les pics de montée en charge ne soient pas tous au même moment. Pour prendre un exemple, le service de streaming de jeux dans le cloud [Shadow](https://shadow.tech/) est une offre qui est utilisée par des particuliers sur leur temps personnel. Lors du [rachat par M. Klaba](https://www.lefigaro.fr/flash-eco/jeu-video-en-ligne-le-fondateur-d-ovhcloud-reprend-blade-shadow-20210430), le patron d'[OVH](https://www.ovh.com/), la nouvelle stratégie fut d'ajouter sur le même data-center des offres professionnelles. Ainsi, durant la journée les applications de bureau vont prendre la majeure partie du datacenter tandis que le soir, ces applications vont être désinstancier pour laisser place à des machines de jeux. Les pics de charges sur ces deux types d'applications étant non synchronisés, il est très facile de les faire cohabiter.
+Kubernetes possède des mécaniques qui lui permettent de répartir au mieux la charge au sein des différents nodes qui constituent son infrastructure. Il sera donc capable de créer de nouvelles instances de pod afin d'utiliser au mieux les ressources mises à sa disposition et éviter les dégradations de services. Pour les fournisseurs de cloud, cela permet également d'éviter d'allouer trop de ressources à des applications qui ne serait pas ou peu utilisé. Cette technologie permet donc de faire tourner plus d'applications sur moins de machines, à condition que les pics de montée en charge ne soient pas tous au même moment. Pour prendre un exemple, le service de streaming de jeux dans le cloud [Shadow](https://shadow.tech/) est une offre qui est utilisée par des particuliers sur leur temps personnel. Lors du [rachat par M. Klaba](https://www.lefigaro.fr/flash-eco/jeu-video-en-ligne-le-fondateur-d-ovhcloud-reprend-blade-shadow-20210430), le patron d'[OVH](https://www.ovh.com/), la nouvelle stratégie fut d'ajouter sur la même data-center des offres professionnelles. Ainsi, durant la journée les applications de bureau vont prendre la majeure partie du datacenter tandis que le soir, ces applications vont être désinstancier pour laisser place à des machines de jeux. Les pics de charges sur ces deux types d'applications étant non synchronisés, il est très facile de les faire cohabiter.
 
 Cependant, des problématiques peuvent de nouveau survenir quand la totalité des ressources des nodes de l'application est consommée. Si Kubernetes ne répond pas directement à cette problématique, il est tout de même extrêmement facile d'ajouter un nouveau node à un cluster durant son fonctionnement et il est tout aussi facile de le supprimer. Les mécaniques de Kubernetes faisant en sorte que les ressources disponibles sur un node soient instanciées ailleurs en cas de perte. Ainsi dans le cas ou une entreprise gère elle-même son cluster Kubernetes, mais qu'elle repose sur un cloud-provider, il lui est donc possible de faire de l'autoscaling de node.
 

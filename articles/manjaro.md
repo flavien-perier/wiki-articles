@@ -1850,6 +1850,8 @@ Un petit script qui met à jour toutes nos applications avec les différents ges
 ```bash
 #!/bin/bash
 
+set -e
+
 sudo pacman --noconfirm -Syyu
 yay --noconfirm -Syyu
 flatpak update -y
