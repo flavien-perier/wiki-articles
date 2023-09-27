@@ -21,9 +21,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      showguides="false"
-     inkscape:zoom="0.53427247"
-     inkscape:cx="530.62812"
-     inkscape:cy="458.56751"
+     inkscape:zoom="1.5111507"
+     inkscape:cx="189.59062"
+     inkscape:cy="231.61157"
      inkscape:window-width="1920"
      inkscape:window-height="1048"
      inkscape:window-x="1920"
@@ -838,19 +838,6 @@
        height="34"
        fill="#2F5597"
        id="rect107" />
-    <text
-       fill="#ffffff"
-       font-family="Calibri, Calibri_MSFontService, sans-serif"
-       font-weight="400"
-       font-size="24"
-       id="text107"
-       style="font-size:18.6667px"
-       x="157.33911"
-       y="311.79935">Docker pull <tspan
-   x="272.73212"
-   y="311.79935"
-   id="tspan107"
-   style="font-size:18.6667px">mysql</tspan></text>
     <rect
        x="94"
        y="328"
@@ -865,7 +852,7 @@
        font-size="24"
        id="text108"
        style="font-size:18.6667px"
-       x="157.38174"
+       x="153.38174"
        y="349.52194">Docker run mysql</text>
     <rect
        x="94"
@@ -919,5 +906,22 @@
        d="M676.905 305.929 686.851 319.566 689.452 323.22 685.106 326.313 682.515 322.671 682.533 322.696 672.596 309.071ZM698.699 336.333 701.716 340.731 697.318 343.748 694.301 339.35ZM710.507 354.222 713.157 358.432 716.58 364.328 719.634 370.054 721.072 373.109 716.246 375.38 714.837 372.386 714.897 372.505 711.897 366.88 711.944 366.964 708.569 361.152 708.618 361.233 705.993 357.063ZM726.544 388.766 726.833 390.191 727.178 394.537 727.142 394.875 721.839 394.306 721.849 394.216 721.842 394.711 721.529 390.774 721.574 391.093 721.317 389.826ZM716.234 408.771 712.031 410.409 706.177 412.035 699.933 413.258 694.955 413.921 694.25 408.635 699.148 407.982 698.987 408.008 705.05 406.821 704.849 406.868 710.474 405.306 710.219 405.39 714.298 403.801ZM678.827 415.594 673.622 415.851 673.481 415.857 673.257 410.529 673.388 410.523 673.368 410.524 678.564 410.267ZM667.5 421.438 651.5 413.438 667.5 405.438Z"
        fill="#FF0000"
        id="path116" />
+    <text
+       fill="#ffffff"
+       font-family="Calibri, Calibri_MSFontService, sans-serif"
+       font-weight="400"
+       font-size="24"
+       id="text106-3"
+       style="font-size:18.6667px"
+       x="152.36406"
+       y="311.18277"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         x="152.36406"
+         y="311.18277">Docker pull mysql</tspan><tspan
+         sodipodi:role="line"
+         id="tspan2"
+         x="152.36406"
+         y="334.51614" /></text>
   </g>
 </svg>
