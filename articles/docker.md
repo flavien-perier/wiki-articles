@@ -6,7 +6,7 @@ categories:
   - development
 description: Base de connaissances sur la solution de conteneurisation Docker.
 author: Flavien PERIER <perier@flavien.io>
-date: 2021-12-17 18:00
+date: 2023-09-29 18:00
 ---
 
 Durant la dernière décennie, l'architecture de nos centres de données et par extension celles de tous les services qu'ils hébergent a considérablement évolué. Parmi ces évolutions, l'une des plus marquantes est sans aucun doute la technologie de conteneurisation Docker qui a radicalement changé les approches non seulement en termes de développement des applications, mais également d'un point de vue administration des plateformes.
@@ -29,7 +29,7 @@ En effet, comme on le voit dans le schéma précédent, chaque machine virtuelle
 
 ![Architecture d'un conteneur](https://medias.flavien.io/articles/docker/architecture-conteneur.svg)
 
-La conteneurisation propose une approche radicalement différente. Contrairement à des machines virtuelles, les environnements conteneurisés ne contiennent pas leur propre noyau et utilisent simplement celui de l'hyperviseur. Différentes technologies sont alors mises en place par le système hôte afin de garantir que les conteneurs sont correctement isolés les uns des autres (comme par exemple le chrooting). Les éditeurs de distributions pour conteneurs n'ont plus besoin de gérer ni le noyau ni les fonctionnalités spécifiques au hardware. En effet, l'environnement Docker étant standardisé, il n'est par exemple pas utile à un conteneur d'embarquer des drivers pour carte réseau, car cet aspect est à la charge de l'hyperviseur. Ainsi, certaines distributions comme [Alpine Linux](https://www.alpinelinux.org/) arrivent à diminuer le poids de leurs images à moins de 5Mo. Le poids sur disque est une chose, mais à l'ère du stockage illimité ça ne serait pas un argument suffisant. Les ressources matérielles nécessaires au lancement d'une application conteneurisé sont tellement faibles, qu'elles ne sont pas significativement supérieures à ce que consommerait la machine hôte en termes de ressource RAM/CPU si elle lançait elle-même l'application sans le conteneur. Le temps de démarrage d'un conteneur va donc se compter en seconde quand celui d'une machine virtuelle se compte généralement en minutes (même si cela dépend de la façon d'on les éléments ont été packagé).
+La conteneurisation propose une approche radicalement différente. Contrairement à des machines virtuelles, les environnements conteneurisés ne contiennent pas leur propre noyau et utilisent simplement celui de l'hyperviseur. Différentes technologies sont alors mises en place par le système hôte afin de garantir que les conteneurs sont correctement isolés les uns des autres (comme par exemple le chrooting). Les éditeurs de distributions pour conteneurs n'ont plus besoin de gérer ni le noyau ni les fonctionnalités spécifiques au hardware. En effet, l'environnement Docker étant standardisé, il n'est par exemple pas utile à un conteneur d'embarquer des drivers pour carte réseau, car cet aspect est à la charge de l'hyperviseur. Ainsi, certaines distributions comme [Alpine Linux](https://www.alpinelinux.org/) arrivent à diminuer le poids de leurs images à moins de 5Mo. Le poids sur disque est une chose, mais à l'ère du stockage illimité ça ne serait pas un argument suffisant. Les ressources matérielles nécessaires au lancement d'une application conteneurisé sont tellement faibles, qu'elles ne sont pas significativement supérieures à ce que consommerait la machine hôte en termes de ressource RAM/CPU si elle lançait elle-même l'application sans le conteneur. Le temps de démarrage d'un conteneur va donc se compter en seconde quand celui d'une machine virtuelle se compte généralement en minutes (même si cela dépend de la façon d'on les éléments ont été packagés).
 
 ## Description de l'architecture
 
@@ -134,7 +134,7 @@ Il est important de noter qu'a la suite de chaque instruction, un layer va être
 
 Voici les instructions de base pour construire un Dockerfile :
 
-- `FROM`: Cette première instruction permet de définir la base sur laquelle va être construite notre image. En général il s'agit d'un système d'exploitation ou d'une distribution sur laquelle un langage est déjà déployé. Ça peut être par exemple `alpine:3.18.3`, `debian:trixie`, `node:lts-hydrogen`, `openjdk:22-slim`. Il est possible d'utiliser plusieurs instructions FROM dans le même Dockerfile. Cette technique permet de créer une première image qui va en général effectuer un build afin de fournir le résultat de ce build à une seconde image qui va l'utiliser.
+- `FROM`: Cette première instruction permet de définir la base sur laquelle va être construite notre image. En général, il s'agit d'un système d'exploitation ou d'une distribution sur laquelle un langage est déjà déployé. Ça peut être par exemple `alpine:3.18.3`, `debian:trixie`, `node:lts-hydrogen`, `openjdk:22-slim`. Il est possible d'utiliser plusieurs instructions FROM dans le même Dockerfile. Cette technique permet de créer une première image qui va en général effectuer un build afin de fournir le résultat de ce build à une seconde image qui va l'utiliser.
 
 - `LABEL`: Cette instruction permet de rajouter des métadonnées à l'image.
 
@@ -143,6 +143,8 @@ Voici les instructions de base pour construire un Dockerfile :
 - `ENV`: Cette instruction permet de déclarer une variable d'environnement au moment du runtime du conteneur.
 
 - `COPY`: Cette instruction permet de copier un fichier présent à côté du Dockerfile directement au sein de l'image. Il est possible de rajouter des paramètres `chown` ou `chmod`. Il est également possible de rajouter un fichier `.dockerignore` dans le cas ou on souhaite copier l'intégralité d'un dossier à l'exception de certains fichiers.
+
+- `WORKDIR`: Un équivalent de `cd` mais au niveau du Dockerfile. Cette commande va créer le dossier s'il n'existe pas déjà.
 
 - `RUN`: Cette instruction permet d'exécuter une commande au moment de la création de l'image. Il est préférable de chainer un maximum les instructions afin de ne pas créer trop d'instructions. Il faut aussi faire en sorte de supprimer le cache à la suite de l'installation d'un programme. Et ne jamais mettre à jour la distribution (sinon l'image va contenir différentes versions de chaque programme réparti sur plusieurs layers).
 
@@ -271,6 +273,34 @@ Il est à noter que si le système utilise Alpine Linux ou une autre distributio
 
 ```bash
 docker exec -it container-test sh
+```
+
+#### Un peut de nettoyage
+
+Quand on utilise fréquemment Docker des ressources orphelines s'accumulent sur notre système. Elles peuvent très rapidement représenter une place très importante sur notre système.
+
+- Pour supprimer les layers orphelins :
+
+```bash
+docker system prune -f
+```
+
+- Pour supprimer les conteneurs qui sont stop :
+
+```bash
+docker container prune -f
+```
+
+- Pour supprimer les volumes managés par Docker qui ne sont pas utilisés :
+
+```bash
+docker volume prune -f
+```
+
+- Pour supprimer les réseaux qui ne sont pas utilisés :
+
+```bash
+docker container prune -f
 ```
 
 ### docker-compose
@@ -469,9 +499,43 @@ Pour lancer cette application il suffit de lancer la commande `docker-compose up
 
 Dans cet exemple, on peut noter que toutes les machines peuvent se joindre directement avec leur nom de conteneur. Cela est lié au fait que Docker déploie son propre DNS dans l'infrastructure.
 
+### Les volumes
+
+Dans l'exemple précédent avec `docker-compose` différents volumes ont été créés. Sans rentrer dans toutes les subtilités de [la documentation](https://docs.docker.com/storage/volumes/), il y a un point qu'il semble important d'aborder : qui possède les fichiers ?
+
+Avec Docker, le backend étant un démon, celui-ci est root sur la machine hôte. Il est donc tout à fait possible de créer un volume appartenant à un utilisateur quelconque. Quand un volume est partagé entre plusieurs conteneurs, cela peut poser problème, car l'utilisateur par défaut n'est pas le même pour toutes les solutions.
+
+Autre point, les volumes sur lesquels un conteneur ne doit pas apporter de modifications doivent se finir par `:ro` (pour read-only). Par exemple pour amener de la configuration dans un conteneur. Même en cas de piratage, elle ne pourra pas être modifiée.
+
+### La sécurité
+
+En France L'ANSSI a réalisé [un ensemble de recommandations relatives à Docker](https://www.ssi.gouv.fr/guide/recommandations-de-securite-relatives-au-deploiement-de-conteneurs-docker/). Ces différents points peuvent avoir un réel intérêt dans le déploiement de certaines applications nécessitant un très haut niveau de sécurité. Cependant, le cout en temps de la mise en place d'une telle infrastructure est très important et tous les points ne peuvent malheureusement pas être appliqués par défaut.
+
+Voici une conférence du [Volcamp](https://www.volcamp.io/) 2022 qui traite de cette problématique de sécurisation des conteneurs : https://www.youtube.com/watch?v=WWzG5ps2v14
+
+Un autre aspect non moins important à traiter concerne le poste de travail des développeurs. Une astuce assez fréquente sur internet consiste à rajouter l'utilisateur principal dans le group `docker`. De cette façon il obtient la possibilité de piloter le backend sans avoir accès au compte root. Ceci est extrêmement dangereux, car il est ainsi possible d'effectuer de manière triviale une augmentation de privilège. En effet, le démon docker est root, il peut donc monter n'importe quel volume de la machine hôte. Un utilisateur dans le group Docker peut donc dans l'absolu accéder à autant de choses que l'utilisateur root.
+
+Pour s'en convaincre :
+
+```bash
+docker run --rm -v /:/mnt -it alpine cat /etc/passwd
+```
+
+## Podman
+
+[Podman](https://podman.io/) est une autre solution de conteneurisation équivalente à Docker. Au niveau de l'architecture, la principale différence est que Podman ne possède pas de backend lancé en tant que démon. Il n'a donc pas accès au droit root. Si la solution monte un volume sur disque, le contenu de ce dossier appartiendra donc forcément à l'utilisateur qui a lancé le conteneur. De même, il ne va pas être possible d'effectuer un mapping de port sur l'un des 1024 premières valeurs si l'administrateur du système ne l'a pas autorisé.
+
+Dans l'absolu, Podman ne possède pas de réels avantages sur une machine de production. Cependant, il peut être intéressent sur une machine de développer, car il peut permettre à l'administrateur de s'assurer que les utilisateurs ne peuvent pas effectuer d'augmentation de privilège par le biais de la conteneurisation.
+
+Certaines distributions telles que Fedora poussent de plus en plus l'utilisation de cette solution par rapport à Docker. Après, l'un dans l'autre elles respectent toutes les deux la même norme, donc pas de changement majeur en termes de paradigme, ni même de commandes (juste remplace la commande docker par podman ce qui suit ne change pas).
+
 ## Impacte sur les développements
 
 ### Applications Statless
+
+Il est évident que toutes les applications ne sont pas compatibles avec la conteneurisation. La principale caractéristique d'une application fonctionnant de manière optimale sur un conteneur est qu'elle doit être en elle-même sans état. Cela signifie que tous les états doivent être portés par des bases de données. Le principe étant que l'application doit ce comporter de la même manière si elle ne possède qu'une seule instance ou plusieurs. Il faut donc par exemple oublier les mécanismes de session et préférer l'utilisation d'autres mécaniques telle que le [JWT](https://jwt.io/).
+
+Il existe de nombreux exemples de design patterns qui se marie très bien avec la conteneurisation. L'[event-sourcing](https://learn.microsoft.com/fr-fr/azure/architecture/patterns/event-sourcing) en fait partie.
 
 ### Approche IAC (Infrastructure As Code)
 
@@ -491,7 +555,7 @@ Sans entrer plus dans le détail, [Kubernetes](https://kubernetes.io/) est une s
 
 - Gestion de l'autoscaling: L'infrastructure est capable d'augmenter ou de diminuer le nombre d'instances d'une application en fonction de critères comme la charge moyenne des instances déjà en place. Il est possible d'éditer de très nombreuses règles et donc de définir très précisément une stratégie.
 - Ingress: Dans Kubernetes, les Ingres sont les points d'entrées vers l'application. Ce sont eux qui vont servir de reverse-proxy et s'occuper du load-balancing. En fonction des instances Kubernetes ils peuvent être sous [Nginx](https://nginx.org/) ou plus généralement sous [Traefik](https://traefik.io/traefik/).
-- Mise à jour à chaud: Quand les applications le permettent (le point bloquant étant souvent le schéma de la base de données), il est possible d'effectuer des mises à jour des applications sur l'infrastructure sans même que les utilisateurs ne le remarquent. Pour ce faire il existe diverses stratégies de redirection de flux.
+- Mise à jour à chaud: Quand les applications le permettent (le point bloquant étant souvent le schéma de la base de données), il est possible d'effectuer des mises à jour des applications sur l'infrastructure sans même que les utilisateurs ne le remarquent. Pour ce faire, il existe diverses stratégies de redirection de flux.
 - Readiness probe: commence à utiliser une application uniquement au moment ou elle a complètement fini de démarrer. L'application ne prendra donc pas de trafic entrant durant son démarrage.
 - Liveness probe: Vérifie à interval régulier que l'application est bien lancée. En cas de dysfonctionnement l'infrastructure est capable de réagir en fonction de scénario. Redémarrer l'application, faire une nouvelle instance...
 - Déploiement d'application réparti entre plusieurs data-center sur plusieurs contient avec adaptation du nombre d'instances et des points de sortis en fonction de la position géographique des utilisateurs.
