@@ -513,13 +513,23 @@ En France L'ANSSI a réalisé [un ensemble de recommandations relatives à Docke
 
 Voici une conférence du [Volcamp](https://www.volcamp.io/) 2022 qui traite de cette problématique de sécurisation des conteneurs : https://www.youtube.com/watch?v=WWzG5ps2v14
 
-Un autre aspect non moins important à traiter concerne le poste de travail des développeurs. Une astuce assez fréquente sur internet consiste à rajouter l'utilisateur principal dans le group `docker`. De cette façon il obtient la possibilité de piloter le backend sans avoir accès au compte root. Ceci est extrêmement dangereux, car il est ainsi possible d'effectuer de manière triviale une augmentation de privilège. En effet, le démon docker est root, il peut donc monter n'importe quel volume de la machine hôte. Un utilisateur dans le group Docker peut donc dans l'absolu accéder à autant de choses que l'utilisateur root.
+Sans aller dans des déploiements aussi complexes que faire du 100% sur ces règles, il y a quelques points qui peuvent être relativement faciles à mettre en place :
+
+- L'utilisateur qui exécute l'instruction RUN dans le conteneur ne devrait pas être l'utilisateur root (dans la majorité des cas).
+
+- Faire attention de ne laisser aucun secret dans aucun layers. Cette règle semble basique, mais [cet article](https://www.nextinpact.com/article/72094/docker-hub-milliers-dimages-contiennent-cles-privees-ou-dapi) de NextImpact semble montrer que ce n'est pas aussi évident.
+
+- Éviter de démarrer des conteneurs avec le mode `--privileged`, ou de monter des volumes dans `/dev`. Quand on le fait, cela permet au conteneur d'accéder à un certain nombre de ressources sur la machine hôte et donc de compromettre le principe d'isolation.
+
+Un autre aspect non moins important à traiter concerne le poste de travail des développeurs. Une astuce assez fréquente sur internet consiste à rajouter l'utilisateur principal dans le group `docker`. De cette façon, il obtient la possibilité de piloter le backend sans avoir accès au compte root. Ceci est extrêmement dangereux, car il est ainsi possible d'effectuer de manière triviale une augmentation de privilège. En effet, le démon docker est root, il peut donc monter n'importe quel volume de la machine hôte. Un utilisateur dans le group Docker peut donc dans l'absolu accéder à autant de choses que l'utilisateur root.
 
 Pour s'en convaincre :
 
 ```bash
 docker run --rm -v /:/mnt -it alpine cat /etc/passwd
 ```
+
+Bien évidemment, il existe des cas où ces règles peuvent être transgressées. Cependant, il faut être extrêmement vigilant quand on le fait, surtout dans un contexte de production.
 
 ## Podman
 
