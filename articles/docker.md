@@ -517,9 +517,11 @@ Sans aller dans des déploiements aussi complexes que faire du 100% sur ces règ
 
 - L'utilisateur qui exécute l'instruction RUN dans le conteneur ne devrait pas être l'utilisateur root (dans la majorité des cas).
 
-- Faire attention de ne laisser aucun secret dans aucun layers. Cette règle semble basique, mais [cet article](https://www.nextinpact.com/article/72094/docker-hub-milliers-dimages-contiennent-cles-privees-ou-dapi) de NextImpact semble montrer que ce n'est pas aussi évident.
+- Faire attention de ne laisser aucun secret dans aucun layers. Cette règle semble basique, mais [cet article de NextImpact](https://www.nextinpact.com/article/72094/docker-hub-milliers-dimages-contiennent-cles-privees-ou-dapi) semble montrer que ce n'est pas aussi évident.
 
 - Éviter de démarrer des conteneurs avec le mode `--privileged`, ou de monter des volumes dans `/dev`. Quand on le fait, cela permet au conteneur d'accéder à un certain nombre de ressources sur la machine hôte et donc de compromettre le principe d'isolation.
+
+- On ne peut raisonnablement avoir confiance qu'en très peu d'images de références ([cet article de Lemonde informatique](https://www.lemondeinformatique.fr/actualites/lire-encore-une-faille-zero-day-dans-chrome-a-corriger-d-urgence-91719.html) montre une partie du problème). Les questions à se poser quand on télécharge une image depuis le Docker Hub sont : s'agit-il d'une image Docker officielle (reconnaissable par le label `Docker Official Image`) ? L'image est elle packagé par les développeurs qui produisent la solution ? Si aucune des deux conditions n'est remplie, l'image ne devrait pas être utilisée. Par chance les Dockerfile sont souvent accessibles. Il suffit donc de le récupérer, de l'auditer et de le redéployer sur ca propre registry. Ce processus peut sembler lourd, mais ne pas effectuer cette opération peut causer des incidents majeurs en production.
 
 Un autre aspect non moins important à traiter concerne le poste de travail des développeurs. Une astuce assez fréquente sur internet consiste à rajouter l'utilisateur principal dans le group `docker`. De cette façon, il obtient la possibilité de piloter le backend sans avoir accès au compte root. Ceci est extrêmement dangereux, car il est ainsi possible d'effectuer de manière triviale une augmentation de privilège. En effet, le démon docker est root, il peut donc monter n'importe quel volume de la machine hôte. Un utilisateur dans le group Docker peut donc dans l'absolu accéder à autant de choses que l'utilisateur root.
 
