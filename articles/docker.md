@@ -359,7 +359,6 @@ services:
       - ./data/nextcloud/config:/var/www/html/config
       - ./data/nextcloud/data:/var/www/html/data
       - ./data/nextcloud/themes:/var/www/html/themes
-      - ./data/nextcloud/version.php:/tmp/version.php
     environment:
       - POSTGRES_DB=nextcloud
       - POSTGRES_USER=nextcloud
@@ -410,7 +409,6 @@ http {
 
   default_type application/octet-stream;
 
-  log_format csv '"$time_local";"$host";"$request";$status;$body_bytes_sent;"$remote_addr";"$remote_user";"$http_referer";"$http_user_agent"';
   log_format log '$host $remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent"';
 
   access_log /var/log/nginx/access.csv csv;
@@ -421,10 +419,6 @@ http {
   server {
     listen 80;
     listen [::]:80;
-
-    location /.well-known/acme-challenge/ {
-      root /var/www/certbot;
-    }
 
     location / {
       return 301 https://$host$request_uri;
@@ -474,6 +468,10 @@ http {
 
     location /.well-known/caldav {
       return 301 $scheme://$host/remote.php/dav;
+    }
+
+    location /.well-known/pki-validation {
+      try_files $uri $uri/ =404;
     }
 
     gzip on;

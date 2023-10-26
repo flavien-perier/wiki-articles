@@ -287,7 +287,7 @@ Cette application permet de faire une boucle VPN en local afin d'analyser tous l
 
 Termux est une application permettant d'utiliser différents outils Linux directement sur un téléphone. Pour ce faire, l'environnement est isolé du reste du système (Android étant lui-même un Linux) dans lequel il est possible d'utiliser le gestionnaire de paquets `pkg` afin d'installer divers packages. Il est cependant important de noter qu'il ne s'agit ni de virtualisation ni de conteneurisation, mais bien d'une installation dans un emplacement réservé de l'application. Cela signifie qu'il n'est pas non plus possible de tout faire dans cette application (il est notamment impossible d'accéder à l'utilisateur root).
 
-## Les applications à installer en temps que root
+## Les applications à installer en tant que root
 
 Sur un téléphone rooter, on peut aller beaucoup plus loin dans l'utilisation de son téléphone. Bien que ces applications soient inintéressantes pour le commun des mortels, elles peuvent s'avérer très utiles auprès d'utilisateurs avertis.
 

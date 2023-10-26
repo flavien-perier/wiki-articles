@@ -243,6 +243,16 @@ Par la suite, il n'y a plus qu'à redémarrer la machine et utiliser les command
 
 Il est à noter qu'à chaque fois que la carte graphique est changée, il faudra redémarrer l'interface avec `sudo systemctl restart lightdm`.
 
+Quand optimus-manager est en mode hybride, il suffit de passer quelques variables d'environnement à un programme pour qu'il démarre sur la carte graphique. Par exemple pour lancer Steam dans son flatpak :
+
+```bash
+/usr/bin/flatpak run --env=__NV_PRIME_RENDER_OFFLOAD=1 --env=__GLX_VENDOR_LIBRARY_NAME="nvidia" --env=__VK_LAYER_NV_optimus="NVIDIA_only" --branch=stable --arch=x86_64 --command=/app/bin/steam --file-forwarding com.valvesoftware.Steam @@u %U @@
+```
+
+Si le programme que l'on souhaite lancer est une simple application, on peut l'appeler en ligne de commande à travers la commande `prime-run`.
+
+Enfin pour afficher les processus qui utilisent actuellement le GPU, il suffit d'utiliser la commande : `nvidia-smi`.
+
 ### Installation de l'antivirus
 
 Pour garantir un niveau de sécurité minimal, la présence d'un antivirus est nécessaire (et oui même sous Linux). [Clamav](https://www.clamav.net/) n'est pas forcément le plus performant du marché, mais il est très léger, configurable et très utilisé par la communauté Linux :
