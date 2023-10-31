@@ -1927,6 +1927,7 @@ yes o | yay -Scc
 sudo pip cache purge
 pip cache purge
 flatpak uninstall --unused -y
+flatpak repair --user
 yes o | sudo pamac remove --orphans
 
 # Cleans up Docker and Podman
