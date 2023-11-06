@@ -1718,6 +1718,30 @@ do
 done
 ```
 
+### Réparer les liens cliquables Flatpak
+
+Il arrive que les liens cliquables ne mènent plus au navigateur pour les applications Flatpak. Ceci est lié à un problème de configuration de [xdg-desktop-portal](https://github.com/flatpak/xdg-desktop-portal). Ce composant permet de faire la passerelle entre la machine hôte de Flatpak pour un certain nombre de tâches.
+
+La première chose à faire est de vérifier que `xdg-desktop-portal-gtk` soit bien installé sur le système (si l'environnement de bureau est XFCE) :
+
+```bash
+sudo pacman -S xdg-desktop-portal-gtk
+```
+
+Par la suite, il faut changer la configuration pour l'utilisateur :
+
+```bash
+systemctl --user import-environment XDG_CURRENT_DESKTOP
+systemctl --user show-environment
+mkdir -p ~/.config/xdg-desktop-portal/
+cat << EOL > ~/.config/xdg-desktop-portal/xfce-portals.conf
+[preferred]
+default=gtk;
+EOL
+systemctl --user restart xdg-desktop-portal.service xdg-desktop-portal-gtk.service
+```
+Une fois ces actions effectuées, les liens devraient être de nouveau cliquables dans les applications XFCE.
+
 ### Activation des programmes par défaut
 
 Sur Linux, il ne suffit pas forcément qu'un programme soit installé pour qu'il soit utilisé par défaut pour ouvrir certains types de fichiers depuis l'explorateur de fichier (`thunar`) ou avec la commande `exo-open`. Pour utiliser la plupart des programmes précédemment installés comme programme par défaut il suffit de mettre à jour le fichier `~/.config/mimeapps.list` :
@@ -1763,6 +1787,7 @@ x-scheme-handler/http=org.mozilla.firefox.desktop;
 x-scheme-handler/https=org.mozilla.firefox.desktop;
 x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop;
 EOL
+xdg-settings set default-web-browser org.mozilla.firefox.desktop
 ```
 
 ### Ajout de modèles de fichiers
@@ -1927,7 +1952,6 @@ yes o | yay -Scc
 sudo pip cache purge
 pip cache purge
 flatpak uninstall --unused -y
-flatpak repair --user
 yes o | sudo pamac remove --orphans
 
 # Cleans up Docker and Podman
@@ -2100,3 +2124,4 @@ Si vous rencontrez des problèmes, n'hésitez pas à me contacter par mail sur [
 - [Copy and Paste in Tmux](https://www.rockyourcode.com/copy-and-paste-in-tmux/)
 - [Configure your firewall to work with Sonos](https://support.sonos.com/s/article/688)
 - [Ports nécessaires à Steam](https://help.steampowered.com/fr/faqs/view/2EA8-4D75-DA21-31EB)
+- [Forum Manjaro : Link in flatpak apps won’t open anymore on click since last update](https://forum.manjaro.org/t/link-in-flatpak-apps-wont-open-anymore-on-click-since-last-update/149907/22)
