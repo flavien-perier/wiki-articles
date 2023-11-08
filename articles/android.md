@@ -255,12 +255,6 @@ Aujourd'hui je peux affirmer que je me passe de tous les services Google à une 
 
 Un lecteur de flux RSS léger et open source.
 
-### [Bookeen](https://apkpure.com/fr/bookeen/fr.bookeen.qboo.reader)
-
-[Bookeen](https://bookeen.com/) est une entreprise française spécialisée dans la construction d'eBook et la diffusion de livre au format numérique depuis [leur store](https://www.bookeenstore.com/).
-
-Leur application permet simplement de reprendre la lecture sur téléphone la ou on l'a laissé sur liseuse, ou simplement d'ouvrir un fichier ePub. 
-
 ### [Collabora Office](https://www.collaboraoffice.com/)
 
 Pendant assez longtemps, la distribution possédait son implémentation d'une visionneuse de document office. Cependant, étant donné qu'il n'y a pas d'implémentation officielle, cela semble compliqué à maintenir dans le temps (d'autant plus que l'implémentation qui avait été choisie n'était pas des plus efficaces).
