@@ -1732,12 +1732,12 @@ Par la suite, il faut changer la configuration pour l'utilisateur :
 
 ```bash
 systemctl --user import-environment XDG_CURRENT_DESKTOP
-systemctl --user show-environment
 mkdir -p ~/.config/xdg-desktop-portal/
 cat << EOL > ~/.config/xdg-desktop-portal/xfce-portals.conf
 [preferred]
 default=gtk;
 EOL
+echo 'XDG_CURRENT_DESKTOP=XFCE' | tee -a /etc/environment
 systemctl --user restart xdg-desktop-portal.service xdg-desktop-portal-gtk.service
 ```
 Une fois ces actions effectuées, les liens devraient être de nouveau cliquables dans les applications XFCE.

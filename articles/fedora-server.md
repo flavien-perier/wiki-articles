@@ -35,7 +35,7 @@ Toutes les commandes sont à exécuter en tant que root.
 Pour une mise a jour de l'os vers une nouvelle version de Fedora :
 
 ```bash
-dnf system-upgrade download --releasever=38
+dnf system-upgrade download --releasever=39
 dnf system-upgrade reboot
 ```
 

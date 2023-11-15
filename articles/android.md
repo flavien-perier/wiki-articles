@@ -148,25 +148,6 @@ Si on utilise ces services, il faut repasser en IPv4 pour que ca fonctionne et p
 - Type MVNO : `SPN`
 - Valeur MVNO : `Bouygues Telecom`
 
-## Installation des polices de caractères
-
-Cette manipulation n'est pas vraiment utile, elle consiste simplement à rajouter une police de caractère ([JetBrains mono](https://www.jetbrains.com/lp/mono/) dans le cas présent) dans l'os.
-
-- Vérifier que le "Débogage usb" et le "Déboggage rooté" sont activés dans les "Options pour les développeurs".
-- On connecte le téléphone à l'ordinateur.
-- On tape les commandes suivantes :
-
-```bash
-adb usb
-adb root
-cd /tmp
-wget https://download.jetbrains.com/fonts/JetBrainsMono-2.304.zip
-unzip JetBrainsMono-2.304.zip
-cd fonts/ttf
-adb push * /system/fonts
-adb reboot
-```
-
 ### Applications Par Default
 
 Par défaut le système d'exploitation contient un minimum d'applications pour être utilisable (Dialer, SMS, Launcher, Calendar...). Bien évidemment, je ne vais pas parler de toutes ces applications, déjà parce que ça prendrait beaucoup de temps, mais surtout parce que ça n'apporterait pas grand-chose. je vais donc me contenter de parler de quelques-unes d'entre elles :
@@ -203,7 +184,7 @@ Forcément pas de Google Chrome en vue, mais du [Chromium](https://www.chromium.
 
 #### Le launcher
 
-Appelé Bliss Lancher, le lanceur d'application de la distribution est une copie de l'interface Apple, avec des fonctionnalités en moins et des bugs en plus. Pour avoir testé beaucoup d'autre launchers tel que [NovaLauncher](https://novalauncher.com/) ou [Lawnchair](https://lawnchair.app/), je peux affirmer qu'il manque beaucoup de fonctionnalités comme la gestion des gestes, un tiroir et des paramètres de manière générale. Cependant, contrairement à d'autres lanceurs d'applications tels que [Mikcrosoft Launcher](https://apkpure.com/fr/microsoft-launcher/com.microsoft.launcher) celui-ci a les immenses avantages de respecter notre vie privée, de ne passe pas son temps à interagir avec le réseau, d'être open source et économe en batterie. Il ne s'agit donc clairement pas de l'application de l'année, mais à l'avantage de faire ce qu'on lui demande.
+Appelé Bliss Lancher, le lanceur d'application de la distribution est une copie de l'interface Apple, avec des fonctionnalités en moins et des bugs en plus. Pour avoir testé beaucoup d'autre launchers tel que [NovaLauncher](https://novalauncher.com/) ou [Lawnchair](https://lawnchair.app/), je peux affirmer qu'il manque beaucoup de fonctionnalités comme la gestion des gestes, un tiroir et des paramètres de manière générale. Cependant, contrairement à d'autres lanceurs d'applications tels que [Mikcrosoft Launcher](https://apkpure.com/fr/microsoft-launcher/com.microsoft.launcher) celui-ci a l'immense avantages de respecter notre vie privée, de ne pas passer son temps à interagir avec le réseau, d'être open source et d'économe en batterie. Il ne s'agit donc clairement pas de l'application de l'année, mais elle fait néanmoins bien ce qu'on lui demande.
 
 #### [Magic Earth](https://www.magicearth.com/)
 
@@ -227,15 +208,16 @@ De manière générale les performances des antivirus sont changeantes d'une ann
 
 ### Les réseaux sociaux
 
-Pour les utilisateurs de réseaux sociaux, il est évident qu'il est pratique d'avoir accès à ces derniers directement depuis son mobile.
+Concernant les réseaux sociaux, il est à la fois évident que disposer de ces derniers sur son téléphone pause un problème pour la vie privée et que ne pas les avoir peut-être parfois embarassant dans la vie réel. Sans être exaustif, voila quelques conseille pour une meilleur gestion de ces réseaux sur smartphone :
 
-Le premier conseil que je peux donner, est de bien définir les réseaux que vous utiliser afin d'éviter d'installer du superflux.
+- Le premier, est de bien définir les réseaux d'on on a besoin et ceux qui ne nous servent pas.
 
-Le second conseil que je peux donner est de privilégier quand c'est possible les versions "lite" de vos réseaux sociaux. Ces dernières sont développées pour les téléphones peu puissants (ce qui n'est pas le cas du Fairphone) et effectuent donc moins d'opérations (et sont donc un peu plus respectueuses de la vie privée). En voici une liste :
+- Il est préférable d'utiliser les réseaux sociaux dans un contexte isoler du reste du téléphone. C'est ce que propose des applications tel que [Shelter](https://f-droid.org/packages/net.typeblog.shelter/) ou [Island](https://github.com/oasisfeng/island) (la seconde ne fonctionnant pas sur /e/). Ces programmes vont créer des contextes dans lesquels les applications ne pourtant pas accéder aux fichiers, contacts... Ces environnements seront également désactivables de sorte qu'aucune application installée dans ce contexte ne puisse tourne en arrière-plan.
 
-- [Facebook lite](https://apkpure.com/fr/facebook-lite/com.facebook.lite)
-- [Messenger lite](https://apkpure.com/fr/messenger-lite/com.facebook.mlite)
-- [Instagram lite](https://apkpure.com/fr/instagram-lite/com.instagram.lite)
+- Enfin, quand c'est possible, il est préférable d'utiliser la version light des applications de réseaux sociaux. Ces versions sont développées pour de vieux appareils et font donc moins de choses. Après c'est à chacun de voir si le minimum est suffisant et si l'application est bien proposée pour un réseau social donné (typiquement la version lite de LinkedIn a été abandonnée).
+    - [Facebook lite](https://apkpure.com/fr/facebook-lite/com.facebook.lite)
+    - [Messenger lite](https://apkpure.com/fr/messenger-lite/com.facebook.mlite)
+    - [Instagram lite](https://apkpure.com/fr/instagram-lite/com.instagram.lite)
 
 ### [KDE Connect](https://kdeconnect.kde.org/)
 
