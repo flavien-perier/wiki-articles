@@ -1389,6 +1389,10 @@ sudo pacman -S tmux xclip
 
 cat << EOL > ~/.tmux.conf
 set-option -g default-shell /usr/bin/fish
+set -g default-command /usr/bin/fish
+
+bind '"' split-window -c "#{pane_current_path}"
+bind % split-window -h -c "#{pane_current_path}"
 
 set -g status off
 set -g history-limit 999999999
