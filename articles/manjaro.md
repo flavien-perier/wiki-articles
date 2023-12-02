@@ -1256,6 +1256,8 @@ Moonlight est un logiciel de streaming pour pouvoir récupérer le flux vidéo d
 flatpak install com.moonlight_stream.Moonlight
 ```
 
+Au niveau du serveur, il est possible d'utiliser la technologie de streaming du [Nvidia Shield](https://www.nvidia.com/fr-fr/shield/). Mais il semblerait que l'option la plus viable soit [Sunshine](https://github.com/LizardByte/Sunshine) qui est une réimplémentation open source du protocole.
+
 ### [AntiMicroX](https://github.com/AntiMicroX/antimicroX)
 
 Logiciel permettant de faire le mapping des touches d'une manette de Xbox sur les touches d'un clavier.
