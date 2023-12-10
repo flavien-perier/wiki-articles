@@ -49,7 +49,7 @@ Pour la suite, [le tutoriel présent sur le site](https://asteroidos.org/install
 
 Je détaille néanmoins ici les étapes d'installation :
 
-- Dans un premier temps, il faut télécharger les fichiers de la dernière version de WearOS pour la montre : [Le kernel](https://androidfilehost.com/?fid=529152257862690904) et [La ROM](https://androidfilehost.com/?fid=745425885120695961).
+- Dans un premier temps, il faut télécharger les fichiers de la dernière version de WearOS pour la montre : [Le kernel](https://androidfilehost.com/?fid=529152257862690904), [Le recovery](https://www.androidfilehost.com/?fid=457095661767128807) et [La ROM](https://androidfilehost.com/?fid=745425885120695961).
 
 - Puis les fichiers d'AsteroidOS : [Les données utilisateur](https://release.asteroidos.org/nightlies/bass/asteroid-image-bass.ext4) et [La ROM](https://release.asteroidos.org/nightlies/bass/zImage-dtb-bass.fastboot).
 
@@ -64,6 +64,7 @@ Je détaille néanmoins ici les étapes d'installation :
 ```sh
 fastboot oem unlock
 
+fastboot flash recovery recovery.img
 fastboot flash system MM-system-ext4-*.img
 fastboot flash boot Skin1980-boot-*.img
 
@@ -122,47 +123,6 @@ ifconfig wlan0 up
 systemctl restart connman
 ```
 
-## Connection SSH
-
-Dans un premier temps, depuis un pc, il faut générer une clé privée pour la connexion SSH et la transférer vers l'équipement :
-
-```sh
-MONTRE_IP=192.168.X.X
-
-ssh-keygen -f ~/.ssh/montre -t rsa -b 4096
-ssh-copy-id -i ~/.ssh/montre ceres@$MONTRE_IP
-
-cat << EOL >> ~/.ssh/config
-Host montre
-    HostName $MONTRE_IP
-    User ceres
-    Port 22
-    IdentityFile ~/.ssh/montre
-    IdentitiesOnly yes
-EOL
-```
-
-Ensuite, se connecter sur la montre avec la commande `ssh ceres@MONTRE_IP` puis taper les commandes :
-
-```sh
-passwd
-su
-cat << EOL > /etc/ssh/sshd_config
-PermitRootLogin no
-PubkeyAuthentication yes
-AuthorizedKeysFile .ssh/authorized_keys
-PasswordAuthentication no
-PermitEmptyPasswords no
-ChallengeResponseAuthentication no
-UsePAM yes
-Compression no
-ClientAliveInterval 15
-ClientAliveCountMax 4
-Subsystem       sftp    /usr/libexec/sftp-server
-EOL
-systemctl reload sshd
-```
-
 ## Watchface
 
 J'utilise une watchface custom pour la montre. Pour l'installer, il suffit de taper les commandes depuis un pc :
@@ -181,7 +141,7 @@ Le gestionnaire de paquet de la distribution est `opkg`. Il s'utilise globalemen
 
 Il faut cependant être attentif à ne pas faire d'`opkg dist-upgrade`. Cela pose un problème au moment de la mise à jour de la [BusyBox](https://www.busybox.net/) et casse complètement l'OS... Donc obligé de tout réinstaller.
 
-De même, des upgrades globaux (`opkg upgrade`) peuvent introduire des instabilités plus ou moins graves... Chose malheureusement symptomatique des distributions mal ou insuffisamment testées. Il est donc recommandé de mettre à jour uniquement les paquets les plus sensibles tels qu'OpenSSH.
+De même, des upgrades globaux (`opkg upgrade`) peuvent introduire des instabilités plus ou moins graves... Chose malheureusement symptomatique des distributions mal ou insuffisamment testées. Il est donc recommandé de mettre à jour uniquement les paquets liés à l'interface.
 
 ## Script d'optimisation de la batterie
 
@@ -218,7 +178,6 @@ day)
   systemctl start ofono
   systemctl start connman
   systemctl start bluetooth
-  systemctl start sshd
   connmanctl enable wifi
   ifconfig wlan0 up
 
@@ -235,7 +194,6 @@ night)
   systemctl stop ofono
   systemctl stop connman
   systemctl stop bluetooth
-  systemctl stop sshd
 
   echo "night" > /tmp/alim-state
 ;;
@@ -249,7 +207,6 @@ indoor)
   mcetool --set-power-saving-mode enabled
   mcetool --set-low-power-mode disabled
   systemctl stop sensorfwd
-  systemctl start sshd
 
   echo "indoor" > /tmp/alim-state
 ;;
@@ -263,7 +220,6 @@ outdoor)
   mcetool --set-power-saving-mode enabled
   mcetool --set-low-power-mode disabled
   systemctl start sensorfwd
-  systemctl stop sshd
 
   echo "outdoor" > /tmp/alim-state
 ;;
@@ -372,7 +328,7 @@ then
   su -l ceres -c "notificationtool -o add --icon=ios-wifi --application=\"System\" --urgency=3 --hint=\"x-nemo-preview-summary WiFi\" --hint=\"x-nemo-preview-body IP: $IP\" \"WiFi\" \"IP: $IP\""
 
   opkg update
-  opkg upgrade asteroid-* openssh
+  opkg upgrade asteroid-*
 fi
 
 if [ $LAST_STATE = "ready" ]

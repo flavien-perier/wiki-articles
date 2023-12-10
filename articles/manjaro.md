@@ -1922,7 +1922,8 @@ do
 done
 
 sudo pkill -9 xfce4-panel
-
+sudo optimus-manager --no-confirm --cleanup
+sudo optimus-manager --no-confirm --switch hybrid
 ```
 
 #### clean
