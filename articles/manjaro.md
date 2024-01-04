@@ -253,6 +253,44 @@ Si le programme que l'on souhaite lancer est une simple application, on peut l'a
 
 Enfin pour afficher les processus qui utilisent actuellement le GPU, il suffit d'utiliser la commande : `nvidia-smi`.
 
+Il est également possible de configurer optimus-manager dans `/etc` afin de rendre la configuration permanente :
+
+```bash
+cat << EOL | sudo tee /etc/optimus-manager/optimus-manager.conf
+[optimus]
+switching=none
+pci_power_control=no
+pci_remove=no
+pci_reset=no
+auto_logout=yes
+startup_mode=hybrid
+startup_auto_battery_mode=integrated
+startup_auto_extpower_mode=nvidia
+
+[intel]
+driver=modesetting
+accel=
+tearfree=
+DRI=3
+modeset=yes
+
+[amd]
+driver=modesetting
+tearfree=
+DRI=3
+
+[nvidia]
+modeset=yes
+PAT=yes
+DPI=96
+ignore_abi=no
+allow_external_gpus=no
+options=overclocking
+dynamic_power_management=no
+dynamic_power_management_memory_threshold=
+EOL
+```
+
 ### Installation de l'antivirus
 
 Pour garantir un niveau de sécurité minimal, la présence d'un antivirus est nécessaire (et oui même sous Linux). [Clamav](https://www.clamav.net/) n'est pas forcément le plus performant du marché, mais il est très léger, configurable et très utilisé par la communauté Linux :
@@ -570,6 +608,8 @@ Enfin, nous allons ajouter quelques commandes :
 
 - `firewall stop`: Pour désactiver la protection.
 - `firewall start`: Pour réactiver la protection.
+- `firewall input-stop`: Pour désactiver la protection pour le trafic entrant.
+- `firewall output-stop`: Pour désactiver la protection pour le trafic sortant.
 
 ```bash
 chmod 700 ~/bin
@@ -587,6 +627,12 @@ stop)
   sudo iptables -t filter -P FORWARD ACCEPT
   sudo iptables -t filter -P OUTPUT ACCEPT
 ;;
+input-stop)
+  sudo iptables -t filter -P INPUT ACCEPT
+;;
+output-stop)
+  sudo iptables -t filter -P OUTPUT ACCEPT
+;;
 full-start)
   sudo iptables-restore /etc/iptables.rules
 ;;
@@ -598,7 +644,7 @@ full-stop)
   sudo iptables -t filter -P OUTPUT ACCEPT
 ;;
 *)
-  echo "Usage: firewall (start|stop|full-start|full-stop)"
+  echo "Usage: firewall (start|stop|input-stop|output-stop|full-start|full-stop)"
   exit -1
 ;;
 esac' | tee ~/bin/firewall
@@ -617,11 +663,13 @@ Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est po
 
 ```bash
 cd /tmp
-wget https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.20.7940.tar.gz -O /tmp/toolbox.tar.gz
+wget https://download-cdn.jetbrains.com/toolbox/jetbrains-toolbox-2.1.3.18901.tar.gz -O /tmp/toolbox.tar.gz
 tar xvf /tmp/toolbox.tar.gz
 mv jetbrains* jetbrains
 ./jetbrains/jetbrains-toolbox
 ```
+
+Il est également possible d'utiliser GraalVM pour lancer ces différentes IDEs ce qui aura un impacte extrêmement positif sur leurs performances.
 
 ### [VisualStudio code](https://code.visualstudio.com/)
 
@@ -646,7 +694,7 @@ code --install-extension k--kato.intellij-idea-keybindings
 
 ### Environnement Node.js
 
-Je déconseille personnellement d'installer [Node.js](https://nodejs.org/en/) directement sur ça machine. En effet quand on travaille sur différents projets développés en JavaScript on peut être amené à utiliser différentes versions de NodeJs en fonction des projets. Il est alors possible de passer par [NVM (Node Version Manager)](https://github.com/nvm-sh/nvm), qui va permettre de changer de version de Node.js en seulement quelques commandes.
+Quand on travaille sur différents projets JavaScript, on peut être amené à utiliser différentes versions de [Node.js](https://nodejs.org/en/) en fonction des projets. Il est alors possible de passer par [NVM (Node Version Manager)](https://github.com/nvm-sh/nvm), qui va permettre de changer de version de Node.js en seulement quelques commandes.
 
 ```bash
 sudo pacman -S nvm
@@ -660,16 +708,30 @@ nvm use stable
 
 ### Environnement Java/Kotlin
 
-De la même façon qu'avec Node.js, je déconseille d'installer [Open JDK](https://openjdk.java.net/) directement sur ça machine. Heureusement, de la même façon que dans un environnement Node.js avec NVM, il est possible d'utiliser un manageur de version nommé [Jabba](https://github.com/shyiko/jabba).
+De la même façon que NVM gère les versions de Node.js, il est possible d'utiliser [SdkMan](https://sdkman.io/) afin de gérer les versions d'[Open JDK](https://openjdk.java.net/), [GraalVM](https://www.graalvm.org/) ou encore [Maven](https://maven.apache.org/) nécessaire au fonctionnement de nos projets.
 
 ```bash
-curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
+curl -s "https://get.sdkman.io" | bash
+echo 'source "$HOME/.sdkman/bin/sdkman-init.sh"' >> ~/.profile
+source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-jabba install openjdk@1.17.0
-jabba use openjdk@1.17.0
+# Fish compatibility
+cat << EOL > ~/.config/fish/conf.d/sdkman.fish
+#!/usr/bin/fish
+
+function sdk
+  bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk $argv"
+end
+
+for VERSION in $HOME/.sdkman/candidates/* ;
+  set -gx PATH $PATH $VERSION/current/bin
+end
+EOL
+
+# Install GraalVM 21
+sdk install java 21.0.1-graal
+sdk use java 21.0.1-graal
 ```
-
-Il est à noter que Jabba permet non seulement d'utiliser Open JDK, mais également d'autres implémentations de la JVM tel que [GraalVM](https://www.graalvm.org/).
 
 ### Environnement [QT](https://www.qt.io/)
 
