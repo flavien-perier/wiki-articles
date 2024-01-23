@@ -688,6 +688,7 @@ code --install-extension redhat.vscode-xml
 code --install-extension redhat.vscode-yaml
 code --install-extension efoerster.texlab
 code --install-extension janisdd.vscode-edit-csv
+code --install-extension naumovs.color-highlight
 
 code --install-extension k--kato.intellij-idea-keybindings
 ```
