@@ -30,7 +30,7 @@ Pour le paramétrage "Cookies et données de sites", je coche pour ma part l'opt
 
 Par la suite, pour le menu "Identifiants et mots de passe" je n'autorise personnellement pas à Firefox de se souvenir de mes mots de passe. Il est cependant important de souligner que durant ces dernières années, le coffre-fort de mot de passe de l'application a vu son niveau de sécurité augmenter. Si vous souhaitez l'utiliser, je vous conseille de cocher la case "Utiliser un mot de passe principal" et d'utiliser un mot de passe fort afin de protéger tous vos autres comptes. Vous pouvez aussi cocher la case "afficher des alertes pour les mots de passe de sites concernés par des fuites de données" qui va permettre à Firefox de vous afficher des alertes si un compte que vous utilisez s'est malencontreusement retrouvé dans une fuite de données. Cette fonctionnalité est une simple implémentation du site [Firefox monitor](https://monitor.firefox.com/), sur lequel je vous conseille vivement de vérifier régulièrement la présence ou non d'identifiants vous concernant dans des fuites de données.
 
-Dans la partie historique, j'applique une philosophie identique à celle des cookies, à savoir que rien n'est conservé au-delà de ma session d'utilisation de Firefox. Décochez donc les 2 options "Conserver l’historique de navigation et des téléchargements" et "Conserver l’historique des recherches et des formulaires" puis cochez l'option "Vider l’historique lors de la fermeture de Firefox". Une fois que c'est fait, rendez-vous dans le menu des "paramètres d'effacement de l'historique" et cochez toutes les cases à l'exception de "cache" et "Données de sites web hors connexion". Ces deux paramètres permettent aux sites web de stocker des médias et autres composants de sites sur votre ordinateur et donc de ne pas les réactualiser à chaque fois que vous vous rendez sur le même site. Ces éléments n'ont qu'un faible impacte sur votre vie privée (voir pas d'impacte du tout), mais ont un impacte important en termes de Green-it étant donné qu'ils nous permettent d'éviter beaucoup d'appels réseau. C'est pourquoi je préfère ne pas les supprimer. Si vous voulez savoir quel type d'élément se cache derrière chacun de ces boutons, je vous conseille [la documentation Mozilla sur le sujet](https://support.mozilla.org/fr/kb/supprimer-historique-recent).
+Dans la partie historique, j'applique une philosophie identique à celle des cookies, à savoir que rien n'est conservé au-delà de ma session d'utilisation de Firefox. Décochez donc les 2 options "Conserver l’historique de navigation et des téléchargements" et "Conserver l’historique des recherches et des formulaires" puis cochez l'option "Vider l’historique lors de la fermeture de Firefox". Une fois que c'est fait, rendez-vous dans le menu des "paramètres d'effacement de l'historique" et cochez toutes les cases à l'exception de "cache" et "Données de sites web hors connexion". Ces deux paramètres permettent aux sites web de stocker des médias et autres composants de sites sur votre ordinateur et donc de ne pas les réactualiser à chaque fois que vous vous rendez sur le même site. Ces éléments n'ont qu'un faible impacte sur votre vie privée (voir pas d'impacte du tout), mais ont un impacte important en termes de Green-it étant donné qu'ils nous permettent d'éviter beaucoup d'appels réseau. C'est pourquoi je préfère ne pas les supprimer. Si vous voulez savoir quel type d'élément se cache derrière chacun de ces boutons, je vous conseille [la documentation Mozilla sur le sujet](https://support.mozilla.org/en-US/kb/supprimer-historique-recent).
 
 ![Configuration "Paramètres d'effacement de l'historique"](https://medias.flavien.io/articles/firefox/configuration-history.webp)
 
@@ -80,24 +80,24 @@ Il est également possible d'aller plus loin en allant dans les paramètres avan
 
 ### Vie privée
 
-#### [uBloc Origin](https://addons.mozilla.org/fr/firefox/addon/ublock-origin/)
+#### [uBloc Origin](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/)
 
 ![uBloc Origin logo](https://medias.flavien.io/articles/firefox/ublock-origin.webp)
 
 Cette extension permet de bloquer les pubs que l'on peut trouver sur différents sites internet, ou avant les vidéos YouTube.
 
-#### [Privacy Badger](https://addons.mozilla.org/fr/firefox/addon/privacy-badger17/)
+#### [Privacy Badger](https://addons.mozilla.org/en-US/firefox/addon/privacy-badger17/)
 
 ![Privacy Badger logo](https://medias.flavien.io/articles/firefox/privacy-badger.webp)
 
 Cette extension permet de bloquer les traqueurs présents sur le web. Cela va par exemple empêcher les modules [Google Analytics](https://fr.wikipedia.org/wiki/Google_Analytics) de s'exécuter.
 
 Il existe actuellement de nombreuses extensions permettant d'améliorer la vie privée. Mais les trois principales qui ont pour objectif de limiter le champ d'action des traqueurs sont :
-- [Ghostery](https://addons.mozilla.org/fr/firefox/addon/ghostery) qui est également un AdBlock, mais qui cause de nombreux dysfonctionnements, car trop agressifs.
-- [Disconnect](https://addons.mozilla.org/fr/firefox/addon/disconnect/) qui est plutôt efficace, mais moins populaire que les deux autres.
-- [Privacy Badger](https://addons.mozilla.org/fr/firefox/addon/privacy-badger17/) qui se base sur des méthodes d'apprentissage pour bloquer les contenus indésirables.
+- [Ghostery](https://addons.mozilla.org/en-US/firefox/addon/ghostery) qui est également un AdBlock, mais qui cause de nombreux dysfonctionnements, car trop agressifs.
+- [Disconnect](https://addons.mozilla.org/en-US/firefox/addon/disconnect/) qui est plutôt efficace, mais moins populaire que les deux autres.
+- [Privacy Badger](https://addons.mozilla.org/en-US/firefox/addon/privacy-badger17/) qui se base sur des méthodes d'apprentissage pour bloquer les contenus indésirables.
 
-#### [NoScript](https://addons.mozilla.org/fr/firefox/addon/noscript/)
+#### [NoScript](https://addons.mozilla.org/en-US/firefox/addon/noscript/)
 
 ![NoScript logo](https://medias.flavien.io/articles/firefox/noscript.webp)
 
@@ -107,21 +107,21 @@ Il existe cependant au sein du logiciel une option nommée "Définir temporairem
 
 ![Configuration de NoScript](https://medias.flavien.io/articles/firefox/noscript-configuration.webp)
 
-#### [ClearURLs](https://addons.mozilla.org/fr/firefox/addon/clearurls/)
+#### [ClearURLs](https://addons.mozilla.org/en-US/firefox/addon/clearurls/)
 
 ![ClearURLs logo](https://medias.flavien.io/articles/firefox/clearurls.webp)
 
 Une autre extension ayant pour but de renforcer la vie privée. Cette dernière nettoie les URLs des informations superflues qui pourrait donner des informations aux sites quant au chemin que l'utilisateur à emprunter dans sa navigation.
 
-Dans les paramètres de cette application, je désactive l'option `Filtrer ETag`. En effet les [ETag](https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/ETag) sont une composante importante de la mécanique de cache de nos navigateurs, les désactiver revient à rendre cette mécanique inopérante. Ce que je trouve personnellement très dommage.
+Dans les paramètres de cette application, je désactive l'option `Filtrer ETag`. En effet les [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) sont une composante importante de la mécanique de cache de nos navigateurs, les désactiver revient à rendre cette mécanique inopérante. Ce que je trouve personnellement très dommage.
 
-#### [Decentraleyes](https://addons.mozilla.org/fr/firefox/addon/decentraleyes/)
+#### [Decentraleyes](https://addons.mozilla.org/en-US/firefox/addon/decentraleyes/)
 
 ![Decentraleyes logo](https://medias.flavien.io/articles/firefox/decentraleyes.webp)
 
 Avec les extensions précédentes, nous pouvons bloquer de manière assez efficace les différents composants d'un site web ayant pour vocation de nous traquer. Cependant parmi toutes les méthodes pouvant être utilisées pour nous suivre à la trace on peut trouver les CDN. Un CDN est un site mettant à la disposition d'autres sites différents contenus tel que des scripts JavaScript, des polices de caractères... Les systèmes de tracking peuvent donc profiter du fait que les clients vont envoyer des requêtes pour récupérer ces contenus afin de savoir sur quel site nous sommes. Le problème c'est que ces contenus sont bien souvent nécessaires au bon fonctionnement d'un site. Par exemple, de nombreux sites ont besoin de JQuery pour fonctionner, ce dernier étant généralement délivré à travers des CDN. L'extension Decentraleyes va simplement régler le problème en téléchargeant les scripts délivrés par les CDN sur la machine de l'utilisateur. De cette manière, le nombre de requêtes transmises aux CDN se trouve grandement réduit. De plus pour les connexions limitées ceci a aussi pour avantage d'éviter les retéléchargements inutiles de contenu que l'on a déjà. Ce qui permet d'économiser de la bande passante.
 
-#### [Random User-Agent](https://addons.mozilla.org/fr/firefox/addon/random_user_agent/)
+#### [Random User-Agent](https://addons.mozilla.org/en-US/firefox/addon/random_user_agent/)
 
 ![Random User-Agent logo](https://medias.flavien.io/articles/firefox/random_user_agent.webp)
 
@@ -151,7 +151,7 @@ Les extensions présentées dans cette catégorie ne doivent pas rester install�
 
 Un simple gestionnaire de Cookies. Permets de les modifier, de les supprimer ou encore de les sauvegarder.
 
-#### [ModHeader](https://addons.mozilla.org/fr/firefox/addon/modheader-firefox/)
+#### [ModHeader](https://addons.mozilla.org/en-US/firefox/addon/modheader-firefox/)
 
 ![Cookie Quick Manager logo](https://medias.flavien.io/articles/firefox/modheader.webp)
 
@@ -165,7 +165,13 @@ Permets de rajouter des informations dans l'entête des requêtes envoyées par 
 
 Cette extension permet donc tout simplement d'accéder à toutes ces informations sur les sites que nous visitons. Elle permet donc de contrôler facilement si une infrastructure n'expose pas trop d'information par rapport à ce qu'elle devrait et que les différents services exposés ne souffrent pas d'anomalies de configuration.
 
-### [GreenIT-Analysis](https://addons.mozilla.org/fr/firefox/addon/greenit-analysis/)
+#### [Wappalyzer](https://addons.mozilla.org/en-US/firefox/addon/wappalyzer/)
+
+![GreenIT-Analysis logo](https://medias.flavien.io/articles/firefox/wappalyzer.webp)
+
+[Wappalyzer](https://www.wappalyzer.com/) est une application permettant d'identifier les différentes technologies utilisées pour un site web donné. Que ce soit des technologies ayant servie à le concevoir tel que [Wordpress](https://wordpress.com/), [FontAwesome](https://fontawesome.com/) ou [Bootstrap](https://getbootstrap.com/)... Ou autre des technologies serveur tel que [Nginx](https://nginx.org/) ou [Apache HTTPD](https://httpd.apache.org/).
+
+#### [GreenIT-Analysis](https://addons.mozilla.org/en-US/firefox/addon/greenit-analysis/)
 
 ![GreenIT-Analysis logo](https://medias.flavien.io/articles/firefox/gereenit-analysis.webp)
 
@@ -173,7 +179,7 @@ Cette application open source permet d'analyser les éléments d'un site web qui
 
 ### Confort
 
-#### [Ecosia](https://addons.mozilla.org/fr/firefox/addon/ecosia-the-green-search/)
+#### [Ecosia](https://addons.mozilla.org/en-US/firefox/addon/ecosia-the-green-search/)
 
 ![Ecosia logo](https://medias.flavien.io/articles/firefox/ecosia.webp)
 
@@ -183,7 +189,7 @@ Ecosia est un métamoteur basé sur Bing qui utilise l'argent généré par nos 
 
 ![I still don't care about cookies logo](https://medias.flavien.io/articles/firefox/i-still-dont-care-about-cookies.webp)
 
-Cette application est un fork en open source de [I don't care about cookies](https://addons.mozilla.org/fr/firefox/addon/i-dont-care-about-cookies/) qui avait été racheté par Avast.
+Cette application est un fork en open source de [I don't care about cookies](https://addons.mozilla.org/en-US/firefox/addon/i-dont-care-about-cookies/) qui avait été racheté par Avast.
 
 Si vous en avez marre de tous les bandeaux "Acceptez les cookies", cette application se charge automatiquement de cliquer sur "J'accepte" (ce n’est pas comme si on nous laissez vraiment le choix d'un autre côté) et de nous cacher les bandeaux en question. Simple et efficace pour une navigation sans encombre.
 
