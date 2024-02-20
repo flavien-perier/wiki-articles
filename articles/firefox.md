@@ -44,6 +44,38 @@ Par la suite, pour tous les paramètres de sécurité, je vous invite, bien évi
 
 Enfin pour le "Mode HTTPS uniquement" je vous conseillerais de cocher la case "Activer le mode HTTPS uniquement dans toutes les fenêtres". Cela va forcer votre navigateur à utiliser le HTTPS plutôt que le HTTP quand cela est possible.
 
+### Configuration avancée
+
+Il est également possible d'aller plus loin en allant dans les paramètres avancés du navigateur. Pour ce faire, il suffit de taper `about:config` dans la barre de recherche. Par la suite, plusieurs optimisations peuvent être effectuées :
+
+#### Désactivation de la géolocalisation
+
+- `geo.enabled`: false
+
+#### Désactivation de la télémétry en profondeur
+
+- `browser.newtabpage.activity-stream.feeds.telemetry`: false
+- `browser.newtabpage.activity-stream.telemetry`: false
+- `browser.ping-centre.telemetry`: false
+- `toolkit.telemetry.enabled`: false
+- `toolkit.telemetry.bhrPing.enabled`: false
+- `toolkit.telemetry.firstShutdownPing.enabled`: false
+- `toolkit.telemetry.newProfilePing.enabled`: false
+- `toolkit.telemetry.reportingpolicy.firstRun`: false
+- `toolkit.telemetry.shutdownPingSender.enabled`: false
+- `toolkit.telemetry.unified`: false
+- `toolkit.telemetry.updatePing.enabled`: false
+- `toolkit.telemetry.archive.enabled`: false
+- `datareporting.healthreport.uploadEnabled`: false
+- `datareporting.policy.dataSubmissionEnabled`: false
+
+#### Désactivation des animations
+
+- `layout.css.animation-composition.enabled`: false
+- `dom.animations-api.compositing.enabled`: false
+- `dom.animations-api.getAnimations.enabled`: false
+- `dom.animations-api.timelines.enabled`: false
+
 ## Extensions
 
 ### Vie privée
@@ -111,6 +143,8 @@ Cette extension permet d'optimiser la gestion de la mémoire au sein des onglets
 
 ### Développement
 
+Les extensions présentées dans cette catégorie ne doivent pas rester installées en permanence. En effet, certaines d'entre elles peuvent fortement dégrader les performances du navigateur et donc nuire à l'expérience utilisateur.
+
 #### [Cookie Quick Manager](https://addons.mozilla.org/en-US/firefox/addon/cookie-quick-manager/)
 
 ![Cookie Quick Manager logo](https://medias.flavien.io/articles/firefox/cookie-quick-manager.webp)
@@ -158,10 +192,3 @@ Si vous en avez marre de tous les bandeaux "Acceptez les cookies", cette applica
 ![SponsorBlock logo](https://medias.flavien.io/articles/firefox/sponsorblock.webp)
 
 Si les AdBlocks permettent de bloquer le les pubs hors des vidéos sur YouTube, il est beaucoup plus difficile de bloquer les placements de produit pour "NordVPN" ou autre "RAID: Shadow Legends" au sein même des vidéos. C'est pourtant bien ce que fait cette extension grâce à une communauté d'utilisateurs motivés qui taguent les moments des vidéos durant lesquelles des placements de produits sont effectués et permettent donc aux autres utilisateurs de sauter ces moments.
-
-#### [Carbonalyser](https://addons.mozilla.org/fr/firefox/addon/carbonalyser/)
-
-![Carbonalyser logo](https://medias.flavien.io/articles/firefox/carbonalyser.webp)
-
-Un simple petit outil, qui évalue globalement l'impacte carbone de son utilisation d'internet. Il est à noter que dans le cas où les extensions présentées sont installées la consommation du navigateur sera plus faible que pour un utilisateur qui ne possède aucune extension.
-

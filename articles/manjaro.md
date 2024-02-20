@@ -2017,12 +2017,12 @@ get-used-space() {
 USED_SPACE_BEFORE=`get-used-space`
 
 # Clean up the package manager
-yes o | sudo pacman -Scc
-yes o | yay -Scc
+sudo pacman -Scc --noconfirm
+yay -Scc --noconfirm
 sudo pip cache purge
 pip cache purge
 flatpak uninstall --unused -y
-yes o | sudo pamac remove --orphans
+sudo pamac remove --orphans --no-confirm
 
 # Cleans up Docker and Podman
 sudo docker container prune -f
