@@ -57,7 +57,6 @@ Il est également possible d'aller plus loin en allant dans les paramètres avan
 - `browser.newtabpage.activity-stream.feeds.telemetry`: false
 - `browser.newtabpage.activity-stream.telemetry`: false
 - `browser.ping-centre.telemetry`: false
-- `toolkit.telemetry.enabled`: false
 - `toolkit.telemetry.bhrPing.enabled`: false
 - `toolkit.telemetry.firstShutdownPing.enabled`: false
 - `toolkit.telemetry.newProfilePing.enabled`: false
@@ -157,9 +156,9 @@ Un simple gestionnaire de Cookies. Permets de les modifier, de les supprimer ou 
 
 Permets de rajouter des informations dans l'entête des requêtes envoyées par le navigateur.
 
-#### [Shodan](https://addons.mozilla.org/en-US/firefox/addon/shodan_io/)
+#### [Shodan](https://addons.mozilla.org/en-US/firefox/addon/shodan-addon/)
 
-![Shodan logo](https://medias.flavien.io/articles/firefox/shodan_io.webp)
+![Shodan logo](https://medias.flavien.io/articles/firefox/shodan.webp)
 
 [Shodan](https://www.shodan.io/) est un site référençant pour chaque site et IPs accessible depuis internet les services exposés. De rapides tests de sécurités automatiques sont également effectués de manière automatique (test de mot de passe par défaut en fonction de l'équipement, version d'un service possédant une vulnérabilité de sécurité référence, mauvaise configuration...).
 
@@ -183,7 +182,7 @@ Cette application open source permet d'analyser les éléments d'un site web qui
 
 ![Ecosia logo](https://medias.flavien.io/articles/firefox/ecosia.webp)
 
-Ecosia est un métamoteur basé sur Bing qui utilise l'argent généré par nos recherches pour planter des arbres. Il s'agit donc d'une application à bilan carbone compensé, c'est-à-dire qu'elle tente de compenser la pollution engendrée par leur serveur en plantant des arbres qui vont absorber ce CO2. En plus de cela, l'application respecte la vie privée des utilisateurs et l'entreprise s'engage à ne pas revendre de données.
+Ecosia est un métamoteur basé sur Bing qui utilise l'argent généré par nos recherches pour planter des arbres. Il s'agit donc d'une application à bilan carbone compensé, c'est-à-dire qu'elle tente de compenser la pollution engendrée par le trafic en plantant des arbres qui vont absorber ce CO2. En plus de cela, l'application respecte la vie privée des utilisateurs et l'entreprise s'engage à ne pas revendre de données.
 
 #### [I still don't care about cookies](https://addons.mozilla.org/en-US/firefox/addon/istilldontcareaboutcookies/)
 
