@@ -22,13 +22,13 @@ D'un point de vue de la configuration, le menu le plus important est celui conce
 
 ![Configuration "Vie privée et sécurité"](https://medias.flavien.io/articles/firefox/configuration-privacy.webp)
 
-Avec la configuration proposée plus haut, le navigateur conservera quasiment aucune informatiuons d'un redémarrage sur l'autre et n'utilisera pas la plupart des options de télémétrie. Il est aussi intéréssent de cliquer sur le bonton "Paramètre" en face de "Vider l’historique lors de la fermeture de Firefox" afin de préciser quel éléments conserver et lesquelles supprimer.
+Avec la configuration proposée plus haut, le navigateur ne conservera quasiment aucune information d'un redémarrage sur l'autre et n'utilisera pas la plupart des options de télémétrie. Il est aussi intéressent de cliquer sur le bonton "Paramètre" en face de "Vider l’historique lors de la fermeture de Firefox" afin de préciser quels éléments conserver et lesquelles supprimer.
 
 ![Configuration "Paramètres d'effacement de l'historique"](https://medias.flavien.io/articles/firefox/configuration-history.webp)
 
-Ces options font que les caches des applications vont être conservés (donc les sites ne seront pas entièrements retélécharger d'une visite sur l'autre), mais les données qui les concernes seront supprimées.
+Ces options font que les caches des applications vont être conservés (donc les sites ne seront pas entièrement retéléchargés d'une visite sur l'autre), mais les données qui les concernent seront supprimées.
 
-Le seul défaut si on peut dire de cette configuration est qu'il faudra ce reconnecter sur tout les sites à chaque utilisation.
+Le seul défaut si on peut dire de cette configuration est qu'il faudra se reconnecter sur tous les sites à chaque utilisation.
 
 ### Configuration avancée
 
