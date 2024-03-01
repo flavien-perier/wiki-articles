@@ -18,31 +18,17 @@ Il est respectueux de la vie privée. Contrairement à son concurrent Google Chr
 
 ## Configuration
 
-D'un point de vue de la configuration, le seul menu dont je vais parler est celui se nommant "Vie privée et sécurité".
+D'un point de vue de la configuration, le menu le plus important est celui concernant les aspects privacy :
 
 ![Configuration "Vie privée et sécurité"](https://medias.flavien.io/articles/firefox/configuration-privacy.webp)
 
-Dans le premier menu nommé "Protection renforcée contre le pistage", je vous invite à cocher la case "personalisée" et cocher les 4 cases "Cookies", "Contenu utilisé pour le pistage", "Mineurs de cryptomonnaies" et "Détecteurs d’empreinte numérique". Pour les cookies je conseille de préciser "Tous les cookies tiers". Le navigateur nous signale que cela peut entrainer des dysfonctionnements sur certains sites, mais ayant cette option activée depuis des années je n'ai jamais constaté de problèmes particuliers liés à ce paramétrage. Je signale quand même que le blocage de la totalité des cookies peut quant à lui empêcher l'utilisateur de s'authentifier sur la plupart des sites proposant des comptes.
-
-Sur le paramétrage suivant, je conseille d'activer l'option "ne pas me pister" et de la mettre sur "Toujours". Il s'agit ici d'une information que les navigateurs transmettent aux sites web que vous consulter leur dément de ne pas vous traquer. Il est cependant important de souligner qu'il s'agit simplement d'une convention et que les sites web ne sont pas obligés de tenir compte de cette requête.
-
-Pour le paramétrage "Cookies et données de sites", je coche pour ma part l'option "Supprimer les cookies et les données des sites à la fermeture de Firefox". Cela signifie qu'à chaque fois que je vais fermer mon navigateur, je serais automatiquement déconnecté de tous les comptes sur lesquels je m'étais authentifiés.
-
-Par la suite, pour le menu "Identifiants et mots de passe" je n'autorise personnellement pas à Firefox de se souvenir de mes mots de passe. Il est cependant important de souligner que durant ces dernières années, le coffre-fort de mot de passe de l'application a vu son niveau de sécurité augmenter. Si vous souhaitez l'utiliser, je vous conseille de cocher la case "Utiliser un mot de passe principal" et d'utiliser un mot de passe fort afin de protéger tous vos autres comptes. Vous pouvez aussi cocher la case "afficher des alertes pour les mots de passe de sites concernés par des fuites de données" qui va permettre à Firefox de vous afficher des alertes si un compte que vous utilisez s'est malencontreusement retrouvé dans une fuite de données. Cette fonctionnalité est une simple implémentation du site [Firefox monitor](https://monitor.firefox.com/), sur lequel je vous conseille vivement de vérifier régulièrement la présence ou non d'identifiants vous concernant dans des fuites de données.
-
-Dans la partie historique, j'applique une philosophie identique à celle des cookies, à savoir que rien n'est conservé au-delà de ma session d'utilisation de Firefox. Décochez donc les 2 options "Conserver l’historique de navigation et des téléchargements" et "Conserver l’historique des recherches et des formulaires" puis cochez l'option "Vider l’historique lors de la fermeture de Firefox". Une fois que c'est fait, rendez-vous dans le menu des "paramètres d'effacement de l'historique" et cochez toutes les cases à l'exception de "cache" et "Données de sites web hors connexion". Ces deux paramètres permettent aux sites web de stocker des médias et autres composants de sites sur votre ordinateur et donc de ne pas les réactualiser à chaque fois que vous vous rendez sur le même site. Ces éléments n'ont qu'un faible impacte sur votre vie privée (voir pas d'impacte du tout), mais ont un impacte important en termes de Green-it étant donné qu'ils nous permettent d'éviter beaucoup d'appels réseau. C'est pourquoi je préfère ne pas les supprimer. Si vous voulez savoir quel type d'élément se cache derrière chacun de ces boutons, je vous conseille [la documentation Mozilla sur le sujet](https://support.mozilla.org/en-US/kb/supprimer-historique-recent).
+Avec la configuration proposée plus haut, le navigateur conservera quasiment aucune informatiuons d'un redémarrage sur l'autre et n'utilisera pas la plupart des options de télémétrie. Il est aussi intéréssent de cliquer sur le bonton "Paramètre" en face de "Vider l’historique lors de la fermeture de Firefox" afin de préciser quel éléments conserver et lesquelles supprimer.
 
 ![Configuration "Paramètres d'effacement de l'historique"](https://medias.flavien.io/articles/firefox/configuration-history.webp)
 
-Pour ce qui concerne l'autocomplétion dans la barre d'adresse, j'ai tendance à ne cocher que "Les marque-pages" afin de n'utiliser la barre de recherche que pour naviguer entre les favoris que j'ai déjà définis.
+Ces options font que les caches des applications vont être conservés (donc les sites ne seront pas entièrements retélécharger d'une visite sur l'autre), mais les données qui les concernes seront supprimées.
 
-Pour les "Permissions", je conseille de "Bloquer les fenêtres popup" et de "Prévenir lorsque les sites essaient d’installer des modules complémentaires".
-
-Pour la "Collecte de données par Firefox et utilisation", je décoche toutes les cases. Mon navigateur n'envoie donc aucune donnée d'utilisation à Mozilla. Cependant, si à un quelconque moment vous rencontrez des problèmes sur votre navigateur, je vous invite à recoucher ces cases afin que les développeurs de Firefox puissent obtenir les informations qui leur permettraient de reproduire le bug, pour par la suite le corriger.
-
-Par la suite, pour tous les paramètres de sécurité, je vous invite, bien évidemment, à cocher toutes les cases dans "Protection contre les contenus trompeurs et les logiciels dangereux".
-
-Enfin pour le "Mode HTTPS uniquement" je vous conseillerais de cocher la case "Activer le mode HTTPS uniquement dans toutes les fenêtres". Cela va forcer votre navigateur à utiliser le HTTPS plutôt que le HTTP quand cela est possible.
+Le seul défaut si on peut dire de cette configuration est qu'il faudra ce reconnecter sur tout les sites à chaque utilisation.
 
 ### Configuration avancée
 
