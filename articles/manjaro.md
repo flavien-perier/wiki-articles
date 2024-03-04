@@ -1180,14 +1180,6 @@ Path=
 StartupNotify=false
 ```
 
-### [mpg123](https://mpg123.de/)
-
-Gérant ma bibliothèque musicale essentiellement  au format `mp3`, il m'arrive d'utiliser l'utilitaire mpg123 afin de lire une musique directement au sein d'une console. Cela peu être très utile dans l'optique de faire des scripts.
-
-```bash
-sudo pacman -S mpg123
-```
-
 ### [NoiseTorch](https://github.com/noisetorch/NoiseTorch)
 
 Un logiciel pour filtrer les bruits parasites d'un micro :

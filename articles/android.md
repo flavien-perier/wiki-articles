@@ -206,6 +206,14 @@ Même si je n'ai aucune preuve tangible que cet antivirus est néfaste (et au de
 
 De manière générale les performances des antivirus sont changeantes d'une année sur l'autre. Il peut donc être pertinent de consulter fréquemment le site [AV-Test](https://www.av-test.org/fr/antivirus/portables/) afin de voir les derniers comparatifs de ces solutions de sécurité.
 
+### [Stop Appels Indésirables](https://primezone.orange.com/app/Stop%20Appels%20Ind%C3%A9sirables/452)
+
+Il s'agit d'une application développée par [Orange labs](https://lelab.orange.fr/) permettant de bloquer les appels gênants. Ce type d'application a comme unique inconvénient qu'une requête est envoyée à un serveur pour chaque appel afin de vérifier sa présence ou non dans la blacklist du fournisseur (ce dernier a donc une copie complète de notre répertoire d'appel).
+
+Contrairement à d'autres applications de blocage, celle-là n'est pas un dialer, mais bien d'une application de blacklist. Il est donc possible de continuer à utiliser le dialer par défaut du système (qui est très bien intégré dans /e/).
+
+Enfin, il s'agit d'une application française, donc bien adaptée pour bloquer les numéros gênants français.
+
 ### Les réseaux sociaux
 
 Concernant les réseaux sociaux, il est à la fois évident que disposer de ces derniers sur son téléphone pause un problème pour la vie privée et que ne pas les avoir peut-être parfois embarassant dans la vie réel. Sans être exaustif, voila quelques conseille pour une meilleur gestion de ces réseaux sur smartphone :
