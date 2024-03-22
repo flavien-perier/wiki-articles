@@ -1536,6 +1536,14 @@ Un outil permettant de scanner un réseau et de déterminer pour chaque machine 
 sudo pacman -S nmap
 ```
 
+### [Magika](https://github.com/google/magika)
+
+Magika est un outil développé par Google permettant d'identifier le type d'un fichier. Cet outil est bien plus puissant dans sa capacité d'identification que la commande `file` intégrée à la plupart des systèmes.
+
+```bash
+yay -S python-magika
+```
+
 ### [Insomnia](https://insomnia.rest/)
 
 Pour permettre aux développeurs back-end de tester les APIs REST qu'ils développent. Le logiciel est assez similaire à [Postman](https://www.postman.com/), mais offre à mon sens une meilleure gestion des formats [Swagger](https://swagger.io/) et [OpenAPI](https://www.openapis.org/).
