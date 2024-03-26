@@ -16,4 +16,4 @@ Je travaille essentiellement avec les langages de programmation Kotlin, Java, Ty
 
 Je porte aussi un grand intérêt à l'écosystème Linux et notamment tout ce qui gravite autour de la solution de conteneurisation Docker.
 
-À la suite d'un semestre en Belgique, j'ai pu également acquérir quelques notions élémentaires me permettant d'analyser des données grâces à différentes librairies Python tel que Pandas, Scikit-learn ou SciPy.
+À la suite d'un semestre en Belgique, j'ai pu également acquérir quelques notions élémentaires me permettant d'analyser des données grâce à différentes librairies Python telles que Pandas, Scikit-learn ou SciPy.

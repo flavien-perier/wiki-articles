@@ -141,7 +141,7 @@ Le gestionnaire de paquet de la distribution est `opkg`. Il s'utilise globalemen
 
 Il faut cependant être attentif à ne pas faire d'`opkg dist-upgrade`. Cela pose un problème au moment de la mise à jour de la [BusyBox](https://www.busybox.net/) et casse complètement l'OS... Donc obligé de tout réinstaller.
 
-De même, des upgrades globaux (`opkg upgrade`) peuvent introduire des instabilités plus ou moins graves... Chose malheureusement symptomatique des distributions mal ou insuffisamment testées. Il est donc recommandé de mettre à jour uniquement les paquets liés à l'interface.
+De même, des upgrades globaux (`opkg upgrade`) peuvent introduire des instabilités plus ou moins graves... Chose malheureusement symptomatique des distributions mal ou insuffisamment testées. Une fois la distribution installée, le plus sage est donc malheureusement de ne plus toucher à rien.
 
 ## Script d'optimisation de la batterie
 
@@ -274,7 +274,7 @@ Requires=alim-night.service
 
 [Timer]
 Unit=alim-night.service
-OnCalendar=*-*-* 23:00:00
+OnCalendar=*-*-* 1:30:00
 
 [Install]
 WantedBy=timers.target
@@ -326,9 +326,6 @@ then
 
   IP=`ip -br -4 a show wlan0 | tr -s " " | cut -f3 -d " " | cut -f1 -d "/"`
   su -l ceres -c "notificationtool -o add --icon=ios-wifi --application=\"System\" --urgency=3 --hint=\"x-nemo-preview-summary WiFi\" --hint=\"x-nemo-preview-body IP: $IP\" \"WiFi\" \"IP: $IP\""
-
-  opkg update
-  opkg upgrade asteroid-*
 fi
 
 if [ $LAST_STATE = "ready" ]
