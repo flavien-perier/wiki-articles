@@ -141,7 +141,7 @@ Pour maximiser la sécurité du système, nous allons également chiffrer le SSD
 ```bash
 sudo mkdir -p /mnt/data
 sudo cryptsetup luksOpen /dev/sdb home
-sudo mkfs.ext4 /dev/mapper/home
+sudo mkfs.btrfs /dev/mapper/home
 sudo mount /dev/mapper/home /mnt/data
 
 sudo cp -Rp $HOME /mnt/data
@@ -165,7 +165,7 @@ echo "home	/dev/sdb	none	luks2" >> /etc/crypttab
 
 ```bash
 sudo su
-echo "/dev/mapper/home	/home	ext4	defaults 0 0" >> /etc/fstab
+echo "/dev/mapper/home	/home	btrfs	defaults 0 0" >> /etc/fstab
 ```
 
 ### Configuration du Shell
@@ -524,7 +524,7 @@ iptables -t filter -A INPUT -p udp --dport 1900 -j ACCEPT
 iptables -t filter -A INPUT -p udp --dport 5353 -j ACCEPT
 iptables -t filter -A OUTPUT -p udp --dport 5353 -j ACCEPT -m owner --uid-owner 1000
 
-# Barrier
+# Synergy
 iptables -t filter -A INPUT -p tcp --dport 24800 -j ACCEPT
 iptables -t filter -A OUTPUT -p tcp --dport 24800 -j ACCEPT -m owner --uid-owner 1000
 
@@ -1379,54 +1379,16 @@ Categories=Game;
 EOL
 ```
 
-### [Barrier](https://github.com/debauchee/barrier)
+### [Synergy](https://symless.com/synergy)
 
-Barrier est un logiciel permettant d'utiliser différents ordinateurs comme s'il s'agissait d'écrans. L'ordinateur principal (celui disposant d'un clavier et d'une souris) sera le serveur et tous les autres les clients. Cela me permet personnellement de connecter mon ordinateur professionnel (qui est sur Windows) à mon ordinateur personnel et ainsi de bénéficier des avantages d'un Linux tout en respectant les normes de mon entreprise. La configuration par défaut entre client sous Windows et serveur sous Linux peut poser des problèmes de mapping avec certaines touches. C'est pour cela que je préconise de faire sa configuration manuellement. Comme celle qui suit :
+Synergy est un logiciel permettant d'utiliser différents ordinateurs comme s'il s'agissait d'écrans. L'ordinateur principal (celui disposant d'un clavier et d'une souris) sera le serveur et tous les autres les clients.
+
+Il s'agit d'une application payante, mais open source. Un fork populaire est [Barrier](https://github.com/debauchee/barrier). Cependant ce dernier ne supporte pas Wayland et n'est pas maintenu. La meilleure solution est donc à mon sens de payer.
 
 ```bash
-flatpak install --user com.github.debauchee.barrier
+wget "https://api-functions.stage.a.symless.com/download-log?synergyVersion=3.0.79.1-rc3&operatingSystem=Linux&architecture=flatpak&downloadUrl=https%3A%2F%2Frc.symless.com%2Fsynergy3%2Fv3.0.79.1-rc3%2Fsynergy-linux_x64-libssl3-v3.0.79.1-rc3.flatpak&userId=1452232" -O /tmp/synerg.flatpak
 
-cat << EOL > ~/.config/barrier.sgc
-section: screens
-        Windows:
-                halfDuplexCapsLock = false
-                halfDuplexNumLock = false
-                halfDuplexScrollLock = false
-                xtestIsXineramaUnaware = false
-                preserveFocus = false
-                switchCorners = none +bottom-left
-                switchCornerSize = 0
-                meta = altgr
-                altgr = shift
-        Linux:
-                halfDuplexCapsLock = false
-                halfDuplexNumLock = false
-                halfDuplexScrollLock = false
-                xtestIsXineramaUnaware = false
-                preserveFocus = false
-                switchCorners = none
-                switchCornerSize = 0
-end
-
-section: aliases
-end
-
-section: links
-        Windows:
-                down = Linux
-        Linux:
-                up = Windows
-end
-
-section: options
-        relativeMouseMoves = false
-        screenSaverSync = true
-        win32KeepForeground = false
-        clipboardSharing = true
-        switchCorners = none
-        switchCornerSize = 0
-end
-EOL
+flatpak install /tmp/synerg.flatpak
 ```
 
 ### [Solaar](https://pwr-solaar.github.io/Solaar/)
@@ -1476,6 +1438,28 @@ Sur Linux [TLP](https://github.com/linrunner/TLP) est un démon permettant de g�
 
 ```bash
 sudo pacman -S tlpui
+```
+
+### [fwupd](https://fwupd.org/)
+
+Fwupd est un démon permettant de maintenir à jour les firmwares des composants d'un pc.
+
+
+```bash
+sudo pacman -S fwupd
+sudo systemctl start fwupd
+```
+
+Pour rechercher les mises à jour, on utilise la commande :
+
+```bash
+fwupdmgr get-updates
+```
+
+Et pour effectuer la mise à jour :
+
+```bash
+fwupdmgr update
 ```
 
 ### [Kleopatra](https://www.openpgp.org/software/kleopatra/)
