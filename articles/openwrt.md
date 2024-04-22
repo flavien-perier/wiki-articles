@@ -13,6 +13,21 @@ Au niveau du hardware l'équipement utilisé va être une carte [Banana Pi BPI-R
 
 Au niveau du software c'est la distribution [OpenWrt](https://openwrt.org/) qui va être utilisée. Cette distribution Linux étant spécifiquement faite pour être installée sur des routeurs.
 
+## Installation
+
+Dans un premier temps, il faut récupérter l'image OpenWRT pour carte micro sd sur leur lien [Google Drive](https://drive.google.com/file/d/146CUGBRC0ce5uN9nCM08Jegc51abAz1b/view).
+
+Dans un second temps, on peut utiliser l'outil mis à disposition par Banana Pi afin d'écrire l'image sur la carte.
+
+```bash
+sudo pacman -S pv
+wget https://raw.githubusercontent.com/BPI-SINOVOIP/bpi-tools/master/bpi-copy -O /tmp/bpi-copy
+chmod 700 /tmp/bpi-copy
+sudo /tmp/bpi-copy ~/Downloads/mtk-bpi-r4-SD-*-New.img /dev/sdd
+```
+
+Ensuite il est possible de se connecter sur l'interface `192.168.1.1`
+
 ## Sources
 
 - [Getting Started BPI-R4](https://docs.banana-pi.org/en/BPI-R4/GettingStarted_BPI-R4)

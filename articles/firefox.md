@@ -22,7 +22,7 @@ D'un point de vue de la configuration, le menu le plus important est celui conce
 
 ![Configuration "Vie privée et sécurité"](https://medias.flavien.io/articles/firefox/configuration-privacy.webp)
 
-Avec la configuration proposée plus haut, le navigateur devrait avoir un niveau de sécurité optimal et un minimum en termes de privacy (sur ce point, ce sont les extensions qui font faire l'essentiel du travail).
+Avec la configuration proposée plus haut, le navigateur devrait avoir un niveau de sécurité optimal et un minimum en termes de privacy (sur ce point, ce sont les extensions qui vont faire l'essentiel du travail).
 
 Pour aller plus loin, il est possible de cliquer sur le bonton "Paramètre" en face de "Vider l’historique lors de la fermeture de Firefox" afin de préciser quels éléments conserver et lesquelles supprimer au moment de la fermeture du navigateur.
 
