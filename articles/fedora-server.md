@@ -20,11 +20,11 @@ Le serveur est doté d'un [AMD Ryzen 9 5900X](https://www.amd.com/fr/products/cp
 
 ## OS
 
-Pour ce type de serveur, je pense personnellement qu'une distribution basée sur [RedHat](https://www.redhat.com/) sera avantageuse. En effet, cette famille de distribution Linux étant initialement destinée aux entreprises, qui sont elles-mêmes de grandes utilisatrices de virtualisation et de conteneurisation, on peut s'attendre à avoir une meilleure prise en charge de nos logiciels.
+Pour ce type de serveur, les distributions basées sur [RedHat](https://www.redhat.com/) sont relativement avantageuses. En effet, cette famille de distribution Linux étant destinée aux entreprises, elles bénéficient de nombreux avantages en termes de virtualisation et de conteneurisation.
 
-Après un premier essai sous [RockyLinux](https://rockylinux.org/) (distribution succédant à [CentOS](https://www.centos.org/)), il s'est avéré que la version du noyau Linux implémenté dans les distributions basées sur [RHEL 8](https://www.redhat.com/fr/technologies/linux-platforms/enterprise-linux) (à savoir la 4.18) ne prenaient pas en charge toutes les fonctionnalités du Ryzen 9 5900X, ce qui déclenchait des crashs du système hôte après le lancement de certains jeux utilisant [Easy Anti-Cheat](https://www.easy.ac/fr-fr/) dans la machine virtuelle Windows.
+Cependant, il peut-être dommage de ne pas bénéficier des dernières mises à jour du kernel quand on souhaite avoir une infrastructure performante. On oublie donc RHEL[RHEL](https://www.redhat.com/fr/technologies/linux-platforms/enterprise-linux) (de toute façon, pas de nécessité de support), [RockyLinux](https://rockylinux.org/) ou [CentOS](https://www.centos.org/).
 
-Afin de bénéficier des dernières mises à jour du noyau Linux, je me suis donc tourné vers [Fedora Server](https://getfedora.org/fr/server/) (en version 36) avec une installation minimale sans environnement de bureau.
+La distribution qui semble donc le plus appropriée pour cette installation est [Fedora Server](https://fedoraproject.org/fr/server/).
 
 ## Installation
 
@@ -32,7 +32,7 @@ Utilisateur principal: admin
 
 Toutes les commandes sont à exécuter en tant que root.
 
-Pour une mise a jour de l'os vers une nouvelle version de Fedora :
+Pour une mise à jour de l'os vers une nouvelle version de Fedora :
 
 ```bash
 dnf system-upgrade download --releasever=39
@@ -204,7 +204,7 @@ systemctl enable openvpn-server@server
 systemctl start openvpn-server@server
 ```
 
-Par la suite il est possible de générer le fichier `ovpn` qui sera transmis au client afin qu'il puisse ce connecter :
+Par la suite il est possible de générer le fichier `ovpn` qui sera transmis au client afin qu'il puisse se connecter :
 
 ```bash
 cat << EOL > ~/vm-jeux.ovpn
@@ -234,7 +234,7 @@ $(cat /etc/openvpn/client/client.key)
 EOL
 ```
 
-Il suffit alors de récupérer le fichier `~/clien.ovpn` sur ca machine à l'aide de scp et de l'exécuter avec :
+Il suffit alors de récupérer le fichier `~/clien.ovpn` sur ça machine à l'aide de SCP et de l'exécuter avec :
 
 ```bash
 sudo sudo openvpn --config client.ovpn
@@ -352,17 +352,17 @@ GRUB_DISABLE_RECOVERY="true"
 GRUB_ENABLE_BLSCFG=true' | tee /etc/default/grub
 
 grub2-mkconfig -o /boot/grub2/grub.cfg
-mkdir -p /etc/libvirt/hooks/qemu.d/Windows10/prepare/begin
-mkdir -p /etc/libvirt/hooks/qemu.d/Windows10/release/end
+mkdir -p /etc/libvirt/hooks/qemu.d/vm-jeux/prepare/begin
+mkdir -p /etc/libvirt/hooks/qemu.d/vm-jeux/release/end
 
 wget https://raw.githubusercontent.com/PassthroughPOST/VFIO-Tools/master/libvirt_hooks/qemu -O /etc/libvirt/hooks/qemu
 chmod 750 /etc/libvirt/hooks/qemu
 
 wget https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/start.sh -O /tmp/start-qemu.sh
 
-cat /tmp/start-qemu.sh | sed 's/youruser/admin/g' > /etc/libvirt/hooks/qemu.d/Windows10/prepare/begin/start.sh
+cat /tmp/start-qemu.sh | sed 's/youruser/admin/g' > /etc/libvirt/hooks/qemu.d/vm-jeux/prepare/begin/start.sh
 
-wget https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/revert.sh -O /etc/libvirt/hooks/qemu.d/Windows10/release/end/revert.sh
+wget https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/revert.sh -O /etc/libvirt/hooks/qemu.d/vm-jeux/release/end/revert.sh
 
 find /etc/libvirt/hooks/ -name "*.sh" -exec chmod 750 {} \;
 
@@ -370,16 +370,18 @@ echo VIRSH_GPU_VIDEO=pci_0000_`lspci | grep -i nvidia | grep -i vga | cut -f1 -d
 echo VIRSH_GPU_AUDIO=pci_0000_`lspci | grep -i nvidia | grep -i audio | cut -f1 -d ' ' | tr ':' '_' | tr '.' '_'` >> /etc/libvirt/hooks/kvm.conf
 ```
 
-#### XML de configuration de la vm Windows 10
+#### XML de configuration de la vm Windows 11
 
-J'utilise [Virt manager](https://virt-manager.org/) depuis mon pc personnel que je connecte à mon serveur par ssh. Depuis l'interface, je peux donc configurer ma VM à distance.
+La configuration de cette machine virtuelle est prévue pour le jeu. Dans le XML ci-dessous un certain nombre d'optimisations ont pour but d'améliorer la performance du CPU vis-à-vis de la VM, mais également de dissimuler au mieux le fait qu'il s'agisse d'une machine virtuelle. En effet les anti-sheats tel qu'[Easy Anti-Cheat](https://www.easy.ac/) peuvent essayer de bloquer les jeux dans des machines virtuelles. Ces optimisations devraient rendre la détection beaucoup plus compliquée.
+
+Avec [Virt manager](https://virt-manager.org/) il est possible de configurer l'hyperviseur à distance à travers un tunnel SSH.
 
 Voici le XML de configuration utilisé pour l'interface réseau :
 
 ```xml
 <network>
-  <name>host-network</name>
-  <uuid>32c75e86-61ae-4357-8029-dd90db2812c1</uuid>
+  <name>network</name>
+  <uuid>******</uuid>
   <forward dev="enp4s0" mode="nat">
     <nat>
       <port start="1024" end="65535"/>
@@ -388,7 +390,7 @@ Voici le XML de configuration utilisé pour l'interface réseau :
   </forward>
   <bridge name="virbr1" stp="on" delay="0"/>
   <mac address="52:54:00:2a:e1:56"/>
-  <domain name="host-network"/>
+  <domain name="network"/>
   <ip address="192.168.2.1" netmask="255.255.255.0">
     <dhcp>
       <range start="192.168.2.1" end="192.168.2.254"/>
@@ -398,15 +400,15 @@ Voici le XML de configuration utilisé pour l'interface réseau :
 ```
 
 
-Voici le XML de configuration utilisé pour la machine Windows 10 :
+Voici le XML de configuration utilisé pour la machine Windows 11 :
 
 ```xml
 <domain type="kvm">
-  <name>Windows10</name>
-  <uuid>1007d331-1936-4ede-8175-0b3d182fce23</uuid>
+  <name>vm-jeux</name>
+  <uuid>******</uuid>
   <metadata>
     <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
-      <libosinfo:os id="http://microsoft.com/win/10"/>
+      <libosinfo:os id="http://microsoft.com/win/11"/>
     </libosinfo:libosinfo>
   </metadata>
   <memory unit="KiB">20971520</memory>
@@ -430,9 +432,15 @@ Voici le XML de configuration utilisé pour la machine Windows 10 :
     <iothreadpin iothread="1" cpuset="0-1"/>
     <iothreadpin iothread="2" cpuset="2-3"/>
   </cputune>
-  <os>
-    <type arch="x86_64" machine="pc-q35-6.1">hvm</type>
-    <boot dev="hd"/>
+  <os firmware="efi">
+    <type arch="x86_64" machine="pc-q35-8.1">hvm</type>
+    <firmware>
+      <feature enabled="yes" name="enrolled-keys"/>
+      <feature enabled="yes" name="secure-boot"/>
+    </firmware>
+    <smbios mode="host"/>
+    <loader readonly="yes" secure="yes" type="pflash" format="qcow2">/usr/share/edk2/ovmf/OVMF_CODE_4M.secboot.qcow2</loader>
+    <nvram template="/usr/share/edk2/ovmf/OVMF_VARS_4M.secboot.qcow2" format="qcow2">/var/lib/libvirt/qemu/nvram/vm-jeux_VARS.fd</nvram>
   </os>
   <features>
     <acpi/>
@@ -442,21 +450,29 @@ Voici le XML de configuration utilisé pour la machine Windows 10 :
       <vapic state="on"/>
       <spinlocks state="on" retries="8191"/>
       <vpindex state="on"/>
+      <runtime state="on"/>
       <synic state="on"/>
-      <stimer state="on"/>
+      <stimer state="on">
+        <direct state="on"/>
+      </stimer>
       <reset state="on"/>
-      <vendor_id state="on" value="kvm"/>
+      <vendor_id state="on" value="Asus"/>
       <frequencies state="on"/>
+      <reenlightenment state="on"/>
+      <tlbflush state="on"/>
+      <ipi state="on"/>
+      <evmcs state="off"/>
     </hyperv>
     <kvm>
       <hidden state="on"/>
     </kvm>
     <vmport state="off"/>
+    <smm state="on"/>
   </features>
   <cpu mode="host-passthrough" check="none" migratable="on">
     <topology sockets="1" dies="1" cores="8" threads="2"/>
     <cache mode="passthrough"/>
-    <feature policy="require" name="topoext"/>
+    <feature policy='disable' name="hypervisor"/>
   </cpu>
   <clock offset="localtime">
     <timer name="rtc" tickpolicy="catchup"/>
@@ -476,14 +492,11 @@ Voici le XML de configuration utilisé pour la machine Windows 10 :
     <disk type="block" device="disk">
       <driver name="qemu" type="raw" cache="none" io="native" discard="unmap"/>
       <source dev="/dev/nvme1n1"/>
-      <target dev="sdb" bus="sata"/>
-      <address type="drive" controller="0" bus="0" target="0" unit="1"/>
+      <target dev="sda" bus="sata"/>
+      <address type="drive" controller="0" bus="0" target="0" unit="0"/>
     </disk>
-    <controller type="usb" index="0" model="qemu-xhci">
+    <controller type="usb" index="0" model="qemu-xhci" ports="15">
       <address type="pci" domain="0x0000" bus="0x02" slot="0x00" function="0x0"/>
-    </controller>
-    <controller type="sata" index="0">
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x1f" function="0x2"/>
     </controller>
     <controller type="pci" index="0" model="pcie-root"/>
     <controller type="pci" index="1" model="pcie-root-port">
@@ -521,12 +534,52 @@ Voici le XML de configuration utilisé pour la machine Windows 10 :
       <target chassis="7" port="0x16"/>
       <address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x6"/>
     </controller>
-    <controller type="pci" index="8" model="pcie-to-pci-bridge">
+    <controller type="pci" index="8" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="8" port="0x17"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x7"/>
+    </controller>
+    <controller type="pci" index="9" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="9" port="0x18"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x0" multifunction="on"/>
+    </controller>
+    <controller type="pci" index="10" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="10" port="0x19"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x1"/>
+    </controller>
+    <controller type="pci" index="11" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="11" port="0x1a"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x2"/>
+    </controller>
+    <controller type="pci" index="12" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="12" port="0x1b"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x3"/>
+    </controller>
+    <controller type="pci" index="13" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="13" port="0x1c"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x4"/>
+    </controller>
+    <controller type="pci" index="14" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="14" port="0x1d"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x5"/>
+    </controller>
+    <controller type="pci" index="15" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="15" port="0x1e"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x6"/>
+    </controller>
+    <controller type="pci" index="16" model="pcie-to-pci-bridge">
       <model name="pcie-pci-bridge"/>
       <address type="pci" domain="0x0000" bus="0x06" slot="0x00" function="0x0"/>
     </controller>
-    <controller type="scsi" index="0" model="lsilogic">
-      <address type="pci" domain="0x0000" bus="0x08" slot="0x01" function="0x0"/>
+    <controller type="sata" index="0">
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x1f" function="0x2"/>
     </controller>
     <interface type="network">
       <mac address="52:54:00:e5:75:75"/>
@@ -539,12 +592,17 @@ Voici le XML de configuration utilisé pour la machine Windows 10 :
     </input>
     <input type="mouse" bus="ps2"/>
     <input type="keyboard" bus="ps2"/>
+    <tpm model="tpm-crb">
+      <backend type="emulator" version="2.0"/>
+    </tpm>
     <graphics type="spice" autoport="yes">
       <listen type="address"/>
     </graphics>
     <audio id="1" type="spice"/>
     <video>
-      <model type="qxl" ram="65536" vram="65536" vgamem="16384" heads="1" primary="yes"/>
+      <model type="vga" vram="16384" heads="1" primary="yes">
+        <resolution x="1920" y="1080"/>
+      </model>
       <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x0"/>
     </video>
     <hostdev mode="subsystem" type="pci" managed="yes">
@@ -559,6 +617,7 @@ Voici le XML de configuration utilisé pour la machine Windows 10 :
       </source>
       <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
     </hostdev>
+    <watchdog model="itco" action="reset"/>
     <memballoon model="virtio">
       <address type="pci" domain="0x0000" bus="0x04" slot="0x00" function="0x0"/>
     </memballoon>
