@@ -220,6 +220,8 @@ remote-cert-tls server
 nobind
 verb 3
 
+route-nopull
+
 <ca>
 $(cat /etc/openvpn/server/ca.crt)
 </ca>
