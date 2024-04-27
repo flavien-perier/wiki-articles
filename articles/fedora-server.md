@@ -22,7 +22,7 @@ Le serveur est doté d'un [AMD Ryzen 9 5900X](https://www.amd.com/fr/products/cp
 
 Pour ce type de serveur, les distributions basées sur [RedHat](https://www.redhat.com/) sont relativement avantageuses. En effet, cette famille de distribution Linux étant destinée aux entreprises, elles bénéficient de nombreux avantages en termes de virtualisation et de conteneurisation.
 
-Cependant, il peut-être dommage de ne pas bénéficier des dernières mises à jour du kernel quand on souhaite avoir une infrastructure performante. On oublie donc RHEL[RHEL](https://www.redhat.com/fr/technologies/linux-platforms/enterprise-linux) (de toute façon, pas de nécessité de support), [RockyLinux](https://rockylinux.org/) ou [CentOS](https://www.centos.org/).
+Cependant, il peut-être dommage de ne pas bénéficier des dernières mises à jour du kernel quand on souhaite avoir une infrastructure performante. On oublie donc [RHEL](https://www.redhat.com/fr/technologies/linux-platforms/enterprise-linux) (de toute façon, pas de nécessité de support), [RockyLinux](https://rockylinux.org/) ou [CentOS](https://www.centos.org/).
 
 La distribution qui semble donc le plus appropriée pour cette installation est [Fedora Server](https://fedoraproject.org/fr/server/).
 
@@ -440,9 +440,9 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
       <feature enabled="yes" name="enrolled-keys"/>
       <feature enabled="yes" name="secure-boot"/>
     </firmware>
-    <smbios mode="host"/>
     <loader readonly="yes" secure="yes" type="pflash" format="qcow2">/usr/share/edk2/ovmf/OVMF_CODE_4M.secboot.qcow2</loader>
     <nvram template="/usr/share/edk2/ovmf/OVMF_VARS_4M.secboot.qcow2" format="qcow2">/var/lib/libvirt/qemu/nvram/vm-jeux_VARS.fd</nvram>
+    <boot dev="hd"/>
   </os>
   <features>
     <acpi/>
