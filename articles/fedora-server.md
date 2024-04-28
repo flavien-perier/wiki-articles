@@ -442,6 +442,7 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
     </firmware>
     <loader readonly="yes" secure="yes" type="pflash" format="qcow2">/usr/share/edk2/ovmf/OVMF_CODE_4M.secboot.qcow2</loader>
     <nvram template="/usr/share/edk2/ovmf/OVMF_VARS_4M.secboot.qcow2" format="qcow2">/var/lib/libvirt/qemu/nvram/vm-jeux_VARS.fd</nvram>
+    <smbios mode="host"/>
     <boot dev="hd"/>
   </os>
   <features>
