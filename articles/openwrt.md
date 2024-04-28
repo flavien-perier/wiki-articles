@@ -26,7 +26,42 @@ chmod 700 /tmp/bpi-copy
 sudo /tmp/bpi-copy ~/Downloads/mtk-bpi-r4-SD-*-New.img /dev/sdd
 ```
 
-Ensuite il est possible de se connecter sur l'interface `192.168.1.1`
+Ensuite il est nécessaire de se connecter sur l'interface `192.168.1.1` afin de configurer le modem. Dans les options du system il est noteament possible de configurer un accès SSH, ce qui peut ce révéler pratique pour les opérations qui vont suivre.
+
+## Connexion à l'opérateur
+
+Afin de ce connecter à un opérateur il va falloir deux informations :
+
+- L'addresse mac du modem fourni par l'opérateur: 
+- Le numéro client: Qui est inscrit en haut de ca facture.
+
+Une fois ces informations en notre pocession, il faut modifer le fichier `/etc/config/network` pour y ajouter la configuration suivantes :
+
+```
+config device
+	option name 'eth2'
+	option macaddr '$MAC_ADDRESS'
+  option ipv6 '0'
+
+config device
+	option type '8021q'
+	option ifname 'eth2'
+	option vid '100'
+	option macaddr '$MAC_ADDRESS'
+	option name 'eth2.100'
+  option ipv6 '0'
+
+config interface 'wan'
+	option proto 'dhcp'
+	option clientid '$CLIENT_ID'
+	option vendorid 'BYGTELIAD'
+	option hostname '*'
+	option macaddr '$MAC_ADDRESS'
+	option device 'eth2.100'
+  option delegate '0'
+  option peerdns '0'
+  option dns '1.1.1.1 1.0.0.1'
+```
 
 ## Sources
 
