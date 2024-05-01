@@ -1063,10 +1063,11 @@ flatpak install --user org.mozilla.Thunderbird
 
 ### [Discord](https://discord.com/)
 
-Logiciel de chat communautaire.
+Discord est surement l'application de communication la plus populaire du moment. Elle est cependant développée en JavaScript dans un conteneur [Electron](https://www.electronjs.org/) et ne se soucie pas vraiment des utilisateurs Linux. Un patch du nom de [Vencord](https://vencord.dev/) a donc été développé par la communauté afin d'améliorer la performance de l'application et enlever plusieurs options de tracking.
 
 ```bash
 flatpak install --user com.discordapp.Discord
+sh -c "$(curl -sS https://raw.githubusercontent.com/Vendicated/VencordInstaller/main/install.sh)"
 ```
 
 Pour lancer Discord en mode réduit il est possible d'utiliser la ligne de commande suivante :
