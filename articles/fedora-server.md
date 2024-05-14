@@ -54,7 +54,10 @@ Installation des drivers Nvidia et configuration minimale du serveur :
 ```bash
 curl -s https://raw.githubusercontent.com/flavien-perier/linux-shell-configuration/master/linux-shell-configuration.sh | bash -
 
-dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
+dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/fedora39/x86_64/cuda-fedora39.repo
+dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+dnf config-manager --add-repo https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
+
 dnf install kernel-devel kernel-headers
 dnf module install nvidia-driver
 dnf remove plymouth*
@@ -262,9 +265,6 @@ echo 'ETHTOOL_OPTS="wol g"' > /etc/sysconfig/network-scripts/ifcfg-enp4s0
 Installation de Docker et de nvidia-docker :
 
 ```bash
-dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-dnf config-manager --add-repo https://nvidia.github.io/nvidia-docker/rhel9.0/nvidia-docker.repo
-
 dnf install docker-ce docker-ce-cli containerd.io nvidia-docker2 nvidia-container-toolkit
 
 systemctl enable docker
@@ -475,7 +475,7 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
   <cpu mode="host-passthrough" check="none" migratable="on">
     <topology sockets="1" dies="1" cores="8" threads="2"/>
     <cache mode="passthrough"/>
-    <feature policy='disable' name="hypervisor"/>
+    <feature policy="require" name="topoext"/>
   </cpu>
   <clock offset="localtime">
     <timer name="rtc" tickpolicy="catchup"/>
@@ -586,7 +586,7 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
     </controller>
     <interface type="network">
       <mac address="52:54:00:e5:75:75"/>
-      <source network="host-network"/>
+      <source network="network"/>
       <model type="e1000e"/>
       <address type="pci" domain="0x0000" bus="0x01" slot="0x00" function="0x0"/>
     </interface>
@@ -610,13 +610,13 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
     </video>
     <hostdev mode="subsystem" type="pci" managed="yes">
       <source>
-        <address domain="0x0000" bus="0x09" slot="0x00" function="0x0"/>
+        <address domain="0x0000" bus="0x0a" slot="0x00" function="0x0"/>
       </source>
       <address type="pci" domain="0x0000" bus="0x03" slot="0x00" function="0x0"/>
     </hostdev>
     <hostdev mode="subsystem" type="pci" managed="yes">
       <source>
-        <address domain="0x0000" bus="0x09" slot="0x00" function="0x1"/>
+        <address domain="0x0000" bus="0x0a" slot="0x00" function="0x1"/>
       </source>
       <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
     </hostdev>

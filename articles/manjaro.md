@@ -1641,9 +1641,13 @@ Permets de donner un certain nombre d'informations concernant une adresse IP (lo
 sudo pacman -S whois
 ```
 
-### [Neofetch](https://github.com/dylanaraps/neofetch)
+### [Fastfetch](https://github.com/fastfetch-cli/fastfetch)
 
-Sans aucun doute l'outil le plus inutile de la sélection... Il permet d'afficher un certain nombre de caractéristiques de sa machine sous un format coloré. Un vrai Linuxien se doit de toujours laisser un Neofetch tourné dans un coin de terminale sur chaque capture d'écran qu'il envoie. Cela permet de prouver au reste de la communauté la supériorité de sa distribution.
+L'outil [Neofetch](https://github.com/dylanaraps/neofetch) était une vraie religion chez les utilisateurs de Linux. Cependant son créateur à malheureusement décidé d'arrêter ça maintenance.
+
+Le projet Fastfetch a donc pris le relais.
+
+Il s'agit aucun doute de l'outil le plus inutile de la sélection... Il permet d'afficher un certain nombre de caractéristiques de sa machine sous un format coloré. Un vrai Linuxien se doit de toujours laisser un Neofetch/Fastfetch tourné dans un coin de terminale sur chaque capture d'écran qu'il envoie. Cela permet de prouver au reste de la communauté la supériorité de sa distribution.
 
 ```bash
 sudo pacman -S neofetch
