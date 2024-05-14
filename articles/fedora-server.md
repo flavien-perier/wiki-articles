@@ -441,9 +441,9 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
       <feature enabled="yes" name="secure-boot"/>
     </firmware>
     <loader readonly="yes" secure="yes" type="pflash" format="qcow2">/usr/share/edk2/ovmf/OVMF_CODE_4M.secboot.qcow2</loader>
-    <nvram template="/usr/share/edk2/ovmf/OVMF_VARS_4M.secboot.qcow2" format="qcow2">/var/lib/libvirt/qemu/nvram/vm-jeux_VARS.fd</nvram>
-    <smbios mode="host"/>
+    <nvram template="/usr/share/edk2/ovmf/OVMF_VARS_4M.secboot.qcow2" format="qcow2">/var/lib/libvirt/qemu/nvram/vm-jeux_VARS.qcow2</nvram>
     <boot dev="hd"/>
+    <smbios mode="host"/>
   </os>
   <features>
     <acpi/>
@@ -571,15 +571,6 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
       <model name="pcie-root-port"/>
       <target chassis="14" port="0x1d"/>
       <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x5"/>
-    </controller>
-    <controller type="pci" index="15" model="pcie-root-port">
-      <model name="pcie-root-port"/>
-      <target chassis="15" port="0x1e"/>
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x6"/>
-    </controller>
-    <controller type="pci" index="16" model="pcie-to-pci-bridge">
-      <model name="pcie-pci-bridge"/>
-      <address type="pci" domain="0x0000" bus="0x06" slot="0x00" function="0x0"/>
     </controller>
     <controller type="sata" index="0">
       <address type="pci" domain="0x0000" bus="0x00" slot="0x1f" function="0x2"/>
