@@ -1943,7 +1943,7 @@ Un petit script qui met à jour toutes nos applications avec les différents ges
 ```bash
 #!/bin/bash
 
-set -e
+# set -e
 
 sudo pacman --noconfirm -Syyu
 yay --noconfirm -Syyu
@@ -1954,6 +1954,8 @@ sudo pacman --noconfirm -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 sudo docker pull
 podman images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 podman pull
 
+yes "" | sh -c "$(curl -sS https://raw.githubusercontent.com/Vendicated/VencordInstaller/main/install.sh)"
+
 for PLATFORM in `ls $HOME/.local/share/flatpak/runtime | grep "Platform$"`
 do
     for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
@@ -1961,15 +1963,21 @@ do
         THEMES=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/themes
         ICONS=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/icons
         FONTS=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/fonts
+
         chmod -R 700 $THEMES
-        chmod -R 700 $ICONS
-        chmod -R 700 $FONTS
         rm -Rf $THEMES/*
-        rm -Rf $ICONS/*
-        rm -Rf $FONTS/*
         cp -Rf $HOME/.themes/* $THEMES
+        chmod -R u+w $THEMES
+
+        chmod -R 700 $ICONS
+        rm -Rf $ICONS/*
         cp -Rf $HOME/.icons/* $ICONS
+        chmod -R u+w $ICONS
+
+        chmod -R 700 $FONTS
+        rm -Rf $FONTS/*
         cp -Rf $HOME/.fonts/* $FONTS
+        chmod -R u+w $FONTS
     done
 done
 
@@ -2184,3 +2192,4 @@ Si vous rencontrez des problèmes, n'hésitez pas à me contacter par mail sur [
 - [Configure your firewall to work with Sonos](https://support.sonos.com/s/article/688)
 - [Ports nécessaires à Steam](https://help.steampowered.com/fr/faqs/view/2EA8-4D75-DA21-31EB)
 - [Forum Manjaro : Link in flatpak apps won’t open anymore on click since last update](https://forum.manjaro.org/t/link-in-flatpak-apps-wont-open-anymore-on-click-since-last-update/149907/22)
+- [Manjaro forum - Manjaro System repair / integrity check?](https://forum.manjaro.org/t/manjaro-system-repair-integrity-check/154486/11)
