@@ -167,8 +167,8 @@ Dans l'exemple suivant on créer un utilisateur `my-user` sur une image Alpine e
 ```Dockerfile
 FROM alpine:3.18.3
 
-ARG DOCKER_UID="500" \
-    DOCKER_GID="500"
+ARG DOCKER_UID="1000" \
+    DOCKER_GID="1000"
 
 RUN addgroup -g $DOCKER_GID my-user && \
     adduser -G my-user -D -H -h /opt/my-user -u $DOCKER_UID my-user
@@ -179,8 +179,8 @@ USER my-user
 ```Dockerfile
 FROM debian:11.7
 
-ARG DOCKER_UID="500" \
-    DOCKER_GID="500"
+ARG DOCKER_UID="1000" \
+    DOCKER_GID="1000"
 
 RUN groupadd -g $DOCKER_GID my-user && \
     useradd -g my-user -M -d /opt/my-user -u $DOCKER_UID my-user
@@ -217,8 +217,8 @@ LABEL maintainer="Flavien PERIER <perier@flavien.io>" \
     version="1.0.0" \
     description="Flavien website"
 
-ARG DOCKER_UID="500" \
-    DOCKER_GID="500"
+ARG DOCKER_UID="1000" \
+    DOCKER_GID="1000"
 
 WORKDIR /opt/flavien
 
