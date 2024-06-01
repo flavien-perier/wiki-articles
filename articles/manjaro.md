@@ -763,7 +763,13 @@ sudo pacman -S android-tools
 Pour installer Docker :
 
 ```bash
-sudo pacman -S docker
+sudo pacman -S docker docker-buildx
+ 
+echo '{
+  "features": {
+    "buildkit" : true
+  }
+}' > /etc/docker/daemon.json
 
 sudo systemctl enable docker
 sudo systemctl start docker
