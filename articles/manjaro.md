@@ -763,7 +763,7 @@ sudo pacman -S android-tools
 Pour installer Docker :
 
 ```bash
-sudo pacman -S docker docker-buildx
+sudo pacman -S docker docker-buildx docker-compose
  
 echo '{
   "features": {

@@ -228,11 +228,11 @@ RUN apk add --no-cache libpng-dev jpeg-dev giflib-dev pango-dev cairo-dev && \
     mkdir /var/log/flavien && \
     chown flavien:flavien /var/log/flavien
 
-COPY --chown=flavien:flavien --from=builder /opt/flavien .
-
 USER flavien
 
 EXPOSE 8080
+
+COPY --chown=flavien:flavien --from=builder /opt/flavien .
 
 CMD yarn start
 ```
