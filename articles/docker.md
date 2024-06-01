@@ -213,9 +213,14 @@ RUN apk add --no-cache build-base g++ python3 libpng-dev jpeg-dev giflib-dev pan
 
 FROM node:lts-alpine
 
-LABEL maintainer="Flavien PERIER <perier@flavien.io>" \
-    version="1.0.0" \
-    description="Flavien website"
+LABEL org.opencontainers.image.title="Flavien website" \
+      org.opencontainers.image.description="Flavien website" \
+      org.opencontainers.image.version="1.0.0" \
+      org.opencontainers.image.vendor="flavien.io" \
+      org.opencontainers.image.maintainer="Flavien PERIER <perier@flavien.io>" \
+      org.opencontainers.image.url="https://github.com/flavien-perier/flavien-website" \
+      org.opencontainers.image.source="https://github.com/flavien-perier/flavien-website" \
+      org.opencontainers.image.licenses="MIT"
 
 ARG DOCKER_UID="1000" \
     DOCKER_GID="1000"
