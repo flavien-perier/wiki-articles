@@ -197,7 +197,7 @@ USER my-user
 Pour exemple voici le Dockerfile de ce site :
 
 ```Dockerfile
-FROM node:lts-alpine as builder
+FROM node:hydrogen-alpine as builder
 
 WORKDIR /opt/flavien
 
@@ -211,7 +211,7 @@ RUN apk add --no-cache build-base g++ python3 libpng-dev jpeg-dev giflib-dev pan
     npm install --production && \
     rm -Rf src public postcss.config.js vue.config.js tsconfig.json .env*
 
-FROM node:lts-alpine
+FROM node:hydrogen-alpine
 
 LABEL org.opencontainers.image.title="Flavien website" \
       org.opencontainers.image.description="Flavien website" \
@@ -222,8 +222,8 @@ LABEL org.opencontainers.image.title="Flavien website" \
       org.opencontainers.image.source="https://github.com/flavien-perier/flavien-website" \
       org.opencontainers.image.licenses="MIT"
 
-ARG DOCKER_UID="1000" \
-    DOCKER_GID="1000"
+ARG DOCKER_UID="1100" \
+    DOCKER_GID="1100"
 
 WORKDIR /opt/flavien
 
