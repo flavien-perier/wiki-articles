@@ -241,9 +241,9 @@ En fonction de l'environnement de bureau installé sur l'ordinateur de l'utilisa
 
 Aujourd'hui je peux affirmer que je me passe de tous les services Google à une exception près, YouTube. Heureusement sur mobile il existe une application qui me permet d'accéder au contenu de YouTube sans installer l'application YouTube officielle. Il est possible de regarder les vidéos en arrière-plan (pour écouter de la musique, même si je déconseille de le faire, car écouter de la musique sur YouTube n'est pas un acte écoresponsable en termes de GreenIt), de les télécharger, de ne pas avoir les pubs et de faire des playlists locales (qui ne sont pas sauvegardées sur les serveurs de Google).
 
-### [Flym](https://github.com/FredJul/Flym)
+### [Nextcloud News](https://f-droid.org/en/packages/co.appreactor.news/)
 
-Un lecteur de flux RSS léger et open source.
+Un lecteur de flux RSS qu'il est possible de synchroniser avec une instance NextCloud.
 
 ### [Collabora Office](https://www.collaboraoffice.com/)
 
