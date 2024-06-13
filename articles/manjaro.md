@@ -1072,14 +1072,13 @@ flatpak install --user org.mozilla.Thunderbird
 Discord est surement l'application de communication la plus populaire du moment. Elle est cependant développée en JavaScript dans un conteneur [Electron](https://www.electronjs.org/) et ne se soucie pas vraiment des utilisateurs Linux. Un patch du nom de [Vencord](https://vencord.dev/) a donc été développé par la communauté afin d'améliorer la performance de l'application et enlever plusieurs options de tracking.
 
 ```bash
-flatpak install --user com.discordapp.Discord
-sh -c "$(curl -sS https://raw.githubusercontent.com/Vendicated/VencordInstaller/main/install.sh)"
+flatpak install --user dev.vencord.Vesktop
 ```
 
 Pour lancer Discord en mode réduit il est possible d'utiliser la ligne de commande suivante :
 
 ```bash
-flatpak run --branch=stable --arch=x86_64 --command=discord com.discordapp.Discord --start-minimized
+/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=startvesktop dev.vencord.Vesktop --start-minimized
 ```
 
 ### [Tox](https://tox.chat/)
@@ -1959,8 +1958,6 @@ sudo pacman --noconfirm -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 
 sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 sudo docker pull
 podman images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 podman pull
-
-yes "" | sh -c "$(curl -sS https://raw.githubusercontent.com/Vendicated/VencordInstaller/main/install.sh)"
 
 for PLATFORM in `ls $HOME/.local/share/flatpak/runtime | grep "Platform$"`
 do
