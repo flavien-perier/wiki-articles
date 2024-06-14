@@ -982,19 +982,19 @@ EOL
 
 ### [Firefox](https://www.mozilla.org/fr/firefox/new/)
 
-Dans un premier temps, nous allons désinstaller Midori, le navigateur par défaut de la distribution. Puis nous allons le remplacer par Firefox.
+Par défaut, Manjaro utilise le navigateur [Midori](https://astian.org/midori-browser/). Ce dernier est conçu pour être léger, mais n'est pas vraiment populaire et n'est pas installé dans un Flatpak. Un remplacement par Firefox en version Flatpak semble donc pertinent.
 
 ```bash
 sudo pacman -Rsn midori
 flatpak install --user org.mozilla.firefox
 ```
 
-### [Chromium](https://www.chromium.org/)
+### [Brave Browser](https://brave.com/)
 
-La version open source du navigateur de Google. Je ne l'utilise personnellement pas comme navigateur principal, mais certains sites ne fonctionnant pas sous Firefox, l'avoir sur son poste peut bien souvent dépanner.
+Brave Browser est un énième navigateur basé sur [Chromium](https://www.chromium.org/). Cependant, contrairement à la plupart des alternatives, il est orienté vie privée. Malheureusement, certains sites (très rares) ne fonctionnent pas sur Firefox, il est donc toujours pertinent d'avoir un navigateur de la famille Chrome sous la main pour ce type de situation.
 
 ```bash
-flatpak install --user org.chromium.Chromium
+flatpak install --user com.brave.Browser
 ```
 
 ### [TorBrowser](https://www.torproject.org/)
