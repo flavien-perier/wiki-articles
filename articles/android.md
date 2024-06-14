@@ -206,13 +206,35 @@ Même si je n'ai aucune preuve tangible que cet antivirus est néfaste (et au de
 
 De manière générale les performances des antivirus sont changeantes d'une année sur l'autre. Il peut donc être pertinent de consulter fréquemment le site [AV-Test](https://www.av-test.org/fr/antivirus/portables/) afin de voir les derniers comparatifs de ces solutions de sécurité.
 
-### [Stop Appels Indésirables](https://primezone.orange.com/app/Stop%20Appels%20Ind%C3%A9sirables/452)
+### [SpamBlocker](https://f-droid.org/en/packages/spam.blocker/)
 
-Il s'agit d'une application développée par [Orange labs](https://lelab.orange.fr/) permettant de bloquer les appels gênants. Ce type d'application a comme unique inconvénient qu'une requête est envoyée à un serveur pour chaque appel afin de vérifier sa présence ou non dans la blacklist du fournisseur (ce dernier a donc une copie complète de notre répertoire d'appel).
+Le démarchage téléphonique est devenu insupportable pour beaucoup de personnes, avec parfois plusieurs appels par jour. Une première chose à faire, est bien évidemment de s'inscrire sur [Blocter](https://www.bloctel.gouv.fr/), l'initiative du gouvernement. Cependant, il semblerait que certaines entreprises peu scrupuleuses ne prennent pas réellement cette liste en compte. Il existe de nombreuses applications de blocage de numéro indésirables en ligne. Ces dernières sont souvent très intrusives, car des requêtes sont généralement envoyées à des serveurs avec les numéros qui vous appellent sans qu'on puisse vraiment savoir comment elles sont traitées (quand c'est Orange, je pense qu'on peut avoir confiance, mais quand ce sont des applications américaines qui font leur business autour de quelques applications, je pense qu'il est raisonnable de se méfier).
 
-Contrairement à d'autres applications de blocage, celle-là n'est pas un dialer, mais bien d'une application de blacklist. Il est donc possible de continuer à utiliser le dialer par défaut du système (qui est très bien intégré dans /e/).
+L'application SpamBlocker n'a rien d'incroyable dans son fonctionnement. Elle permet simplement de bloquer des numéros en fonction de patterns, et ce, sans communiquer avec internet. D'autres applications permettent très certainement de faire la même chose. Celle-là à l'avantage d'être open source et raisonnablement maintenu.
 
-Enfin, il s'agit d'une application française, donc bien adaptée pour bloquer les numéros gênants français.
+En France, les numéros de démarchages sont tenus de nous appeler avec des plages de numéro précises, donc faciles à identifier (donc à bloquer avec cette application). [Le plan de numérotation de l'ARCEP](https://www.arcep.fr/actualites/actualites-et-communiques/detail/n/plan-de-numerotation-050922.html) référence la liste de ces préfix. Il ne reste donc plus qu'à écrire les regex et le tour est joué :
+
+```regex
+33162.*
+33163.*
+33270.*
+33271.*
+33377.*
+33378.*
+33424.*
+33425.*
+33568.*
+33569.*
+33948.*
+33949.*
+339475.*
+339476.*
+339477.*
+339478.*
+339479.*
+```
+
+Cette méthode n'est surement pas aussi efficace qu'un service en ligne, mais a le mérite de garantir le respect de ses données tout en limitant la nuisance provoquée par ces appels.
 
 ### Les réseaux sociaux
 

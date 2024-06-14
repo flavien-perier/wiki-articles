@@ -359,9 +359,9 @@ mkdir -p /etc/libvirt/hooks/qemu.d/vm-jeux/release/end
 wget https://raw.githubusercontent.com/PassthroughPOST/VFIO-Tools/master/libvirt_hooks/qemu -O /etc/libvirt/hooks/qemu
 chmod 750 /etc/libvirt/hooks/qemu
 
-wget https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/start.sh -O /tmp/start-qemu.sh
+wget https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/start.sh -O /etc/libvirt/hooks/qemu.d/vm-jeux/prepare/begin/start.sh
 
-cat /tmp/start-qemu.sh | sed 's/youruser/admin/g' > /etc/libvirt/hooks/qemu.d/vm-jeux/prepare/begin/start.sh
+sed -i "s/youruser/admin/g" /etc/libvirt/hooks/qemu.d/vm-jeux/prepare/begin/start.sh
 
 wget https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/revert.sh -O /etc/libvirt/hooks/qemu.d/vm-jeux/release/end/revert.sh
 
