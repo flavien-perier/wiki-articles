@@ -301,16 +301,6 @@ Sur un téléphone rooter, on peut aller beaucoup plus loin dans l'utilisation d
 
 AdAway est un bloqueur de pub capable de fonctionner avec deux modes différents. Si le téléphone n'est pas root, de la même façon que TrackerControl, il va créer une boucle VPN en local et filtrer les flux sur cette boucle. Ce qui est assez peu performant et très gourmand en batterie. En revanche en mode root, l'application met simplement à jour le fichier host de l'appareil afin que les publicités soient directement bloquées au niveau du système d'exploitation. Ce qui est évidemment beaucoup plus optimisé.
 
-### [Kernel Adiutor](https://f-droid.org/en/packages/com.nhellfire.kerneladiutor/)
-
-Une application permettant de modifier les paramètres du kernel d'Android. Il est par exemple possible de modifier la fréquence de ses processeurs. Personnellement, je la baisse de quelques MHz afin de gagner en autonomie et limiter la chauffe de mon téléphone (ce qui n'est pas forcément pertinent en fonction de l'utilisation qu'on a de son appareil).
-
-### [Linux deploy](https://apkpure.com/linux-deploy/ru.meefik.linuxdeploy)
-
-Permets d'installer un conteneur Linux sur un téléphone portable. Plusieurs distributions sont disponibles [Arch](https://archlinux.org/), [Debian](https://www.debian.org/), [Kali](https://www.kali.org/)...
-
-Contrairement à Termux, s'agissant de véritable conteneurisation, il est possible d'utiliser toutes les fonctionnalités d'un véritable Linux.
-
 ### [NetHunter Store](https://store.nethunter.com/)
 
 Développée par les équipes de [Kali Linux](https://www.kali.org/), la distribution [NetHunter](https://www.kali.org/docs/nethunter/) contient un grand nombre d'outils de pentest.
