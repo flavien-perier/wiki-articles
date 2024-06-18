@@ -177,7 +177,7 @@ Ce dernier introduit plusieurs raccourcis ainsi que des configurations pour les 
 Pour l'installer, il suffit de taper la ligne de commande :
 
 ```bash
-curl -s https://raw.githubusercontent.com/flavien-perier/linux-shell-configuration/master/linux-shell-configuration.sh | sudo bash -
+curl -s https://raw.githubusercontent.com/flavien-perier/linux-configuration/master/shell-configuration.sh | sudo bash -
 ```
 
 ### Apparence
