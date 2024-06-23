@@ -143,157 +143,9 @@ Il faut cependant être attentif à ne pas faire d'`opkg dist-upgrade`. Cela pos
 
 De même, des upgrades globaux (`opkg upgrade`) peuvent introduire des instabilités plus ou moins graves... Chose malheureusement symptomatique des distributions mal ou insuffisamment testées. Une fois la distribution installée, le plus sage est donc malheureusement de ne plus toucher à rien.
 
-## Script d'optimisation de la batterie
-
-`crontab` n'est malheureusement pas installé sur cet OS et aucune alternative n'est disponible dans les repos d'`opkg`. L'objectif est donc de créer des scripts sous forme de machine à état appelé à des moments précis à l'aide de `systemd`.
-
-Ce premier script possède 4 états :
-
-- `night`: Pendant la nuit le Bluetooth, et le WiFi sont coupés, la luminosité et à son minimum et le seul état vers lequel on peut aller depuis cet état est `day`.
-- `day`: État de transition permettant de réactiver Bluetooth et WiFi. Depuis cet état on peut aller vers `indoor` ou `outdoor`.
-- `indoor`: La montre est à proximité d'un réseau WiFi connu. Elle est donc en intérieur. La luminosité est à son minimum.
-- `outdoor`: La montre n'est pas à proximité d'un réseau WiFi connu. Elle est donc en extérieur. La luminosité est à son maximum.
-
-```sh
-echo '#!/bin/sh
-
-if [ $# -ne 1 ]
-then
-  exit 1
-fi
-
-if [ ! -f /tmp/alim-state ]
-then
-  echo "init" > /tmp/alim-state
-fi
-
-LAST_STATE=`cat /tmp/alim-state`
-
-case $1 in
-day)
-  mcetool --set-display-brightness 100
-  mcetool --set-power-saving-mode enabled
-  mcetool --set-low-power-mode disabled
-  systemctl start sensorfwd
-  systemctl start ofono
-  systemctl start connman
-  systemctl start bluetooth
-  connmanctl enable wifi
-  ifconfig wlan0 up
-
-  echo "day" > /tmp/alim-state
-  echo "ready" > /tmp/network-state
-;;
-night)
-  mcetool --set-display-brightness 1
-  mcetool --set-power-saving-mode enabled
-  mcetool --set-low-power-mode disabled
-  ifconfig wlan0 down
-  connmanctl disable wifi
-  systemctl stop sensorfwd
-  systemctl stop ofono
-  systemctl stop connman
-  systemctl stop bluetooth
-
-  echo "night" > /tmp/alim-state
-;;
-indoor)
-  if [ $LAST_STATE == "night" ] || [ $LAST_STATE == "indoor" ]
-  then
-    exit 0
-  fi
-
-  mcetool --set-display-brightness 1
-  mcetool --set-power-saving-mode enabled
-  mcetool --set-low-power-mode disabled
-  systemctl stop sensorfwd
-
-  echo "indoor" > /tmp/alim-state
-;;
-outdoor)
-  if [ $LAST_STATE == "night" ] || [ $LAST_STATE == "outdoor" ]
-  then
-    exit 0
-  fi
-
-  mcetool --set-display-brightness 100
-  mcetool --set-power-saving-mode enabled
-  mcetool --set-low-power-mode disabled
-  systemctl start sensorfwd
-
-  echo "outdoor" > /tmp/alim-state
-;;
-*)
-  exit 1
-esac' | tee /home/root/alim
-chmod 550 /home/root/alim
-
-cat << EOL > /etc/systemd/system/alim-day.service
-[Unit]
-Description=Switch alim state to day
-Wants=alim-day.timer
-
-[Service]
-ExecStart=/home/root/alim day
-Type=oneshot
-
-[Install]
-WantedBy=app.slice
-EOL
-
-cat << EOL > /etc/systemd/system/alim-day.timer
-[Unit]
-Description=Switch alim state to day
-Requires=alim-day.service
-
-[Timer]
-Unit=alim-day.service
-OnCalendar=*-*-* 7:00:00
-
-[Install]
-WantedBy=timers.target
-EOL
-
-cat << EOL > /etc/systemd/system/alim-night.service
-[Unit]
-Description=Switch alim state to night
-Wants=alim-night.timer
-
-[Service]
-ExecStart=/home/root/alim night
-Type=oneshot
-
-[Install]
-WantedBy=app.slice
-EOL
-
-cat << EOL > /etc/systemd/system/alim-night.timer
-[Unit]
-Description=Switch alim state to night
-Requires=alim-night.service
-
-[Timer]
-Unit=alim-night.service
-OnCalendar=*-*-* 1:30:00
-
-[Install]
-WantedBy=timers.target
-EOL
-
-systemctl enable alim-day.service
-systemctl enable alim-day.timer
-systemctl enable alim-night.service
-systemctl enable alim-night.timer
-systemctl start alim-day.service
-systemctl start alim-day.timer
-systemctl start alim-night.service
-systemctl start alim-night.timer
-systemctl daemon-reload
-```
-
 ## Affichage de l'IP après connexion au WiFi
 
-L'objectif de ce script est simplement d'afficher l'IP de la montre avec une notification quand cette dernière se connecte à un WiFi. Par la même occasion, c'est ce script qui va entrainer les passages aux états `indoor` et `outdoor` du script d'optimisation de la batterie.
+L'objectif de ce script est simplement d'afficher l'IP de la montre avec une notification quand cette dernière se connecte à un WiFi.
 
 ```sh
 echo '#!/bin/sh
@@ -322,15 +174,8 @@ fi
 
 if [ $STATE = "ready" ]
 then
-  /home/root/alim indoor
-
   IP=`ip -br -4 a show wlan0 | tr -s " " | cut -f3 -d " " | cut -f1 -d "/"`
   su -l ceres -c "notificationtool -o add --icon=ios-wifi --application=\"System\" --urgency=3 --hint=\"x-nemo-preview-summary WiFi\" --hint=\"x-nemo-preview-body IP: $IP\" \"WiFi\" \"IP: $IP\""
-fi
-
-if [ $LAST_STATE = "ready" ]
-then
-  /home/root/alim outdoor
 fi
 
 echo $STATE > /tmp/network-state' | tee /home/root/notification-wifi
