@@ -616,6 +616,8 @@ chmod 700 ~/bin
 
 echo '#!/bin/bash
 
+USER_ID=$(id -u)
+
 case $1 in
 start)
   sudo iptables -t filter -P INPUT DROP
@@ -643,8 +645,16 @@ full-stop)
   sudo iptables -t filter -P FORWARD ACCEPT
   sudo iptables -t filter -P OUTPUT ACCEPT
 ;;
+allow-local)
+  sudo iptables -t filter -A OUTPUT -p tcp -d 10.0.0.0/8 -j ACCEPT -m owner --uid-owner $USER_ID
+  sudo iptables -t filter -A OUTPUT -p udp -d 10.0.0.0/8 -j ACCEPT -m owner --uid-owner $USER_ID
+  sudo iptables -t filter -A OUTPUT -p tcp -d 192.168.0.0/16 -j ACCEPT -m owner --uid-owner $USER_ID
+  sudo iptables -t filter -A OUTPUT -p udp -d 192.168.0.0/16 -j ACCEPT -m owner --uid-owner $USER_ID
+  sudo iptables -t filter -A OUTPUT -p tcp -d 172.16.0.0/12 -j ACCEPT -m owner --uid-owner $USER_ID
+  sudo iptables -t filter -A OUTPUT -p udp -d 172.16.0.0/12 -j ACCEPT -m owner --uid-owner $USER_ID
+;;
 *)
-  echo "Usage: firewall (start|stop|input-stop|output-stop|full-start|full-stop)"
+  echo "Usage: firewall (start|stop|input-stop|output-stop|full-start|full-stop|allow-local)"
   exit -1
 ;;
 esac' | tee ~/bin/firewall
