@@ -15,18 +15,21 @@ Au niveau du software c'est la distribution [OpenWrt](https://openwrt.org/) qui 
 
 ## Installation
 
-Dans un premier temps, il faut récupérter l'image OpenWRT pour carte micro sd sur leur lien [Google Drive](https://drive.google.com/file/d/146CUGBRC0ce5uN9nCM08Jegc51abAz1b/view).
+- Dans un premier temps, il faut récupérter l'image pour carte sd sur le site [d'OpenWRT](https://firmware-selector.openwrt.org/?version=SNAPSHOT&target=mediatek%2Ffilogic&id=bananapi_bpi-r4).
 
-Dans un second temps, on peut utiliser l'outil mis à disposition par Banana Pi afin d'écrire l'image sur la carte.
+- Dans un second temps on peut insérer la carte et y écrire l'OS avec la commande :
 
 ```bash
-sudo pacman -S pv
-wget https://raw.githubusercontent.com/BPI-SINOVOIP/bpi-tools/master/bpi-copy -O /tmp/bpi-copy
-chmod 700 /tmp/bpi-copy
-sudo /tmp/bpi-copy ~/Downloads/mtk-bpi-r4-SD-*-New.img /dev/sdd
+zcat openwrt-mediatek-filogic-bananapi_bpi-r4-sdcard.img.gz | sudo dd of=/dev/sdd bs=1M status=progress
 ```
 
-Ensuite il est nécessaire de se connecter sur l'interface `192.168.1.1` afin de configurer le modem. Dans les options du system il est noteament possible de configurer un accès SSH, ce qui peut ce révéler pratique pour les opérations qui vont suivre.
+- La troisième étape consiste à brancher son pc à la carte et effectuer quelques configurations de base en SSH :
+
+```bash
+ssh root@192.168.1.1 passwd
+ssh-keygen -f ~/.ssh/openwrt -t rsa -b 4096
+ssh-copy-id -i ~/.ssh/openwrt root@192.168.1.1
+```
 
 ## Connexion à l'opérateur
 
@@ -41,7 +44,7 @@ Une fois ces informations en notre pocession, il faut modifer le fichier `/etc/c
 config device
 	option name 'eth2'
 	option macaddr '$MAC_ADDRESS'
-  option ipv6 '0'
+	option ipv6 '0'
 
 config device
 	option type '8021q'
@@ -49,7 +52,7 @@ config device
 	option vid '100'
 	option macaddr '$MAC_ADDRESS'
 	option name 'eth2.100'
-  option ipv6 '0'
+	option ipv6 '0'
 
 config interface 'wan'
 	option proto 'dhcp'
@@ -58,9 +61,9 @@ config interface 'wan'
 	option hostname '*'
 	option macaddr '$MAC_ADDRESS'
 	option device 'eth2.100'
-  option delegate '0'
-  option peerdns '0'
-  option dns '1.1.1.1 1.0.0.1'
+	option delegate '0'
+	option peerdns '0'
+	option dns '1.1.1.1 1.0.0.1'
 ```
 
 ## Sources
@@ -69,3 +72,4 @@ config interface 'wan'
 - [Sinovoip BananaPi BPi-R4](https://openwrt.org/inbox/toh/sinovoip/bananapi_bpi-r4)
 - [ISP Configurations](https://openwrt.org/docs/guide-user/network/wan/isp-configurations)
 - [[TUTORIEL] Remplacer sa bbox par un routeur OpenWRT (Avec IPTV)](https://lafibre.info/remplacer-bbox/tutoriel-remplacer-sa-bbox-par-un-routeur-openwrt-avec-iptv/)
+- [Config OpenWRT derrière ONT Bouygues](https://lafibre.info/remplacer-bbox/config-openwrt-derriere-ont-bouygues/)
