@@ -437,7 +437,7 @@ Ce dernier va permettre à l'antivirus de se mettre à jour toute les 24 heures 
 
 ### Mise en place d'un pare-feu
 
-Autre composante importante de la politique de sécurité, le pare-feu. L'objectif va être ici de limiter au strict minimum les interactions avec le réseau. Malheureusement, certains logiciels tels que Discord ou Shadow nécessitent de grandes plages d'ouverture de port, ce qui réduit la sécurité du système. Un compromis, est de n'autoriser les connections à ces plages de port qu'à l'utilisateur principal. Il ne faut donc pas hésiter à supprimer ces règles si les programmes auxquels elles se rapportent ne sont pas installés.
+Autre composante importante de la politique de sécurité, le pare-feu. L'objectif va être ici de limiter au strict minimum les interactions avec le réseau. Malheureusement, certains logiciels tels que Discord nécessitent de grandes plages d'ouverture de port, ce qui réduit la sécurité du système. Un compromis, est de n'autoriser les connections à ces plages de port qu'à l'utilisateur principal. Il ne faut donc pas hésiter à supprimer ces règles si les programmes auxquels elles se rapportent ne sont pas installés.
 
 Pour faire cela, nous allons utiliser le proxy `iptables` intégré à la plupart des distributions Linux.
 
@@ -505,10 +505,6 @@ iptables -A OUTPUT -o tun+ -j ACCEPT -m owner --uid-owner 0
 
 ## Discord
 iptables -t filter -A OUTPUT -p udp --dport 50000:65535 -j ACCEPT -m owner --uid-owner 1000
-
-## Shadow
-iptables -t filter -A OUTPUT -p tcp --dport 8001:11299 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p udp --dport 8001:11299 -j ACCEPT -m owner --uid-owner 1000
 
 ## Steam (Remote Play)
 iptables -t filter -A INPUT -p udp --dport 27031:27036 -j ACCEPT
@@ -1338,64 +1334,6 @@ Logiciel permettant de faire le mapping des touches d'une manette de Xbox sur le
 flatpak install --user io.github.antimicrox.antimicrox
 ```
 
-### [Shadow](https://shadow.tech/frfr)
-
-Permet de bénéficier d'un ordinateur avec des ressources CPU / GPU importante directement dans le Cloud.
-
-Dans le cas où Shadow ne fonctionne pas par défaut avec les drivers déjà présents sur la machine, le site [Shadow on Linux](https://nicolasguilloux.github.io/blade-shadow-beta/setup) permet de trouver quelles sont les applications à installer en fonction du hardware.
-
-```bash
-sudo pacman -S libindicator-gtk2 libdbusmenu-gtk2
-sudo pacman -U https://archive.archlinux.org/packages/l/libldap/libldap-2.4.59-2-x86_64.pkg.tar.zst
-
-cat << EOL > ~/.drirc
-<!-- https://gitlab.com/NicolasGuilloux/shadow-live-os/raw/arch-master/airootfs/etc/drirc -->
-<driconf>
-  <device driver="radeonsi">
-    <application name="Shadow" executable="Shadow">
-      <option name="allow_rgb10_configs" value="false" />
-      <option name="radeonsi_clear_db_cache_before_clear" value="true" />
-    </application>
-  </device>
-  <device driver="radeon">
-    <application name="Shadow" executable="Shadow">
-      <option name="allow_rgb10_configs" value="false" />
-    </application>
-  </device>
-  <device driver="iris">
-    <application name="Shadow" executable="Shadow">
-      <option name="allow_rgb10_configs" value="false" />
-    </application>
-  </device>
-</driconf>
-EOL
-
-mkdir -p ~/.icons
-
-chmod 700 ~/bin
-chmod 700 ~/.icons
-
-curl 'https://update.shadow.tech/launcher/prod/linux/ubuntu_18.04/ShadowPC.AppImage' --output ~/bin/shadow
-wget https://shadow.tech/icons/icon-512x512.png -O ~/.icons/shadow.png
-
-chmod 500 ~/bin
-chmod 500 ~/bin/shadow
-chmod 500 ~/.icons
-chmod 400 ~/.icons/shadow.png
-
-cat << EOL > ~/.local/share/applications/shadow.desktop
-[Desktop Entry]
-Name=Shadow
-Comment=Transforme tes appareils en PC Gaming
-Keywords=cloud;
-Exec=$HOME/bin/shadow
-Terminal=false
-Type=Application
-Icon=$HOME/.icons/shadow.png
-Categories=Game;
-EOL
-```
-
 ### [Synergy](https://symless.com/synergy)
 
 Synergy est un logiciel permettant d'utiliser différents ordinateurs comme s'il s'agissait d'écrans. L'ordinateur principal (celui disposant d'un clavier et d'une souris) sera le serveur et tous les autres les clients.
@@ -2195,7 +2133,6 @@ Si vous rencontrez des problèmes, n'hésitez pas à me contacter par mail sur [
 - [Manjaro wiki - Configure Graphics Cards](https://wiki.manjaro.org/index.php/Configure_Graphics_Cards)
 - [Manjaro wiki - Networking](https://wiki.manjaro.org/index.php/Networking)
 - [Documentation Ubuntu - cryptsetup](https://doc.ubuntu-fr.org/cryptsetup)
-- [Shadow on Linux](https://nicolasguilloux.github.io/blade-shadow-beta/setup)
 - [How to install Virtual Machine Manager (KVM) in Manjaro and Arch Linux](https://www.fosslinux.com/2484/how-to-install-virtual-machine-manager-kvm-in-manjaro-and-arch-linux.htm)
 - [Adding Custom Themes to Flatpak Apps](https://forums.linuxmint.com/viewtopic.php?t=284418)
 - [Unable to connect to Browser Plugin or SSH Agent](https://github.com/flathub/org.keepassxc.KeePassXC/issues/19)
