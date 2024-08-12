@@ -52,7 +52,7 @@ echo "flavien-server" > /etc/hostname
 Installation des drivers Nvidia et configuration minimale du serveur :
 
 ```bash
-curl -s https://raw.githubusercontent.com/flavien-perier/linux-configuration/master/shell-configuration.sh | bash -
+curl -s https://sh.flavien.io/shell.sh | bash -
 
 dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/fedora39/x86_64/cuda-fedora39.repo
 dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
