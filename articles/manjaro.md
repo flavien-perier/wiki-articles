@@ -724,8 +724,8 @@ echo 'source "$HOME/.sdkman/bin/sdkman-init.sh"' >> ~/.profile
 source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # Fish compatibility
-cat << EOL > ~/.config/fish/conf.d/sdkman.fish
-#!/usr/bin/fish
+
+echo '#!/usr/bin/fish
 
 function sdk
   bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk $argv"
@@ -733,12 +733,12 @@ end
 
 for VERSION in $HOME/.sdkman/candidates/* ;
   set -gx PATH $PATH $VERSION/current/bin
-end
-EOL
+end' | tee ~/.config/fish/conf.d/sdkman.fish
 
 # Install GraalVM 21
-sdk install java 21.0.1-graal
-sdk use java 21.0.1-graal
+sdk install java 21-graal
+sdk install maven
+sdk use java 21-graal
 ```
 
 ### Environnement [QT](https://www.qt.io/)
@@ -1899,9 +1899,12 @@ Un petit script qui met à jour toutes nos applications avec les différents ges
 
 # set -e
 
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+
 sudo pacman --noconfirm -Syyu
 yay --noconfirm -Syyu
 flatpak update -y
+sdk update
 
 sudo pacman --noconfirm -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 
