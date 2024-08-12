@@ -1604,7 +1604,7 @@ Le projet Fastfetch a donc pris le relais.
 Il s'agit aucun doute de l'outil le plus inutile de la sélection... Il permet d'afficher un certain nombre de caractéristiques de sa machine sous un format coloré. Un vrai Linuxien se doit de toujours laisser un Neofetch/Fastfetch tourné dans un coin de terminale sur chaque capture d'écran qu'il envoie. Cela permet de prouver au reste de la communauté la supériorité de sa distribution.
 
 ```bash
-sudo pacman -S neofetch
+sudo pacman -S fastfetch
 ```
 
 ### [Conky](https://wiki.archlinux.org/title/Conky)
