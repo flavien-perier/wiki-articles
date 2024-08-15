@@ -184,7 +184,11 @@ curl -s https://sh.flavien.io/shell.sh | sudo bash -
 
 Sans plus entrer dans les détails, j'utilise personnellement le thème [Sweet Dark](https://www.xfce-look.org/p/1253385/) avec le pack d'icônes [Sweet Rainbow](https://www.opendesktop.org/p/1284047/) ainsi que les polices de caractères de [JetBrains](https://www.jetbrains.com/lp/mono/) qui ont été pensées pour être optimisées pour le développement.
 
-Pour installer le thème décompressez l'archive dans `~/.themes`, les icônes dans `~/.icons` et les polices dans `~/.fonts`.
+Pour mettre en place ma configuration, il suffit d'exécuter le script :
+
+```bash
+curl -s https://sh.flavien.io/xfce.sh | bash -
+```
 
 Le thème `Sweet Dark` étant un thème [GTK2](https://www.gtk.org/), les applications développées avec [QT](https://www.qt.io/) ne sont pas compatibles. Étant donné que les applications QT que j'utilise passent toutes par flatpak, j'installe simplement le thème [Adwaita](https://www.gnomelibre.fr/tag/adwaita/) sur cet environnement.
 
@@ -950,7 +954,7 @@ sudo pacman -Rsn gtkhash-thunar gtkhash
 sudo pacman -Rsn gcolor2
 ```
 
-- La surcouche Manjaro pour XFCE n'est pas nécessaire dans le cas où un autre thème est déjà installé. Cependant, certains éléments tels que le thème d'icônes `papirus-icon-theme` et le thème de pointeur `xcursor-breeze` peuvent être conservés.
+- La surcouche Manjaro pour XFCE n'est pas nécessaire dans le cas où un autre thème est déjà installé.
 
 ```bash
 sudo pacman -Rsn manjaro-xfce-minimal-settings manjaro-application-utility manjaro-browser-settings kvantum-theme-matchama kvantum-qt5
@@ -958,8 +962,6 @@ sudo pacman -Rsn matcha-gtk-theme gnome-icon-theme
 sudo pacman -Rsn xcursor-simpleandsoft xcursor-vanilla-dmz-aa
 sudo pacman -Rsn noto-fonts noto-fonts-cjk terminus-font
 sudo pacman -Rsn `pacman -Qsq texlive`
-
-sudo pacman -S papirus-icon-theme xcursor-breeze
 ```
 
 ### [KeePassXC](https://keepassxc.org/)
