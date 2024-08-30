@@ -1913,7 +1913,7 @@ sudo pacman --noconfirm -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 sudo docker pull
 podman images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 podman pull
 
-for PLATFORM in `ls $HOME/.local/share/flatpak/runtime | grep "Platform$"`
+for PLATFORM in `ls $HOME/.local/share/flatpak/runtime`
 do
     for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
     do
@@ -1921,20 +1921,20 @@ do
         ICONS=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/icons
         FONTS=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/fonts
 
+        mkdir -p $THEMES
         chmod -R 700 $THEMES
-        rm -Rf $THEMES/*
-        cp -Rf $HOME/.themes/* $THEMES
-        chmod -R u+w $THEMES
+        rm -Rf $THEMES
+        cp -Rf $HOME/.themes $THEMES
 
+        mkdir -p $ICONS
         chmod -R 700 $ICONS
-        rm -Rf $ICONS/*
-        cp -Rf $HOME/.icons/* $ICONS
-        chmod -R u+w $ICONS
+        rm -Rf $ICONS
+        cp -Rf $HOME/.icons $ICONS
 
+        mkdir -p $FONTS
         chmod -R 700 $FONTS
-        rm -Rf $FONTS/*
-        cp -Rf $HOME/.fonts/* $FONTS
-        chmod -R u+w $FONTS
+        rm -Rf $FONTS
+        cp -Rf $HOME/.fonts $FONTS
     done
 done
 
