@@ -1899,42 +1899,55 @@ Un petit script qui met à jour toutes nos applications avec les différents ges
 ```bash
 #!/bin/bash
 
-# set -e
+set -e
+
+copy_theme() {
+    SRC=$1
+    DEST=$2
+
+    mkdir -p $DEST
+    chmod 700 $DEST
+
+    for SRC_FILE in `ls $SRC`
+    do
+        DEST_PATH=$DEST/$SRC_FILE
+        if [ ! -e $DEST_PATH ]
+        then
+            cp -Rf $SRC/$SRC_FILE $DEST_PATH
+            find $DEST_PATH -type f -exec chmod 400 {} \;
+            find $DEST_PATH -type d -exec chmod 500 {} \;
+        fi
+    done
+
+    chmod 500 $DEST
+}
 
 source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 sudo pacman --noconfirm -Syyu
 yay --noconfirm -Syyu
-flatpak update -y
-sdk update
 
 sudo pacman --noconfirm -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 
-sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 sudo docker pull
-podman images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 podman pull
+sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 sudo docker pull &
+podman images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 podman pull &
+
+flatpak update -y &
+sdk update &
+
+wait
 
 for PLATFORM in `ls $HOME/.local/share/flatpak/runtime`
 do
     for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
     do
-        THEMES=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/themes
-        ICONS=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/icons
-        FONTS=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/fonts
+        FLATPAK_DIR=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share
 
-        mkdir -p $THEMES
-        chmod -R 700 $THEMES
-        rm -Rf $THEMES
-        cp -Rf $HOME/.themes $THEMES
+        copy_theme $HOME/.themes $FLATPAK_DIR/themes $
+        copy_theme $HOME/.icons $FLATPAK_DIR/icons $
+        copy_theme $HOME/.fonts $FLATPAK_DIR/fonts $
 
-        mkdir -p $ICONS
-        chmod -R 700 $ICONS
-        rm -Rf $ICONS
-        cp -Rf $HOME/.icons $ICONS
-
-        mkdir -p $FONTS
-        chmod -R 700 $FONTS
-        rm -Rf $FONTS
-        cp -Rf $HOME/.fonts $FONTS
+        wait
     done
 done
 
