@@ -1950,10 +1950,6 @@ do
         wait
     done
 done
-
-sudo pkill -9 xfce4-panel
-sudo optimus-manager --no-confirm --cleanup
-sudo optimus-manager --no-confirm --switch hybrid
 ```
 
 #### clean
@@ -2019,8 +2015,8 @@ fi
 
 # Configuration of user rights
 sudo chmod -R go-rwx $HOME
-sudo find . ! -user $USER -exec chown $USER {} \;
-sudo find . ! -group $USER -exec chgrp $USER {} \;
+sudo find $HOME ! -user $USER -exec chown $USER {} \;
+sudo find $HOME ! -group $USER -exec chgrp $USER {} \;
 sudo find $HOME -type d ! -perm 700 -exec chmod 700 {} \; 
 chmod -R 500 $HOME/bin
 chmod 777 $HOME/Public
