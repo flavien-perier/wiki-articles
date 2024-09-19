@@ -259,9 +259,9 @@ En fonction de l'environnement de bureau installé sur l'ordinateur de l'utilisa
 - Sous [Gnome](https://www.gnome.org/), il sera possible d'utiliser [GSConnect](https://github.com/GSConnect/gnome-shell-extension-gsconnect).
 - Enfin pour les utilisateurs de [XFCE](https://xfce.org/), il sera possible d'utiliser [Valent](https://valent.andyholmes.ca/). Un paragraphe est dédié à ce logiciel dans [la section du wiki consacré à Manjaro](https://www.flavien.io/wiki/manjaro.md#valent).
 
-### [NewPipe](https://newpipe.schabi.org/)
+### [NewPipe](https://newpipe.net/)
 
-Aujourd'hui je peux affirmer que je me passe de tous les services Google à une exception près, YouTube. Heureusement sur mobile il existe une application qui me permet d'accéder au contenu de YouTube sans installer l'application YouTube officielle. Il est possible de regarder les vidéos en arrière-plan (pour écouter de la musique, même si je déconseille de le faire, car écouter de la musique sur YouTube n'est pas un acte écoresponsable en termes de GreenIt), de les télécharger, de ne pas avoir les pubs et de faire des playlists locales (qui ne sont pas sauvegardées sur les serveurs de Google).
+Une application alternative au viewer officiel YouTube. Elle permet de bloquer par défaut les publicités, de jouer les vidéos en arrière-plan, de les télécharger, de jouer le son uniquement, de créer des playlists de chaines sans comptes... Et cerise sur le gâteau elle permet également d'accéder à d'autre sources de vidéo tel que [PeerTube](https://joinpeertube.org/).
 
 ### [Nextcloud News](https://f-droid.org/en/packages/co.appreactor.news/)
 

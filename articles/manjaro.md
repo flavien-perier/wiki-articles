@@ -250,7 +250,7 @@ Il est à noter qu'à chaque fois que la carte graphique est changée, il faudra
 Quand optimus-manager est en mode hybride, il suffit de passer quelques variables d'environnement à un programme pour qu'il démarre sur la carte graphique. Par exemple pour lancer Steam dans son flatpak :
 
 ```bash
-/usr/bin/flatpak run --env=__NV_PRIME_RENDER_OFFLOAD=1 --env=__GLX_VENDOR_LIBRARY_NAME="nvidia" --env=__VK_LAYER_NV_optimus="NVIDIA_only" --branch=stable --arch=x86_64 --command=/app/bin/steam --file-forwarding com.valvesoftware.Steam @@u %U @@
+flatpak run --env=__NV_PRIME_RENDER_OFFLOAD=1 --env=__GLX_VENDOR_LIBRARY_NAME="nvidia" --env=__VK_LAYER_NV_optimus="NVIDIA_only" --branch=stable --arch=x86_64 --command=/app/bin/steam --file-forwarding com.valvesoftware.Steam @@u %U @@
 ```
 
 Si le programme que l'on souhaite lancer est une simple application, on peut l'appeler en ligne de commande à travers la commande `prime-run`.
@@ -1087,15 +1087,15 @@ flatpak install --user dev.vencord.Vesktop
 Pour lancer Discord en mode réduit il est possible d'utiliser la ligne de commande suivante :
 
 ```bash
-/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=startvesktop dev.vencord.Vesktop --start-minimized
+flatpak run --branch=stable --arch=x86_64 --command=startvesktop dev.vencord.Vesktop --start-minimized
 ```
 
-### [Tox](https://tox.chat/)
+### [Matrix](https://matrix.org/)
 
-Tox est un système de chat décentralisé et chiffré. Étant donné qu'il est open source, on peut trouver un grand nombre de clients. Pour ma part, j'utilise qTox, qui a l'avantage d'être disponible sur FlatHub.
+Matrix est un protocole de communication ouvert qui supporte aussi bien les conversations écrites qu'en audio/vidéo. Il existe plusieurs implémentations, mais la plus populaire est nommée Matrix (Il s'agit de l'implémentation officielle).
 
 ```bash
-flatpak install --user io.github.qtox.qTox
+flatpak install --user im.riot.Riot
 ```
 
 ### [Eye of GNOME](https://github.com/GNOME/eog)
@@ -1244,6 +1244,10 @@ flatpak install --user com.calibre_ebook.calibre
 ```
 
 Personnellement, je dispose d'une liseuse [Bookeen Diva HD](https://bookeen.com/products/diva-hd) (produit d'excellente qualité et Française au demeurant). Afin de centraliser mon catalogue de livre acquis sur différentes plateformes, je les stocke au format epub sans DRM. Pour cela, j'utilise Calibrea avec l'extension [DeDRM_tools](https://github.com/apprenticeharper/DeDRM_tools).
+
+### [FontForge](https://fontforge.org/)
+
+Un éditeur de police de caractères.
 
 ### [Antidote](https://www.antidote.info/fr)
 
@@ -1499,14 +1503,6 @@ Un client torrent complet.
 
 ```bash
 flatpak install --user org.deluge_torrent.deluge
-```
-
-### [Free Download Manager](https://www.freedownloadmanager.org/)
-
-Derrière un nom qui n'inspire pas très confiance, se cache un puissant logiciel permettant de télécharger aussi bien des torrents que des fichiers en téléchargements directs. Ce logiciel contrairement à nos navigateurs gère la reprise. Il est donc possible de suspendre un téléchargement pour le reprendre plus tard.
-
-```bash
-flatpak install --user org.freedownloadmanager.Manager
 ```
 
 ### [P7zip](http://p7zip.sourceforge.net/)
@@ -1914,8 +1910,8 @@ copy_theme() {
         if [ ! -e $DEST_PATH ]
         then
             cp -Rf $SRC/$SRC_FILE $DEST_PATH
-            find $DEST_PATH -type f -exec chmod 400 {} \;
-            find $DEST_PATH -type d -exec chmod 500 {} \;
+            find $DEST_PATH -type f -exec chmod 600 {} \;
+            find $DEST_PATH -type d -exec chmod 700 {} \;
         fi
     done
 
