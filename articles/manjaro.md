@@ -688,18 +688,19 @@ Sur les dépôts pacman, il n'y a pas de trace de [Microsoft VisualStudio Code](
 ```bash
 sudo pacman -S code
 
-code --install-extension ms-vscode.hexeditor
-
 code --install-extension ms-azuretools.vscode-docker
 code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
 
+code --install-extension ms-vscode.hexeditor
 code --install-extension ms-python.python
+code --install-extension ms-toolsai.jupyter
 code --install-extension redhat.vscode-xml
 code --install-extension redhat.vscode-yaml
 code --install-extension efoerster.texlab
+
+code --install-extension arjun.swagger-viewer
 code --install-extension janisdd.vscode-edit-csv
 code --install-extension naumovs.color-highlight
-code --install-extension arjun.swagger-viewer
 
 code --install-extension k--kato.intellij-idea-keybindings
 ```
