@@ -1249,6 +1249,10 @@ Personnellement, je dispose d'une liseuse [Bookeen Diva HD](https://bookeen.com/
 
 Un éditeur de police de caractères.
 
+```bash
+flatpak install --user org.fontforge.FontForge
+```
+
 ### [Antidote](https://www.antidote.info/fr)
 
 Sans aucun doute le meilleur correcteur orthographique (payant) du marché.
