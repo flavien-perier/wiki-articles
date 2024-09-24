@@ -1925,32 +1925,43 @@ copy_theme() {
 
 source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-sudo pacman --noconfirm -Syyu
-yay --noconfirm -Syyu
+echo "Update pacman"
+sudo pacman --noconfirm -q -Syyu
+sudo pacman --noconfirm -q -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 
-sudo pacman --noconfirm -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
+echo "Update yay"
+yay --noconfirm -q -Syyu
 
-sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 sudo docker pull &
-podman images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 podman pull &
+echo "Update Docker"
+sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 sudo docker pull -q &
 
-flatpak update -y &
+echo "Update Podman"
+podman images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 podman pull -q &
+
+echo "Update SDK"
 sdk update &
+
+echo "Update Flatpak"
+flatpak update --noninteractive -y &
 
 wait
 
+echo "Update Flatpak themes"
 for PLATFORM in `ls $HOME/.local/share/flatpak/runtime`
 do
     for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
     do
         FLATPAK_DIR=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share
 
-        copy_theme $HOME/.themes $FLATPAK_DIR/themes $
-        copy_theme $HOME/.icons $FLATPAK_DIR/icons $
-        copy_theme $HOME/.fonts $FLATPAK_DIR/fonts $
+        copy_theme $HOME/.themes $FLATPAK_DIR/themes &
+        copy_theme $HOME/.icons $FLATPAK_DIR/icons &
+        copy_theme $HOME/.fonts $FLATPAK_DIR/fonts &
 
         wait
     done
 done
+
+echo "End of update"
 ```
 
 #### clean
