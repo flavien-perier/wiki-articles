@@ -147,16 +147,21 @@ cp /etc/openvpn/easy-rsa/pki/issued/flavien-server.crt /etc/openvpn/server/
 openvpn --genkey secret /etc/openvpn/server/ta.key
 
 # Client certificates
-./easyrsa gen-req client nopass
-./easyrsa sign-req client client
+./easyrsa gen-req vm-client nopass
+./easyrsa sign-req client vm-client
 cp /etc/openvpn/easy-rsa/pki/ca.crt /etc/openvpn/client/
 cp /etc/openvpn/easy-rsa/pki/issued/*.crt /etc/openvpn/client/
 cp /etc/openvpn/easy-rsa/pki/private/*.key /etc/openvpn/client/
 rm /etc/openvpn/client/flavien-server.*
 
+chown -R openvpn: /etc/openvpn/client
+chmod 700 /etc/openvpn/client
+chown -R openvpn: /etc/openvpn/server
+chmod 700 /etc/openvpn/server
+
 # Verify CA validity
 openssl verify -CAfile /etc/openvpn/server/ca.crt /etc/openvpn/server/flavien-server.crt
-openssl verify -CAfile /etc/openvpn/client/ca.crt /etc/openvpn/client/client.crt
+openssl verify -CAfile /etc/openvpn/client/ca.crt /etc/openvpn/client/vm-client.crt
 
 # Add firewall rules
 firewall-cmd --permanent --add-service=openvpn
@@ -210,7 +215,7 @@ systemctl start openvpn-server@server
 Par la suite il est possible de générer le fichier `ovpn` qui sera transmis au client afin qu'il puisse se connecter :
 
 ```bash
-cat << EOL > ~/vm-jeux.ovpn
+cat << EOL > ~/vm-client.ovpn
 client
 remote $SEREVER_IP 1194
 proto udp4
@@ -230,16 +235,16 @@ $(cat /etc/openvpn/server/ca.crt)
 </ca>
 
 <cert>
-$(cat /etc/openvpn/client/client.crt)
+$(cat /etc/openvpn/client/vm-client.crt)
 </cert>
 
 <key>
-$(cat /etc/openvpn/client/client.key)
+$(cat /etc/openvpn/client/vm-client.key)
 </key>
 EOL
 ```
 
-Il suffit alors de récupérer le fichier `~/clien.ovpn` sur ça machine à l'aide de SCP et de l'exécuter avec :
+Il suffit alors de récupérer le fichier `~/vm-clien.ovpn` sur ça machine à l'aide de SCP et de l'exécuter avec :
 
 ```bash
 sudo sudo openvpn --config client.ovpn
