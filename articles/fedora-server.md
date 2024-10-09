@@ -35,7 +35,7 @@ Toutes les commandes sont à exécuter en tant que root.
 Pour une mise à jour de l'os vers une nouvelle version de Fedora :
 
 ```bash
-dnf system-upgrade download --releasever=39
+dnf system-upgrade download --releasever=40
 dnf system-upgrade reboot
 ```
 
@@ -185,9 +185,6 @@ dh /etc/openvpn/server/dh.pem
 
 cipher AES-256-CBC
 
-route-nopull
-route 192.168.1.254
-
 push "redirect-gateway def1"
 push "dhcp-option DNS 208.67.222.222"
 push "dhcp-option DNS 208.67.220.220"
@@ -196,10 +193,10 @@ push "dhcp-option DNS 1.0.0.1"
 push "dhcp-option DNS 151.80.222.79"
 
 daemon
-max-clients 5
 client-to-client
 user nobody
 group nobody
+max-clients 5
 keepalive 20 120
 log-append /var/log/openvpn.log
 verb 3' > /etc/openvpn/server/server.conf
@@ -261,8 +258,8 @@ Il faut préalable activer le démarrage par le réseau dans le bios de la machi
 Puis au niveau de Linux, mettre les configurations suivantes :
 
 ```bash
-ethtool -s enp4s0 wol g
-echo 'ETHTOOL_OPTS="wol g"' > /etc/sysconfig/network-scripts/ifcfg-enp4s0
+ethtool -s enp6s0 wol g
+echo 'ETHTOOL_OPTS="wol g"' > /etc/sysconfig/network-scripts/ifcfg-enp6s0
 ```
 
 ### Docker
@@ -270,7 +267,7 @@ echo 'ETHTOOL_OPTS="wol g"' > /etc/sysconfig/network-scripts/ifcfg-enp4s0
 Installation de Docker et de nvidia-docker :
 
 ```bash
-dnf install docker-ce docker-ce-cli containerd.io nvidia-docker2 nvidia-container-toolkit
+dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin nvidia-docker2 nvidia-container-toolkit
 
 systemctl enable docker
 systemctl start docker
@@ -335,6 +332,7 @@ Et d'exécuter le fichier en question avec notre utilisateur par défaut grâce 
 Pour installer la base de KVM :
 
 ```bash
+dnf install @virtualization
 dnf install bridge-utils libvirt virt-install qemu-kvm libvirt-devel virt-top libguestfs-tools
 
 systemctl enable libvirtd

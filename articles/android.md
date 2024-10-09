@@ -75,7 +75,7 @@ cd /tmp
 rm -Rf $TMP_LOCATION
 ```
 
-## Installation de [/e/](https://e.foundation/) + root avec [Magisk](https://github.com/topjohnwu/Magisk/) sur Fairphone 3
+## Installation
 
 En premier lieu, il faut télécharger les différents composants pour l'installation :
 
