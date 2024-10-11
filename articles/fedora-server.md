@@ -330,7 +330,41 @@ Et d'exécuter le fichier en question avec notre utilisateur par défaut grâce 
 
 ### Ollama
 
-[Ollama](https://ollama.com/) est une technologie permettant d'exécuter des modèles de langages avec des templates. L'architecture de l'application s'inspire gloabalement de Docker ce qui rend pertinant son installation au niveau de l'hyperviseur et non sur un sous système conteneurisé / virtualisé.
+[Ollama](https://ollama.com/) est une technologie permettant d'exécuter des modèles de langages avec des templates. L'architecture de l'application s'inspire globalement de Docker ce qui rend pertinent son installation au niveau de l'hyperviseur et non sur un sous-système conteneurisé / virtualisé.
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull mixtral
+ollama pull llama3.2
+ollama pull codestral
+
+echo '[Unit]
+Description=Ollama Service
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/ollama serve
+User=ollama
+Group=ollama
+Restart=always
+RestartSec=3
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/lib/snapd/snap/bin"
+Environment="OLLAMA_HOST=0.0.0.0:11434"
+
+[Install]
+WantedBy=default.target' | tee /etc/systemd/system/ollama.service
+
+systemctl daemon-reload
+systemctl restart ollama
+
+echo '<service>
+  <short>Ollama</short>
+  <description>Ollama service</description>
+  <port protocol="tcp" port="11434"/>
+</service>' | tee /etc/firewalld/services/ollama.xml
+firewall-cmd --reload
+firewall-cmd --permanent --add-service=ollama
+```
 
 ### KVM & GPU Passtrough
 
@@ -480,7 +514,7 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
     <smm state="on"/>
   </features>
   <cpu mode="host-passthrough" check="none" migratable="on">
-    <topology sockets="1" dies="1" cores="8" threads="2"/>
+    <topology sockets="1" dies="1" clusters="1" cores="8" threads="2"/>
     <cache mode="passthrough"/>
     <feature policy="require" name="topoext"/>
   </cpu>
