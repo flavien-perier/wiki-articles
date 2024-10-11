@@ -106,21 +106,21 @@ systemctl reload sshd
 ```bash
 SERVER_IP=`ip route get 1.1.1.1 | awk 'NR==1 {print $(NF-2)}'`
 
+dnf install openvpn
+
 echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
 sysctl -p
 
-cd /tmp
-wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.1.6/EasyRSA-3.1.6.tgz
-tar xvf EasyRSA-*.tgz
-rm EasyRSA-*.tgz
-mv EasyRSA-* /etc/openvpn/easy-rsa
-cd /etc/openvpn/easy-rsa
-echo 'set_var EASYRSA                 "$PWD"
+wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.2.1/EasyRSA-3.2.1.tgz -O /tmp/EasyRSA.tgz
+mkdir -p /etc/openvpn/easy-rsa
+tar xvf /tmp/EasyRSA.tgz --strip-components=1 -C /etc/openvpn/easy-rsa
+rm -f /tmp/EasyRSA.tgz
+echo 'set_var EASYRSA                 "/etc/openvpn/easy-rsa"
 set_var EASYRSA_PKI             "$EASYRSA/pki"
 set_var EASYRSA_DN              "cn_only"
 set_var EASYRSA_REQ_COUNTRY     "France"
 set_var EASYRSA_REQ_PROVINCE    "France"
-set_var EASYRSA_REQ_CITY        "Limoges"
+set_var EASYRSA_REQ_CITY        "Lyon"
 set_var EASYRSA_REQ_ORG         "Flavien"
 set_var EASYRSA_REQ_EMAIL       "perier@flavien.io"
 set_var EASYRSA_REQ_OU          "Flavien"
@@ -132,9 +132,10 @@ set_var EASYRSA_NS_SUPPORT      "no"
 set_var EASYRSA_NS_COMMENT      "Flavien CA"
 set_var EASYRSA_EXT_DIR         "$EASYRSA/x509-types"
 set_var EASYRSA_SSL_CONF        "$EASYRSA/openssl-easyrsa.cnf"
-set_var EASYRSA_DIGEST          "sha256"' | tee /etc/openvpn/easy-rsa/vars
+set_var EASYRSA_DIGEST          "sha512"' | tee /etc/openvpn/easy-rsa/vars
 
 # Server certificates
+cd /etc/openvpn/easy-rsa
 ./easyrsa init-pki
 ./easyrsa build-ca
 ./easyrsa gen-req flavien-server nopass
@@ -183,7 +184,7 @@ cert /etc/openvpn/server/flavien-server.crt
 key /etc/openvpn/server/flavien-server.key
 dh /etc/openvpn/server/dh.pem
 
-cipher AES-256-CBC
+cipher AES-256-GCM
 
 push "redirect-gateway def1"
 push "dhcp-option DNS 208.67.222.222"
@@ -218,7 +219,7 @@ remote $SEREVER_IP 1194
 proto udp4
 dev tap
 
-cipher AES-256-CBC
+cipher AES-256-GCM
 
 resolv-retry infinite
 remote-cert-tls server
@@ -327,6 +328,10 @@ services:
 
 Et d'exécuter le fichier en question avec notre utilisateur par défaut grâce à la commande `docker-compose up -d`.
 
+### Ollama
+
+[Ollama](https://ollama.com/) est une technologie permettant d'exécuter des modèles de langages avec des templates. L'architecture de l'application s'inspire gloabalement de Docker ce qui rend pertinant son installation au niveau de l'hyperviseur et non sur un sous système conteneurisé / virtualisé.
+
 ### KVM & GPU Passtrough
 
 Pour installer la base de KVM :
@@ -386,11 +391,11 @@ Voici le XML de configuration utilisé pour l'interface réseau :
 <network>
   <name>network</name>
   <uuid>******</uuid>
-  <forward dev="enp4s0" mode="nat">
+  <forward dev="enp6s0" mode="nat">
     <nat>
       <port start="1024" end="65535"/>
     </nat>
-    <interface dev="enp4s0"/>
+    <interface dev="enp6s0"/>
   </forward>
   <bridge name="virbr1" stp="on" delay="0"/>
   <mac address="52:54:00:2a:e1:56"/>
