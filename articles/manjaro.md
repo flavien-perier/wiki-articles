@@ -74,14 +74,14 @@ sudo pacman -Scc
 
 ### Gestionnaires de paquets
 
-La plupart des outils disposants d'une interface qui vont être installée dans ce wiki sont installés grâce à [Flatpak](https://www.flatpak.org/). Il s'agit d'un gestionnaire de paquets qui permet d'installer des applications avec un système d'isolation. Cela va permettre de garantir un certain niveau de sécurité pour des applications possédant une GUI.
+La plupart des outils disposant d'une interface qui vont être installés dans ce wiki sont installés grâce à [Flatpak](https://www.flatpak.org/). Il s'agit d'un gestionnaire de paquets qui permet d'installer des applications avec un système d'isolation. Cela va permettre de garantir un certain niveau de sécurité pour des applications possédant une GUI.
 
 ```bash
 sudo pacman -S flatpak
 flatpak remote-add --user flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
 
-À d'autres moments, il sera nécessaire d'utiliser des paquets provenant de la communauté (les [AUR d'Arch Linux](https://aur.archlinux.org/)). Pour ce faire, il faut installer `yay` qui est un gestionnaire de paquets qui prend la succession de `yaourt`.
+À d'autres moments, il sera nécessaire d'utiliser des paquets provenant de la communauté (les [AUR d'Arch Linux](https://aur.archlinux.org/)). Pour se faire, il faut installer `yay` qui est un gestionnaire de paquets qui prend la succession de `yaourt`.
 
 ```bash
 cd /tmp
@@ -297,147 +297,14 @@ EOL
 
 ### Installation de l'antivirus
 
-Pour garantir un niveau de sécurité minimal, la présence d'un antivirus est nécessaire (et oui même sous Linux). [Clamav](https://www.clamav.net/) n'est pas forcément le plus performant du marché, mais il est très léger, configurable et très utilisé par la communauté Linux :
+Pour garantir un niveau de sécurité minimal, la présence d'un antivirus est nécessaire (même sous Linux). [Clamav](https://www.clamav.net/) n'est pas forcément le plus performant du marché, mais il est très léger, configurable et très utilisé par la communauté Linux :
 
 ```bash
 sudo pacman -S clamav
+
+sudo systemctl enable clamav-daemon
+sudo systemctl start clamav-daemon
 ```
-
-Certains considèrent que la base de signature par défaut n'est pas suffisante. C'est pour cela qu'il est possible de l'étendre avec une base non officielle. La base de [Fangfrisch](https://rseichter.github.io/fangfrisch/) est censé être plutôt efficace dans son genre et a l'avantage d'être disponible en AUR.
-
-```bash
-yay -S python-fangfrisch
-
-echo '[DEFAULT]
-db_url = sqlite:////var/lib/fangfrisch/db.sqlite
-local_directory = /var/lib/fangfrisch/signatures
-log_level = WARNING
-max_size = 100MB
-
-[malwarepatrol]
-enabled = no
-receipt = you_forgot_to_configure_receipt
-interval = 1d
-integrity_check = disabled
-product = 8
-prefix = https://lists.malwarepatrol.net/cgi/getfile?product=${product}&receipt=${receipt}&list=
-url_clamav_basic = ${prefix}clamav_basic
-filename_clamav_basic = malwarepatrol.db
-
-[sanesecurity]
-enabled = yes
-interval = 2h
-prefix = http://ftp.swin.edu.au/sanesecurity/
-!url_foxhole_all_cdb = ${prefix}foxhole_all.cdb
-!url_foxhole_all_ndb = ${prefix}foxhole_all.ndb
-!url_foxhole_mail = ${prefix}foxhole_mail.cdb
-!url_scamnailer = ${prefix}scamnailer.ndb
-!url_winnow_phish_complete = ${prefix}winnow_phish_complete.ndb
-url_badmacro = ${prefix}badmacro.ndb
-url_blurl = ${prefix}blurl.ndb
-url_bofhland_cracked_url = ${prefix}bofhland_cracked_URL.ndb
-url_bofhland_malware_attach = ${prefix}bofhland_malware_attach.hdb
-url_bofhland_malware_url = ${prefix}bofhland_malware_URL.ndb
-url_bofhland_phishing_url = ${prefix}bofhland_phishing_URL.ndb
-url_foxhole_filename = ${prefix}foxhole_filename.cdb
-url_foxhole_generic = ${prefix}foxhole_generic.cdb
-url_foxhole_js_cdb = ${prefix}foxhole_js.cdb
-url_foxhole_js_ndb = ${prefix}foxhole_js.ndb
-url_hackingteam = ${prefix}hackingteam.hsb
-url_junk = ${prefix}junk.ndb
-url_jurlbl = ${prefix}jurlbl.ndb
-url_jurlbla = ${prefix}jurlbla.ndb
-url_lott = ${prefix}lott.ndb
-url_malwareexpert_fp = ${prefix}malware.expert.fp
-url_malwareexpert_hdb = ${prefix}malware.expert.hdb
-url_malwareexpert_ldb = ${prefix}malware.expert.ldb
-url_malwareexpert_ndb = ${prefix}malware.expert.ndb
-url_malwarehash = ${prefix}malwarehash.hsb
-url_phish = ${prefix}phish.ndb
-url_phishtank = ${prefix}phishtank.ndb
-url_porcupine = ${prefix}porcupine.ndb
-url_rogue = ${prefix}rogue.hdb
-url_scam = ${prefix}scam.ndb
-url_shelter = ${prefix}shelter.ldb
-url_spamattach = ${prefix}spamattach.hdb
-url_spamimg = ${prefix}spamimg.hdb
-url_spear = ${prefix}spear.ndb
-url_spearl = ${prefix}spearl.ndb
-url_winnow_attachments = ${prefix}winnow.attachments.hdb
-url_winnow_bad_cw = ${prefix}winnow_bad_cw.hdb
-url_winnow_extended_malware = ${prefix}winnow_extended_malware.hdb
-url_winnow_extended_malware_links = ${prefix}winnow_extended_malware_links.ndb
-url_winnow_malware = ${prefix}winnow_malware.hdb
-url_winnow_malware_links = ${prefix}winnow_malware_links.ndb
-url_winnow_phish_complete_url = ${prefix}winnow_phish_complete_url.ndb
-url_winnow_spam_complete = ${prefix}winnow_spam_complete.ndb
-
-[securiteinfo]
-enabled = no
-customer_id = you_forgot_to_configure_customer_id
-interval = 1h
-max_size = 20MB
-prefix = https://www.securiteinfo.com/get/signatures/${customer_id}/
-!url_0hour = ${prefix}securiteinfo0hour.hdb
-!url_old = ${prefix}securiteinfoold.hdb
-!url_securiteinfo_mdb = ${prefix}securiteinfo.mdb
-!url_spam_marketing = ${prefix}spam_marketing.ndb
-url_android = ${prefix}securiteinfoandroid.hdb
-url_ascii = ${prefix}securiteinfoascii.hdb
-url_html = ${prefix}securiteinfohtml.hdb
-url_javascript = ${prefix}javascript.ndb
-url_pdf = ${prefix}securiteinfopdf.hdb
-url_securiteinfo = ${prefix}securiteinfo.hdb
-url_securiteinfo_ign2 = ${prefix}securiteinfo.ign2
-
-[urlhaus]
-enabled = yes
-interval = 10m
-url_urlhaus = https://urlhaus.abuse.ch/downloads/urlhaus.ndb'  | sudo tee /etc/fangfrisch/fangfrisch.conf
-
-sudo chown root:clamav /etc/fangfrisch/fangfrisch.conf
-sudo chmod 640 /etc/fangfrisch/fangfrisch.conf
-
-sudo -u clamav fangfrisch --conf /etc/fangfrisch/fangfrisch.conf initdb
-
-sudo systemctl enable fangfrisch.timer
-sudo systemctl start fangfrisch.timer
-```
-
-Pour mettre la base de données du logiciel, tapez la commande :
-
-```bash
-sudo freshclam
-```
-
-Le script suivant va permettre à l'antivirus de passer tous les jours en ne consommant que 10% de la puissance d'un coeur du CPU au maximum (ce qui va éviter de maltraiter le matériel) en analysant les fichiers les plus récemment modifiés en premier :
-
-```bash
-echo '#!/bin/bash
-
-mkdir -p /var/virus
-chmod -R 000 /var/virus
-
-freshclam
-if [ $? -ne 0 ]
-then
-    rm /var/log/clamav/freshclam.log
-    freshclam
-fi
-
-touch /var/log/clamav/scan.log
-
-find / -type f ! -size 0 -printf "%Ts,%p\n" | sort -nr | cut -f2- -d, > /tmp/antivirus-files
-clamscan -i -l /var/log/clamav/scan.log --move=/var/virus --file-list=/tmp/antivirus-files &
-
-cpulimit -l 10 -p `pgrep clamscan`
-
-rm /tmp/antivirus-files
-chmod -R 000 /var/virus' | sudo tee /etc/cron.daily/antivirus
-sudo chmod 544 /etc/cron.daily/antivirus
-```
-
-Ce dernier va permettre à l'antivirus de se mettre à jour toute les 24 heures puis d'effectuer une analyse. Dans l'hypothèse où un virus serait trouvé au sein de vos fichiers personnels, il serait transféré dans le dossier `/var/virus`.
 
 ### Mise en place d'un pare-feu
 
@@ -746,14 +613,6 @@ sdk install maven
 sdk use java 21-graal
 ```
 
-### Environnement [QT](https://www.qt.io/)
-
-Pour designer de petites interfaces en C++.
-
-```bash
-sudo pacman -S qtcreator
-```
-
 ### Autres langages
 
 Même si je ne code pas directement dans ces technologies, le [GO](https://golang.org/) de Google et le [Rust](https://www.rust-lang.org/) de Mozilla, sont deux langages de programmation de bas niveau qui sont en train de s'imposer. Je les installe afin d'avoir la possibilité de compiler différents projets quand c'est nécessaire.
@@ -776,12 +635,13 @@ Pour installer Docker :
 
 ```bash
 sudo pacman -S docker docker-buildx docker-compose
- 
+
+sudo mkdir -p /etc/docker
 echo '{
   "features": {
     "buildkit" : true
   }
-}' > /etc/docker/daemon.json
+}' | sudo tee /etc/docker/daemon.json
 
 sudo systemctl enable docker
 sudo systemctl start docker
@@ -819,7 +679,7 @@ Avant de commencer, il est indispensable de vérifier au préalable que la virtu
 Il existe dans l'univers Linux de nombreuses solutions de virtualisation. Cependant, le choix de KVM plutôt qu'une autre repose sur le fait qu'il s'agisse d'un hyperviseur de niveau 1, ce qui signifie qu'il est directement intégré au niveau du noyau du système d'exploitation. Cette solution est donc particulièrement efficace dans un environnement Linux.
 
 ```bash
-sudo pacman -S virt-manager qemu vde2 ebtables dnsmasq bridge-utils openbsd-netcat x11-ssh-askpass
+sudo pacman -S virt-manager qemu-full vde2 ebtables dnsmasq bridge-utils openbsd-netcat x11-ssh-askpass
 
 sudo systemctl enable libvirtd.service
 sudo systemctl start libvirtd.service
@@ -830,7 +690,7 @@ sudo usermod -a -G kvm $USER
 
 Par la suite pour récupérer une image Windows, il faut se rendre sur [le site officiel de Microsoft](https://www.microsoft.com/en-us/software-download/windows11) et télécharger l'image ISO du système d'exploitation.
 
-L'outil `virt-manager` va permettre de manager les différentes machines virtuelles au travers d'une interface. Il fourni également un certain nombre de profils déjà configuré pour faciliter la mise en place de Machines virtuelles avec des configurations complexes (comme c'est le cas d'un Windows 11 avec son TPM).
+L'outil `virt-manager` va permettre de manager les différentes machines virtuelles au travers d'une interface. Il fournit également un certain nombre de profils déjà configuré pour faciliter la mise en place de Machines virtuelles avec des configurations complexes (comme c'est le cas d'un Windows 11 avec son TPM).
 
 Pour installer facilement des Machines virtuelles en ligne de commande, il est aussi possible d'utiliser le script [Quickemu](https://github.com/quickemu-project/quickemu) avec la commande suivante :
 
@@ -889,7 +749,7 @@ Avec ce script, il suffit de taper les commandes `smb start` ou `smb stop` afin 
 
 ### Copie de disque
 
-Les disques utilisés par Qemu sont par default au format `qcow2` ce format à l'avantage d'adapté sa taille sur disque en focntion de ce qu'il va contenir. Cependant, dans le cas ou on supprime des fichiers volumineux dans le disque virtuel, sa taille réservé sur le disque physique ne diminue pas. Il peut alors être bon de réecrir le disque afin de réoptimiser sa structure. Pour se faire il suffit d'utiliser la commande :
+Les disques utilisés par Qemu sont par défaut au format `qcow2` ce format à l'avantage d'adapter sa taille sur disque en fonction de ce qu'il va contenir. Cependant, dans le cas où on supprime des fichiers volumineux dans le disque virtuel, sa taille réservé sur le disque physique ne diminue pas. Il peut alors être bon de réecrir le disque afin de réoptimiser sa structure. Pour se faire il suffit d'utiliser la commande :
 
 ```bash
 qemu-img convert -O qcow2 old.qcow2 new.qcow2
@@ -904,65 +764,22 @@ Même en version lite, Manjaro contient de nombreux outils qui ne sont pas réel
 - Manjaro Hello est un menu au démarrage de l'OS qui présente la distribution Manjaro.
 
 ```bash
-sudo pacman -Rsn manjaro-hello manjaro-documentation-en
+sudo pacman -Rsn manjaro-hello
 ```
 
-- Parole est lecteur de média installé par défaut avec la distribution. On installera VLC plus tard.
+- Plusieurs logiciels plus ou moins pertinnats sont préinstallé avec le système. Certains d'entre eux peuvent être désinstallé si on souhaitre avoir une distribution la plus adapté possible à son besoin.
 
 ```bash
-sudo pacman -Rsn parole
+sudo pacman -Rsn parole mousepad gufw gparted
 ```
 
-- Qpdfview est un lecteur de fichier PDF. Vu le nombre de vulnérabilités relevées sur ce format de fichier je trouve personnellement plus sûr d'utiliser un logiciel isolé dans un conteneur Flatpak.
+- Il est également possible de désinstaller quelques thèmes par défaut.
 
 ```bash
-sudo pacman -Rsn qpdfview
-```
-
-- Mousepad est un éditeur de texte. Inutile de rajouter de nouveaux éditeurs quand Vim, VScode et tous les outils JetBrains sont déjà installés.
-
-```bash
-sudo pacman -Rsn mousepad
-```
-
-- Orage est un calendrier.
-
-```bash
-sudo pacman -Rsn orage
-```
-
-- Gufw est un configurateur de firewall. Cet outil est complètement redondant avec les configurations `iptables` proposées plus haut. De plus, il propose des fonctionnalités beaucoup moins avancées que ce qu'il est possible de faire en ligne de commande.
-
-```bash
-sudo pacman -Rsn gufw
-```
-
-- Gparted est un logiciel de gestion de partitions. Personnellement je préfère effectuer ce type de manipulations sur les lecteurs directement en ligne de commandes avec `fdisk` et `mkfs`.
-
-```bash
-sudo pacman -Rsn gparted
-```
-
-- GTK hash est un outil en interface graphique permettant de calculer des hash. Personnellement, les outils en ligne de commande `md5sum` ou `sha256sum` me conviennent parfaitement.
-
-```bash
-sudo pacman -Rsn gtkhash-thunar gtkhash
-```
-
-- Gcolor2 est un logiciel permettant d'afficher des codes couleur. La plupart des outils de gestion de code et de design embarquent déjà ce type de fonctionnalité.
-
-```bash
-sudo pacman -Rsn gcolor2
-```
-
-- La surcouche Manjaro pour XFCE n'est pas nécessaire dans le cas où un autre thème est déjà installé.
-
-```bash
-sudo pacman -Rsn manjaro-xfce-minimal-settings manjaro-application-utility manjaro-browser-settings kvantum-theme-matchama kvantum-qt5
-sudo pacman -Rsn matcha-gtk-theme gnome-icon-theme
+sudo pacman -Rsn manjaro-xfce-minimal-settings manjaro-application-utility manjaro-zsh-config kvantum kvantum-theme-matcha
 sudo pacman -Rsn xcursor-simpleandsoft xcursor-vanilla-dmz-aa
-sudo pacman -Rsn noto-fonts noto-fonts-cjk terminus-font
-sudo pacman -Rsn `pacman -Qsq texlive`
+
+sudo pacman -S zsh
 ```
 
 ### [KeePassXC](https://keepassxc.org/)
@@ -992,10 +809,10 @@ EOL
 
 ### [Firefox](https://www.mozilla.org/fr/firefox/new/)
 
-Par défaut, Manjaro utilise le navigateur [Midori](https://astian.org/midori-browser/). Ce dernier est conçu pour être léger, mais n'est pas vraiment populaire et n'est pas installé dans un Flatpak. Un remplacement par Firefox en version Flatpak semble donc pertinent.
+Par défaut, Manjaro utilise une version de Firefox installée directement sur l'os. Cela n'est pas réellement recommandé. C'est pourquoi nous allons la remplacer par une version Flatpak.
 
 ```bash
-sudo pacman -Rsn midori
+sudo pacman -Rsn firefox manjaro-browser-settings
 flatpak install --user org.mozilla.firefox
 ```
 
@@ -1039,34 +856,10 @@ flatpak run --branch=stable --arch=x86_64 --command=protonmail-bridge ch.protonm
 
 ### [ProtonVPN](https://protonvpn.com/)
 
-Sur Linux, il est possible d'utiliser ProtonVPN directement en ligne de commande ce qui peut permettre de scripter les connections/déconnections.
+Durant longtemps, il était possible d'utiliser un client ProtonVPN en ligne de commande. Malheureusement, cela n'est plus possible maintenant qu'il existe une interface. Cette dernière est néanmoins relativement pratique et disponible sur flathub. 
 
 ```bash
-yay -S protonvpn-cli
-```
-
-Par la suite, il suffit de faire la commande suivante pour s'authentifier à son compte Proton :
-
-```bash
-protonvpn-cli login
-```
-
-Pour se connecter au serveur le plus rapide (si le besoin est de sécuriser sa connexion sur un hotspot public) :
-
-```bash
-protonvpn-cli c -f
-```
-
-Pour se connecter à un pays en particulier avec son [code pays](https://fr.wikipedia.org/wiki/Liste_des_codes_pays_UIC) (si le besoin est de contourner une géorestriction) :
-
-```bash
-protonvpn-cli c --cc CH
-```
-
-Pour se déconnecter du VPN :
-
-```bash
-protonvpn-cli d
+flatpak install --user com.protonvpn.www
 ```
 
 ### [Thunderbird](https://www.thunderbird.net/fr/)
@@ -1194,14 +987,6 @@ X-Flatpak=io.github.janbar.noson
 Comment=
 Path=
 StartupNotify=false
-```
-
-### [NoiseTorch](https://github.com/noisetorch/NoiseTorch)
-
-Un logiciel pour filtrer les bruits parasites d'un micro :
-
-```bash
-yay -S noisetorch
 ```
 
 ### [NextCloud](https://nextcloud.com/)
@@ -1354,7 +1139,7 @@ Il s'agit d'une application payante, mais open source. Un fork populaire est [Ba
 ```bash
 wget "https://api-functions.stage.a.symless.com/download-log?synergyVersion=3.0.79.1-rc3&operatingSystem=Linux&architecture=flatpak&downloadUrl=https%3A%2F%2Frc.symless.com%2Fsynergy3%2Fv3.0.79.1-rc3%2Fsynergy-linux_x64-libssl3-v3.0.79.1-rc3.flatpak&userId=1452232" -O /tmp/synerg.flatpak
 
-flatpak install /tmp/synerg.flatpak
+flatpak install --user /tmp/synerg.flatpak
 ```
 
 ### [Solaar](https://pwr-solaar.github.io/Solaar/)
@@ -1433,7 +1218,7 @@ fwupdmgr update
 Une petite interface pour la gestion de nos clés privées OpenPGP.
 
 ```bash
-sudo pacman -S kleopatra
+flatpak install --user org.kde.kleopatra
 ```
 
 ### [Ghidra](https://ghidra-sre.org/)
@@ -1544,37 +1329,13 @@ Voici un exemple simple visant à extraire les valeurs "a", "b" et "c" au sein d
 echo '{"values": [{"name": "a"}, {"name": "b"}, {"name": "c"}]}' | jq -cM ".values[].name"
 ```
 
-### [bat](https://github.com/sharkdp/bat)
-
-Bat est un clone de la commande `cat` réécrit en Rust. Cette commande prend en charge la pagination, la coloration syntaxique, git et dispose de quelques paramètres qui peuvent s'avérer bien utiles.
-
-```bash
-sudo pacman -S bat
-```
-
-Par exemple pour afficher seulement les lignes 2 à 5 d'un fichier :
-
-```bash
-bat -r 2:5 file.md
-```
-
-### [CpuLimit](https://github.com/opsengine/cpulimit)
-
-Un petit outil permettant de limiter l'utilisation du processeur à un processus.
-
-```bash
-sudo pacman -S cpulimit
-```
-
-Les paramètres de `cpulimit` sont :
-
-- `-e`: Le nom d'un processus.
-- `-p`: Le PID d'un processus.
-- `-l`: La limite d'utilisation du processeur en pourcentage à appliquer au processus ciblé.
-
 ### [Smartmontools](https://www.smartmontools.org/)
 
 Smartmontools est un outil permettant de récupérer [les données SMART](https://fr.wikipedia.org/wiki/Self-Monitoring,_Analysis_and_Reporting_Technology) concernant l'état de santé d'un disque dur ou SSD : Vitesse d'écriture, lecture si des secteurs ont été détectés comme défaillant... Faire des analyses de temps à autre peut s'avérer pertinent afin d'éventuellement faire passer un disque dur ou SSD interne en simple support de sauvegarde externe externe.
+
+```bash
+sudo pacman -S smartmontools
+```
 
 Pour faire une analyse, il suffit de taper la commande (en remplaçant `sda` par le disque à analyser) :
 
