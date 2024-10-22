@@ -1663,7 +1663,7 @@ Un petit script qui met à jour toutes nos applications avec les différents ges
 
 set -e
 
-copy_theme() {
+copy-theme() {
     SRC=$1
     DEST=$2
 
@@ -1676,8 +1676,7 @@ copy_theme() {
         if [ ! -e $DEST_PATH ]
         then
             cp -Rf $SRC/$SRC_FILE $DEST_PATH
-            find $DEST_PATH -type f -exec chmod 600 {} \;
-            find $DEST_PATH -type d -exec chmod 700 {} \;
+            find $DEST_PATH ! -perm /400 | xargs -r -d "\n" -P4 -L10 chmod go-rwx
         fi
     done
 
@@ -1714,9 +1713,9 @@ do
     do
         FLATPAK_DIR=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share
 
-        copy_theme $HOME/.themes $FLATPAK_DIR/themes &
-        copy_theme $HOME/.icons $FLATPAK_DIR/icons &
-        copy_theme $HOME/.fonts $FLATPAK_DIR/fonts &
+        copy-theme $HOME/.themes $FLATPAK_DIR/themes &
+        copy-theme $HOME/.icons $FLATPAK_DIR/icons &
+        copy-theme $HOME/.fonts $FLATPAK_DIR/fonts &
 
         wait
     done
@@ -1732,130 +1731,147 @@ Comme son nom l'indique, ce script permet de nettoyer différents éléments du 
 ```bash
 #!/bin/bash
 
-CLEAN_CACHE=0
-
-if [[ $* == "-c" ]] || [[ $* == "--cache" ]]
-then
-    CLEAN_CACHE=1
-elif [[ $* == "-h" ]] || [[ $* == "--help" ]]
-then
-    echo "-c, --cache           Clean cache"
-    exit 0
-fi
-
 PROTECTED_FOLDER=".ssh .themes .icons .fonts Templates Pictures Videos Music"
 PROTECTED_FILETYPE="pdf zip tar gz 7z wav mp3 mp4 mkv mov"
+HISTORY_PREFIX_TO_CLEAN="pacman yay flatpak clear ls ll rm mv rmdir touch tar 7z unzip unrar"
 
 get-used-space() {
    df | tr -s " " | cut -f3 -d " " | tail -n +2 | sed -z 's/\n/+/g;s/+$/\n/' | bc
 }
 
-USED_SPACE_BEFORE=`get-used-space`
+root-clean() {
+  CLEAN_CACHE="$1"
+  USER_NAME="$2"
+  USER_HOME="$3"
 
-# Clean up the package manager
-sudo pacman -Scc --noconfirm
-yay -Scc --noconfirm
-sudo pip cache purge
-pip cache purge
-flatpak uninstall --unused -y
-sudo pamac remove --orphans --no-confirm
+  echo "Clean pacman"
+  pamac remove --orphans --no-confirm
+  pacman -Scc --noconfirm
 
-# Cleans up Docker and Podman
-sudo docker container prune -f
-sudo docker volume prune -f
-sudo docker network prune -f
-sudo docker system prune -f
-podman container prune -f
-podman volume prune -f
-podman network prune -f
-podman system prune -f
+  if [ $CLEAN_CACHE -eq 1 ]
+  then
+    echo "Clean root cache"
+    rm -Rf /var/cache/*
+    rm -Rf /root/.cache/*
+  fi
 
-# Cleans up the user session
-rm -Rf $HOME/Downloads/*
-rm -Rf $HOME/.local/share/.Trash
-rm -f $HOME/.xsession-errors*
-rm -f $HOME/.local/share/recently-used.xbel*
-find $HOME -type f -iname "*.old" -delete
+  echo "Clean Docker"
+  docker container prune -f
+  docker volume prune -f
+  docker network prune -f
+  docker system prune -f
 
-# Cleans up cache
-if [ $CLEAN_CACHE -eq 1 ]
-then
-    sudo rm -Rf /var/cache/*
-    sudo rm -Rf /root/.cache/*
+  echo "Chown user home"
+  find $USER_HOME ! -user $USER_NAME | xargs -r -d "\n" -P4 -L10 chown $USER_NAME
+  find $USER_HOME ! -group $USER_NAME | xargs -r -d "\n" -P4 -L10 chgrp $USER_NAME
+
+  echo "Adds access rights to vms for Qemu"
+  mkdir -p $USER_HOME/Vms
+  setfacl -R --remove-all $USER_HOME
+  setfacl -m g:libvirt-qemu:rx $USER_HOME
+  chgrp -R libvirt-qemu $USER_HOME/Vms
+
+  echo "Delete old /etc configuration"
+  find /etc -iname "*.old" -delete
+  find /etc -iname "*-" -delete
+  find /etc -iname "*~" -delete
+
+  echo "Delete unused logs"
+  journalctl --vacuum-time=1d
+  find $USER_HOME -type f -iname "*.log" -delete
+  find $USER_HOME -type f -iname "*.log.[0-9]" -delete
+  find /var/log -type f -iname "*.[0-9]" -delete
+  find /var/log -type f -iname "*.[0-9].log" -delete
+  find /var/log -type f -iname "*.old" -delete
+  rm -f /var/log/optimus-manager/daemon/*.log
+  rm -f /var/log/optimus-manager/switch/*.log
+
+  echo "Clean root history"
+  rm -f /root/.*_history
+}
+
+user-clean() {
+  CLEAN_CACHE="$1"
+
+  echo "Clean yay"
+  yay -Scc --noconfirm
+
+  echo "Clean flatpak"
+  flatpak uninstall --unused -y
+
+  # Clean cache
+  if [ $CLEAN_CACHE -eq 1 ]
+  then
+    echo "Clean user cache"
     rm -Rf $HOME/.cache/*
-    find $HOME/.var/app/ -type d -name "cache" -exec rm -Rf {}/* \;
-fi
+    find $HOME/.var/app/ -type d -name "cache" | xargs -r -d "\n" -P4 -L10 rm -Rf
+  fi
 
-# Configuration of user rights
-sudo chmod -R go-rwx $HOME
-sudo find $HOME ! -user $USER -exec chown $USER {} \;
-sudo find $HOME ! -group $USER -exec chgrp $USER {} \;
-sudo find $HOME -type d ! -perm 700 -exec chmod 700 {} \; 
-chmod -R 500 $HOME/bin
-chmod 777 $HOME/Public
-chmod 750 $HOME
-setfacl -R --remove-all $HOME
-setfacl -m g:libvirt-qemu:rx $HOME
-find $HOME/Vms -type d ! -perm 550 -exec chmod 550 {} \; 
-find $HOME/Vms -type f ! -perm 770 -exec chmod 770 {} \; 
-sudo chgrp -R libvirt-qemu $HOME/Vms
-for FOLDER in $PROTECTED_FOLDER
-do
-    find $HOME/$FOLDER -type d ! -perm 500 -exec chmod 500 {} \;
-    find $HOME/$FOLDER -type f ! -perm 400 -exec chmod 400 {} \;
-done
-for FILETYPE in $PROTECTED_FILETYPE
-do
-    find $HOME -type f -name "*.$FILETYPE" -exec chmod ugo-wx {} \;
-done
+  echo "Clean Podman"
+  podman container prune -f
+  podman volume prune -f
+  podman network prune -f
+  podman system prune -f
 
-# Cleans up the system
-sudo find /etc -iname "*.old" -delete
-sudo find /etc -iname "*-" -delete
-sudo find /etc -iname "*~" -delete
+  echo "Remove user files"
+  rm -Rf $HOME/Downloads/*
+  rm -Rf $HOME/.local/share/.Trash
+  rm -f $HOME/.xsession-errors*
+  rm -f $HOME/.local/share/recently-used.xbel*
+  find $HOME -type f -iname "*.old" -delete
 
-# Delete unused logs
-find $HOME -type f -iname "*.log" -delete
-find $HOME -type f -iname "*.log.[0-9]" -delete
-sudo journalctl --vacuum-time=1d
-sudo find /var/log -type f -iname "*.[0-9]" -delete
-sudo find /var/log -type f -iname "*.[0-9].log" -delete
-sudo find /var/log -type f -iname "*.old" -delete
-sudo rm -f /var/log/optimus-manager/daemon/*.log
-sudo rm -f /var/log/optimus-manager/switch/*.log
+  echo "Chmod user files"
+  find $HOME -type f -perm /077 | xargs -r -d "\n" -P4 -L10 chmod go-rwx
 
-# Delete history
-sudo rm -f /root/.bash_history
-rm -f $HOME/.bash_history
-rm -f $HOME/.python_history
-rm -f $HOME/.node_repl_history
-rm -f $HOME/.wget-hsts
-rm -f $HOME/.lesshst
-yes all | sudo fish -c "history delete all"
+  for FOLDER in $PROTECTED_FOLDER
+  do
+      find $HOME/$FOLDER -type d ! -perm 500 | xargs -r -d "\n" -P4 -L10 chmod 500
+      find $HOME/$FOLDER -type f ! -perm 400 | xargs -r -d "\n" -P4 -L10 chmod 400
+  done
+  for FILETYPE in $PROTECTED_FILETYPE
+  do
+      find $HOME -type f -name "*.$FILETYPE" | xargs -r -d "\n" -P4 -L10 chmod ugo-wx
+  done
+  find $USER_HOME/Vms -type d ! -perm 550 | xargs -r -d "\n" -P4 -L10 chmod 550
+  find $USER_HOME/Vms -type f ! -perm 770 | xargs -r -d "\n" -P4 -L10 chmod 770
+  chmod 777 $HOME/Public
+  chmod 750 $HOME
 
-yes all | fish -c "history delete --prefix 'sudo pacman '"
-yes all | fish -c "history delete --prefix 'pacman '"
-yes all | fish -c "history delete --prefix 'yay '"
-yes all | fish -c "history delete --prefix 'flatpak '"
+  echo "Clean history"
+  rm -f $HOME/.*_history
+  rm -f $HOME/.wget-hsts
+  rm -f $HOME/.lesshst
+  for COMMAND in $(echo "$HISTORY_PREFIX_TO_CLEAN")
+  do
+    yes all | fish -c "history delete --prefix '$COMMAND '"
+  done
+}
 
-yes all | fish -c "history delete --prefix clear"
-yes all | fish -c "history delete --prefix ls"
-yes all | fish -c "history delete --prefix ll"
-yes all | fish -c "history delete --prefix 'rm '"
-yes all | fish -c "history delete --prefix 'mv '"
-yes all | fish -c "history delete --prefix 'rmdir '"
-yes all | fish -c "history delete --prefix 'touch '"
+main() {
+  CLEAN_CACHE=0
 
-yes all | fish -c "history delete --prefix 'tar '"
-yes all | fish -c "history delete --prefix '7z '"
-yes all | fish -c "history delete --prefix 'unzip '"
-yes all | fish -c "history delete --prefix 'unrar '"
+  if [[ $* == "-c" ]] || [[ $* == "--cache" ]]
+  then
+      CLEAN_CACHE=1
+  elif [[ $* == "-h" ]] || [[ $* == "--help" ]]
+  then
+      echo "-c, --cache           Clean cache"
+      exit 0
+  fi
 
-USED_SPACE_AFTER=`get-used-space`
+  USED_SPACE_BEFORE=$(get-used-space)
 
-RECOVERED_SPACE=`echo "scale=3; ($USED_SPACE_BEFORE - $USED_SPACE_AFTER) / 1000000" | bc`
+  ROOT_CLEAN_DEC=$(declare -f root-clean)
+  sudo bash -c "$ROOT_CLEAN_DEC; root-clean $CLEAN_CACHE $USER $HOME"
 
-echo "Recovered space: $RECOVERED_SPACE Go"
+  user-clean $CLEAN_CACHE
+
+  USED_SPACE_AFTER=$(get-used-space)
+  RECOVERED_SPACE=$(echo "scale=3; ($USED_SPACE_BEFORE - $USED_SPACE_AFTER) / 1000000" | bc)
+  echo "Recovered space: $RECOVERED_SPACE Go"
+}
+
+main $*
 ```
 
 #### Spotify-diff
