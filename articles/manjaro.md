@@ -776,7 +776,8 @@ sudo pacman -Rsn parole mousepad gufw gparted
 - Il est également possible de désinstaller quelques thèmes par défaut.
 
 ```bash
-sudo pacman -Rsn manjaro-xfce-minimal-settings manjaro-application-utility manjaro-zsh-config kvantum kvantum-theme-matcha
+sudo pacman -Rsn manjaro-xfce-minimal-settings manjaro-application-utility manjaro-zsh-config
+sudo pacman -Rsn kvantum kvantum-theme-matcha matcha-gtk-theme
 sudo pacman -Rsn xcursor-simpleandsoft xcursor-vanilla-dmz-aa
 
 sudo pacman -S zsh

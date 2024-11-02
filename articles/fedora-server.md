@@ -395,21 +395,103 @@ GRUB_DISABLE_RECOVERY="true"
 GRUB_ENABLE_BLSCFG=true' | tee /etc/default/grub
 
 grub2-mkconfig -o /boot/grub2/grub.cfg
-mkdir -p /etc/libvirt/hooks/qemu.d/vm-jeux/prepare/begin
-mkdir -p /etc/libvirt/hooks/qemu.d/vm-jeux/release/end
 
-wget https://raw.githubusercontent.com/PassthroughPOST/VFIO-Tools/master/libvirt_hooks/qemu -O /etc/libvirt/hooks/qemu
+mkdir -p /etc/libvirt/hooks
+echo '#!/bin/bash
+
+GUEST_NAME="$1"
+HOOK_NAME="$2"
+STATE_NAME="$3"
+
+source "/etc/libvirt/hooks/kvm.conf"
+
+EXIT=1
+
+for VM in $GPU_VMS
+do
+    if [ "$VM" == "$GUEST_NAME" ]
+    then
+        EXIT=0
+    fi
+done
+
+if [ $EXIT -eq 1 ]
+then
+    exit 0
+fi
+
+# https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/start.sh
+if [ "$HOOK_NAME" == "prepare" ] && [ "$STATE_NAME" == "begin" ]
+then
+    echo "Start GPU vm $GUEST_NAME"
+
+    # Stop services
+    systemctl stop docker
+    systemctl stop ollama
+
+    # Unbind VTconsoles
+    echo 0 > /sys/class/vtconsole/vtcon0/bind
+
+    # Unbind EFI-Framebuffer
+    echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind
+
+    # Unload all Nvidia drivers
+    modprobe -r nvidia_drm
+    modprobe -r nvidia_modeset
+    modprobe -r drm_kms_helper
+    modprobe -r nvidia
+    modprobe -r i2c_nvidia_gpu
+    modprobe -r drm
+    modprobe -r nvidia_uvm
+
+    # Unbind the GPU from display driver
+    virsh nodedev-detach $VIRSH_GPU_VIDEO
+    virsh nodedev-detach $VIRSH_GPU_AUDIO
+
+    # Load VFIO kernel module
+    modprobe vfio
+    modprobe vfio_pci
+    modprobe vfio_iommu_type1
+fi
+
+# https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/revert.sh
+if [ "$HOOK_NAME" == "release" ] && [ "$STATE_NAME" == "end" ]
+then
+    echo "Stop GPU vm $GUEST_NAME"
+
+    # Unload all the vfio modules
+    modprobe -r vfio_pci
+    modprobe -r vfio_iommu_type1
+    modprobe -r vfio
+
+    # Reattach the gpu
+    virsh nodedev-reattach $VIRSH_GPU_VIDEO
+    virsh nodedev-reattach $VIRSH_GPU_AUDIO
+
+    # Rebind VT consoles
+    echo 1 > /sys/class/vtconsole/vtcon0/bind
+
+    nvidia-xconfig --query-gpu-info > /dev/null 2>&1
+
+    # Re-Bind EFI-Framebuffer
+    echo "efi-framebuffer.0" > /sys/bus/platform/drivers/efi-framebuffer/bind
+
+    #Load nvidia driver
+    modprobe nvidia_drm
+    modprobe nvidia_modeset
+    modprobe drm_kms_helper
+    modprobe nvidia
+    modprobe i2c_nvidia_gpu
+    modprobe drm
+
+    # Start services
+    systemctl start docker
+    systemctl start ollama
+fi' | tee /etc/libvirt/hooks/qemu
 chmod 750 /etc/libvirt/hooks/qemu
 
-wget https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/start.sh -O /etc/libvirt/hooks/qemu.d/vm-jeux/prepare/begin/start.sh
-
-sed -i "s/youruser/admin/g" /etc/libvirt/hooks/qemu.d/vm-jeux/prepare/begin/start.sh
-
-wget https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/revert.sh -O /etc/libvirt/hooks/qemu.d/vm-jeux/release/end/revert.sh
-
-find /etc/libvirt/hooks/ -name "*.sh" -exec chmod 750 {} \;
-
-echo VIRSH_GPU_VIDEO=pci_0000_`lspci | grep -i nvidia | grep -i vga | cut -f1 -d ' ' | tr ':' '_' | tr '.' '_'` > /etc/libvirt/hooks/kvm.conf
+echo "GPU_VMS='vm-windows vm-jeux'" > /etc/libvirt/hooks/kvm.conf
+echo VIRSH_GPU_VIDEO=pci_0000_`lspci | grep -i nvidia | grep -i vga | cut -f1 -d ' ' | tr ':' '_' | tr '.' '_'` >> /etc/libvirt/hooks/kvm.conf
 echo VIRSH_GPU_AUDIO=pci_0000_`lspci | grep -i nvidia | grep -i audio | cut -f1 -d ' ' | tr ':' '_' | tr '.' '_'` >> /etc/libvirt/hooks/kvm.conf
 ```
 
