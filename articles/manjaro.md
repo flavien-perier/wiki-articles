@@ -165,7 +165,7 @@ echo "home	/dev/sdb	none	luks2" >> /etc/crypttab
 
 ```bash
 sudo su
-echo "/dev/mapper/home	/home	btrfs	defaults 0 0" >> /etc/fstab
+echo "/dev/mapper/home	/home	btrfs	defaults,noatime,discard 0 0" >> /etc/fstab
 ```
 
 ### Configuration du Shell
@@ -1833,8 +1833,8 @@ user-clean() {
   do
       find $HOME -type f -name "*.$FILETYPE" | xargs -r -d "\n" -P4 -L10 chmod ugo-wx
   done
-  find $USER_HOME/Vms -type d ! -perm 550 | xargs -r -d "\n" -P4 -L10 chmod 550
-  find $USER_HOME/Vms -type f ! -perm 770 | xargs -r -d "\n" -P4 -L10 chmod 770
+  find $HOME/Vms -type d ! -perm 550 | xargs -r -d "\n" -P4 -L10 chmod 550
+  find $HOME/Vms -type f ! -perm 770 | xargs -r -d "\n" -P4 -L10 chmod 770
   chmod 777 $HOME/Public
   chmod 750 $HOME
 
@@ -1946,5 +1946,6 @@ Si vous rencontrez des problèmes, n'hésitez pas à me contacter par mail sur [
 - [Copy and Paste in Tmux](https://www.rockyourcode.com/copy-and-paste-in-tmux/)
 - [Configure your firewall to work with Sonos](https://support.sonos.com/s/article/688)
 - [Ports nécessaires à Steam](https://help.steampowered.com/fr/faqs/view/2EA8-4D75-DA21-31EB)
-- [Forum Manjaro : Link in flatpak apps won’t open anymore on click since last update](https://forum.manjaro.org/t/link-in-flatpak-apps-wont-open-anymore-on-click-since-last-update/149907/22)
+- [Forum Manjaro - Link in flatpak apps won’t open anymore on click since last update](https://forum.manjaro.org/t/link-in-flatpak-apps-wont-open-anymore-on-click-since-last-update/149907/22)
 - [Manjaro forum - Manjaro System repair / integrity check?](https://forum.manjaro.org/t/manjaro-system-repair-integrity-check/154486/11)
+- [Debian facile - /etc/fstab](https://debian-facile.org/doc:systeme:fstab)
