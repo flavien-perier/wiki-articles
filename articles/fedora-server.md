@@ -54,13 +54,47 @@ Installation des drivers Nvidia et configuration minimale du serveur :
 ```bash
 curl -s https://sh.flavien.io/shell.sh | bash -
 
-dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/fedora39/x86_64/cuda-fedora39.repo
-dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/fedora40/x86_64/cuda-fedora40.repo
 dnf config-manager --add-repo https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
+
+dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 
 dnf install kernel-devel kernel-headers
 dnf module install nvidia-driver
 dnf remove plymouth*
+```
+
+### SELinux
+
+SELinux est un élément de sécurité ajouté aux systèmes RedHat. En théorie l'installation fonctionnerait au global avec SELinux d'actif, mais de nombreux problèmes de stabilité peuvent survenir. C'est pourquoi nous allons désactiver la partie blocage de ce composant, tout en conservant la partie monitoring.
+
+```bash
+sed -i "s/SELINUX=enforcing/SELINUX=permissive/" /etc/selinux/config
+```
+
+### fichier SWAP
+
+Par défaut Fedora utilise une mécanique nommée zRam qui permet de compresser la mémoire plutôt que de l'écrire dans le disque. C'est assez malin et globalement beaucoup plus rapide que du SWAP. Cependant, avec cette mécanique on ne peut pas mettre autant de SWAP que de mémoire, ce qui peut malheureusement être pratique quand on veut traiter de très gros volume de données (mais qui aura un impacte très important sur les performances). Sur cette machine zRam va donc être désinstallé et un fichier de SWAP va être rajouté. Comme la machine possède beaucoup de mémoire, cette solution ne devrait pas dégrader les performances pour la majorité des usages.
+
+```bash
+dnf remove zram-generator
+
+# For btrfs
+truncate -s 0 /var/swapfile
+chattr +C /var/swapfile
+
+fallocate -l 32G /var/swapfile
+chmod 600 /var/swapfile
+mkswap /var/swapfile
+swapon /var/swapfile
+echo "/var/swapfile sw swap sw   0 0" | tee -a /etc/fstab
+```
+
+Par default le system va commencer à utiliser le SWAP a partir de 40% d'occupation de la mémoire vu la taille du SWAP installé ici (et le fait que la machine possède quand même 32Go de RAM), la valeur va être remonté à 80% afin que le système utilise le SWAP le moins souvent possible.
+
+```bash
+sysctl vm.swappiness=20
+echo "vm.swappiness=20" | tee /etc/sysctl.d/99-swappiness.conf
 ```
 
 ### Connection SSH
@@ -426,14 +460,18 @@ then
     echo "Start GPU vm $GUEST_NAME"
 
     # Stop services
-    systemctl stop docker
     systemctl stop ollama
+    systemctl stop docker
+    systemctl stop containerd
 
     # Unbind VTconsoles
     echo 0 > /sys/class/vtconsole/vtcon0/bind
 
     # Unbind EFI-Framebuffer
     echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind
+    
+    # Avoid a race condition by waiting a couple of seconds. This can be calibrated to be shorter or longer if required for your system
+    sleep 5
 
     # Unload all Nvidia drivers
     modprobe -r nvidia_drm
@@ -485,6 +523,7 @@ then
     modprobe drm
 
     # Start services
+    systemctl start containerd
     systemctl start docker
     systemctl start ollama
 fi' | tee /etc/libvirt/hooks/qemu

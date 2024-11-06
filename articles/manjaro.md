@@ -165,7 +165,7 @@ echo "home	/dev/sdb	none	luks2" >> /etc/crypttab
 
 ```bash
 sudo su
-echo "/dev/mapper/home	/home	btrfs	defaults,noatime,discard 0 0" >> /etc/fstab
+echo "/dev/mapper/home	/home	btrfs	defaults,relatime,discard=async,ssd 0 0" >> /etc/fstab
 ```
 
 ### Configuration du Shell
