@@ -60,7 +60,7 @@ dnf config-manager --add-repo https://nvidia.github.io/libnvidia-container/stabl
 dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 
 dnf install kernel-devel kernel-headers
-dnf module install nvidia-driver
+dnf module install nvidia-driver:open-dkms
 dnf remove plymouth*
 ```
 
@@ -369,7 +369,7 @@ Et d'exécuter le fichier en question avec notre utilisateur par défaut grâce 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ollama pull mixtral
-ollama pull llama3.2
+ollama pull mistral-nemo
 ollama pull codestral
 
 echo '[Unit]
