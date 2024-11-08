@@ -1799,8 +1799,8 @@ user-clean() {
 
   echo "Clean flatpak"
   flatpak uninstall --unused -y
+  rm -Rf $HOME/.local/share/flatpak/.removed/
 
-  # Clean cache
   if [ $CLEAN_CACHE -eq 1 ]
   then
     echo "Clean user cache"
