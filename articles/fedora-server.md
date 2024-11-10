@@ -656,7 +656,7 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type="block" device="disk">
       <driver name="qemu" type="raw" cache="none" io="native" discard="unmap"/>
-      <source dev="/dev/nvme1n1"/>
+      <source dev="/dev/disk/by-id/nvme-***"/>
       <target dev="sda" bus="sata"/>
       <address type="drive" controller="0" bus="0" target="0" unit="0"/>
     </disk>
