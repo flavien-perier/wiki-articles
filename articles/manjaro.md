@@ -860,6 +860,9 @@ flatpak run --branch=stable --arch=x86_64 --command=protonmail-bridge ch.protonm
 Durant longtemps, il était possible d'utiliser un client ProtonVPN en ligne de commande. Malheureusement, cela n'est plus possible maintenant qu'il existe une interface. Cette dernière est néanmoins relativement pratique et disponible sur flathub. 
 
 ```bash
+sudo pacman -S openvpn openresolv
+sudo wget "https://raw.githubusercontent.com/ProtonVPN/scripts/master/update-resolv-conf.sh" -O "/etc/openvpn/update-resolv-conf"
+sudo chmod +x "/etc/openvpn/update-resolv-conf"
 flatpak install --user com.protonvpn.www
 ```
 
@@ -879,7 +882,13 @@ Discord est surement l'application de communication la plus populaire du moment.
 flatpak install --user dev.vencord.Vesktop
 ```
 
-Pour lancer Discord en mode réduit il est possible d'utiliser la ligne de commande suivante :
+Pour lancer Discord en mode réduit il est possible d'utiliser la ligne de   echo "Remove user files"
+  rm -f $HOME/.xsession-errors*
+  rm -Rf $HOME/Downloads/*
+  rm -Rf $HOME/.local/share/Trash
+  rm -Rf $HOME/.local/share/RecentDocuments
+  rm -f $HOME/.local/share/recently-used.xbel*
+  find $HOME -type f -iname "*.old" -deletecommande suivante :
 
 ```bash
 flatpak run --branch=stable --arch=x86_64 --command=startvesktop dev.vencord.Vesktop --start-minimized
@@ -1023,10 +1032,13 @@ flatpak install --user net.scribus.Scribus
 ```
 
 ### [Calibre](https://calibre-ebook.com/)
-
-Calibre est un puissant outil de lecture/écriture d'e-book. Il accepte différents formats de fichiers, dont notamment les epub.
-
-```bash
+  echo "Remove user files"
+  rm -f $HOME/.xsession-errors*
+  rm -Rf $HOME/Downloads/*
+  rm -Rf $HOME/.local/share/Trash
+  rm -Rf $HOME/.local/share/RecentDocuments
+  rm -f $HOME/.local/share/recently-used.xbel*
+  find $HOME -type f -iname "*.old" -delete
 flatpak install --user com.calibre_ebook.calibre
 ```
 
@@ -1815,9 +1827,10 @@ user-clean() {
   podman system prune -f
 
   echo "Remove user files"
-  rm -Rf $HOME/Downloads/*
-  rm -Rf $HOME/.local/share/.Trash
   rm -f $HOME/.xsession-errors*
+  rm -Rf $HOME/Downloads/*
+  rm -Rf $HOME/.local/share/Trash
+  rm -Rf $HOME/.local/share/RecentDocuments
   rm -f $HOME/.local/share/recently-used.xbel*
   find $HOME -type f -iname "*.old" -delete
 
