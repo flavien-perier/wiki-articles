@@ -383,23 +383,23 @@ iptables -t filter -A INPUT -p tcp --dport 27036 -j ACCEPT
 iptables -t filter -A OUTPUT -p udp --dport 27000:27100 -j ACCEPT -m owner --uid-owner 1000
 
 ## Sonos
-iptables -t filter -A INPUT -p tcp --dport 1400 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 1400 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A INPUT -p tcp --dport 1400 -d 192.168.1.1/24 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 1400 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
 
 ### Sonos with Spotify
-iptables -t filter -A INPUT -p udp --dport 1900 -j ACCEPT
-iptables -t filter -A INPUT -p udp --dport 5353 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 5353 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A INPUT -p udp --dport 1900 -d 192.168.1.1/24 -j ACCEPT
+iptables -t filter -A INPUT -p udp --dport 5353 -d 192.168.1.1/24 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 5353 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
 
 # Synergy
-iptables -t filter -A INPUT -p tcp --dport 24800 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 24800 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A INPUT -p tcp --dport 24800 -d 192.168.1.1/24 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
 
 # Valent
-iptables -t filter -A INPUT -p tcp --dport 1714:1764 -j ACCEPT
-iptables -t filter -A INPUT -p udp --dport 1714:1764 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 1714:1764 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p udp --dport 1714:1764 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A INPUT -p tcp --dport 1714:1764 -d 192.168.1.1/24 -j ACCEPT
+iptables -t filter -A INPUT -p udp --dport 1714:1764 -d 192.168.1.1/24 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 1714:1764 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p udp --dport 1714:1764 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
 
 # Protections
 
