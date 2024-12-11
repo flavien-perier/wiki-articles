@@ -166,12 +166,6 @@ Cette application open source permet d'analyser les éléments d'un site web qui
 
 ### Confort
 
-#### [Ecosia](https://addons.mozilla.org/en-US/firefox/addon/ecosia-the-green-search/)
-
-![Ecosia logo](https://medias.flavien.io/articles/firefox/ecosia.webp)
-
-Ecosia est un métamoteur basé sur Bing qui utilise l'argent généré par nos recherches pour planter des arbres. Il s'agit donc d'une application à bilan carbone compensé, c'est-à-dire qu'elle tente de compenser la pollution engendrée par le trafic en plantant des arbres qui vont absorber ce CO2. En plus de cela, l'application respecte la vie privée des utilisateurs et l'entreprise s'engage à ne pas revendre de données.
-
 #### [I still don't care about cookies](https://addons.mozilla.org/en-US/firefox/addon/istilldontcareaboutcookies/)
 
 ![I still don't care about cookies logo](https://medias.flavien.io/articles/firefox/i-still-dont-care-about-cookies.webp)
