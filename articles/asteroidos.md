@@ -51,7 +51,7 @@ Je détaille néanmoins ici les étapes d'installation :
 
 - Dans un premier temps, il faut télécharger les fichiers de la dernière version de WearOS pour la montre : [Le kernel](https://androidfilehost.com/?fid=529152257862690904), [Le recovery](https://www.androidfilehost.com/?fid=457095661767128807) et [La ROM](https://androidfilehost.com/?fid=745425885120695961).
 
-- Puis les fichiers d'AsteroidOS : [Les données utilisateur](https://release.asteroidos.org/nightlies/bass/asteroid-image-bass.ext4) et [La ROM](https://release.asteroidos.org/nightlies/bass/zImage-dtb-bass.fastboot).
+- Puis les fichiers d'AsteroidOS : [Les données utilisateur](https://release.asteroidos.org/nightlies/bass/asteroid-image-bass.rootfs.ext4) et [La ROM](https://release.asteroidos.org/nightlies/bass/zImage-dtb-bass.fastboot).
 
 - La stabilité de distribution étant ce qu'elle est, il peut-être bon de remplacer le recovery par [TWRP](https://dl.twrp.me/bass/). Cela peut permettre d'effectuer des backups.
 
@@ -72,7 +72,7 @@ fastboot continue
 # Attendre que l'os de base ait fini de s'installer avant de revenir sur fastboot et continuer.
 
 fastboot flash recovery twrp-*-bass.img
-fastboot flash userdata asteroid-image-bass.ext4
+fastboot flash userdata asteroid-image-bass.rootfs.ext4
 fastboot flash boot zImage-dtb-bass.fastboot
 
 fastboot oem lock
