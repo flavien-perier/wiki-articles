@@ -317,20 +317,29 @@ sudo su
 
 # Reset parameters
 iptables -t filter -F
+ip6tables -t filter -F
 iptables -t filter -X
+ip6tables -t filter -X
 
 # Traffic Blocking
 iptables -t filter -P INPUT DROP
+ip6tables -t filter -P INPUT DROP
 iptables -t filter -P FORWARD DROP
+ip6tables -t filter -P FORWARD DROP
 iptables -t filter -P OUTPUT DROP
+ip6tables -t filter -P OUTPUT DROP
 
 # Authorization of already established connections
 iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+ip6tables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+ip6tables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 # Loopback authorization
 iptables -t filter -A INPUT -i lo -j ACCEPT
+ip6tables -t filter -A INPUT -i lo -j ACCEPT
 iptables -t filter -A OUTPUT -o lo -j ACCEPT
+ip6tables -t filter -A OUTPUT -o lo -j ACCEPT
 
 # Allow PING to user
 iptables -t filter -A OUTPUT -p icmp --icmp-type 8 -j ACCEPT -m owner --uid-owner 1000
@@ -349,16 +358,23 @@ iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT -m owner --uid-owner 9
 
 ## http/s
 iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 0
+ip6tables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 0
 iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 0
+ip6tables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 0
 iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 1000
+ip6tables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 1000
 iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 1000
+ip6tables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 1000
 
 ## QUIC
 iptables -t filter -A OUTPUT -p udp --dport 80 -j ACCEPT -m owner --uid-owner 1000
+ip6tables -t filter -A OUTPUT -p udp --dport 80 -j ACCEPT -m owner --uid-owner 1000
 iptables -t filter -A OUTPUT -p udp --dport 443 -j ACCEPT -m owner --uid-owner 1000
+ip6tables -t filter -A OUTPUT -p udp --dport 443 -j ACCEPT -m owner --uid-owner 1000
 
 ## ssh
 iptables -t filter -A OUTPUT -p tcp --dport 22 -j ACCEPT -m owner --uid-owner 1000
+ip6tables -t filter -A OUTPUT -p tcp --dport 22 -j ACCEPT -m owner --uid-owner 1000
 
 ## ftp
 iptables -t filter -A OUTPUT -p tcp --dport 21 -j ACCEPT -m owner --uid-owner 1000
@@ -407,59 +423,99 @@ iptables -t filter -A OUTPUT -p udp --dport 1714:1764 -d 192.168.1.1/24 -j ACCEP
 
 ### Drop invalid packets
 iptables -t mangle -A PREROUTING -m conntrack --ctstate INVALID -j DROP
+ip6tables -t mangle -A PREROUTING -m conntrack --ctstate INVALID -j DROP
 
 ### Drop TCP packets that are new and are not SYN
 iptables -t mangle -A PREROUTING -p tcp ! --syn -m conntrack --ctstate NEW -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp ! --syn -m conntrack --ctstate NEW -j DROP
 
 ### Drop SYN packets with suspicious MSS value
 iptables -t mangle -A PREROUTING -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP
 
 ### Block packets with bogus TCP flags
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,RST FIN,RST -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,RST FIN,RST -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,ACK FIN -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,ACK FIN -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,URG URG -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,URG URG -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,FIN FIN -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,FIN FIN -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,PSH PSH -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,PSH PSH -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL ALL -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ALL ALL -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL NONE -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ALL NONE -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP
 iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP
+ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP
 
 ### Drop fragments in all chains
 iptables -t mangle -A PREROUTING -f -j DROP
 
 ### Limit connections per source IP
 iptables -A INPUT -p tcp -m connlimit --connlimit-above 111 -j REJECT --reject-with tcp-reset
+ip6tables -A INPUT -p tcp -m connlimit --connlimit-above 111 -j REJECT --reject-with tcp-reset
 
 ### Limit RST packets
 iptables -A INPUT -p tcp --tcp-flags RST RST -m limit --limit 2/s --limit-burst 2 -j ACCEPT
+ip6tables -A INPUT -p tcp --tcp-flags RST RST -m limit --limit 2/s --limit-burst 2 -j ACCEPT
 iptables -A INPUT -p tcp --tcp-flags RST RST -j DROP
+ip6tables -A INPUT -p tcp --tcp-flags RST RST -j DROP
 
 ### Limit new TCP connections per second per source IP
 iptables -A INPUT -p tcp -m conntrack --ctstate NEW -m limit --limit 60/s --limit-burst 20 -j ACCEPT
+ip6tables -A INPUT -p tcp -m conntrack --ctstate NEW -m limit --limit 60/s --limit-burst 20 -j ACCEPT
 iptables -A INPUT -p tcp -m conntrack --ctstate NEW -j DROP
+ip6tables -A INPUT -p tcp -m conntrack --ctstate NEW -j DROP
 
 ## Port scan
 iptables -N port-scanning
+ip6tables -N port-scanning
 iptables -A port-scanning -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/s --limit-burst 2 -j RETURN
+ip6tables -A port-scanning -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/s --limit-burst 2 -j RETURN
 iptables -A port-scanning -j DROP
+ip6tables -A port-scanning -j DROP
 
 # Save table
-iptables-save > /etc/iptables.rules
+iptables-save > /etc/iptables.v4.rules
+ip6tables-save > /etc/iptables.v6.rules
 
-cat << EOL > /etc/systemd/system/custom-firewall.service
+cat << EOL > /etc/systemd/system/custom-firewall-v4.service
 [Unit]
-Description=Custom firewall
+Description=Custom firewall IPv4
 After=network.target
 Before=docker.service
 Before=libvirtd.service
 
 [Service]
-ExecStart=iptables-restore /etc/iptables.rules
+ExecStart=iptables-restore /etc/iptables.v4.rules
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+cat << EOL > /etc/systemd/system/custom-firewall-v6.service
+[Unit]
+Description=Custom firewall IPv6
+After=network.target
+Before=docker.service
+Before=libvirtd.service
+
+[Service]
+ExecStart=ip6tables-restore /etc/iptables.v6.rules
 Type=oneshot
 
 [Install]
@@ -467,8 +523,10 @@ WantedBy=multi-user.target
 EOL
 
 systemctl daemon-reload
-systemctl enable custom-firewall
-systemctl start custom-firewall
+systemctl enable custom-firewall-v4
+systemctl enable custom-firewall-v6
+systemctl start custom-firewall-v4
+systemctl start custom-firewall-v6
 ```
 
 Enfin, nous allons ajouter quelques commandes :
