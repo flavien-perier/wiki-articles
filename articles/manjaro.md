@@ -546,29 +546,43 @@ USER_ID=$(id -u)
 case $1 in
 start)
   sudo iptables -t filter -P INPUT DROP
+  sudo ip6tables -t filter -P INPUT DROP
   sudo iptables -t filter -P FORWARD DROP
+  sudo ip6tables -t filter -P FORWARD DROP
   sudo iptables -t filter -P OUTPUT DROP
+  sudo ip6tables -t filter -P OUTPUT DROP
 ;;
 stop)
   sudo iptables -t filter -P INPUT ACCEPT
+  sudo ip6tables -t filter -P INPUT ACCEPT
   sudo iptables -t filter -P FORWARD ACCEPT
+  sudo ip6tables -t filter -P FORWARD ACCEPT
   sudo iptables -t filter -P OUTPUT ACCEPT
+  sudo ip6tables -t filter -P OUTPUT ACCEPT
 ;;
 input-stop)
   sudo iptables -t filter -P INPUT ACCEPT
+  sudo ip6tables -t filter -P INPUT ACCEPT
 ;;
 output-stop)
   sudo iptables -t filter -P OUTPUT ACCEPT
+  sudo ip6tables -t filter -P OUTPUT ACCEPT
 ;;
 full-start)
-  sudo iptables-restore /etc/iptables.rules
+  sudo iptables-restore /etc/iptables.v4.rules
+  sudo ip6tables-restore /etc/iptables.v6.rules
 ;;
 full-stop)
   sudo iptables -t filter -F
+  sudo ip6tables -t filter -F
   sudo iptables -t filter -X
+  sudo ip6tables -t filter -X
   sudo iptables -t filter -P INPUT ACCEPT
+  sudo ip6tables -t filter -P INPUT ACCEPT
   sudo iptables -t filter -P FORWARD ACCEPT
+  sudo ip6tables -t filter -P FORWARD ACCEPT
   sudo iptables -t filter -P OUTPUT ACCEPT
+  sudo ip6tables -t filter -P OUTPUT ACCEPT
 ;;
 allow-local)
   sudo iptables -t filter -A OUTPUT -p tcp -d 10.0.0.0/8 -j ACCEPT -m owner --uid-owner $USER_ID
@@ -918,7 +932,7 @@ flatpak run --branch=stable --arch=x86_64 --command=protonmail-bridge ch.protonm
 Durant longtemps, il était possible d'utiliser un client ProtonVPN en ligne de commande. Malheureusement, cela n'est plus possible maintenant qu'il existe une interface. Cette dernière est néanmoins relativement pratique et disponible sur flathub. 
 
 ```bash
-sudo pacman -S openvpn openresolv
+sudo pacman -S openvpn openresolv libnatpmp
 sudo wget "https://raw.githubusercontent.com/ProtonVPN/scripts/master/update-resolv-conf.sh" -O "/etc/openvpn/update-resolv-conf"
 sudo chmod +x "/etc/openvpn/update-resolv-conf"
 flatpak install --user com.protonvpn.www
@@ -2015,8 +2029,9 @@ Si vous rencontrez des problèmes, n'hésitez pas à me contacter par mail sur [
 - [KVM - Fix Missing Default Network](https://blog.programster.org/kvm-missing-default-network)
 - [DDoS Protection With IPtables: The Ultimate Guide](https://javapipe.com/blog/iptables-ddos-protection/)
 - [Copy and Paste in Tmux](https://www.rockyourcode.com/copy-and-paste-in-tmux/)
-- [Configure your firewall to work with Sonos](https://support.sonos.com/s/article/688)
-- [Ports nécessaires à Steam](https://help.steampowered.com/fr/faqs/view/2EA8-4D75-DA21-31EB)
 - [Forum Manjaro - Link in flatpak apps won’t open anymore on click since last update](https://forum.manjaro.org/t/link-in-flatpak-apps-wont-open-anymore-on-click-since-last-update/149907/22)
 - [Manjaro forum - Manjaro System repair / integrity check?](https://forum.manjaro.org/t/manjaro-system-repair-integrity-check/154486/11)
 - [Debian facile - /etc/fstab](https://debian-facile.org/doc:systeme:fstab)
+- [ProtonVPN - How to manually set up port forwarding](https://protonvpn.com/support/port-forwarding-manual-setup/#linux)
+- [Sonos - Configure your firewall to work with Sonos](https://support.sonos.com/s/article/688)
+- [Steam - Ports nécessaires à Steam](https://help.steampowered.com/fr/faqs/view/2EA8-4D75-DA21-31EB)
