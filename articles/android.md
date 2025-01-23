@@ -249,16 +249,6 @@ Concernant les réseaux sociaux, il est à la fois évident que disposer de ces 
     - [Messenger lite](https://apkpure.com/fr/messenger-lite/com.facebook.mlite)
     - [Instagram lite](https://apkpure.com/fr/instagram-lite/com.instagram.lite)
 
-### [KDE Connect](https://kdeconnect.kde.org/)
-
-Logiciel permettant d'utiliser son téléphone depuis son ordinateur à travers le réseau local. Il est ainsi possible d'envoyer et de recevoir des SMS sur son PC, ou encore de partager son presse-papier entre les deux appareils.
-
-En fonction de l'environnement de bureau installé sur l'ordinateur de l'utilisateur, il sera possible d'opter pour une implémentation ou une autre.
-
-- Pour les utilisateurs sous [KDE](https://kde.org/), c'est bien évidemment l'implémentation officielle qui est recommandée.
-- Sous [Gnome](https://www.gnome.org/), il sera possible d'utiliser [GSConnect](https://github.com/GSConnect/gnome-shell-extension-gsconnect).
-- Enfin pour les utilisateurs de [XFCE](https://xfce.org/), il sera possible d'utiliser [Valent](https://valent.andyholmes.ca/). Un paragraphe est dédié à ce logiciel dans [la section du wiki consacré à Manjaro](https://www.flavien.io/wiki/manjaro.md#valent).
-
 ### [NewPipe](https://newpipe.net/)
 
 Une application alternative au viewer officiel YouTube. Elle permet de bloquer par défaut les publicités, de jouer les vidéos en arrière-plan, de les télécharger, de jouer le son uniquement, de créer des playlists de chaines sans comptes... Et cerise sur le gâteau elle permet également d'accéder à d'autre sources de vidéo tel que [PeerTube](https://joinpeertube.org/).
