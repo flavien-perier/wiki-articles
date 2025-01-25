@@ -280,6 +280,10 @@ Il est à noter que si le système utilise Alpine Linux ou une autre distributio
 docker exec -it container-test sh
 ```
 
+#### [Dive](https://github.com/wagoodman/dive)
+
+Dive est un outil indispensable en ligne de commandes qui permet de visualiser les modifications effectuées par un layer sur le système de fichiers par rapport au layer précédent. Il est ainsi possible de détecter facilement les fichiers inutiles qui pourront être supprimés sur les versions suivantes de l'image.
+
 #### Un peut de nettoyage
 
 Quand on utilise fréquemment Docker des ressources orphelines s'accumulent sur notre système. Elles peuvent très rapidement représenter une place très importante sur notre système.
