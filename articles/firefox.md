@@ -42,6 +42,7 @@ Il est également possible d'aller plus loin en allant dans les paramètres avan
 
 #### Désactivation de la télémétry en profondeur
 
+- `browser.send_pings`: false
 - `browser.newtabpage.activity-stream.feeds.telemetry`: false
 - `browser.newtabpage.activity-stream.telemetry`: false
 - `browser.ping-centre.telemetry`: false
