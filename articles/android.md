@@ -300,13 +300,13 @@ Sur un téléphone rooter, on peut aller beaucoup plus loin dans l'utilisation d
 
 AdAway est un bloqueur de pub capable de fonctionner avec deux modes différents. Si le téléphone n'est pas root, de la même façon que TrackerControl, il va créer une boucle VPN en local et filtrer les flux sur cette boucle. Ce qui est assez peu performant et très gourmand en batterie. En revanche en mode root, l'application met simplement à jour le fichier host de l'appareil afin que les publicités soient directement bloquées au niveau du système d'exploitation. Ce qui est évidemment beaucoup plus optimisé.
 
-#### [NetHunter](https://store.nethunter.com/en/packages/com.offsec.nethunter/)
+### [NetHunter](https://store.nethunter.com/en/packages/com.offsec.nethunter/)
 
-Le composant principal de l'écosystème, c'est lui qui va permettre de télécharger et installer KaliLinux sur le téléphone.
+NetHunter est un outil développé par les équipes d'[OffSec](https://www.offsec.com/) qui sont également les développeurs de la distribution [KaliLinux](https://www.kali.org/). Cette application, permet d'installer KaliLinux dans un chroot sur son téléphone et de le piloter via une interface.
 
-#### [NetHunter Terminal](https://store.nethunter.com/en/packages/com.offsec.nhterm/)
+### [NetHunter Terminal](https://store.nethunter.com/en/packages/com.offsec.nhterm/)
 
-Le terminal qui va permettre d'accéder en ligne de commande à Android et au système Linux installé sur le téléphone.
+Cette application permet simplement d'utiliser la distribution fournie par NetHunter dans un terminal.
 
 ## Sources
 
