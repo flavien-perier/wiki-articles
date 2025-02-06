@@ -196,6 +196,15 @@ Simple application pour gérer vos [clés de chiffrement asymétrique](https://f
 
 ## Les applications à installer
 
+### [f-droid](https://f-droid.org/)
+
+F-droid est un store d'application Android open source. Son repos par défaut est déjà nativement disponible sur le repos de /e/, mais il peut être intéressent d'installer quand même l'application. En effet cette dernière intègre de nombreuses fonctionnalités telles que le partage d'application à d'autres appareils via le Bluetooth ou le wi-fi. Ce qui peut s'avérer utile dans des contextes extrêmes ou la connexion internet serait coupé. L'application propose également de rajouter d'autres repos d'applications en plus de celui par défaut. En voici quelques exemples :
+
+- [Nethunter](https://store.nethunter.com/): `https://store.nethunter.com/repo?fingerprint=fe7a23dfc003a1cf2d2add2469b9c0c49b206ba5dc9edd6563b3b7eb6a8f5fab`
+- [Guardian project](https://guardianproject.info/fdroid/): `https://guardianproject.info/fdroid/repo?fingerprint=b7c2eefd8dac7806af67dfcd92eb18126bc08312a7f2d6f3862e46013c7a6135`
+- [Second Wind](https://secondwind.guardianproject.info/): `https://guardianproject-wind.s3.amazonaws.com/fdroid/repo?fingerprint=182cf464d219d340da443c62155198e399fec1bc4379309b775dd9fc97ed97e1`
+- [Collabora Office](https://www.collaboraonline.com/collabora-office/): `https://www.collaboraoffice.com/downloads/fdroid/repo?fingerprint=573258c84e149b5f4d9299e7434b2b69a8410372921d4ae586ba91ec767892cc`
+
 ### L'antivirus
 
 Android étant un système d'exploitation particulièrement vulnérable, il est donc important de posséder un antivirus digne de ce nom.
@@ -290,14 +299,6 @@ Sur un téléphone rooter, on peut aller beaucoup plus loin dans l'utilisation d
 ### [AdAway](https://adaway.org/)
 
 AdAway est un bloqueur de pub capable de fonctionner avec deux modes différents. Si le téléphone n'est pas root, de la même façon que TrackerControl, il va créer une boucle VPN en local et filtrer les flux sur cette boucle. Ce qui est assez peu performant et très gourmand en batterie. En revanche en mode root, l'application met simplement à jour le fichier host de l'appareil afin que les publicités soient directement bloquées au niveau du système d'exploitation. Ce qui est évidemment beaucoup plus optimisé.
-
-### [NetHunter Store](https://store.nethunter.com/)
-
-Développée par les équipes de [Kali Linux](https://www.kali.org/), la distribution [NetHunter](https://www.kali.org/docs/nethunter/) contient un grand nombre d'outils de pentest.
-
-Cette distribution n'étant disponible que pour un nombre restreint d'appareils (et parce qu'un téléphone sert à autre chose que rechercher des vulnérabilités sur un réseau), nous pouvons seulement installer le store de NetHunter sur leur site. Une fois cette application installée, on pourra installer les autres composants de NetHunter.
-
-Une autre façon d'accéder à ces applications (façon que je préfère personnellement) est d'installer le store [F-droid](https://f-droid.org/) (sur lequel est basé le celui de NetHunter), d'aller dans les paramètres et de rajouter le dépôt `https://store.nethunter.com/repo?fingerprint=7E418D34C3AD4F3C37D7E6B0FACE13332364459C862134EB099A3BDA2CCF4494`.
 
 #### [NetHunter](https://store.nethunter.com/en/packages/com.offsec.nethunter/)
 
