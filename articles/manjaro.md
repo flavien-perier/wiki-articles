@@ -1370,12 +1370,12 @@ Un client torrent complet.
 flatpak install --user org.deluge_torrent.deluge
 ```
 
-### [P7zip](http://p7zip.sourceforge.net/)
+### [7zip](http://www.7-zip.org/)
 
 Le `7z` est l'un, si ce n'est pas le format qui offre le meilleur taux de compression du moment, le rendant particulièrement efficace pour tout ce qui touche à l'archivage. Seul problème, 7zip n'existe que sur Windows. Heureusement, avec p7zip il est possible d'utiliser ce format en ligne de commande depuis son Linux.
 
 ```bash
-sudo pacman -S p7zip
+sudo pacman -S 7zip
 ```
 
 Par la suite, pour créer une archive avec un taux de compression maximal utilisez la commande :
