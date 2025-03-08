@@ -12,7 +12,7 @@ L'application la plus utilisée sur un ordinateur est dans la majorité des cas 
 
 Pour ma part, j'utilise le navigateur Mozilla Firefox. Ce navigateur possède à mon sens deux avantages qui ne sont pas des moindres :
 
-Tout d'abord il est open source. Le code source est donc à livre ouvert et chacun peu à la fois contribuer à l'amélioration de l'outil et vérifier qu'il ne comporte pas de portes dérobées. Pour ceux que ça intéresse, le code est disponible [sur les dépôts de Mozilla](https://hg.mozilla.org/mozilla-central/).
+Tout d'abord, il est open source. Le code source est donc à livre ouvert et chacun peu à la fois contribuer à l'amélioration de l'outil et vérifier qu'il ne comporte pas de portes dérobées. Pour ceux que ça intéresse, le code est disponible [sur les dépôts de Mozilla](https://hg.mozilla.org/mozilla-central/).
 
 Il est respectueux de la vie privée. Contrairement à son concurrent Google Chrome, la société Mozilla accorde beaucoup d'importance à la sécurité des données des utilisateurs.
 
@@ -101,13 +101,13 @@ Il existe cependant au sein du logiciel une option nommée "Définir temporairem
 
 Une autre extension ayant pour but de renforcer la vie privée. Cette dernière nettoie les URLs des informations superflues qui pourrait donner des informations aux sites quant au chemin que l'utilisateur à emprunter dans sa navigation.
 
-Dans les paramètres de cette application, je désactive l'option `Filtrer ETag`. En effet les [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) sont une composante importante de la mécanique de cache de nos navigateurs, les désactiver revient à rendre cette mécanique inopérante. Ce que je trouve personnellement très dommage.
+Dans les paramètres de cette application, je désactive l'option `Filtrer ETag`. En effet, les [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) sont une composante importante de la mécanique de cache de nos navigateurs, les désactiver revient à rendre cette mécanique inopérante. Ce que je trouve personnellement très dommage.
 
 #### [Decentraleyes](https://addons.mozilla.org/en-US/firefox/addon/decentraleyes/)
 
 ![Decentraleyes logo](https://medias.flavien.io/articles/firefox/decentraleyes.webp)
 
-Avec les extensions précédentes, nous pouvons bloquer de manière assez efficace les différents composants d'un site web ayant pour vocation de nous traquer. Cependant parmi toutes les méthodes pouvant être utilisées pour nous suivre à la trace on peut trouver les CDN. Un CDN est un site mettant à la disposition d'autres sites différents contenus tel que des scripts JavaScript, des polices de caractères... Les systèmes de tracking peuvent donc profiter du fait que les clients vont envoyer des requêtes pour récupérer ces contenus afin de savoir sur quel site nous sommes. Le problème c'est que ces contenus sont bien souvent nécessaires au bon fonctionnement d'un site. Par exemple, de nombreux sites ont besoin de JQuery pour fonctionner, ce dernier étant généralement délivré à travers des CDN. L'extension Decentraleyes va simplement régler le problème en téléchargeant les scripts délivrés par les CDN sur la machine de l'utilisateur. De cette manière, le nombre de requêtes transmises aux CDN se trouve grandement réduit. De plus pour les connexions limitées ceci a aussi pour avantage d'éviter les retéléchargements inutiles de contenu que l'on a déjà. Ce qui permet d'économiser de la bande passante.
+Avec les extensions précédentes, nous pouvons bloquer de manière assez efficace les différents composants d'un site web ayant pour vocation de nous traquer. Cependant, parmi toutes les méthodes pouvant être utilisées pour nous suivre à la trace, on peut trouver les CDN. Un CDN est un site mettant à la disposition d'autres sites différents contenus tel que des scripts JavaScript, des polices de caractères... Les systèmes de tracking peuvent donc profiter du fait que les clients vont envoyer des requêtes pour récupérer ces contenus afin de savoir sur quel site nous sommes. Le problème, c'est que ces contenus sont bien souvent nécessaires au bon fonctionnement d'un site. Par exemple, de nombreux sites ont besoin de JQuery pour fonctionner, ce dernier étant généralement délivré à travers des CDN. L'extension Decentraleyes va simplement régler le problème en téléchargeant les scripts délivrés par les CDN sur la machine de l'utilisateur. De cette manière, le nombre de requêtes transmises aux CDN se trouve grandement réduit. De plus pour les connexions limitées ceci a aussi pour avantage d'éviter les retéléchargements inutiles de contenu que l'on a déjà. Ce qui permet d'économiser de la bande passante.
 
 #### [Random User-Agent](https://addons.mozilla.org/en-US/firefox/addon/random_user_agent/)
 
@@ -115,9 +115,9 @@ Avec les extensions précédentes, nous pouvons bloquer de manière assez effica
 
 Lorsqu'un navigateur envoie une requête à un site web, il envoie dans sa requête un User-Agent. Cette information permet au site de savoir quel navigateur est utilisé, sa version et éventuellement le système d'exploitation qui le porte.
 
-Grâce à cette extension, cette information et falsifiée et régénérée toutes les 10 minutes. Ainsi, les trekkeurs peuvent très bien croire que vous utilisez Google Chrome sur un Mac alors que vous utilisez en réalité Firefox sur un Windows. Cela vous rend plus difficile à suivre et protège donc un peu plus votre anonymat.
+Grâce à cette extension, cette information est falsifiée et régénérée toutes les 10 minutes. Ainsi, les trekkeurs peuvent très bien croire que vous utilisez Google Chrome sur un Mac alors que vous utilisez en réalité Firefox sur un Windows. Cela vous rend plus difficile à suivre et protège donc un peu plus votre anonymat.
 
-Cependant, cette application peut aussi causer quelques petits désagréments. Par exemple, si on pense que vous êtes sur Internet Explorer ou sur un mobile il est probable que certains sites n'activent pas les mêmes options. Je vous conseille donc de configurer la liste des User-Agents que l'application peut utiliser et de ne cocher que les "Firefox", "Chrome" et "Edge" sur "Windows", "Mac" et "Linux". Il s'agit des combinaisons les plus supportées et qui, en général, posent le moins problème.
+Cependant, cette application peut aussi causer quelques petits désagréments. Par exemple, si on pense que vous êtes sur Internet Explorer ou sur un mobile, il est probable que certains sites n'activent pas les mêmes options. Je vous conseille donc de configurer la liste des User-Agents que l'application peut utiliser et de ne cocher que les "Firefox", "Chrome" et "Edge" sur "Windows", "Mac" et "Linux". Il s'agit des combinaisons les plus supportées et qui, en général, posent le moins problème.
 
 ![Configuration de Random User-Agent](https://medias.flavien.io/articles/firefox/random_user_agent-configuration.webp)
 
@@ -151,19 +151,19 @@ Permets de rajouter des informations dans l'entête des requêtes envoyées par 
 
 [Shodan](https://www.shodan.io/) est un site référençant pour chaque site et IPs accessible depuis internet les services exposés. De rapides tests de sécurités automatiques sont également effectués de manière automatique (test de mot de passe par défaut en fonction de l'équipement, version d'un service possédant une vulnérabilité de sécurité référence, mauvaise configuration...).
 
-Cette extension permet donc tout simplement d'accéder à toutes ces informations sur les sites que nous visitons. Elle permet donc de contrôler facilement si une infrastructure n'expose pas trop d'information par rapport à ce qu'elle devrait et que les différents services exposés ne souffrent pas d'anomalies de configuration.
+Cette extension permet donc tout simplement d'accéder à toutes ces informations sur les sites que nous visitons. Elle permet ainsi de contrôler facilement si une infrastructure n'expose pas trop d'information par rapport à ce qu'elle devrait et que les différents services exposés ne souffrent pas d'anomalies de configuration.
 
 #### [Wappalyzer](https://addons.mozilla.org/en-US/firefox/addon/wappalyzer/)
 
 ![GreenIT-Analysis logo](https://medias.flavien.io/articles/firefox/wappalyzer.webp)
 
-[Wappalyzer](https://www.wappalyzer.com/) est une application permettant d'identifier les différentes technologies utilisées pour un site web donné. Que ce soit des technologies ayant servie à le concevoir tel que [Wordpress](https://wordpress.com/), [FontAwesome](https://fontawesome.com/) ou [Bootstrap](https://getbootstrap.com/)... Ou autre des technologies serveur tel que [Nginx](https://nginx.org/) ou [Apache HTTPD](https://httpd.apache.org/).
+[Wappalyzer](https://www.wappalyzer.com/) est une application permettant d'identifier les différentes technologies utilisées pour un site web donné. Que ce soit des technologies ayant servi à le concevoir tel que [Wordpress](https://wordpress.com/), [FontAwesome](https://fontawesome.com/) ou [Bootstrap](https://getbootstrap.com/)... Ou autre des technologies serveur tel que [Nginx](https://nginx.org/) ou [Apache HTTPD](https://httpd.apache.org/).
 
 #### [GreenIT-Analysis](https://addons.mozilla.org/en-US/firefox/addon/greenit-analysis/)
 
 ![GreenIT-Analysis logo](https://medias.flavien.io/articles/firefox/gereenit-analysis.webp)
 
-Cette application open source permet d'analyser les éléments d'un site web qui ne serait pas conforme à une démarche d'écoconception. Elle peut donc nous aider afin de savoir quoi regarder pour améliorer les performances de son site et réduire son empreinte énergétique.
+Cette application open source permet d'analyser les éléments d'un site web qui ne serait pas conforme à une démarche d'écoconception. Elle peut donc nous aider afin de savoir que regarder pour améliorer les performances de son site et réduire son empreinte énergétique.
 
 ### Confort
 
@@ -173,10 +173,10 @@ Cette application open source permet d'analyser les éléments d'un site web qui
 
 Cette application est un fork en open source de [I don't care about cookies](https://addons.mozilla.org/en-US/firefox/addon/i-dont-care-about-cookies/) qui avait été racheté par Avast.
 
-Si vous en avez marre de tous les bandeaux "Acceptez les cookies", cette application se charge automatiquement de cliquer sur "J'accepte" (ce n’est pas comme si on nous laissez vraiment le choix d'un autre côté) et de nous cacher les bandeaux en question. Simple et efficace pour une navigation sans encombre.
+Si vous en avez marre de tous les bandeaux "Acceptez les cookies", cette application se charge automatiquement de cliquer sur "J'accepte" (ce n’est pas comme si on nous laisse vraiment le choix d'un autre côté) et de nous cacher les bandeaux en question. Simple et efficace pour une navigation sans encombre.
 
 #### [SponsorBlock](https://addons.mozilla.org/en-US/firefox/addon/sponsorblock/)
 
 ![SponsorBlock logo](https://medias.flavien.io/articles/firefox/sponsorblock.webp)
 
-Si les AdBlocks permettent de bloquer le les pubs hors des vidéos sur YouTube, il est beaucoup plus difficile de bloquer les placements de produit pour "NordVPN" ou autre "RAID: Shadow Legends" au sein même des vidéos. C'est pourtant bien ce que fait cette extension grâce à une communauté d'utilisateurs motivés qui taguent les moments des vidéos durant lesquelles des placements de produits sont effectués et permettent donc aux autres utilisateurs de sauter ces moments.
+Si les AdBlocks permettent de bloquer les pubs hors des vidéos sur YouTube, il est beaucoup plus difficile de bloquer les placements de produit pour "NordVPN" ou autre "RAID: Shadow Legends" au sein même des vidéos. C'est pourtant bien ce que fait cette extension grâce à une communauté d'utilisateurs motivés qui taguent les moments des vidéos durant lesquelles des placements de produits sont effectués et permettent donc aux autres utilisateurs de sauter ces moments.

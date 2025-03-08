@@ -22,9 +22,9 @@ Le serveur est doté d'un [AMD Ryzen 9 5900X](https://www.amd.com/fr/products/cp
 
 Pour ce type de serveur, les distributions basées sur [RedHat](https://www.redhat.com/) sont relativement avantageuses. En effet, cette famille de distribution Linux étant destinée aux entreprises, elles bénéficient de nombreux avantages en termes de virtualisation et de conteneurisation.
 
-Cependant, il peut-être dommage de ne pas bénéficier des dernières mises à jour du kernel quand on souhaite avoir une infrastructure performante. On oublie donc [RHEL](https://www.redhat.com/fr/technologies/linux-platforms/enterprise-linux) (de toute façon, pas de nécessité de support), [RockyLinux](https://rockylinux.org/) ou [CentOS](https://www.centos.org/).
+Cependant, il peut être dommage de ne pas bénéficier des dernières mises à jour du kernel quand on souhaite avoir une infrastructure performante. On oublie donc [RHEL](https://www.redhat.com/fr/technologies/linux-platforms/enterprise-linux) (de toute façon, pas de nécessité de support), [RockyLinux](https://rockylinux.org/) ou [CentOS](https://www.centos.org/).
 
-La distribution qui semble donc le plus appropriée pour cette installation est [Fedora Server](https://fedoraproject.org/fr/server/).
+La distribution qui semble donc le plus approprié pour cette installation est [Fedora Server](https://fedoraproject.org/fr/server/).
 
 ## Installation
 
@@ -74,7 +74,7 @@ sed -i "s/SELINUX=enforcing/SELINUX=permissive/" /etc/selinux/config
 
 ### fichier SWAP
 
-Par défaut Fedora utilise une mécanique nommée zRam qui permet de compresser la mémoire plutôt que de l'écrire dans le disque. C'est assez malin et globalement beaucoup plus rapide que du SWAP. Cependant, avec cette mécanique on ne peut pas mettre autant de SWAP que de mémoire, ce qui peut malheureusement être pratique quand on veut traiter de très gros volume de données (mais qui aura un impacte très important sur les performances). Sur cette machine zRam va donc être désinstallé et un fichier de SWAP va être rajouté. Comme la machine possède beaucoup de mémoire, cette solution ne devrait pas dégrader les performances pour la majorité des usages.
+Par défaut Fedora utilise une mécanique nommée zRam qui permet de compresser la mémoire plutôt que de l'écrire dans le disque. C'est assez malin et globalement beaucoup plus rapide que du SWAP. Cependant, avec cette mécanique, on ne peut pas mettre autant de SWAP que de mémoire, ce qui peut malheureusement être pratique quand on veut traiter de très gros volumes de données (mais qui aura un impact très important sur les performances). Sur cette machine zRam va donc être désinstallé et un fichier de SWAP va être rajouté. Comme la machine possède beaucoup de mémoire, cette solution ne devrait pas dégrader les performances pour la majorité des usages.
 
 ```bash
 dnf remove zram-generator
@@ -90,7 +90,7 @@ swapon /var/swapfile
 echo "/var/swapfile sw swap sw   0 0" | tee -a /etc/fstab
 ```
 
-Par default le system va commencer à utiliser le SWAP a partir de 40% d'occupation de la mémoire vu la taille du SWAP installé ici (et le fait que la machine possède quand même 32Go de RAM), la valeur va être remonté à 80% afin que le système utilise le SWAP le moins souvent possible.
+Par default le system va commencer à utiliser le SWAP à partir de 40% d'occupation de la mémoire vu la taille du SWAP installé ici (et le fait que la machine possède quand même 32Go de RAM), la valeur va être remonté à 80% afin que le système utilise le SWAP le moins souvent possible.
 
 ```bash
 sysctl vm.swappiness=20
@@ -99,7 +99,7 @@ echo "vm.swappiness=20" | tee /etc/sysctl.d/99-swappiness.conf
 
 ### Connection SSH
 
-Pour accéder au serveur à distance il est important de commencer par créer une clé SSH afin de s'y connecter.
+Pour accéder au serveur à distance, il est important de commencer par créer une clé SSH afin de s'y connecter.
 
 Depuis une machine client (autre que le serveur), il faut utiliser les commandes suivantes afin de générer les clés :
 
@@ -244,7 +244,7 @@ systemctl enable openvpn-server@server
 systemctl start openvpn-server@server
 ```
 
-Par la suite il est possible de générer le fichier `ovpn` qui sera transmis au client afin qu'il puisse se connecter :
+Par la suite, il est possible de générer le fichier `ovpn` qui sera transmis au client afin qu'il puisse se connecter :
 
 ```bash
 cat << EOL > ~/vm-client.ovpn
@@ -331,7 +331,7 @@ ldconfig = "@/sbin/ldconfig"
 EOL
 ```
 
-Par la suite pour lancer le conteneur il suffit de créer le fichier [docker-compose](https://docs.docker.com/compose/) avec les paramètres suivants :
+Par la suite pour lancer le conteneur, il suffit de créer le fichier [docker-compose](https://docs.docker.com/compose/) avec les paramètres suivants :
 
 ```yaml
 version: "3.9"
@@ -536,9 +536,9 @@ echo VIRSH_GPU_AUDIO=pci_0000_`lspci | grep -i nvidia | grep -i audio | cut -f1 
 
 #### XML de configuration de la vm Windows 11
 
-La configuration de cette machine virtuelle est prévue pour le jeu. Dans le XML ci-dessous un certain nombre d'optimisations ont pour but d'améliorer la performance du CPU vis-à-vis de la VM, mais également de dissimuler au mieux le fait qu'il s'agisse d'une machine virtuelle. En effet les anti-sheats tel qu'[Easy Anti-Cheat](https://www.easy.ac/) peuvent essayer de bloquer les jeux dans des machines virtuelles. Ces optimisations devraient rendre la détection beaucoup plus compliquée.
+La configuration de cette machine virtuelle est prévue pour le jeu. Dans le XML ci-dessous un certain nombre d'optimisations ont pour but d'améliorer la performance du CPU vis-à-vis de la VM, mais également de dissimuler au mieux le fait qu'il s'agisse d'une machine virtuelle. En effet, les anti-sheats tel qu'[Easy Anti-Cheat](https://www.easy.ac/) peuvent essayer de bloquer les jeux dans des machines virtuelles. Ces optimisations devraient rendre la détection beaucoup plus compliquée.
 
-Avec [Virt manager](https://virt-manager.org/) il est possible de configurer l'hyperviseur à distance à travers un tunnel SSH.
+Avec [Virt manager](https://virt-manager.org/), il est possible de configurer l'hyperviseur à distance à travers un tunnel SSH.
 
 Voici le XML de configuration utilisé pour l'interface réseau :
 

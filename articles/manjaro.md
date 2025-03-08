@@ -26,7 +26,7 @@ L'autre avantage de Manjaro, est qu'elle est basée sur la distribution [Arch Li
 
 Maintenant que Manjaro est installé, nous allons le mettre à jour grâce à l'un des gestionnaires de paquets intègres de la distribution. Pour ma part, j'utilise `pacman`, qui est le gestionnaire de paquet de la distribution Arch. Il est relativement difficile à utiliser et très peu intuitif, c'est pour cette raison que les développeurs de la distribution Manjaro ont rajouté un outil permettant de simplifier son utilisation `pamac`. Pour les utilisateurs venant d'une distribution basée sur [Debian](https://www.debian.org/), ou [RedHat](https://www.redhat.com/), il semblera sans aucun doute plus intuitif.
 
-La raison pour lequel j'utilise néanmoins `pacman` est qu'il offre beaucoup plus de possibilités que sa surcouche. Ce wiki peut néanmoins être suivi en recopiant les commandes `pacman` et par la suite utilisé à titre personnel `pamac`. Ce dernier étant simplement une surcouche, cela ne devrait pas poser de problème de compatibilité.
+La raison pour laquelle j'utilise néanmoins `pacman` est qu'il offre beaucoup plus de possibilités que sa surcouche. Ce wiki peut néanmoins être suivi en recopiant les commandes `pacman` et par la suite utilisé à titre personnel `pamac`. Ce dernier étant simplement une surcouche, cela ne devrait pas poser de problème de compatibilité.
 
 #### Quelques commandes Pacman
 
@@ -81,7 +81,7 @@ sudo pacman -S flatpak
 flatpak remote-add --user flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
 
-À d'autres moments, il sera nécessaire d'utiliser des paquets provenant de la communauté (les [AUR d'Arch Linux](https://aur.archlinux.org/)). Pour se faire, il faut installer `yay` qui est un gestionnaire de paquets qui prend la succession de `yaourt`.
+À d'autres moments, il sera nécessaire d'utiliser des paquets provenant de la communauté (les [AUR d'Arch Linux](https://aur.archlinux.org/)). Pour ce faire, il faut installer `yay` qui est un gestionnaire de paquets qui prend la succession de `yaourt`.
 
 ```bash
 cd /tmp
@@ -170,7 +170,7 @@ echo "/dev/mapper/home	/home	btrfs	defaults,relatime,discard=async,ssd 0 0" >> /
 
 ### Configuration du Shell
 
-Pour configurer mon shell j'ai développé un petit script que je maintiens sur github : [linux-shell-configuration](https://github.com/flavien-perier/linux-shell-configuration).
+Pour configurer mon shell, j'ai développé un petit script que je maintiens sur github : [linux-shell-configuration](https://github.com/flavien-perier/linux-shell-configuration).
 
 Ce dernier introduit plusieurs raccourcis ainsi que des configurations pour les Shells [bash](https://www.gnu.org/software/bash/), [fish](https://fishshell.com/) et [zsh](https://www.zsh.org/).
 
@@ -198,7 +198,7 @@ flatpak install --user org.kde.KStyle.Adwaita
 
 ### Nommage des dossiers
 
-Pour des questions d'habitude, il est souvent plus simple d'utiliser la convention de nommage des dossiers en anglais. Pour les renommer dans XFCE, il d'utiliser les commandes suivantes :
+Pour des questions d'habitude, il est souvent plus simple d'utiliser la convention de nommage des dossiers en anglais. Pour les renommer dans XFCE, il est possible d'utiliser les commandes suivantes :
 
 ```bash
 echo "en_EN" > ~/.config/user-dirs.locale
@@ -622,7 +622,7 @@ Il est également possible d'utiliser GraalVM pour lancer ces différentes IDEs 
 
 ### [VisualStudio code](https://code.visualstudio.com/)
 
-Sur les dépôts pacman, il n'y a pas de trace de [Microsoft VisualStudio Code](https://code.visualstudio.com/). En revanche on peut trouver un fork nommé [Code OSS](https://appimage.github.io/Code_OSS/) sur lequel les traqueurs Microsoft ont été enlevés et les composants propriétaires remplacés (le logo par exemple). Ce fork est également compatible avec la plupart des extensions de l'IDE de base.
+Sur les dépôts pacman, il n'y a pas de trace de [Microsoft VisualStudio Code](https://code.visualstudio.com/). En revanche, on peut trouver un fork nommé [Code OSS](https://appimage.github.io/Code_OSS/) sur lequel les traqueurs Microsoft ont été enlevés et les composants propriétaires remplacés (le logo par exemple). Ce fork est également compatible avec la plupart des extensions de l'IDE de base.
 
 ```bash
 sudo pacman -S code
@@ -770,7 +770,7 @@ Pour installer facilement des Machines virtuelles en ligne de commande, il est a
 yay -S quickemu
 ```
 
-Par la suite pour créer une machine virtuelle MacOsX il suffira de taper la commande :
+Par la suite pour créer une machine virtuelle MacOsX, il suffira de taper la commande :
 
 ```bash
 quickget macos big-sur
@@ -821,7 +821,7 @@ Avec ce script, il suffit de taper les commandes `smb start` ou `smb stop` afin 
 
 ### Copie de disque
 
-Les disques utilisés par Qemu sont par défaut au format `qcow2` ce format à l'avantage d'adapter sa taille sur disque en fonction de ce qu'il va contenir. Cependant, dans le cas où on supprime des fichiers volumineux dans le disque virtuel, sa taille réservé sur le disque physique ne diminue pas. Il peut alors être bon de réecrir le disque afin de réoptimiser sa structure. Pour se faire il suffit d'utiliser la commande :
+Les disques utilisés par Qemu sont par défaut au format `qcow2` ce format à l'avantage d'adapter sa taille sur disque en fonction de ce qu'il va contenir. Cependant, dans le cas où on supprime des fichiers volumineux dans le disque virtuel, sa taille réservé sur le disque physique ne diminue pas. Il peut alors être bon de réecrir le disque afin de réoptimiser sa structure. Pour ce faire, il suffit d'utiliser la commande :
 
 ```bash
 qemu-img convert -O qcow2 old.qcow2 new.qcow2
@@ -839,7 +839,7 @@ Même en version lite, Manjaro contient de nombreux outils qui ne sont pas réel
 sudo pacman -Rsn manjaro-hello
 ```
 
-- Plusieurs logiciels plus ou moins pertinnats sont préinstallé avec le système. Certains d'entre eux peuvent être désinstallé si on souhaitre avoir une distribution la plus adapté possible à son besoin.
+- Plusieurs logiciels plus ou moins pertinnats sont préinstallé avec le système. Certains d'entre eux peuvent être désinstallées si on souhaite avoir une distribution plus adaptée à son besoin.
 
 ```bash
 sudo pacman -Rsn parole mousepad gufw gparted
@@ -936,6 +936,12 @@ sudo pacman -S openvpn openresolv libnatpmp
 sudo wget "https://raw.githubusercontent.com/ProtonVPN/scripts/master/update-resolv-conf.sh" -O "/etc/openvpn/update-resolv-conf"
 sudo chmod +x "/etc/openvpn/update-resolv-conf"
 flatpak install --user com.protonvpn.www
+```
+
+Par default le p2p ne va pas fonctionner en upload. La commande suivante va permettre de créer un mapping de port avec le serveur VPN. Il n'y aura plus qu'à donner le port dans la configuration de deluge pour pouvoir uploader.
+
+```bash
+while true ; do date ; natpmpc -a 1 0 udp 60 -g 10.2.0.1 && natpmpc -a 1 0 tcp 60 -g 10.2.0.1 || { echo -e "ERROR with natpmpc command \a" ; break ; } ; sleep 45 ; done
 ```
 
 ### [Thunderbird](https://www.thunderbird.net/fr/)
@@ -1054,7 +1060,7 @@ Pour ceux, qui comme moi, possèdent du matériel [Sonos](https://www.sonos.com/
 flatpak install --user io.github.janbar.noson
 ```
 
-Afin d'accélérer l'accès à l'enceinte au démarrage de l'application, j'ai configuré ma box avec un bail DHCP permanent afin que mon périphérique Sonos ait toujours la même adresse IP d'attribuée (dans mon cas `192.168.1.5`). Ensuite il ne reste plus qu'à modifier le raccourci de lancement de l'application pour lui appliquer le paramètre `--deviceurl=http://192.168.1.5:1400`. Avec cette configuration, l'application n'a pas besoin de découverte réseau étant donné qu'elle sait d'avance où se situe l'enceinte.
+Afin d'accélérer l'accès à l'enceinte au démarrage de l'application, j'ai configuré ma box avec un bail DHCP permanent afin que mon périphérique Sonos ait toujours la même adresse IP d'attribuée (dans mon cas `192.168.1.5`). Ensuite, il ne reste plus qu'à modifier le raccourci de lancement de l'application pour lui appliquer le paramètre `--deviceurl=http://192.168.1.5:1400`. Avec cette configuration, l'application n'a pas besoin de découverte réseau étant donné qu'elle sait d'avance où se situe l'enceinte.
 
 ```bash
 cat << EOL > ~/.local/share/applications/io.github.janbar.noson.desktop
@@ -1126,7 +1132,7 @@ flatpak install --user org.fontforge.FontForge
 
 ### [Antidote](https://www.antidote.info/fr)
 
-Sans aucun doute le meilleur correcteur orthographique (payant) du marché.
+Sans aucun doutes le meilleur correcteur orthographique (payant) du marché.
 
 Téléchargez l'application Antidote [sur le site officiel](https://services.druide.com/client/).
 
@@ -1143,7 +1149,7 @@ Pandoc est un outil très puissant permettant de convertir de nombreux formats d
 
 Je vois plusieurs avantages à cette solution par rapport au traditionnel Microsoft Word, mais la plus importante à mon sens est le découpage du flux de travail. En effet, je considère que lors de la rédaction d'un document nous avons 3 grandes phases de travail, l'écriture du contenu, une phase de relecture durant lesquelles nous pouvons corriger fautes d'orthographe et mauvaises tournures de phrases et enfin la mise en page. Le problème avec Microsoft Word est que nous devons gérer ces 3 phases simultanément, ce qui a pour inconvénient de nous rendre moins efficaces sur chacune d'entre elles et résulte sur des documents de moindre qualité. La plupart des universitaires ce sont donc tournés vers le format LaTex, mais le problème reste similaire, avec ses nombreuses annotations ce format reste lourd et nous devons donc gérer la rédaction et une partie de la mise en page simultanément. Le meilleur compromis à mon sens est le Markdown qui est très léger en écriture et surtout très intuitif.
 
-Ainsi avec les différents logiciels que j'utilise, je peux garantir un flux de travail efficace sur ces trois axes. Je commence par rédiger en Markdown le contenu de mon document dans un simple IDE (généralement Visual Studio Code ou VIM), puis je corrige les fautes grâce à Antidote et enfin j'utilise Pandoc pour la mise en page. J'ai créé [un projet GitHub](https://github.com/flavien-perier/pandoc-template) qui me sert de base pour mes nouveaux projets. Il utilise la feuille de style LaTex [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) afin de mettre en forme mes documents Markdown dans le format PDF.
+Ainsi avec les différents logiciels que j'utilise, je peux garantir un flux de travail efficace sur ces trois axes. Je commence par rédiger en Markdown le contenu de mon document dans un simple IDE (généralement Visual Studio Code ou VIM), puis je corrige les fautes grâce à Antidote et enfin, j'utilise Pandoc pour la mise en page. J'ai créé [un projet GitHub](https://github.com/flavien-perier/pandoc-template) qui me sert de base pour mes nouveaux projets. Il utilise la feuille de style LaTex [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) afin de mettre en forme mes documents Markdown dans le format PDF.
 
 ```bash
 pacman -Syyu pandoc pandoc-citeproc
@@ -1176,7 +1182,7 @@ La célèbre plateforme de jeux. Actuellement, Valve (la société à l'origine 
 flatpak install --user com.valvesoftware.Steam
 ```
 
-Par la suite pour activer ProtonDb il suffit de ce rendre dans l'application puis: `Steam` > `Paramètres` > `Steam Play` > `Activer Steam Play pour tous les autres titres` > `Proton 6.3-8`.
+Par la suite pour activer ProtonDb, il suffit de ce rendre dans l'application puis: `Steam` > `Paramètres` > `Steam Play` > `Activer Steam Play pour tous les autres titres` > `Proton 6.3-8`.
 
 ### [Xpadneo](https://atar-axis.github.io/xpadneo/)
 
@@ -1209,7 +1215,7 @@ flatpak install --user io.github.antimicrox.antimicrox
 
 Synergy est un logiciel permettant d'utiliser différents ordinateurs comme s'il s'agissait d'écrans. L'ordinateur principal (celui disposant d'un clavier et d'une souris) sera le serveur et tous les autres les clients.
 
-Il s'agit d'une application payante, mais open source. Un fork populaire est [Barrier](https://github.com/debauchee/barrier). Cependant ce dernier ne supporte pas Wayland et n'est pas maintenu. La meilleure solution est donc à mon sens de payer.
+Il s'agit d'une application payante, mais open source. Un fork populaire est [Barrier](https://github.com/debauchee/barrier). Cependant, ce dernier ne supporte pas Wayland et n'est pas maintenu. La meilleure solution est donc à mon sens de payer.
 
 ```bash
 wget "https://api-functions.stage.a.symless.com/download-log?synergyVersion=3.0.79.1-rc3&operatingSystem=Linux&architecture=flatpak&downloadUrl=https%3A%2F%2Frc.symless.com%2Fsynergy3%2Fv3.0.79.1-rc3%2Fsynergy-linux_x64-libssl3-v3.0.79.1-rc3.flatpak&userId=1452232" -O /tmp/synerg.flatpak
@@ -1436,7 +1442,7 @@ sudo pacman -S whois
 
 ### [Fastfetch](https://github.com/fastfetch-cli/fastfetch)
 
-L'outil [Neofetch](https://github.com/dylanaraps/neofetch) était une vraie religion chez les utilisateurs de Linux. Cependant son créateur à malheureusement décidé d'arrêter ça maintenance.
+L'outil [Neofetch](https://github.com/dylanaraps/neofetch) était une vraie religion chez les utilisateurs de Linux. Cependant, son créateur a malheureusement décidé d'arrêter ça maintenance.
 
 Le projet Fastfetch a donc pris le relais.
 
@@ -1555,7 +1561,7 @@ EOL
 
 ### Faire en sorte que les applications Flatpak puissent utiliser le thème XFCE
 
-L'isolation proposée par Flatpak présente de nombreux avantages en termes de sécurité, mais peu également causés quelques désagréments en termes d'usage. L'un des problèmes, qui peut au premier abord paraitre anodin, est le fait d'avoir le même thème entre chacune de ses applications. En effet Flatpak n'ayant pas accès au dossier `~/.themes`, les applications auront tout le temps leur thème par défaut. Si vous êtes un utilisateur d'un thème standard tel qu'[Adwaita dark pour GTK](https://github.com/axxapy/Adwaita-dark-gtk2) et que ce thème est disponible dans le Flathub, vous pourrez simplement l'installer et Flatpak se chargera de l'activer (par exemple: `flatpak install --user org.gtk.Gtk3theme.Adwaita-dark`). Cependant, s’il s'agit d'un thème non présent dans le store ou custom, il n'est pas possible de l'utiliser dans les applications Flatpak. Une solution, est donc de copier les fichiers du thème utilisé dans les runtimes `freedesktop`, `kde` et `gnome` de Flatpak. Le problème est qu'il faut refaire les copies à chaque nouvelle version de ces runtimes. L'avantage est qu'avec cette solution il n'est pas nécessaire de modifier les configurations par défaut de Flatpak ni réduire le niveau d'isolation.
+L'isolation proposée par Flatpak présente de nombreux avantages en termes de sécurité, mais peu également causés quelques désagréments en termes d'usage. L'un des problèmes, qui peut au premier abord paraitre anodin, est le fait d'avoir le même thème entre chacune de ses applications. En effet Flatpak n'ayant pas accès au dossier `~/.themes`, les applications auront tout le temps leur thème par défaut. Si vous êtes un utilisateur d'un thème standard tel qu'[Adwaita dark pour GTK](https://github.com/axxapy/Adwaita-dark-gtk2) et que ce thème est disponible dans le Flathub, vous pourrez simplement l'installer et Flatpak se chargera de l'activer (par exemple: `flatpak install --user org.gtk.Gtk3theme.Adwaita-dark`). Cependant, s’il s'agit d'un thème non présent dans le store ou custom, il n'est pas possible de l'utiliser dans les applications Flatpak. Une solution, est donc de copier les fichiers du thème utilisé dans les runtimes `freedesktop`, `kde` et `gnome` de Flatpak. Le problème est qu'il faut refaire les copies à chaque nouvelle version de ces runtimes. L'avantage est qu'avec cette solution, il n'est pas nécessaire de modifier les configurations par défaut de Flatpak ni réduire le niveau d'isolation.
 
 ```bash
 for PLATFORM in `ls $HOME/.local/share/flatpak/runtime | grep "Platform$"`
@@ -1948,6 +1954,38 @@ main() {
 }
 
 main $*
+```
+
+#### update-hosts
+
+Un petit script à exécuter dans une crontab pour mettre à jour le fichier hosts.
+
+```bash
+#!/bin/bash
+
+set -e
+
+HOSTS_PATH="/etc/hosts"
+NEW_HOSTS_PATH="/etc/hosts.new"
+BACKUP_HOSTS_PATH="/etc/hosts~"
+
+echo "127.0.0.1  localhost" > $NEW_HOSTS_PATH
+
+cat << EOF | tee $NEW_HOSTS_PATH
+127.0.0.1  localhost
+::1        localhost ip6-localhost ip6-loopback
+ff02::1    ip6-allnodes
+ff02::2    ip6-allrouters
+127.0.1.1  pc-flavien
+EOF
+
+curl -s https://raw.githubusercontent.com/StevenBlack/hosts/refs/heads/master/hosts | grep -v "^#" | tee -ap $NEW_HOSTS_PATH
+
+curl -s https://dl.red.flag.domains/pihole/red.flag.domains.txt | grep -v "^#" | tee -ap $NEW_HOSTS_PATH
+
+rm -f $BACKUP_HOSTS_PATH
+mv $HOSTS_PATH $BACKUP_HOSTS_PATH
+mv $NEW_HOSTS_PATH $HOSTS_PATH
 ```
 
 #### Spotify-diff

@@ -9,11 +9,11 @@ author: Flavien PERIER <perier@flavien.io>
 date: 2023-01-11 18:00
 ---
 
-Je tiens avant toute chose à préciser que cet article est rédigé uniquement à but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous couter jusqu'a deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
+Je tiens avant toute chose à préciser que cet article est rédigé uniquement à but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous couter jusqu'à deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
 
 Le [Flipper Zero](https://flipperzero.one/) est un dispositif d'attaque physique. Il s'agit d'une sorte de couteau suisse de l'attaque sans fil.
 
-En effet le dispositif dispose d'un grand nombre de capteurs :
+En effet, le dispositif dispose d'un grand nombre de capteurs :
 - Radio
 - Infrarouge
 - NFC
@@ -37,17 +37,17 @@ De très nombreux scénarios peuvent être imaginés avec cet appareil.
 
 Le principal scénario à mon sens concerne les intrusions physiques dans des bâtiments. Le Flipper Zero peut permettre de cloner le badge d'accès à un bâtiment d'un employé, ou encore la télécommande d'accès à un parking de l'entreprise.
 
-Une fois dans le bâtiment il est possible de se servir du Flipper Zero comme d'un moyen d'exécuter rapidement des instructions sur un poste qui n'aurait pas été verrouillé avec les fonctionnalités de BadUSB.
+Une fois dans le bâtiment, il est possible de se servir du Flipper Zero comme d'un moyen d'exécuter rapidement des instructions sur un poste qui n'aurait pas été verrouillé avec les fonctionnalités de BadUSB.
 
 ## Comment s'en défendre
 
-Pour les zones vraiment sensibles d'une infrastructure (par exemple l'accès à un data center), il peut être bon de privilégier l'utilisation de système d'accès basé sur de la biométrie et non sur des supports physiques tel que des badges.
+Pour les zones vraiment sensibles d'une infrastructure (par exemple l'accès à un data center), il peut être bon de privilégier l'utilisation de système d'accès basé sur de la biométrie et non sur des supports physiques tels que des badges.
 
 Dans les grosses structures, demander à des employés de garder en évidence constamment des badges avec leur matricule peut permettre de repérer plus facilement un intrus.
 
 Il est possible de protéger ses cartes sans contact grâce à des étuis spécialisés. Ces derniers contiennent de fins filaments de cuivre qui font cage de faraday et empêchent donc la lecture de la carte en sans contact, tant qu'elle est dans leur étui.
 
-Il est malheureux de noter que cet appareil peu également permette de s'introduire dans des immeubles d'habitations. Il est possible de répliquer une télécommande radio ou un badge d'accès. Ça, cumulé au fait, qu'il est aujourd'hui possible de ce procurer facilement et légalement un jeu de clés PTT (utilisées pour la distribution du courrier afin de rentrer dans les bâtiments et ouvrir les boites aux lettres). Une personne mal intentionnée et bien préparée n'aura donc aucune difficulté à rentrer dans un immeuble dit "sécurisé". La seule sécurité restante est donc la serrure de son appartement. C'est pourquoi investir dans une serrure 3 points ou posséder un ou plusieurs verrous peut être une bonne solution. L'idéale étant d'avoir une serrure conçue pour ne pas être crochetée facilement, comme celles proposées par la marque française [Point Fort Fichet](https://www.fichet-pointfort.com/fr/fr/products/serrure-de-securite).
+Il est malheureux de noter que cet appareil peu également permette de s'introduire dans des immeubles d'habitations. Il est possible de répliquer une télécommande radio ou un badge d'accès. Ça, cumulé au fait, qu'il est aujourd'hui possible de se procurer facilement et légalement un jeu de clés PTT (utilisées pour la distribution du courrier afin de rentrer dans les bâtiments et ouvrir les boites aux lettres). Une personne mal intentionnée et bien préparée n'aura donc aucune difficulté à rentrer dans un immeuble dit "sécurisé". La seule sécurité restante est la serrure de son appartement. C'est pourquoi investir dans une serrure 3 points ou posséder un ou plusieurs verrous peut être une bonne solution. L'idéale étant d'avoir une serrure conçue pour ne pas être crochetée facilement, comme celles proposées par la marque française [Point Fort Fichet](https://www.fichet-pointfort.com/fr/fr/products/serrure-de-securite).
 
 ## Comment s'en servir
 
@@ -76,7 +76,7 @@ mkdir -p ~/.config/Yubico
 pamu2fcfg >> ~/.config/Yubico/u2f_keys
 ```
 
-Il est maintenant possible d'utiliser le Flipper Zero afin de se connecter à des sites. Cependant, il n'est pas conseillé d'aller plus loin avec ce dispositif ni de protéger des comptes trop importants avec (comme une banque par exemple), étant donné que contrairement à d'autres dispositifs [FIDO](https://www.yubico.com/authentication-standards/fido2/) il n'est pas certifié pour cet usage.
+Il est maintenant possible d'utiliser le Flipper Zero afin de se connecter à des sites. Cependant, il n'est pas conseillé d'aller plus loin avec ce dispositif ni de protéger des comptes trop importants avec (comme une banque par exemple), étant donné que contrairement à d'autres dispositifs [FIDO](https://www.yubico.com/authentication-standards/fido2/), il n'est pas certifié pour cet usage.
 
 ### Quelques exemples de scripts
 
