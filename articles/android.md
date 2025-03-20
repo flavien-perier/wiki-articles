@@ -8,9 +8,9 @@ author: Flavien PERIER <perier@flavien.io>
 date: 2020-11-10 19:00
 ---
 
-Avant toute chose, cet article traite de manipulation technique qui pourraient dans certains cas causer un certain nombre de dysfonctionnements voir des pertes de données. Je n'assumerais en aucun cas la responsabilité de tels problèmes.
+Avant toute chose, cet article traite de manipulation technique qui pourraient dans certains cas causer un certain nombre de dysfonctionnements voir des pertes de données.
 
-Dans cet article nous allons nous intéresser à la mise en place d'un environnement orient vie privée et sécurité sur un téléphone portable.
+Dans cet article, nous allons nous intéresser à la mise en place d'un environnement orient vie privée et sécurité sur un téléphone portable.
 
 ## Le téléphone
 
@@ -36,7 +36,7 @@ Si le téléphone est actuellement utilisé, il est possible de sauvegarder une 
 
 Tout d'abord, il faut vérifier qu'[ADB](https://www.flavien.io/wiki/manjaro.md#android-adb) est bien installé sur son PC afin de pouvoir manipuler son mobile.
 
-Ensuite il faut activer le mode développeur sur le téléphone (aller dans les paramètres, puis dans "À propos du téléphone" et cliquer 7 fois sur le numéro du build). Une fois le menu développeur visible s'y rendre et activer le "debogage USB".
+Ensuite, il faut activer le mode développeur sur le téléphone (aller dans les paramètres, puis dans "À propos du téléphone" et cliquer 7 fois sur le numéro du build). Une fois le menu développeur visible s'y rendre et activer le "debogage USB".
 
 Pour la suite, il est possible d'écrire un script `android-backup` grâce aux informations trouvées sur le précédent repos GitHub :
 
@@ -108,10 +108,10 @@ Une fois le système de base installé, il est possible de rooter le téléphone
 
 - Dans un premier temps, il va falloir le démarrer et y installer l'application Magisk (grâce à l'APK précédemment récupérée).
 - Temps que le téléphone est branché à un ordinateur, nous allons en profiter pour déposer sur le stockage de l'appareil le fichier `boot.img`.
-- Depuis l'application Magisk il faut sélectionner le bouton `installer` depuis l'onglet `Magisk`. Par la suite, on sélectionne le fichier `boot.img`. L'application va alors appliquer ses correctifs root sur le fichier.
+- Depuis l'application Magisk, il faut sélectionner le bouton `installer` depuis l'onglet `Magisk`. Par la suite, on sélectionne le fichier `boot.img`. L'application va alors appliquer ses correctifs root sur le fichier.
 - On récupère le fichier généré dans le dossier Téléchargement et on le dépose sur l'ordinateur.
 - On redémarre le téléphone sur le bootloader.
-- On tape les commandes suivantes sur un terminale de son ordinateur :
+- On tape les commandes suivantes sur un terminal de son ordinateur :
 
 ```bash
 fastboot flash boot_a magisk_patched-*.img
@@ -124,9 +124,9 @@ Remarque : Avec le root le bootloader ne devra jamais être reverrouillé. Visib
 
 L'[APN](https://fr.wikipedia.org/wiki/Access_Point_Name) est une configuration permettant de se connecter au réseau mobile de l'opérateur afin de pouvoir envoyer et recevoir des MMS ainsi que d'accéder à internet au travers de la 3G/4G/5G.
 
-Cependant dans leur infinie sagesse les opérateurs peuvent nous passer en IPv6. Le futur d'internet, plus sécurisé, sur lequel on pourra brancher plus d'appareils... Et sur lequel de nombreux services ne fonctionnent pas encore : [Discord](https://discord.com/), [ProtonVPN](https://protonvpn.com/) et biens d'autres.
+Cependant, dans leur infinie sagesse les opérateurs peuvent nous passer en IPv6. Le futur d'internet, plus sécurisé, sur lequel on pourra brancher plus d'appareils... Et sur lequel de nombreux services ne fonctionnent pas encore : [Discord](https://discord.com/), [ProtonVPN](https://protonvpn.com/) et biens d'autres.
 
-Si on utilise ces services, il faut repasser en IPv4 pour que ca fonctionne et pour cela il faut la configuration APN adéquate :
+Si on utilise ces services, il faut repasser en IPv4 pour que ça fonctionne et pour cela, il faut la configuration APN adéquate :
 
 - Nom : `Bouygues`
 - APN : `mms.bouygtel.com`
@@ -150,11 +150,11 @@ Si on utilise ces services, il faut repasser en IPv4 pour que ca fonctionne et p
 
 ### Applications Par Default
 
-Par défaut le système d'exploitation contient un minimum d'applications pour être utilisable (Dialer, SMS, Launcher, Calendar...). Bien évidemment, je ne vais pas parler de toutes ces applications, déjà parce que ça prendrait beaucoup de temps, mais surtout parce que ça n'apporterait pas grand-chose. je vais donc me contenter de parler de quelques-unes d'entre elles :
+Par défaut le système d'exploitation contient un minimum d'applications pour être utilisable (Dialer, SMS, Launcher, Calendar...). Bien évidemment, je ne vais pas parler de toutes ces applications, déjà parce que ça prendrait beaucoup de temps, mais surtout parce que ça n'apporterait pas grand-chose. Je vais donc me contenter de parler de quelques-unes d'entre elles :
 
 #### [MicroG](https://microg.org/download.html)
 
-Comme dit plus tôt, ce système d'exploitation est conçu pour communiquer le moins possible avec Google. Seul problème, Android et son Framework sont développés par Google. Les interactions avec les serveurs de la société sont donc nombreuses et toutes les coupés causeraient de grave dysfonctionnement pour de très nombreuses applications.
+Comme dit plus tôt, ce système d'exploitation est conçu pour communiquer le moins possible avec Google. Seul problème, Android et son Framework sont développés par Google. Les interactions avec les serveurs de la société sont donc nombreuses les coupés causeraient de graves dysfonctionnements pour de très nombreuses applications.
 
 Heureusement, des développeurs se sont penchés sur le sujet et ont conçu MicroG. Ce dernier simule le comportement des composants Google sur un téléphone utilisant un système Android natif en envoyant le moins d'informations possible sur internet. Cette application est donc un très bon équilibre entre téléphone fonctionnel et vie privée.
 
@@ -170,7 +170,7 @@ Parmi les fonctionnalités amusantes de ce store, il y a la possibilité d'affic
 
 #### Le cloud
 
-Par défaut /e/ propose la possibilité de ce connecter à une instance [NextCloud](https://nextcloud.com/) afin d'y synchroniser ses données. Il est donc possible d'y sauvegarder des photos, agenda, contacts... sans passer par un GAFAM, voir, sauvegarder toutes ses données sur une instance auto hébergée. Heureusement, pour les utilisateurs ne souhaitant pas consacrer du temps à la mise en place d'une instance, la fondation propose son propre cloud (ce dernier n'offre malheureusement que quelques mégaoctets). Suffisant néanmoins pour synchroniser des contacts et agendas (il faudra laisser de côté la sauvegarde des photos).
+Par défaut /e/ propose la possibilité de se connecter à une instance [NextCloud](https://nextcloud.com/) afin d'y synchroniser ses données. Il est donc possible d'y sauvegarder des photos, agenda, contacts... sans passer par un GAFAM, voir, sauvegarder toutes ses données sur une instance auto hébergée. Heureusement, pour les utilisateurs ne souhaitant pas consacrer du temps à la mise en place d'une instance, la fondation propose son propre cloud (ce dernier n'offre malheureusement que quelques mégaoctets). Suffisant néanmoins pour synchroniser des contacts et agendas (il faudra laisser de côté la sauvegarde des photos).
 
 En cas de problème de synchronisation, il est possible d'utiliser la commande suivante depuis un ordinateur afin de la forcer.
 
@@ -180,15 +180,15 @@ adb shell am broadcast -a foundation.e.drive.action.FORCE_SYNC --receiver-includ
 
 #### Le navigateur
 
-Forcément pas de Google Chrome en vue, mais du [Chromium](https://www.chromium.org/) (la version open source du navigateur). Quant au moteur de recherche par défaut, là encore, pas de Google, mais un métamoteur aux couleurs de /e/ localisé à l'URL [spot.ecloud.global](https://spot.ecloud.global/). Ce dernier nous restitue une agrégation des résultats trouvée sur d'autres moteurs de recherches tels que [Qwant](https://www.qwant.com/), [DuckDuckGo](https://duckduckgo.com/), [Wikipédia](https://fr.wikipedia.org/)... Toutes les requêtes envoyées par ce métamoteur à des tiers sont routées à travers le réseau [Tor](https://www.torproject.org/). L'architecture de ce moteur semble donc très confidentielle et même si je ne l'utilise pas personnellement je trouve sa conception très intéressante.
+Forcément pas de Google Chrome en vue, mais du [Chromium](https://www.chromium.org/) (la version open source du navigateur). Quant au moteur de recherche par défaut, là encore, pas de Google, mais un métamoteur aux couleurs de /e/ localisé à l'URL [spot.ecloud.global](https://spot.ecloud.global/). Ce dernier nous restitue une agrégation des résultats trouvée sur d'autres moteurs de recherches tels que [Qwant](https://www.qwant.com/), [DuckDuckGo](https://duckduckgo.com/), [Wikipédia](https://fr.wikipedia.org/)... Toutes les requêtes envoyées par ce métamoteur à des tiers sont routées à travers le réseau [Tor](https://www.torproject.org/). L'architecture de ce moteur semble donc très confidentielle et même si je ne l'utilise pas personnellement, je trouve sa conception très intéressante.
 
 #### Le launcher
 
-Appelé Bliss Lancher, le lanceur d'application de la distribution est une copie de l'interface Apple, avec des fonctionnalités en moins et des bugs en plus. Pour avoir testé beaucoup d'autre launchers tel que [NovaLauncher](https://novalauncher.com/) ou [Lawnchair](https://lawnchair.app/), je peux affirmer qu'il manque beaucoup de fonctionnalités comme la gestion des gestes, un tiroir et des paramètres de manière générale. Cependant, contrairement à d'autres lanceurs d'applications tels que [Mikcrosoft Launcher](https://apkpure.com/fr/microsoft-launcher/com.microsoft.launcher) celui-ci a l'immense avantages de respecter notre vie privée, de ne pas passer son temps à interagir avec le réseau, d'être open source et d'économe en batterie. Il ne s'agit donc clairement pas de l'application de l'année, mais elle fait néanmoins bien ce qu'on lui demande.
+Appelé Bliss Lancher, le lanceur d'application de la distribution est une copie de l'interface Apple, avec des fonctionnalités en moins et des bugs en plus. Pour avoir testé beaucoup d'autre launchers tel que [NovaLauncher](https://novalauncher.com/) ou [Lawnchair](https://lawnchair.app/), je peux affirmer qu'il manque beaucoup de fonctionnalités comme la gestion des gestes, un tiroir et des paramètres de manière générale. Cependant, contrairement à d'autres lanceurs d'applications tels que [Mikcrosoft Launcher](https://apkpure.com/fr/microsoft-launcher/com.microsoft.launcher) celui-ci a l'immenses avantages de respecter notre vie privée, de ne pas passer son temps à interagir avec le réseau, d'être open source et d'économe en batterie. Il ne s'agit donc clairement pas de l'application de l'année, mais elle fait néanmoins bien ce qu'on lui demande.
 
 #### [Magic Earth](https://www.magicearth.com/)
 
-Magic Earth est un simple GPS basé sur [Open Street Map](https://www.openstreetmap.org/) avec une interface très propre et intuitive qui propose entre autres choses de télécharger les cartes en local. Grâce à cette application, il est possible d'utiliser le téléphone en tant que GPS sans accéder aux données. Cela permet de réduire sa chauffe, lui permettre de rester plus longtemps allumé et de ne pas être épié par un quelconque [GAFAM](https://fr.wikipedia.org/wiki/G%C3%A9ants_du_Web) durant un voyage.
+Magic Earth est un simple GPS basé sur [OpenStreetMap](https://www.openstreetmap.org/) avec une interface très propre et intuitive qui propose entre autres choses de télécharger les cartes en local. Grâce à cette application, il est possible d'utiliser le téléphone en tant que GPS sans accéder aux données. Cela permet de réduire sa chauffe, lui permettre de rester plus longtemps allumé et de ne pas être épié par un quelconque [GAFAM](https://fr.wikipedia.org/wiki/G%C3%A9ants_du_Web) durant un voyage.
 
 #### [OpenKeychain](https://www.openkeychain.org/)
 
@@ -198,7 +198,7 @@ Simple application pour gérer vos [clés de chiffrement asymétrique](https://f
 
 ### [f-droid](https://f-droid.org/)
 
-F-droid est un store d'application Android open source. Son repos par défaut est déjà nativement disponible sur le repos de /e/, mais il peut être intéressent d'installer quand même l'application. En effet cette dernière intègre de nombreuses fonctionnalités telles que le partage d'application à d'autres appareils via le Bluetooth ou le wi-fi. Ce qui peut s'avérer utile dans des contextes extrêmes ou la connexion internet serait coupé. L'application propose également de rajouter d'autres repos d'applications en plus de celui par défaut. En voici quelques exemples :
+F-droid est un store d'application Android open source. Son repos par défaut est déjà nativement disponible sur le repos de /e/, mais il peut être intéressent d'installer quand même l'application. En effet, cette dernière intègre de nombreuses fonctionnalités telles que le partage d'application à d'autres appareils via le Bluetooth ou le wifi. Ce qui peut s'avérer utile dans des contextes extrêmes ou la connexion internet serait coupé. L'application propose également de rajouter d'autres repos d'applications en plus de celui par défaut. En voici quelques exemples :
 
 - [Nethunter](https://store.nethunter.com/): `https://store.nethunter.com/repo?fingerprint=fe7a23dfc003a1cf2d2add2469b9c0c49b206ba5dc9edd6563b3b7eb6a8f5fab`
 - [Guardian project](https://guardianproject.info/fdroid/): `https://guardianproject.info/fdroid/repo?fingerprint=b7c2eefd8dac7806af67dfcd92eb18126bc08312a7f2d6f3862e46013c7a6135`
@@ -209,9 +209,9 @@ F-droid est un store d'application Android open source. Son repos par défaut es
 
 Android étant un système d'exploitation particulièrement vulnérable, il est donc important de posséder un antivirus digne de ce nom.
 
-J'ai personnellement utilisé l'Antivirus [Kaspersky Internet Security](https://www.kaspersky.fr/internet-security) pendant plusieurs années. Cependant ce dernier étant conçu en Russie par d’anciens membres des services de renseignement, plusieurs entreprises et organismes conseillent d'éviter son utilisation dans le contexte de [guerre entre la Russie et l'Ukraine](https://fr.wikipedia.org/wiki/Guerre_du_Donbass). Un [article de Zataz](https://www.zataz.com/kaspersky-dangereux-ou-pas/) détail la situation en pesant les arguments pour et contre l'utilisation de Kapersky.
+J'ai personnellement utilisé l'Antivirus [Kaspersky Internet Security](https://www.kaspersky.fr/internet-security) pendant plusieurs années. Cependant, ce dernier étant conçu en Russie par d’anciens membres des services de renseignement, plusieurs entreprises et organismes conseillent d'éviter son utilisation dans le contexte de [guerre entre la Russie et l'Ukraine](https://fr.wikipedia.org/wiki/Guerre_du_Donbass). Un [article de Zataz](https://www.zataz.com/kaspersky-dangereux-ou-pas/) détail la situation en pesant les arguments pour et contre l'utilisation de Kapersky.
 
-Même si je n'ai aucune preuve tangible que cet antivirus est néfaste (et au demeurant je ne pense personnellement pas qu'il le soit), il vaut mieux s'appuyer sur une solution sur laquelle on peut avoir toute confiance. C'est pourquoi je me suis orienté vers [Avira security](https://www.avira.com/fr/free-antivirus-android).
+Même si je n'ai aucune preuve tangible que cet antivirus est néfaste (et au demeurant, je ne pense personnellement pas qu'il le soit), il vaut mieux s'appuyer sur une solution sur laquelle on peut avoir toute confiance. C'est pourquoi je me suis orienté vers [Avira security](https://www.avira.com/fr/free-antivirus-android).
 
 De manière générale les performances des antivirus sont changeantes d'une année sur l'autre. Il peut donc être pertinent de consulter fréquemment le site [AV-Test](https://www.av-test.org/fr/antivirus/portables/) afin de voir les derniers comparatifs de ces solutions de sécurité.
 
@@ -219,7 +219,7 @@ De manière générale les performances des antivirus sont changeantes d'une ann
 
 Le démarchage téléphonique est devenu insupportable pour beaucoup de personnes, avec parfois plusieurs appels par jour. Une première chose à faire, est bien évidemment de s'inscrire sur [Blocter](https://www.bloctel.gouv.fr/), l'initiative du gouvernement. Cependant, il semblerait que certaines entreprises peu scrupuleuses ne prennent pas réellement cette liste en compte. Il existe de nombreuses applications de blocage de numéro indésirables en ligne. Ces dernières sont souvent très intrusives, car des requêtes sont généralement envoyées à des serveurs avec les numéros qui vous appellent sans qu'on puisse vraiment savoir comment elles sont traitées (quand c'est Orange, je pense qu'on peut avoir confiance, mais quand ce sont des applications américaines qui font leur business autour de quelques applications, je pense qu'il est raisonnable de se méfier).
 
-L'application SpamBlocker n'a rien d'incroyable dans son fonctionnement. Elle permet simplement de bloquer des numéros en fonction de patterns, et ce, sans communiquer avec internet. D'autres applications permettent très certainement de faire la même chose. Celle-là à l'avantage d'être open source et raisonnablement maintenu.
+L'application SpamBlocker n'a rien d'incroyable dans son fonctionnement. Elle permet simplement de bloquer des numéros en fonction de patterns, et ce, sans communiquer avec internet. D'autres applications permettent très certainement de faire la même chose. Celle-là a l'avantage d'être open source et raisonnablement maintenu.
 
 En France, les numéros de démarchages sont tenus de nous appeler avec des plages de numéro précises, donc faciles à identifier (donc à bloquer avec cette application). [Le plan de numérotation de l'ARCEP](https://www.arcep.fr/actualites/actualites-et-communiques/detail/n/plan-de-numerotation-050922.html) référence la liste de ces préfix. Il ne reste donc plus qu'à écrire les regex et le tour est joué :
 
@@ -247,11 +247,11 @@ Cette méthode n'est surement pas aussi efficace qu'un service en ligne, mais a 
 
 ### Les réseaux sociaux
 
-Concernant les réseaux sociaux, il est à la fois évident que disposer de ces derniers sur son téléphone pause un problème pour la vie privée et que ne pas les avoir peut-être parfois embarassant dans la vie réel. Sans être exaustif, voila quelques conseille pour une meilleur gestion de ces réseaux sur smartphone :
+Concernant les réseaux sociaux, il est à la fois évident que disposer de ces derniers sur son téléphone pose un problème pour la vie privée et que ne pas les avoir peut-être parfois embarassant dans la vie réelle. Sans être exaustif, voila quelques conseille pour une meilleure gestion de ces réseaux sur smartphone :
 
-- Le premier, est de bien définir les réseaux d'on on a besoin et ceux qui ne nous servent pas.
+- Le premier, est de bien définir les réseaux qui nous sont utiles et ceux qui ne nous servent pas.
 
-- Il est préférable d'utiliser les réseaux sociaux dans un contexte isoler du reste du téléphone. C'est ce que propose des applications tel que [Shelter](https://f-droid.org/packages/net.typeblog.shelter/) ou [Island](https://github.com/oasisfeng/island) (la seconde ne fonctionnant pas sur /e/). Ces programmes vont créer des contextes dans lesquels les applications ne pourtant pas accéder aux fichiers, contacts... Ces environnements seront également désactivables de sorte qu'aucune application installée dans ce contexte ne puisse tourne en arrière-plan.
+- Il est préférable d'utiliser les réseaux sociaux dans un contexte isolé du reste du téléphone. C'est ce que propose des applications tel que [Shelter](https://f-droid.org/packages/net.typeblog.shelter/) ou [Island](https://github.com/oasisfeng/island) (la seconde ne fonctionnant pas sur /e/). Ces programmes vont créer des contextes dans lesquels les applications ne pourtant pas accéder aux fichiers, contacts... Ces environnements seront également désactivables de sorte qu'aucune application installée dans ce contexte ne puisse tourne en arrière-plan.
 
 - Enfin, quand c'est possible, il est préférable d'utiliser la version light des applications de réseaux sociaux. Ces versions sont développées pour de vieux appareils et font donc moins de choses. Après c'est à chacun de voir si le minimum est suffisant et si l'application est bien proposée pour un réseau social donné (typiquement la version lite de LinkedIn a été abandonnée).
     - [Facebook lite](https://apkpure.com/fr/facebook-lite/com.facebook.lite)
@@ -260,7 +260,7 @@ Concernant les réseaux sociaux, il est à la fois évident que disposer de ces 
 
 ### [NewPipe](https://newpipe.net/)
 
-Une application alternative au viewer officiel YouTube. Elle permet de bloquer par défaut les publicités, de jouer les vidéos en arrière-plan, de les télécharger, de jouer le son uniquement, de créer des playlists de chaines sans comptes... Et cerise sur le gâteau elle permet également d'accéder à d'autre sources de vidéo tel que [PeerTube](https://joinpeertube.org/).
+Une application alternative au viewer officiel YouTube. Elle permet de bloquer par défaut les publicités, de jouer les vidéos en arrière-plan, de les télécharger, de jouer le son uniquement, de créer des playlists de chaines sans comptes... Et cerise sur le gâteau, elle permet également d'accéder à d'autres sources de vidéo telle que [PeerTube](https://joinpeertube.org/).
 
 ### [Nextcloud News](https://f-droid.org/en/packages/co.appreactor.news/)
 
@@ -270,11 +270,11 @@ Un lecteur de flux RSS qu'il est possible de synchroniser avec une instance Next
 
 Pendant assez longtemps, la distribution possédait son implémentation d'une visionneuse de document office. Cependant, étant donné qu'il n'y a pas d'implémentation officielle, cela semble compliqué à maintenir dans le temps (d'autant plus que l'implémentation qui avait été choisie n'était pas des plus efficaces).
 
-Cependant, Collabora semble [avoir le soutient de la fondation Libre Office](https://fr.libreoffice.org/download/android-et-ios/) et ce trouve être basé sur leur solution. Il s'agit donc pour moi de la meilleure solution pour le moment.
+Cependant, Collabora semble [avoir le soutien de la fondation Libre Office](https://fr.libreoffice.org/download/android-et-ios/) et ce trouve être basé sur leur solution. Il s'agit donc pour moi de la meilleure solution pour le moment.
 
 ### [Aegis](https://getaegis.app/)
 
-Aegis est une application de calcul des seconds facteurs d'authentification complètement open source. Elle à l'avantage de ne comporter aucun traqueur et de la possibilité d'être déverrouillé par empreinte digitale. Il est possible d'importer facilement les données d'une autre application 2FA tel que [AndOTP](https://github.com/andOTP/andOTP), [Google Authentificator](https://apkpure.com/fr/google-authenticator/com.google.android.apps.authenticator2), [Microsoft Authentificator](https://apkpure.com/fr/microsoft-authenticator/com.azure.authenticator) et bien d'autres.
+Aegis est une application de calcul des seconds facteurs d'authentification complètement open source. Elle a l'avantage de ne comporter aucun traqueur et de la possibilité d'être déverrouillé par empreinte digitale. Il est possible d'importer facilement les données d'une autre application 2FA tel que [AndOTP](https://github.com/andOTP/andOTP), [Google Authentificator](https://apkpure.com/fr/google-authenticator/com.google.android.apps.authenticator2), [Microsoft Authentificator](https://apkpure.com/fr/microsoft-authenticator/com.azure.authenticator) et bien d'autres.
 
 ### [KeePassDX](https://www.keepassdx.com/)
 

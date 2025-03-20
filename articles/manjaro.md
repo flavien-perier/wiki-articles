@@ -18,7 +18,7 @@ Cet article traite de la mise en place d'un poste de développeur sous Manjaro. 
 
 Pour ma part, je me base sur la version minimale de la distribution [Manjaro](https://manjaro.org/downloads/official/xfce/) avec l'environnement [XFCE](https://xfce.org/). Cet environnement est plus léger que [Gnome](https://www.gnome.org/) ou [KDE](https://kde.org/), mais présente néanmoins tous les avantages d'un véritable gestionnaire de bureau. Malgré sa légèreté, il n'y a pas de compromis sur les fonctionnalités.
 
-Quant au choix de Manjaro, il s'agit d'une distribution de type rolling, c'est-à-dire qu'elle est constamment mise à jour et qu'on n’aura donc pas de réinstallation complète du système à faire toutes les x années pour le passage à la version majeure suivante. Ce type de distribution est assez adapté à des configurations desktop, mais complètement inadapté à des configurations serveurs, car les paquets et le noyau du système d'exploitation étant constamment mis à jour vers les dernières versions, des instabilités peuvent fréquemment survenir. Inacceptable pour un système de production, mais rarement vraiment bloquant (du moins pas longtemps, jusqu’à la mise à jour suivante) sur un pc personnel.
+Quant au choix de Manjaro, il s'agit d'une distribution de type rolling, c'est-à-dire qu'elle est constamment mise à jour et qu'on n’aura donc pas de réinstallation complète du système à faire toutes les quelques années pour le passage à la version majeure suivante. Ce type de distribution est assez adapté à des configurations desktop, mais complètement inadapté à des configurations serveurs, car les paquets et le noyau du système d'exploitation étant constamment mis à jour vers les dernières versions, des instabilités peuvent fréquemment survenir. Inacceptable pour un système de production, mais rarement vraiment bloquant (du moins pas longtemps, jusqu’à la mise à jour suivante) sur un pc personnel.
 
 L'autre avantage de Manjaro, est qu'elle est basée sur la distribution [Arch Linux](https://archlinux.org/). Cette dernière disposant d'une communauté très importante mettant à jour un [Wiki](https://wiki.archlinux.org/) réputé comme étant très complet. Cette source de documentation peut donc servir à se débloquer dans de très nombreuses situations. À mon sens les avantages de Manjaro sur Arch sont la simplicité et la stabilité. En effet, Arch étant une base de système d'exploitation quasiment vierge, c'est à l'utilisateur d'installer les composants dont il aura besoin. Cela nécessite une bonne connaissance de tous ces modules (et beaucoup de temps à lire leur documentation) et cela résulte bien souvent sur des installations instables. Manjaro offre une base déjà installée et configurée et permet donc d'être utilisé par des personnes ayant une moindre connaissance des composants Linux. Il est néanmoins très enrichissant d'installer et de configurer une Arch, mais je réserve cela davantage à de l'expérimentation qu'à la mise en place d'un système d'exploitation destiné à être utilisé tous les jours.
 
@@ -136,7 +136,7 @@ Pour maximiser la sécurité du système, nous allons également chiffrer le SSD
 
 - Par la suite, pour chiffrer le lecteur, il faudra utiliser la commande `sudo cryptsetup luksFormat --type luks2 /dev/sdb`. Lors de cette opération, toutes les données stockées sur le lecteur seront perdues, il faut donc être extrêmement vigilant lors de cette opération.
 
-- Maintenant que le lecteur est chiffré, nous allons pouvoir le formater et le monter à un endroit ou nous pourrons copier les fichiers que nous voudrons garder quand il sera en `/home`.
+- Maintenant que le lecteur est chiffré, nous allons pouvoir le formater et le monter à un endroit où nous pourrons copier les fichiers que nous voudrons garder quand il sera en `/home`.
 
 ```bash
 sudo mkdir -p /mnt/data
@@ -618,7 +618,7 @@ mv jetbrains* jetbrains
 ./jetbrains/jetbrains-toolbox
 ```
 
-Il est également possible d'utiliser GraalVM pour lancer ces différentes IDEs ce qui aura un impacte extrêmement positif sur leurs performances.
+Il est également possible d'utiliser GraalVM pour lancer ces différentes IDEs ce qui aura un impact extrêmement positif sur leurs performances.
 
 ### [VisualStudio code](https://code.visualstudio.com/)
 
@@ -982,7 +982,7 @@ flatpak install --user im.riot.Riot
 
 ### [Eye of GNOME](https://github.com/GNOME/eog)
 
-La visionneuse d'image de Gnome. Elle est plutôt simple à utiliser et affiche les métdatas des images (heure, position GPS si disponible...).
+La visionneuse d'image de Gnome. Elle est plutôt simple à utiliser et affiche les metadata des images (heure, position GPS si disponible...).
 
 ```bash
 flatpak install --user org.gnome.eog
@@ -1147,7 +1147,7 @@ mv Antidote* Antidote
 
 Pandoc est un outil très puissant permettant de convertir de nombreux formats de fichier texte dans d'autres formats de fichier texte. Il est par exemple possible de transformer un fichier Markdown en document PDF en lui appliquant une feuille de style au format [LaTeX](https://www.latex-project.org/). Il est donc possible de rédiger des documents de qualité professionnelle simplement en Markdown et de les convertir plus tard dans le format que nous souhaitons exporter, pdf, doc, html, LaTex, epub...
 
-Je vois plusieurs avantages à cette solution par rapport au traditionnel Microsoft Word, mais la plus importante à mon sens est le découpage du flux de travail. En effet, je considère que lors de la rédaction d'un document nous avons 3 grandes phases de travail, l'écriture du contenu, une phase de relecture durant lesquelles nous pouvons corriger fautes d'orthographe et mauvaises tournures de phrases et enfin la mise en page. Le problème avec Microsoft Word est que nous devons gérer ces 3 phases simultanément, ce qui a pour inconvénient de nous rendre moins efficaces sur chacune d'entre elles et résulte sur des documents de moindre qualité. La plupart des universitaires ce sont donc tournés vers le format LaTex, mais le problème reste similaire, avec ses nombreuses annotations ce format reste lourd et nous devons donc gérer la rédaction et une partie de la mise en page simultanément. Le meilleur compromis à mon sens est le Markdown qui est très léger en écriture et surtout très intuitif.
+Je vois plusieurs avantages à cette solution par rapport au traditionnel Microsoft Word, mais la plus importante à mon sens est le découpage du flux de travail. En effet, je considère que lors de la rédaction d'un document nous avons 3 grandes phases de travail, l'écriture du contenu, une phase de relecture durant lesquelles nous pouvons corriger fautes d'orthographe et mauvaises tournures de phrases et enfin la mise en page. Le problème avec Microsoft Word est que nous devons gérer ces 3 phases simultanément, ce qui a pour inconvénient de nous rendre moins efficaces sur chacune d'entre elles et résulte sur des documents de moindre qualité. La plupart des universitaires se sont donc tournés vers le format LaTex, mais le problème reste similaire, avec ses nombreuses annotations ce format reste lourd et nous devons donc gérer la rédaction et une partie de la mise en page simultanément. Le meilleur compromis à mon sens est le Markdown qui est très léger en écriture et surtout très intuitif.
 
 Ainsi avec les différents logiciels que j'utilise, je peux garantir un flux de travail efficace sur ces trois axes. Je commence par rédiger en Markdown le contenu de mon document dans un simple IDE (généralement Visual Studio Code ou VIM), puis je corrige les fautes grâce à Antidote et enfin, j'utilise Pandoc pour la mise en page. J'ai créé [un projet GitHub](https://github.com/flavien-perier/pandoc-template) qui me sert de base pour mes nouveaux projets. Il utilise la feuille de style LaTex [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) afin de mettre en forme mes documents Markdown dans le format PDF.
 
@@ -1182,7 +1182,7 @@ La célèbre plateforme de jeux. Actuellement, Valve (la société à l'origine 
 flatpak install --user com.valvesoftware.Steam
 ```
 
-Par la suite pour activer ProtonDb, il suffit de ce rendre dans l'application puis: `Steam` > `Paramètres` > `Steam Play` > `Activer Steam Play pour tous les autres titres` > `Proton 6.3-8`.
+Par la suite pour activer ProtonDb, il suffit de se rendre dans l'application puis: `Steam` > `Paramètres` > `Steam Play` > `Activer Steam Play pour tous les autres titres` > `Proton 6.3-8`.
 
 ### [Xpadneo](https://atar-axis.github.io/xpadneo/)
 
@@ -1378,7 +1378,7 @@ flatpak install --user org.deluge_torrent.deluge
 
 ### [7zip](http://www.7-zip.org/)
 
-Le `7z` est l'un, si ce n'est pas le format qui offre le meilleur taux de compression du moment, le rendant particulièrement efficace pour tout ce qui touche à l'archivage. Seul problème, 7zip n'existe que sur Windows. Heureusement, avec p7zip il est possible d'utiliser ce format en ligne de commande depuis son Linux.
+Le `7z` est l'un, si ce n'est pas le format qui offre le meilleur taux de compression du moment, le rendant particulièrement efficace pour tout ce qui touche à l'archivage.
 
 ```bash
 sudo pacman -S 7zip
