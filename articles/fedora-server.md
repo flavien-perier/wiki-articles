@@ -35,7 +35,7 @@ Toutes les commandes sont à exécuter en tant que root.
 Pour une mise à jour de l'os vers une nouvelle version de Fedora :
 
 ```bash
-dnf system-upgrade download --releasever=40
+dnf system-upgrade download --releasever=41
 dnf system-upgrade reboot
 ```
 
@@ -54,13 +54,14 @@ Installation des drivers Nvidia et configuration minimale du serveur :
 ```bash
 curl -s https://sh.flavien.io/shell.sh | bash -
 
-dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/fedora40/x86_64/cuda-fedora40.repo
-dnf config-manager --add-repo https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
+dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
+dnf config-manager addrepo --from-repofile=https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
 
-dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
 
+dnf clean all
 dnf install kernel-devel kernel-headers
-dnf module install nvidia-driver:open-dkms
+dnf install cuda-toolkit-12-8 nvidia-open
 dnf remove plymouth*
 ```
 
@@ -816,3 +817,4 @@ systemctl restart cockpit
 - [How To Install OpenVPN on CentOS/RHEL 8](https://tecadmin.net/install-openvpn-centos-8/)
 - [Arch Wiki - Easy-RSA](https://wiki.archlinux.org/title/Easy-RSA)
 - [Fedora Wiki - OpenVPN](https://fedoraproject.org/wiki/OpenVPN)
+- [Fedora docs : Installing Kernel from Koji](https://docs.fedoraproject.org/en-US/quick-docs/kernel-installing-from-koji/)
