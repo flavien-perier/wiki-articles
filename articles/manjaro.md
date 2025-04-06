@@ -690,7 +690,16 @@ sdk use java 21-graal
 Même si je ne code pas directement dans ces technologies, le [GO](https://golang.org/) de Google et le [Rust](https://www.rust-lang.org/) de Mozilla, sont deux langages de programmation de bas niveau qui sont en train de s'imposer. Je les installe afin d'avoir la possibilité de compiler différents projets quand c'est nécessaire.
 
 ```bash
-sudo pacman -S go rust
+sudo pacman -S go rustup
+rustup default stable
+```
+
+### [OpenAPI-generator](https://openapi-generator.tech/)
+
+OpenAPI est un standard de description d'api REST. OpenAPI-generator est un outil maintenu par une grande communauté permettant de transformer un fichier OpenAPI en code client ou serveur dans de nombreux langages de programmation. Ce qui peut être une très bonne pratique afin de limiter les divergences entre la documentation et le code.
+
+```bash
+sudo pacman -S jre11-openjdk openapi-generator
 ```
 
 ### Android ADB
