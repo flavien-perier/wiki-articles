@@ -1754,23 +1754,23 @@ Un petit script qui met à jour toutes nos applications avec les différents ges
 set -e
 
 copy-theme() {
-    SRC=$1
-    DEST=$2
+  SRC=$1
+  DEST=$2
 
-    mkdir -p $DEST
-    chmod 700 $DEST
+  mkdir -p $DEST
+  chmod 700 $DEST
 
-    for SRC_FILE in `ls $SRC`
-    do
-        DEST_PATH=$DEST/$SRC_FILE
-        if [ ! -e $DEST_PATH ]
-        then
-            cp -Rf $SRC/$SRC_FILE $DEST_PATH
-            find $DEST_PATH ! -perm /400 | xargs -r -d "\n" -P4 -L10 chmod go-rwx
-        fi
-    done
+  for SRC_FILE in `ls $SRC`
+  do
+    DEST_PATH=$DEST/$SRC_FILE
+    if [ ! -e $DEST_PATH ]
+    then
+      cp -Rf $SRC/$SRC_FILE $DEST_PATH
+      find $DEST_PATH ! -perm /400 | xargs -r -d "\n" -P4 -L10 chmod go-rwx
+    fi
+  done
 
-    chmod 500 $DEST
+  chmod 500 $DEST
 }
 
 source "$HOME/.sdkman/bin/sdkman-init.sh"
@@ -1799,17 +1799,23 @@ wait
 echo "Update Flatpak themes"
 for PLATFORM in `ls $HOME/.local/share/flatpak/runtime`
 do
-    for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
-    do
-        FLATPAK_DIR=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share
+  for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
+  do
+    FLATPAK_DIR=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share
 
-        copy-theme $HOME/.themes $FLATPAK_DIR/themes &
-        copy-theme $HOME/.icons $FLATPAK_DIR/icons &
-        copy-theme $HOME/.fonts $FLATPAK_DIR/fonts &
+    copy-theme $HOME/.themes $FLATPAK_DIR/themes &
+    copy-theme $HOME/.icons $FLATPAK_DIR/icons &
+    copy-theme $HOME/.fonts $FLATPAK_DIR/fonts &
 
-        wait
-    done
+    wait
+  done
 done
+
+if [ -d $HOME/.local/share/flatpak/.removed/ ]
+then
+  chmod -R u+w $HOME/.local/share/flatpak/.removed/
+  rm -Rf $HOME/.local/share/flatpak/.removed/
+fi
 
 echo "End of update"
 ```
@@ -1916,12 +1922,12 @@ user-clean() {
 
   for FOLDER in $PROTECTED_FOLDER
   do
-      find $HOME/$FOLDER -type d ! -perm 500 | xargs -r -d "\n" -P4 -L10 chmod 500
-      find $HOME/$FOLDER -type f ! -perm 400 | xargs -r -d "\n" -P4 -L10 chmod 400
+    find $HOME/$FOLDER -type d ! -perm 500 | xargs -r -d "\n" -P4 -L10 chmod 500
+    find $HOME/$FOLDER -type f ! -perm 400 | xargs -r -d "\n" -P4 -L10 chmod 400
   done
   for FILETYPE in $PROTECTED_FILETYPE
   do
-      find $HOME -type f -name "*.$FILETYPE" | xargs -r -d "\n" -P4 -L10 chmod ugo-wx
+    find $HOME -type f -name "*.$FILETYPE" | xargs -r -d "\n" -P4 -L10 chmod ugo-wx
   done
   find $HOME/Vms -type d ! -perm 550 | xargs -r -d "\n" -P4 -L10 chmod 550
   find $HOME/Vms -type f ! -perm 770 | xargs -r -d "\n" -P4 -L10 chmod 770
@@ -1943,11 +1949,11 @@ main() {
 
   if [[ $* == "-c" ]] || [[ $* == "--cache" ]]
   then
-      CLEAN_CACHE=1
+    CLEAN_CACHE=1
   elif [[ $* == "-h" ]] || [[ $* == "--help" ]]
   then
-      echo "-c, --cache           Clean cache"
-      exit 0
+    echo "-c, --cache           Clean cache"
+    exit 0
   fi
 
   USED_SPACE_BEFORE=$(get-used-space)
@@ -2013,30 +2019,30 @@ OFFSET=0
 IFS=$'\n'
 while [ $BREAK -eq 0 ]
 do
-        COUNT=0
+  COUNT=0
 
-        for LINE in `curl "https://api.spotify.com/v1/playlists/$SPOTIFY_PLAYLIST_ID/tracks?offset=$OFFSET&limit=100" -H "authorization: Bearer $SPOTIFY_BEARER" | jq -cM ".items[].track"`
-        do
-                ARTISTS=`echo $LINE | jq -cM .artists[].name | sed s/\"//g | tr "\n" ";" | sed -e "s/;/, /g" -e "s/, \$//g"`
-                TITLE=`echo $LINE | jq -cM .name | sed s/\"//g`
-                echo "$ARTISTS : $TITLE"
-                COUNT=`expr $COUNT + 1`
-        done
+  for LINE in `curl "https://api.spotify.com/v1/playlists/$SPOTIFY_PLAYLIST_ID/tracks?offset=$OFFSET&limit=100" -H "authorization: Bearer $SPOTIFY_BEARER" | jq -cM ".items[].track"`
+  do
+    ARTISTS=`echo $LINE | jq -cM .artists[].name | sed s/\"//g | tr "\n" ";" | sed -e "s/;/, /g" -e "s/, \$//g"`
+    TITLE=`echo $LINE | jq -cM .name | sed s/\"//g`
+    echo "$ARTISTS : $TITLE"
+    COUNT=`expr $COUNT + 1`
+  done
 
-        if [ $COUNT -eq 100 ]
-        then
-                OFFSET=`expr $OFFSET + 100`
-        else
-                BREAK=1
-        fi
+  if [ $COUNT -eq 100 ]
+  then
+    OFFSET=`expr $OFFSET + 100`
+  else
+    BREAK=1
+  fi
 done | sort > /tmp/spotify-music.txt
 
 IFS=$';'
 for FILE in `ls ~/Music | tr "\n" ";"`
 do
-        ARTISTS=`ffprobe ~/Music/$FILE 2>&1 | grep artist | sed "s/ *artist *: //g"`
-        TITLE=`ffprobe ~/Music/$FILE 2>&1 | grep title | head -n 1 | sed "s/ *title *: //g"`
-        echo "$ARTISTS : $TITLE"
+  ARTISTS=`ffprobe ~/Music/$FILE 2>&1 | grep artist | sed "s/ *artist *: //g"`
+  TITLE=`ffprobe ~/Music/$FILE 2>&1 | grep title | head -n 1 | sed "s/ *title *: //g"`
+  echo "$ARTISTS : $TITLE"
 done | sort > /tmp/local-music.txt
 
 diff -iyd /tmp/spotify-music.txt /tmp/local-music.txt
