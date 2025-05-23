@@ -969,13 +969,7 @@ Discord est surement l'application de communication la plus populaire du moment.
 flatpak install --user dev.vencord.Vesktop
 ```
 
-Pour lancer Discord en mode réduit il est possible d'utiliser la ligne de   echo "Remove user files"
-  rm -f $HOME/.xsession-errors*
-  rm -Rf $HOME/Downloads/*
-  rm -Rf $HOME/.local/share/Trash
-  rm -Rf $HOME/.local/share/RecentDocuments
-  rm -f $HOME/.local/share/recently-used.xbel*
-  find $HOME -type f -iname "*.old" -deletecommande suivante :
+Pour lancer Discord en mode réduit il est possible d'utiliser la ligne de commande suivante :
 
 ```bash
 flatpak run --branch=stable --arch=x86_64 --command=startvesktop dev.vencord.Vesktop --start-minimized
@@ -1119,17 +1113,12 @@ flatpak install --user net.scribus.Scribus
 ```
 
 ### [Calibre](https://calibre-ebook.com/)
-  echo "Remove user files"
-  rm -f $HOME/.xsession-errors*
-  rm -Rf $HOME/Downloads/*
-  rm -Rf $HOME/.local/share/Trash
-  rm -Rf $HOME/.local/share/RecentDocuments
-  rm -f $HOME/.local/share/recently-used.xbel*
-  find $HOME -type f -iname "*.old" -delete
-flatpak install --user com.calibre_ebook.calibre
-```
 
 Personnellement, je dispose d'une liseuse [Bookeen Diva HD](https://bookeen.com/products/diva-hd) (produit d'excellente qualité et Française au demeurant). Afin de centraliser mon catalogue de livre acquis sur différentes plateformes, je les stocke au format epub sans DRM. Pour cela, j'utilise Calibrea avec l'extension [DeDRM_tools](https://github.com/apprenticeharper/DeDRM_tools).
+
+```bash
+  flatpak install --user com.calibre_ebook.calibre
+```
 
 ### [FontForge](https://fontforge.org/)
 
@@ -1139,26 +1128,13 @@ Un éditeur de police de caractères.
 flatpak install --user org.fontforge.FontForge
 ```
 
-### [Antidote](https://www.antidote.info/fr)
-
-Sans aucun doutes le meilleur correcteur orthographique (payant) du marché.
-
-Téléchargez l'application Antidote [sur le site officiel](https://services.druide.com/client/).
-
-```bash
-cd /tmp
-tar xvf ~/Downloads/Antidote*
-mv Antidote* Antidote
-./Antidote/Installation.bash
-```
-
 ### [Pandoc](https://pandoc.org/)
 
 Pandoc est un outil très puissant permettant de convertir de nombreux formats de fichier texte dans d'autres formats de fichier texte. Il est par exemple possible de transformer un fichier Markdown en document PDF en lui appliquant une feuille de style au format [LaTeX](https://www.latex-project.org/). Il est donc possible de rédiger des documents de qualité professionnelle simplement en Markdown et de les convertir plus tard dans le format que nous souhaitons exporter, pdf, doc, html, LaTex, epub...
 
 Je vois plusieurs avantages à cette solution par rapport au traditionnel Microsoft Word, mais la plus importante à mon sens est le découpage du flux de travail. En effet, je considère que lors de la rédaction d'un document nous avons 3 grandes phases de travail, l'écriture du contenu, une phase de relecture durant lesquelles nous pouvons corriger fautes d'orthographe et mauvaises tournures de phrases et enfin la mise en page. Le problème avec Microsoft Word est que nous devons gérer ces 3 phases simultanément, ce qui a pour inconvénient de nous rendre moins efficaces sur chacune d'entre elles et résulte sur des documents de moindre qualité. La plupart des universitaires se sont donc tournés vers le format LaTex, mais le problème reste similaire, avec ses nombreuses annotations ce format reste lourd et nous devons donc gérer la rédaction et une partie de la mise en page simultanément. Le meilleur compromis à mon sens est le Markdown qui est très léger en écriture et surtout très intuitif.
 
-Ainsi avec les différents logiciels que j'utilise, je peux garantir un flux de travail efficace sur ces trois axes. Je commence par rédiger en Markdown le contenu de mon document dans un simple IDE (généralement Visual Studio Code ou VIM), puis je corrige les fautes grâce à Antidote et enfin, j'utilise Pandoc pour la mise en page. J'ai créé [un projet GitHub](https://github.com/flavien-perier/pandoc-template) qui me sert de base pour mes nouveaux projets. Il utilise la feuille de style LaTex [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) afin de mettre en forme mes documents Markdown dans le format PDF.
+Ainsi avec les différents logiciels que j'utilise, je peux garantir un flux de travail efficace sur ces trois axes. Je commence par rédiger en Markdown le contenu de mon document dans un simple IDE (généralement Visual Studio Code ou VIM), puis je corrige les fautes en utilisant un logiciel de correction et enfin, j'utilise Pandoc pour la mise en page. J'ai créé [un projet GitHub](https://github.com/flavien-perier/pandoc-template) qui me sert de base pour les documents que je rédige. Il utilise la feuille de style LaTex [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) afin de mettre en forme mes documents Markdown dans le format PDF.
 
 ```bash
 pacman -Syyu pandoc pandoc-citeproc

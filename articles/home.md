@@ -8,12 +8,12 @@ author: Flavien PERIER <perier@flavien.io>
 date: 2020-09-27 18:00
 ---
 
-Mon nom est Flavien PERIER et je travaille actuellement dans le milieu du développement informatique sur Villefranche-sur-Saône.
+Actuellement développeur dans l'entreprise Tixeo, je travaille essentiellement avec les technologies Java Spring, Vue.js (version 3), Python et Docker.
 
-Grâce à une alternance de 3 ans dans l'entreprise Orange, j'ai pu être amené à manipuler différentes technologies, au niveau Backend, comme au niveau Frontend.
+En ce qui concerne les systèmes d'exploitation, j'ai des bonnes bases sur Windows, mais mon système de prédilection est Linux. J'ai des bases assez avancées sur les distributions issues de Debian, RedHat, Alpine et Arch.
 
-Je travaille essentiellement avec les langages de programmation Kotlin, Java, TypeScript et JavaScript sur des frameworks tels que Spring, VueJs ou Angular. J'ai pu être confronté à une grande diversité de bases de données, aussi bien avec des SGBDs relationnels classiques tels que MySQL ou PostreSQL, qu'avec des bases de données NoSQL telles que Neo4j, MongoDB ou Redis.
+Au niveau des bases de données, je travaille principalement avec des modèles relationnels (PostgreSQL notamment), mais j'ai également eu la chance de travailler avec des bases de données NoSQL tel que MongoDB, Neo4j ou encore Redis.
 
-Je porte aussi un grand intérêt à l'écosystème Linux et notamment tout ce qui gravite autour de la solution de conteneurisation Docker.
+Lors de ma scolarité, ma dernière année d'étude a été spécialisée dans tout ce qui concerne la data-science, je peux donc me servir de librairies Python telles que Pandas, Scikit-learn, SciPy ou Keras pour réaliser des analyses de données ou créer des modèles de machine learning basique.
 
-À la suite d'un semestre en Belgique, j'ai pu également acquérir quelques notions élémentaires me permettant d'analyser des données grâce à différentes librairies Python telles que Pandas, Scikit-learn ou SciPy.
+Ces dernières années, j'ai suivi les dernières évolutions en terme d'IA en faisant tourner bon nombre de modèles de LLM de petite taille sur un serveur Ollama hébergé chez moi. Je pense que ces technologies peuvent être une véritable valeur ajoutée si elles sont bien intégrées dans des solutions logiciel modernes.
