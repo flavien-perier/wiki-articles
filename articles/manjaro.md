@@ -1222,7 +1222,7 @@ flatpak install --user com.obsproject.Studio
 
 ### [Steam](https://store.steampowered.com/)
 
-La célèbre plateforme de jeux. Actuellement, Valve (la société à l'origine de Steam) travail afin de rendre les jeux vidéos plus accessibles sur les systèmes d'exploitation Linux. Ils ont actuellement leur propre distribution [SteamOS](https://store.steampowered.com/steamos) basée sur Arch, qui utilise leur technologie [ProtonDB](https://www.protondb.com/) (basée sur [Wine](https://www.winehq.org/)) afin de lancer des jeux Windows sur Linux.
+La célèbre plateforme de jeux. Actuellement, Valve (la société à l'origine de Steam) travaille afin de rendre les jeux vidéos plus accessibles sur les systèmes d'exploitation Linux. Ils ont actuellement leur propre distribution [SteamOS](https://store.steampowered.com/steamos) basée sur Arch, qui utilise leur technologie [ProtonDB](https://www.protondb.com/) (basée sur [Wine](https://www.winehq.org/)) afin de lancer des jeux Windows sur Linux.
 
 ```bash
 flatpak install --user com.valvesoftware.Steam
@@ -1488,11 +1488,11 @@ sudo pacman -S whois
 
 ### [Fastfetch](https://github.com/fastfetch-cli/fastfetch)
 
-L'outil [Neofetch](https://github.com/dylanaraps/neofetch) était une vraie religion chez les utilisateurs de Linux. Cependant, son créateur a malheureusement décidé d'arrêter ça maintenance.
+L'outil [Neofetch](https://github.com/dylanaraps/neofetch) était une vraie religion chez les utilisateurs de Linux. Cependant, son créateur a malheureusement décidé d'arrêter sa maintenance.
 
 Le projet Fastfetch a donc pris le relais.
 
-Il s'agit aucun doute de l'outil le plus inutile de la sélection... Il permet d'afficher un certain nombre de caractéristiques de sa machine sous un format coloré. Un vrai Linuxien se doit de toujours laisser un Neofetch/Fastfetch tourné dans un coin de terminale sur chaque capture d'écran qu'il envoie. Cela permet de prouver au reste de la communauté la supériorité de sa distribution.
+Il s'agit sans aucun doute de l'outil le plus inutile de la sélection... Il permet d'afficher un certain nombre de caractéristiques de sa machine sous un format coloré. Un vrai Linuxien se doit de toujours laisser un Neofetch/Fastfetch tourné dans un coin de terminale sur chaque capture d'écran qu'il envoie. Cela permet de prouver au reste de la communauté la supériorité de sa distribution.
 
 ```bash
 sudo pacman -S fastfetch
