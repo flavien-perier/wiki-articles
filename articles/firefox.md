@@ -1,5 +1,5 @@
 ---
-title: Environement Firefox
+title: Environnement Firefox
 type: WIKI
 categories:
   - system
@@ -12,7 +12,7 @@ L'application la plus utilisée sur un ordinateur est dans la majorité des cas 
 
 Pour ma part, j'utilise le navigateur Mozilla Firefox. Ce navigateur possède à mon sens deux avantages qui ne sont pas des moindres :
 
-Tout d'abord, il est open source. Le code source est donc à livre ouvert et chacun peu à la fois contribuer à l'amélioration de l'outil et vérifier qu'il ne comporte pas de portes dérobées. Pour ceux que ça intéresse, le code est disponible [sur les dépôts de Mozilla](https://hg.mozilla.org/mozilla-central/).
+Tout d'abord, il est open source. Le code source est donc à livre ouvert et chacun peut à la fois contribuer à l'amélioration de l'outil et vérifier qu'il ne comporte pas de portes dérobées. Pour ceux que ça intéresse, le code est disponible [sur les dépôts de Mozilla](https://hg.mozilla.org/mozilla-central/).
 
 Il est respectueux de la vie privée. Contrairement à son concurrent Google Chrome, la société Mozilla accorde beaucoup d'importance à la sécurité des données des utilisateurs.
 

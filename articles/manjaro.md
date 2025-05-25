@@ -8,7 +8,7 @@ author: Flavien PERIER <perier@flavien.io>
 date: 2020-09-30 18:00
 ---
 
-Cet article traite de la mise en place d'un poste de développeur sous Manjaro. L'objectif consiste à avoir un système d'exploitation stable et sécurisé qui réponde à un maximum d'usage.
+Cet article traite de la mise en place d'un poste de développeur sous Manjaro. L'objectif consiste à avoir un système d'exploitation stable et sécurisé qui réponde à un maximum d'usages.
 
 ![Desktop](https://medias.flavien.io/articles/manjaro/desktop.webp)
 
@@ -101,7 +101,7 @@ curl -s https://blackarch.org/strap.sh | sudo bash -
 
 ### Installation des headers
 
-Parfois, certains logiciels vont avoir besoin des headers Linux afin d'être compilés. Il est donc bon d'avoir la dernière version de ces derniers installés sur ça machine.
+Parfois, certains logiciels vont avoir besoin des headers Linux afin d'être compilés. Il est donc bon d'avoir la dernière version de ces derniers installés sur sa machine.
 
 ```bash
 sudo pacman -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
@@ -109,7 +109,7 @@ sudo pacman -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 
 ### Configuration du réseau
 
-Par défaut, Manjaro utilise [NetworkManager](https://networkmanager.dev/) qui permet de gérer automatiquement le démon est en règle générale plutôt efficace. Mon seul problème avec la configuration par défaut est que le DNS que l'on va inscrire dans le `resolve.conf` sera automatiquement remplacé par celui fourni par le DHCP. Je vais donc forcer manuellement l'utilisation des DNS [OpenDNS](https://www.opendns.com/), [Cloudflare](https://www.cloudflare.com/fr-fr/dns) et [OpenNIC](https://www.opennic.org/).
+Par défaut, Manjaro utilise [NetworkManager](https://networkmanager.dev/) qui permet de gérer automatiquement le démon et est en règle générale plutôt efficace. Mon seul problème avec la configuration par défaut est que le DNS que l'on va inscrire dans le `resolve.conf` sera automatiquement remplacé par celui fourni par le DHCP. Je vais donc forcer manuellement l'utilisation des DNS [OpenDNS](https://www.opendns.com/), [Cloudflare](https://www.cloudflare.com/fr-fr/dns) et [OpenNIC](https://www.opennic.org/).
 
 ```bash
 cat << EOL | sudo tee /etc/NetworkManager/conf.d/90-dns.conf
@@ -128,9 +128,9 @@ EOL
 
 ### Mise en place d'un second disque chiffré
 
-Pour cette installation, nous allons utiliser une architecture assez classique dans le monde de Linux. Avoir un SSD pour accueillir le système (monté sur le `/`) et un second SSD pour accueillir les données (monté sur le `/home`).
+Pour cette installation, nous allons utiliser une architecture assez classique dans le monde de Linux : avoir un SSD pour accueillir le système (monté sur le `/`) et un second SSD pour accueillir les données (monté sur le `/home`).
 
-Pour maximiser la sécurité du système, nous allons également chiffrer le SSD contenant les données. De nombreuses distributions Linux modernes proposent lors de l'installation de chiffrer les données sur une partition [LVM](https://wiki.archlinux.fr/LVM) (Logical Volume Manager). Je ne suis personnellement pas entièrement convaincu par cette option, car LVM est une couche d'abstraction entre les volumes physiques et les volumes logiques. Cette solution permet par exemple de créer une unique partition reposant sur plusieurs disques physiques, ou de créer une partition avec des clusters non adjacents. À mon sens, cette technologie prend son intérêt sur une infrastructure serveur, car elle va offrir de la flexibilité sur le stockage. Cependant, je suis beaucoup plus sceptique quant à son utilisation dans un ordinateur personnel ou un volume physique va correspondre à un volume logique. C'est pour cette raison que je vais plutôt m'orienter sur l'utilisation de [LUKS](https://gitlab.com/cryptsetup/cryptsetup) (Linux Unified Key Setup) avec son utilitaire `cryptsetup`. L'avantage de cette technologie est qu'elle est directement intégrée dans le noyau Linux et va donc garantir un bon niveau de performance.
+Pour maximiser la sécurité du système, nous allons également chiffrer le SSD contenant les données. De nombreuses distributions Linux modernes proposent lors de l'installation de chiffrer les données sur une partition [LVM](https://wiki.archlinux.fr/LVM) (Logical Volume Manager). Je ne suis personnellement pas entièrement convaincu par cette option, car LVM est une couche d'abstraction entre les volumes physiques et les volumes logiques. Cette solution permet par exemple de créer une unique partition reposant sur plusieurs disques physiques, ou de créer une partition avec des clusters non adjacents. À mon sens, cette technologie prend son intérêt sur une infrastructure serveur, car elle va offrir de la flexibilité sur le stockage. Cependant, je suis beaucoup plus sceptique quant à son utilisation dans un ordinateur personnel où un volume physique va correspondre à un volume logique. C'est pour cette raison que je vais plutôt m'orienter sur l'utilisation de [LUKS](https://gitlab.com/cryptsetup/cryptsetup) (Linux Unified Key Setup) avec son utilitaire `cryptsetup`. L'avantage de cette technologie est qu'elle est directement intégrée dans le noyau Linux et va donc garantir un bon niveau de performance.
 
 - Dans un premier temps, il faut rechercher l'emplacement du second disque grâce à la commande `sudo fdisk -l`. Dans la plupart des cas, il sera localisé dans `/dev/sdb1`.
 
@@ -161,7 +161,7 @@ sudo su
 echo "home	/dev/sdb	none	luks2" >> /etc/crypttab
 ```
 
-- Maintenant, nous avons plus qu'a ajouté le volume déchiffré à la `fstable`.
+- Maintenant, nous n'avons plus qu'à ajouter le volume déchiffré à la `fstable`.
 
 ```bash
 sudo su
@@ -243,7 +243,7 @@ Par la suite, il n'y a plus qu'à redémarrer la machine et utiliser les command
 
 - `sudo optimus-manager --switch nvidia`: Pour utiliser le GPU NVIDIA.
 - `sudo optimus-manager --switch integrated`: Pour utiliser IGP Intel.
-- `sudo optimus-manager --switch hybrid`: Un fonctionnement similaire à Windows ou le GPU Nvidia sera utilisé pour les taches gourmandes en ressources et l'IGP Intel le reste du temps.
+- `sudo optimus-manager --switch hybrid`: Un fonctionnement similaire à Windows où le GPU Nvidia sera utilisé pour les tâches gourmandes en ressources et l'IGP Intel le reste du temps.
 
 Il est à noter qu'à chaque fois que la carte graphique est changée, il faudra redémarrer l'interface avec `sudo systemctl restart lightdm`.
 
@@ -308,7 +308,7 @@ sudo systemctl start clamav-daemon
 
 ### Mise en place d'un pare-feu
 
-Autre composante importante de la politique de sécurité, le pare-feu. L'objectif va être ici de limiter au strict minimum les interactions avec le réseau. Malheureusement, certains logiciels tels que Discord nécessitent de grandes plages d'ouverture de port, ce qui réduit la sécurité du système. Un compromis, est de n'autoriser les connections à ces plages de port qu'à l'utilisateur principal. Il ne faut donc pas hésiter à supprimer ces règles si les programmes auxquels elles se rapportent ne sont pas installés.
+Autre composante importante de la politique de sécurité, le pare-feu. L'objectif va être ici de limiter au strict minimum les interactions avec le réseau. Malheureusement, certains logiciels tels que Discord nécessitent de grandes plages d'ouverture de port, ce qui réduit la sécurité du système. Un compromis est de n'autoriser les connexions à ces plages de port qu'à l'utilisateur principal. Il ne faut donc pas hésiter à supprimer ces règles si les programmes auxquels elles se rapportent ne sont pas installés.
 
 Pour faire cela, nous allons utiliser le proxy `iptables` intégré à la plupart des distributions Linux.
 
@@ -618,7 +618,7 @@ mv jetbrains* jetbrains
 ./jetbrains/jetbrains-toolbox
 ```
 
-Il est également possible d'utiliser GraalVM pour lancer ces différentes IDEs ce qui aura un impact extrêmement positif sur leurs performances.
+Il est également possible d'utiliser GraalVM pour lancer ces différentes IDEs, ce qui aura un impact extrêmement positif sur leurs performances.
 
 ### [VisualStudio code](https://code.visualstudio.com/)
 
@@ -660,7 +660,7 @@ nvm use stable
 
 ### Environnement Java/Kotlin
 
-De la même façon que NVM gère les versions de Node.js, il est possible d'utiliser [SdkMan](https://sdkman.io/) afin de gérer les versions d'[Open JDK](https://openjdk.java.net/), [GraalVM](https://www.graalvm.org/) ou encore [Maven](https://maven.apache.org/) nécessaire au fonctionnement de nos projets.
+De la même façon que NVM gère les versions de Node.js, il est possible d'utiliser [SdkMan](https://sdkman.io/) afin de gérer les versions d'[Open JDK](https://openjdk.java.net/), [GraalVM](https://www.graalvm.org/) ou encore [Maven](https://maven.apache.org/) nécessaires au fonctionnement de nos projets.
 
 ```bash
 curl -s "https://get.sdkman.io" | bash
@@ -732,7 +732,7 @@ sudo groupadd docker
 echo 'alias docker="sudo docker"' >> $HOME/.alias
 ```
 
-Pour installer Podamn :
+Pour installer Podman :
 
 ```bash
 sudo pacman -S podman
@@ -788,7 +788,7 @@ quickemu --fullscreen --display spice --vm macos-big-sur.conf
 
 ### Partage de dossier
 
-SMB avec son implémentation [Samba](https://www.samba.org/) est une solution qui peut s'avérer indispensable quand il s'agit de transférer des fichiers d'une machine à l'autre. Cependant, ce protocole très utilisé est très prisé par les hackers. Installer un serveur Samba directement sur ça machine hôte afin de partager des fichiers avec une machine virtuelle ne semble donc pas être une bonne solution. Une alternative plus sécurisée consiste simplement à utiliser une implémentation de Samba pour Docker. De cette façon, en cas de vulnérabilité, le système hôte n'est pas exposé, son arborescence non plus et pas même les utilisateurs. 
+SMB avec son implémentation [Samba](https://www.samba.org/) est une solution qui peut s'avérer indispensable quand il s'agit de transférer des fichiers d'une machine à l'autre. Cependant, ce protocole très utilisé est très prisé par les hackers. Installer un serveur Samba directement sur sa machine hôte afin de partager des fichiers avec une machine virtuelle ne semble donc pas être une bonne solution. Une alternative plus sécurisée consiste simplement à utiliser une implémentation de Samba pour Docker. De cette façon, en cas de vulnérabilité, le système hôte n'est pas exposé, son arborescence non plus et pas même les utilisateurs.
 
 Le script suivant permet d'exposer facilement le dossier `~/Public` sur un lecteur Samba :
 
@@ -826,11 +826,11 @@ chmod 500 ~/bin/smb
 chmod 500 ~/bin
 ```
 
-Avec ce script, il suffit de taper les commandes `smb start` ou `smb stop` afin d'activer ou désactiver le partage de fichier. De plus, le script va se charge d'ouvrir ou fermer dynamiquement les ports utilisés au niveau du firewall.
+Avec ce script, il suffit de taper les commandes `smb start` ou `smb stop` afin d'activer ou désactiver le partage de fichier. De plus, le script va se charger d'ouvrir ou fermer dynamiquement les ports utilisés au niveau du firewall.
 
 ### Copie de disque
 
-Les disques utilisés par Qemu sont par défaut au format `qcow2` ce format à l'avantage d'adapter sa taille sur disque en fonction de ce qu'il va contenir. Cependant, dans le cas où on supprime des fichiers volumineux dans le disque virtuel, sa taille réservé sur le disque physique ne diminue pas. Il peut alors être bon de réecrir le disque afin de réoptimiser sa structure. Pour ce faire, il suffit d'utiliser la commande :
+Les disques utilisés par Qemu sont par défaut au format `qcow2`, ce format a l'avantage d'adapter sa taille sur disque en fonction de ce qu'il va contenir. Cependant, dans le cas où on supprime des fichiers volumineux dans le disque virtuel, sa taille réservée sur le disque physique ne diminue pas. Il peut alors être bon de réécrire le disque afin de réoptimiser sa structure. Pour ce faire, il suffit d'utiliser la commande :
 
 ```bash
 qemu-img convert -O qcow2 old.qcow2 new.qcow2
@@ -848,7 +848,7 @@ Même en version lite, Manjaro contient de nombreux outils qui ne sont pas réel
 sudo pacman -Rsn manjaro-hello
 ```
 
-- Plusieurs logiciels plus ou moins pertinnats sont préinstallé avec le système. Certains d'entre eux peuvent être désinstallées si on souhaite avoir une distribution plus adaptée à son besoin.
+- Plusieurs logiciels plus ou moins pertinents sont préinstallés avec le système. Certains d'entre eux peuvent être désinstallés si on souhaite avoir une distribution plus adaptée à son besoin.
 
 ```bash
 sudo pacman -Rsn parole mousepad gufw gparted
@@ -875,7 +875,7 @@ cat << EOL > ~/.local/share/applications/org.keepassxc.KeePassXC.desktop
 [Desktop Entry]
 Name=KeePassXC
 GenericName=Password Manager
-GenericName=Gestionnaire de mot de passe
+GenericName[fr]=Gestionnaire de mot de passe
 Comment=Community-driven port of the Windows application “KeePass Password Safe”
 Exec=/usr/bin/flatpak run --socket=ssh-auth --branch=stable --arch=x86_64 --command=keepassxc --file-forwarding org.keepassxc.KeePassXC @@ %f @@
 Icon=keepassxc
@@ -924,7 +924,7 @@ sudo pacman -S w3m
 
 ### [ProtonMail](https://protonmail.com/)
 
-Quand on utilise Linux, les notions de sécurité et de vie privée sont importantes. Donc, utiliser une boite e-mail sécurisée ça l'est tout autant. Le ProtonMailBridge permet de se connecter de manière sécurisée à son compte ProtonMail avec un client lourd de messagerie telle que Thunderbird.
+Quand on utilise Linux, les notions de sécurité et de vie privée sont importantes. Donc, utiliser une boîte e-mail sécurisée ça l'est tout autant. Le ProtonMailBridge permet de se connecter de manière sécurisée à son compte ProtonMail avec un client lourd de messagerie telle que Thunderbird.
 
 ```bash
 flatpak install --user ch.protonmail.protonmail-bridge
@@ -938,7 +938,7 @@ flatpak run --branch=stable --arch=x86_64 --command=protonmail-bridge ch.protonm
 
 ### [ProtonVPN](https://protonvpn.com/)
 
-Durant longtemps, il était possible d'utiliser un client ProtonVPN en ligne de commande. Malheureusement, cela n'est plus possible maintenant qu'il existe une interface. Cette dernière est néanmoins relativement pratique et disponible sur flathub. 
+Durant longtemps, il était possible d'utiliser un client ProtonVPN en ligne de commande. Malheureusement, cela n'est plus possible maintenant qu'il existe une interface. Cette dernière est néanmoins relativement pratique et disponible sur flathub.
 
 ```bash
 sudo pacman -S openvpn openresolv libnatpmp
@@ -947,7 +947,7 @@ sudo chmod +x "/etc/openvpn/update-resolv-conf"
 flatpak install --user com.protonvpn.www
 ```
 
-Par default le p2p ne va pas fonctionner en upload. La commande suivante va permettre de créer un mapping de port avec le serveur VPN. Il n'y aura plus qu'à donner le port dans la configuration de deluge pour pouvoir uploader.
+Par défaut, le p2p ne va pas fonctionner en upload. La commande suivante va permettre de créer un mapping de port avec le serveur VPN. Il n'y aura plus qu'à donner le port dans la configuration de deluge pour pouvoir uploader.
 
 ```bash
 while true ; do date ; natpmpc -a 1 0 udp 60 -g 10.2.0.1 && natpmpc -a 1 0 tcp 60 -g 10.2.0.1 || { echo -e "ERROR with natpmpc command \a" ; break ; } ; sleep 45 ; done
@@ -963,7 +963,7 @@ flatpak install --user org.mozilla.Thunderbird
 
 ### [Discord](https://discord.com/)
 
-Discord est surement l'application de communication la plus populaire du moment. Elle est cependant développée en JavaScript dans un conteneur [Electron](https://www.electronjs.org/) et ne se soucie pas vraiment des utilisateurs Linux. Un patch du nom de [Vencord](https://vencord.dev/) a donc été développé par la communauté afin d'améliorer la performance de l'application et enlever plusieurs options de tracking.
+Discord est sûrement l'application de communication la plus populaire du moment. Elle est cependant développée en JavaScript dans un conteneur [Electron](https://www.electronjs.org/) et ne se soucie pas vraiment des utilisateurs Linux. Un patch du nom de [Vencord](https://vencord.dev/) a donc été développé par la communauté afin d'améliorer la performance de l'application et enlever plusieurs options de tracking.
 
 ```bash
 flatpak install --user dev.vencord.Vesktop
@@ -985,7 +985,7 @@ flatpak install --user im.riot.Riot
 
 ### [Eye of GNOME](https://github.com/GNOME/eog)
 
-La visionneuse d'image de Gnome. Elle est plutôt simple à utiliser et affiche les metadata des images (heure, position GPS si disponible...).
+La visionneuse d'image de Gnome. Elle est plutôt simple à utiliser et affiche les métadonnées des images (heure, position GPS si disponible...).
 
 ```bash
 flatpak install --user org.gnome.eog
@@ -1057,7 +1057,7 @@ flatpak install --user com.spotify.Client
 
 ### [Noson](https://github.com/janbar/noson-app)
 
-Pour ceux, qui comme moi, possèdent du matériel [Sonos](https://www.sonos.com/fr-fr/home), l'application Noson permet de piloter les équipements de la marque. Ce logiciel va permettre en prime de streamer les musiques qui sont présentes sur le disque dur, chose qu'il n'est pas possible de faire aussi simplement sur Windows avec le client Sonos officielles.
+Pour ceux, qui comme moi, possèdent du matériel [Sonos](https://www.sonos.com/fr-fr/home), l'application Noson permet de piloter les équipements de la marque. Ce logiciel va permettre en prime de streamer les musiques qui sont présentes sur le disque dur, chose qu'il n'est pas possible de faire aussi simplement sur Windows avec le client Sonos officiel.
 
 ```bash
 flatpak install --user io.github.janbar.noson
@@ -1082,7 +1082,7 @@ StartupNotify=false
 
 ### [NextCloud](https://nextcloud.com/)
 
-Pour ceux qui veulent déployer leur propre solution de stockage de fichier qui ne serait pas hébergé chez Google, Microsoft ou Amazon.
+Pour ceux qui veulent déployer leur propre solution de stockage de fichier qui ne serait pas hébergée chez Google, Microsoft ou Amazon.
 
 ```bash
 flatpak install --user com.nextcloud.desktopclient.nextcloud
@@ -1114,7 +1114,7 @@ flatpak install --user net.scribus.Scribus
 
 ### [Calibre](https://calibre-ebook.com/)
 
-Personnellement, je dispose d'une liseuse [Bookeen Diva HD](https://bookeen.com/products/diva-hd) (produit d'excellente qualité et Française au demeurant). Afin de centraliser mon catalogue de livre acquis sur différentes plateformes, je les stocke au format epub sans DRM. Pour cela, j'utilise Calibrea avec l'extension [DeDRM_tools](https://github.com/apprenticeharper/DeDRM_tools).
+Personnellement, je dispose d'une liseuse [Bookeen Diva HD](https://bookeen.com/products/diva-hd) (produit d'excellente qualité et française au demeurant). Afin de centraliser mon catalogue de livre acquis sur différentes plateformes, je les stocke au format epub sans DRM. Pour cela, j'utilise Calibre avec l'extension [DeDRM_tools](https://github.com/apprenticeharper/DeDRM_tools).
 
 ```bash
   flatpak install --user com.calibre_ebook.calibre
@@ -1130,7 +1130,7 @@ flatpak install --user org.fontforge.FontForge
 
 ### [LanguageTool](https://languagetool.org/)
 
-Étant dysorthographique, il m'est assez difficile de pousser directement un texte sur internet sans l'avoir fait relire au préalable par un correcteur... Après de nombreuses années d'utilisation du logiciel [Antidote](https://www.antidote.info), l'ai du me résoudre à utiliser d'autres solutions en raison de l'absence complète de support pour Linux.
+Étant dysorthographique, il m'est assez difficile de pousser directement un texte sur internet sans l'avoir fait relire au préalable par un correcteur... Après de nombreuses années d'utilisation du logiciel [Antidote](https://www.antidote.info), j'ai dû me résoudre à utiliser d'autres solutions en raison de l'absence complète de support pour Linux.
 
 LanguageTool est une solution comportant un backend en Java et des plugins à intégrer dans des applications.
 

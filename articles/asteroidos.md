@@ -8,7 +8,7 @@ author: Flavien PERIER <perier@flavien.io>
 date: 2022-03-27 18:00
 ---
 
-Avant toute chose, cet article traite de manipulation technique qui pourraient dans certains cas causer un certain nombre de dysfonctionnements voir des pertes de données. Je n'assumerais en aucun cas la responsabilité de tels problèmes.
+Avant toute chose, cet article traite de manipulations techniques qui pourraient, dans certains cas, causer un certain nombre de dysfonctionnements voire des pertes de données. Je n'assumerai en aucun cas la responsabilité de tels problèmes.
 
 En préambule, je tiens à préciser que je vois personnellement d'un assez mauvais œil les montres connectées. Elles sont pour moi un gadget supplémentaire n'apportant pas de réelles innovations en matière d'usage, mais sont une source inépuisable de données pour ceux qui nous les vendent (données de déplacement, paramètres de santé...). Un système d'exploitation pour ce type d'objet a néanmoins retenu mon attention. Il s'agit d'[AsteroidOS](https://asteroidos.org/).
 
@@ -16,7 +16,7 @@ En préambule, je tiens à préciser que je vois personnellement d'un assez mauv
 
 AsteroidOS est un système d'exploitation pour montre connectée basé sur Linux. Les interfaces sont développées en [QT](https://www.qt.io/) et sont affichées grâce à [Wayland](https://wayland.freedesktop.org/).
 
-Si on veut être honnête, ce système d'exploitation est très en retard par rapport à ce que peut proposer [Google WearOS](https://wearos.google.com/) ou une [Apple Watch](https://www.apple.com/fr/watch/) et ne propose que très peu d'options supplémentaires par rapport à une montre non connectée. Néanmoins, le projet est intéressent et les montres qui le supporte étant assez anciennes, il est possible de s'en procurais à moindre cout d'occasion (et donc à moindre impacte environnemental).
+Si on veut être honnête, ce système d'exploitation est très en retard par rapport à ce que peut proposer [Google WearOS](https://wearos.google.com/) ou une [Apple Watch](https://www.apple.com/fr/watch/) et ne propose que très peu d'options supplémentaires par rapport à une montre non connectée. Néanmoins, le projet est intéressant et les montres qui le supportent étant assez anciennes, il est possible de s'en procurer à moindre coût d'occasion (et donc à moindre impact environnemental).
 
 On trouve comme fonctionnalités intégrées :
 
@@ -37,7 +37,7 @@ On trouve comme fonctionnalités intégrées :
 
 Ayant acheté une montre connectée dans l'unique objectif d'essayer cet OS, je suis parti sur celle qui avait la meilleure compatibilité à savoir la [LG Watch Urban](https://www.lg.com/fr/montres-connectees-lg-g-watch/lg-Watch-Urbane-W150).
 
-Elle a notamment l'énorme l'avantage d'être connectable directement à un ordinateur sans devoir faire de bricolage au niveau du hardware.
+Elle a notamment l'énorme avantage d'être connectable directement à un ordinateur sans devoir faire de bricolage au niveau du hardware.
 
 Son bracelet est facilement changeable puisqu'il s'agit d'attache standard pour montre. Et en cas de problème au niveau hardware, il semblerait que les équipes de [iFixit](https://fr.ifixit.com/News/7178/lg-watch-urbane) aient réussi à la démonter sans trop de difficultés.
 
@@ -84,18 +84,18 @@ fastboot continue
 
 Par défaut, il est possible d'utiliser [l'application mobile officielle d'AsteroidOs](https://f-droid.org/fr/packages/org.asteroidos.sync/). Elle fonctionne plutôt bien, mais reste assez minimaliste.
 
-Pour aller plus loin, il est également possible d'utiliser [GadgetBridge](https://f-droid.org/fr/packages/nodomain.freeyourgadget.gadgetbridge/) qui est une alternative plus complète et qui est également en mesure de piloter des montres qui ne fonctionnent pas sous AsteroidOs. Il manque cependant actuellement plusieurs fonctionnalités mineures comme la capture d'écrans (ce qui n'est certainement pas la fonctionnalité principale). 
+Pour aller plus loin, il est également possible d'utiliser [GadgetBridge](https://f-droid.org/fr/packages/nodomain.freeyourgadget.gadgetbridge/), une alternative plus complète également en mesure de piloter des montres qui ne fonctionnent pas sous AsteroidOs. Il manque cependant actuellement plusieurs fonctionnalités mineures comme la capture d'écrans (ce qui n'est certainement pas la fonctionnalité principale).
 
 ## Connexion Wi-Fi
 
-Pour se connecter à la montre, il faut aller dans les paramètres de la montre puis configurer le mode USB sur `Mode ADB`, puis tapant les commandes sur un pc pendant que la montre est connectée :
+Pour se connecter à la montre, il faut aller dans les paramètres de la montre puis configurer le mode USB sur `Mode ADB`, puis taper les commandes sur un pc pendant que la montre est connectée :
 
 ```sh
 adb usb
 adb shell
 ```
 
-Ensuite pour se connecter en WiFi il faut taper les commandes : 
+Ensuite, pour se connecter en WiFi, il faut taper les commandes :
 
 ```sh
 WIFI_SSID=*********

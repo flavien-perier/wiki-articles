@@ -3,14 +3,14 @@ title: Environnement Android
 type: WIKI
 categories:
   - system
-description: Environement Android Orienté vie privée.
+description: Environnement Android Orienté vie privée.
 author: Flavien PERIER <perier@flavien.io>
 date: 2020-11-10 19:00
 ---
 
-Avant toute chose, cet article traite de manipulation technique qui pourraient dans certains cas causer un certain nombre de dysfonctionnements voir des pertes de données.
+Avant toute chose, cet article traite de manipulations techniques qui pourraient, dans certains cas, causer un certain nombre de dysfonctionnements voire des pertes de données.
 
-Dans cet article, nous allons nous intéresser à la mise en place d'un environnement orient vie privée et sécurité sur un téléphone portable.
+Dans cet article, nous allons nous intéresser à la mise en place d'un environnement orienté vie privée et sécurité sur un téléphone portable.
 
 ## Le téléphone
 
@@ -20,7 +20,7 @@ Tout d'abord, il est important de souligner que l'entreprise essaye de s'oriente
 
 L'autre aspect du Fairphone qui va plus nous intéresser dans cet article, c'est son aspect modulaire. Ce téléphone étant conçu dans une optique de durabilité, il est possible de changer en quelques poignées de minutes n'importe quels composants. Cela peut se faire tant au niveau hardware (changement de l'écran, caméra, carte mère...) qu'au niveau software. En effet, contrairement à beaucoup d'autres constructeurs, Fairphone fait en sorte qu'il soit facile de remplacer le système d'exploitation par défaut de son téléphone.
 
-L'inconveignet souvent répété de ce téléphone est sa puissance jugée trop faible pour un téléphone de ce prix (plus ou moins 450 €). Mais soyons réalistes, si vous ne jouez pas à des jeux 3D, son processeur [Snapdragon 632](https://www.qualcomm.com/products/snapdragon-632-mobile-platform) et ses 4Go de RAM devraient être largement suffisants pour tous vos usages. Quant au niveau du prix, il faut bien mettre dans la balance le fait que le téléphone étant fait pour durer le support des mises à jour sera poussé tant que possible (5 ans minimum) contrairement à la plupart des constructeurs (hors Apple) qui partent sur une base de 18 mois. Pour ceux qui se disent qu'ils peuvent continuer à utiliser leur téléphone sans mise à jour de sécurité, je tiens simplement à rappeler qu'Android est aujourd'hui l'un des systèmes d'exploitation les plus attaqués et que par conséquent, ne pas le mettre revient à mettre en péril les données qu'on y stocke, notamment quand on sait que beaucoup d'utilisateurs n'hésitent pas à installer leurs applications bancaires favorites sur leur téléphone.
+L'inconvénient souvent répété de ce téléphone est sa puissance jugée trop faible pour un téléphone de ce prix (plus ou moins 450 €). Mais soyons réalistes, si vous ne jouez pas à des jeux 3D, son processeur [Snapdragon 632](https://www.qualcomm.com/products/snapdragon-632-mobile-platform) et ses 4Go de RAM devraient être largement suffisants pour tous vos usages. Quant au niveau du prix, il faut bien mettre dans la balance le fait que le téléphone étant fait pour durer, le support des mises à jour sera poussé tant que possible (5 ans minimum), contrairement à la plupart des constructeurs (hors Apple) qui partent sur une base de 18 mois. Pour ceux qui se disent qu'ils peuvent continuer à utiliser leur téléphone sans mise à jour de sécurité, je tiens simplement à rappeler qu'Android est aujourd'hui l'un des systèmes d'exploitation les plus attaqués et que, par conséquent, ne pas le mettre à jour revient à mettre en péril les données qu'on y stocke, notamment quand on sait que beaucoup d'utilisateurs n'hésitent pas à installer leurs applications bancaires favorites sur leur téléphone.
 
 ## Le système d'exploitation
 
@@ -82,7 +82,7 @@ En premier lieu, il faut télécharger les différents composants pour l'install
 - [/e/ canal stable](https://images.ecloud.global/stable/FP3/) ou [/e/ canal dev](https://images.ecloud.global/dev/FP3/)
 - L'APK [Magisk 24.2](https://github.com/topjohnwu/Magisk/releases/tag/v24.2)
 
-Ensuite, il faut accéder au mode recovry du téléphone (l'éteindre et le rallumer en maintenant les bouton "marche/arrêt" et "volume +" enfoncés) afin d'installer le système (toutes les données utilisateurs vont être perdues).
+Ensuite, il faut accéder au mode recovery du téléphone (l'éteindre et le rallumer en maintenant les bouton "marche/arrêt" et "volume +" enfoncés) afin d'installer le système (toutes les données utilisateurs vont être perdues).
 
 ```bash
 unzip *
@@ -154,7 +154,7 @@ Par défaut le système d'exploitation contient un minimum d'applications pour �
 
 #### [MicroG](https://microg.org/download.html)
 
-Comme dit plus tôt, ce système d'exploitation est conçu pour communiquer le moins possible avec Google. Seul problème, Android et son Framework sont développés par Google. Les interactions avec les serveurs de la société sont donc nombreuses les coupés causeraient de graves dysfonctionnements pour de très nombreuses applications.
+Comme dit plus tôt, ce système d'exploitation est conçu pour communiquer le moins possible avec Google. Seul problème, Android et son Framework sont développés par Google. Les interactions avec les serveurs de la société sont donc nombreuses et les couper causerait de graves dysfonctionnements pour de très nombreuses applications.
 
 Heureusement, des développeurs se sont penchés sur le sujet et ont conçu MicroG. Ce dernier simule le comportement des composants Google sur un téléphone utilisant un système Android natif en envoyant le moins d'informations possible sur internet. Cette application est donc un très bon équilibre entre téléphone fonctionnel et vie privée.
 
@@ -247,11 +247,11 @@ Cette méthode n'est surement pas aussi efficace qu'un service en ligne, mais a 
 
 ### Les réseaux sociaux
 
-Concernant les réseaux sociaux, il est à la fois évident que disposer de ces derniers sur son téléphone pose un problème pour la vie privée et que ne pas les avoir peut-être parfois embarassant dans la vie réelle. Sans être exaustif, voila quelques conseille pour une meilleure gestion de ces réseaux sur smartphone :
+Concernant les réseaux sociaux, il est à la fois évident que disposer de ces derniers sur son téléphone pose un problème pour la vie privée et que ne pas les avoir peut être parfois embarrassant dans la vie réelle. Sans être exhaustif, voici quelques conseils pour une meilleure gestion de ces réseaux sur smartphone :
 
 - Le premier, est de bien définir les réseaux qui nous sont utiles et ceux qui ne nous servent pas.
 
-- Il est préférable d'utiliser les réseaux sociaux dans un contexte isolé du reste du téléphone. C'est ce que propose des applications tel que [Shelter](https://f-droid.org/packages/net.typeblog.shelter/) ou [Island](https://github.com/oasisfeng/island) (la seconde ne fonctionnant pas sur /e/). Ces programmes vont créer des contextes dans lesquels les applications ne pourtant pas accéder aux fichiers, contacts... Ces environnements seront également désactivables de sorte qu'aucune application installée dans ce contexte ne puisse tourne en arrière-plan.
+- Il est préférable d'utiliser les réseaux sociaux dans un contexte isolé du reste du téléphone. C'est ce que proposent des applications telles que [Shelter](https://f-droid.org/packages/net.typeblog.shelter/) ou [Island](https://github.com/oasisfeng/island) (la seconde ne fonctionnant pas sur /e/). Ces programmes vont créer des contextes dans lesquels les applications ne pourront pas accéder aux fichiers, contacts... Ces environnements seront également désactivables de sorte qu'aucune application installée dans ce contexte ne puisse tourner en arrière-plan.
 
 - Enfin, quand c'est possible, il est préférable d'utiliser la version light des applications de réseaux sociaux. Ces versions sont développées pour de vieux appareils et font donc moins de choses. Après c'est à chacun de voir si le minimum est suffisant et si l'application est bien proposée pour un réseau social donné (typiquement la version lite de LinkedIn a été abandonnée).
     - [Facebook lite](https://apkpure.com/fr/facebook-lite/com.facebook.lite)

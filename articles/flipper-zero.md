@@ -9,7 +9,7 @@ author: Flavien PERIER <perier@flavien.io>
 date: 2023-01-11 18:00
 ---
 
-Je tiens avant toute chose à préciser que cet article est rédigé uniquement à but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous couter jusqu'à deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
+Je tiens avant toute chose à préciser que cet article est rédigé uniquement dans un but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes, je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous couter jusqu'à deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
 
 Le [Flipper Zero](https://flipperzero.one/) est un dispositif d'attaque physique. Il s'agit d'une sorte de couteau suisse de l'attaque sans fil.
 
@@ -23,7 +23,7 @@ En effet, le dispositif dispose d'un grand nombre de capteurs :
 
 Par défaut le Flipper Zero ne dispose pas de carte wifi, mais il est possible d'en connecter une externe en utilisant le GPIO.
 
-Il est également possible de connecter l'appareil en USB a un ordinateur afin de l'utiliser comme une [Rubber Ducky](https://www.flavien.io/wiki/rubber-ducky.md) ou comme d'une clé de sécurité (comme une [YubiKey](https://www.yubico.com/)).
+Il est également possible de connecter l'appareil en USB à un ordinateur afin de l'utiliser comme une [Rubber Ducky](https://www.flavien.io/wiki/rubber-ducky.md) ou comme une clé de sécurité (comme une [YubiKey](https://www.yubico.com/)).
 
 ![Flipper Zero](https://medias.flavien.io/articles/flipper-zero/flipper-zero.webp)
 
@@ -61,7 +61,7 @@ Le firmware de base de l'appareil peut être assez limité. En effet, il existe 
 
 Le firmware [unleashed-firmware](https://github.com/DarkFlippers/unleashed-firmware) est assez populaire. Il ne change pas radicalement le fonctionnement de l'appareil, mais se charge d'embarquer de nombreux outils que l'utilisateur n'aura pas à intégrer lui-même.
 
-Au moment du téléchargement plusieurs versions du firmware sont proposées. La `n` ne contient que le firmware modifié, tandis que la `e` contient le firmware et [la plupart des outils communautaires](https://github.com/xMasterX/all-the-plugins). Il est donc bien plus intéressent de télécharger cette seconde version.
+Au moment du téléchargement, plusieurs versions du firmware sont proposées. La `n` ne contient que le firmware modifié, tandis que la `e` contient le firmware et [la plupart des outils communautaires](https://github.com/xMasterX/all-the-plugins). Il est donc bien plus intéressant de télécharger cette seconde version.
 
 ### Utilisation en tant que clé de sécurité
 

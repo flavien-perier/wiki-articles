@@ -24,7 +24,7 @@ Pour ce type de serveur, les distributions basées sur [RedHat](https://www.redh
 
 Cependant, il peut être dommage de ne pas bénéficier des dernières mises à jour du kernel quand on souhaite avoir une infrastructure performante. On oublie donc [RHEL](https://www.redhat.com/fr/technologies/linux-platforms/enterprise-linux) (de toute façon, pas de nécessité de support), [RockyLinux](https://rockylinux.org/) ou [CentOS](https://www.centos.org/).
 
-La distribution qui semble donc le plus approprié pour cette installation est [Fedora Server](https://fedoraproject.org/fr/server/).
+La distribution qui semble donc la plus appropriée pour cette installation est [Fedora Server](https://fedoraproject.org/fr/server/).
 
 ## Installation
 
@@ -54,10 +54,10 @@ Installation des drivers Nvidia et configuration minimale du serveur :
 ```bash
 curl -s https://sh.flavien.io/shell.sh | bash -
 
-dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
-dnf config-manager addrepo --from-repofile=https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
+dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
+dnf config-manager --add-repo https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
 
-dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
+dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 
 dnf clean all
 dnf install kernel-devel kernel-headers
@@ -67,7 +67,7 @@ dnf remove plymouth*
 
 ### SELinux
 
-SELinux est un élément de sécurité ajouté aux systèmes RedHat. En théorie l'installation fonctionnerait au global avec SELinux d'actif, mais de nombreux problèmes de stabilité peuvent survenir. C'est pourquoi nous allons désactiver la partie blocage de ce composant, tout en conservant la partie monitoring.
+SELinux est un élément de sécurité ajouté aux systèmes RedHat. En théorie, l'installation fonctionnerait au global avec SELinux d'actif, mais de nombreux problèmes de stabilité peuvent survenir. C'est pourquoi nous allons désactiver la partie blocage de ce composant, tout en conservant la partie monitoring.
 
 ```bash
 sed -i "s/SELINUX=enforcing/SELINUX=permissive/" /etc/selinux/config
@@ -75,7 +75,7 @@ sed -i "s/SELINUX=enforcing/SELINUX=permissive/" /etc/selinux/config
 
 ### fichier SWAP
 
-Par défaut Fedora utilise une mécanique nommée zRam qui permet de compresser la mémoire plutôt que de l'écrire dans le disque. C'est assez malin et globalement beaucoup plus rapide que du SWAP. Cependant, avec cette mécanique, on ne peut pas mettre autant de SWAP que de mémoire, ce qui peut malheureusement être pratique quand on veut traiter de très gros volumes de données (mais qui aura un impact très important sur les performances). Sur cette machine zRam va donc être désinstallé et un fichier de SWAP va être rajouté. Comme la machine possède beaucoup de mémoire, cette solution ne devrait pas dégrader les performances pour la majorité des usages.
+Par défaut, Fedora utilise une mécanique nommée zRam qui permet de compresser la mémoire plutôt que de l'écrire dans le disque. C'est assez malin et globalement beaucoup plus rapide que du SWAP. Cependant, avec cette mécanique, on ne peut pas mettre autant de SWAP que de mémoire, ce qui peut malheureusement être pratique quand on veut traiter de très gros volumes de données (mais qui aura un impact très important sur les performances). Sur cette machine, zRam va donc être désinstallé et un fichier de SWAP va être rajouté. Comme la machine possède beaucoup de mémoire, cette solution ne devrait pas dégrader les performances pour la majorité des usages.
 
 ```bash
 dnf remove zram-generator
@@ -91,7 +91,7 @@ swapon /var/swapfile
 echo "/var/swapfile sw swap sw   0 0" | tee -a /etc/fstab
 ```
 
-Par default le system va commencer à utiliser le SWAP à partir de 40% d'occupation de la mémoire vu la taille du SWAP installé ici (et le fait que la machine possède quand même 32Go de RAM), la valeur va être remonté à 80% afin que le système utilise le SWAP le moins souvent possible.
+Par défaut, le système va commencer à utiliser le SWAP à partir de 40% d'occupation de la mémoire. Vu la taille du SWAP installé ici (et le fait que la machine possède quand même 32Go de RAM), la valeur va être remontée à 80% afin que le système utilise le SWAP le moins souvent possible.
 
 ```bash
 sysctl vm.swappiness=20
@@ -205,10 +205,10 @@ firewall-cmd --permanent --zone=trusted --add-service=openvpn
 firewall-cmd --permanent --zone=trusted --add-interface=tun0
 firewall-cmd --add-masquerade
 firewall-cmd --permanent --add-masquerade
-firewall-cmd --permanent --direct --passthrough ipv4 -t nat -A POSTROUTING -s 10.8.0.0/24 -o $SERVER_IP -j MASQUERADE
+firewall-cmd --permanent --direct --passthrough ipv4 -t nat -A POSTROUTING -s 10.8.0.0/24 -o enp6s0 -j MASQUERADE
 firewall-cmd --reload
 
-# OpenVPN configuratiuon
+# OpenVPN configuration
 echo 'port 1194
 server 10.8.0.0 255.255.255.0
 proto udp4
@@ -250,7 +250,7 @@ Par la suite, il est possible de générer le fichier `ovpn` qui sera transmis a
 ```bash
 cat << EOL > ~/vm-client.ovpn
 client
-remote $SEREVER_IP 1194
+remote $SERVER_IP 1194
 proto udp4
 dev tap
 
@@ -277,19 +277,19 @@ $(cat /etc/openvpn/client/vm-client.key)
 EOL
 ```
 
-Il suffit alors de récupérer le fichier `~/vm-clien.ovpn` sur ça machine à l'aide de SCP et de l'exécuter avec :
+Il suffit alors de récupérer le fichier `~/vm-client.ovpn` sur sa machine à l'aide de SCP et de l'exécuter avec :
 
 ```bash
-sudo sudo openvpn --config client.ovpn
+sudo openvpn --config client.ovpn
 ```
 
 ### Wake on Lan
 
-La configuration [Wake on Lan](https://fr.wikipedia.org/wiki/Wake-on-LAN) permet à un ordinateur d'être démarré par le réseau. Une fois en place, le seul prérequis pour pouvoir allumer un ordinateur dont le WoL est actif et de posséder son adresse mac et d'être sur le même réseau que lui.
+La configuration [Wake on Lan](https://fr.wikipedia.org/wiki/Wake-on-LAN) permet à un ordinateur d'être démarré par le réseau. Une fois en place, le seul prérequis pour pouvoir allumer un ordinateur dont le WoL est actif est de posséder son adresse MAC et d'être sur le même réseau que lui.
 
-Une partie de la carte réseau de la machine écoutera donc constamment le réseau même quand l'ordinateur est éteint. Si elle reçoit un paque contenant les octets FF FF FF FF FF FF suivi de 16 répétitions de l'adresse mac, le reste de la machine va démarrer (magic packet).
+Une partie de la carte réseau de la machine écoutera donc constamment le réseau même quand l'ordinateur est éteint. Si elle reçoit un paquet contenant les octets FF FF FF FF FF FF suivi de 16 répétitions de l'adresse MAC, le reste de la machine va démarrer (magic packet).
 
-Il faut préalable activer le démarrage par le réseau dans le bios de la machine (configuration différente d'un constructeur à l'autre).
+Il faut au préalable activer le démarrage par le réseau dans le BIOS de la machine (configuration différente d'un constructeur à l'autre).
 
 Puis au niveau de Linux, mettre les configurations suivantes :
 
@@ -365,7 +365,7 @@ Et d'exécuter le fichier en question avec notre utilisateur par défaut grâce 
 
 ### Ollama
 
-[Ollama](https://ollama.com/) est une technologie permettant d'exécuter des modèles de langages avec des templates. L'architecture de l'application s'inspire globalement de Docker ce qui rend pertinent son installation au niveau de l'hyperviseur et non sur un sous-système conteneurisé / virtualisé.
+[Ollama](https://ollama.com/) est une technologie permettant d'exécuter des modèles de langages avec des templates. L'architecture de l'application s'inspire globalement de Docker, ce qui rend pertinent son installation au niveau de l'hyperviseur et non sur un sous-système conteneurisé / virtualisé.
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
@@ -470,7 +470,7 @@ then
 
     # Unbind EFI-Framebuffer
     echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind
-    
+
     # Avoid a race condition by waiting a couple of seconds. This can be calibrated to be shorter or longer if required for your system
     sleep 5
 
@@ -537,7 +537,7 @@ echo VIRSH_GPU_AUDIO=pci_0000_`lspci | grep -i nvidia | grep -i audio | cut -f1 
 
 #### XML de configuration de la vm Windows 11
 
-La configuration de cette machine virtuelle est prévue pour le jeu. Dans le XML ci-dessous un certain nombre d'optimisations ont pour but d'améliorer la performance du CPU vis-à-vis de la VM, mais également de dissimuler au mieux le fait qu'il s'agisse d'une machine virtuelle. En effet, les anti-sheats tel qu'[Easy Anti-Cheat](https://www.easy.ac/) peuvent essayer de bloquer les jeux dans des machines virtuelles. Ces optimisations devraient rendre la détection beaucoup plus compliquée.
+La configuration de cette machine virtuelle est prévue pour le jeu. Dans le XML ci-dessous, un certain nombre d'optimisations ont pour but d'améliorer la performance du CPU vis-à-vis de la VM, mais également de dissimuler au mieux le fait qu'il s'agisse d'une machine virtuelle. En effet, les anti-cheats tels qu'[Easy Anti-Cheat](https://www.easy.ac/) peuvent essayer de bloquer les jeux dans des machines virtuelles. Ces optimisations devraient rendre la détection beaucoup plus compliquée.
 
 Avec [Virt manager](https://virt-manager.org/), il est possible de configurer l'hyperviseur à distance à travers un tunnel SSH.
 
@@ -784,7 +784,7 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
 
 ### [Cockpit](https://cockpit-project.org/)
 
-Cockpit est une interface web préinstallée sur Fedora serveur permettant de manager notre serveur à distance. Certains modules sont déjà préinstallés (comme celui permettant de gérer [SElinux](https://selinuxproject.org/)), mais d'autres peuvent être installés afin de gérer Docker, KVM et quelques autres aspects du système directement depuis l'interface. Pour ce faire :
+Cockpit est une interface web préinstallée sur Fedora Server permettant de manager notre serveur à distance. Certains modules sont déjà préinstallés (comme celui permettant de gérer [SELinux](https://selinuxproject.org/)), mais d'autres peuvent être installés afin de gérer Docker, KVM et quelques autres aspects du système directement depuis l'interface. Pour ce faire :
 
 ```bash
 dnf install cockpit-machines
