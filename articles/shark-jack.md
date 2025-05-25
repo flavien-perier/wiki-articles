@@ -19,11 +19,11 @@ La [Shark Jack](https://shop.hak5.org/products/shark-jack) est un dispositif d'a
 
 La Shark Jack est un dispositif de petite taille et donc facile à dissimuler quand on se rend à un endroit où on ne devrait pas être. Elle est facile à dissimuler et la LED multicolore permet de savoir précisément où le script en est dans son déroulement.
 
-Ses inconvénients sont pour moi liés à sa conception minimaliste, le stockage est très limité, le processeur ridicule et l'autonomie de 10 à 15 minutes en fonction des tâches effectuées. Les limites de stockage rendent impossible lefait de rajouter des paquets. Il pourrait par exemple être intéressant sur ce genre de dispositif de disposer de [Python](https://www.python.org/) avec [Scapy](https://scapy.net/) afin d'analyser les trames qui transitent sur le réseau et de les réécrire à la volée. D'un point de vue processeur, la faible puissance nous dissuade rapidement d'utiliser des outils tel que [arpspoof](https://github.com/alandau/arpspoof) afin de créer une attaque [MITM](https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu) (le processeur aurait trop de mal à faire transiter les paquets entre le client et le routeur, du coup la navigation serait fortement ralentie et la victime devrait vite suspicieuse, même si elle n'est pas sensibilisée à la sécurité) et de toute façon, `tcpdump` ne pourrait pas enregistrer des heures de navigations vu les limitations de stockage et de batterie.
+Ses inconvénients sont pour moi liés à sa conception minimaliste, le stockage est très limité, le processeur relativement peu puissant et l'autonomie de seulement 10 à 15 minutes en fonction des tâches effectuées. Les limites de stockage rendent impossible le fait de rajouter des paquets supplémentaires volumineux. Il pourrait par exemple être intéressant sur ce genre de dispositif de disposer de [Python](https://www.python.org/) avec [Scapy](https://scapy.net/) afin d'analyser les trames qui transitent sur le réseau et de les réécrire à la volée. D'un point de vue processeur, la faible puissance nous dissuade rapidement d'utiliser des outils tels que [arpspoof](https://github.com/alandau/arpspoof) afin de créer une attaque [MITM](https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu) (le processeur aurait trop de mal à faire transiter les paquets entre le client et le routeur, du coup la navigation serait fortement ralentie et la victime devrait vite devenir suspicieuse, même si elle n'est pas sensibilisée à la sécurité) et de toute façon, `tcpdump` ne pourrait pas enregistrer des heures de navigations vu les limitations de stockage et de batterie.
 
-Autre point, je pense personnellement qu'utiliser ce dispositif afin de se connecter à un serveur distant afin d'y déposer par exemple le résultat d'un nmap me semble être une mauvaise idée. Déjà parce que la plupart des réseaux d'entreprises ne nous laisseront pas contacter une machine située à l'extérieur du réseau sans passer par un proxy et ensuite dans l'hypothèse où cette connexion aboutisse, cela laisserait une trace facile à remonter... Celle de notre serveur. Cela nous oblige donc à utiliser uniquement les ressources limitées du dispositif afin de faire des analyse légères ou de modifier furtivement la configuration réseau à notre avantage afin d'y accèder plus tard de l'extérieur.
+Autre point, je pense personnellement qu'utiliser ce dispositif afin de se connecter à un serveur distant pour y déposer par exemple le résultat d'un nmap me semble être une mauvaise idée. Déjà parce que la plupart des réseaux d'entreprises ne nous laisseront pas contacter une machine située à l'extérieur du réseau sans passer par un proxy et ensuite dans l'hypothèse où cette connexion aboutisse, cela laisserait une trace facile à remonter... Celle de notre serveur. Cela nous oblige donc à utiliser uniquement les ressources limitées du dispositif afin de faire des analyses légères ou de modifier furtivement la configuration réseau à notre avantage afin d'y accéder plus tard de l'extérieur.
 
-À cela il faut rajouter que la conception en plus d'être minimaliste est très low cost. La batterie de mon dispositif ayant explosé après seulement quelques minutes d'utilisation... Cela étant surement lié à l'absence de limiteur de charge ou simplement que la batterie est d'une référence douteuse... Bref le concept est assez intéressent, mais la concertions du dispositif assez douteux.
+À cela il faut rajouter que la conception en plus d'être minimaliste est très low cost. La batterie de mon dispositif ayant explosé après seulement quelques minutes d'utilisation... Cela étant sûrement lié à l'absence de limiteur de charge ou simplement que la batterie est d'une référence douteuse... Bref le concept est assez intéressant, mais la conception du dispositif assez douteuse.
 
 ## Vecteurs d'attaque
 
@@ -61,13 +61,13 @@ Il existe plusieurs sites qui proposent des scripts déjà tout faits. Il est in
 
 #### Quelques conseils
 
-- Eviter de faire des analyses trop complètes qui pouraient bloiquer le dispositif pendant un long laps de temps.
+- Éviter de faire des analyses trop complètes qui pourraient bloquer le dispositif pendant un long laps de temps.
 
 #### Reverse SSH
 
-Comme précisé plus haut ce script ne devrait pas être utile lors d'un véritable scénario d'attaque, cependant il peut permettre de conbfigurer l'appareil de manière plus simple qu'en utilisant le réseau virtuel de l'appareil. En effet ce dernier ne permettant pas d'accéder à internet il ne sera pas possible d'installer de nouveau packets ou de les mettres à jour.
+Comme précisé plus haut ce script ne devrait pas être utile lors d'un véritable scénario d'attaque, cependant il peut permettre de configurer l'appareil de manière plus simple qu'en utilisant le réseau virtuel de l'appareil. En effet ce dernier ne permettant pas d'accéder à internet il ne sera pas possible d'installer de nouveaux paquets ou de les mettre à jour.
 
-En prérequis il va falloir installer sur le dispositif les certificats nécesssaires à une connection SSH par clé (pour laquelle aucun mot de passe sera demandé).
+En prérequis il va falloir installer sur le dispositif les certificats nécessaires à une connexion SSH par clé (pour laquelle aucun mot de passe ne sera demandé).
 
 ```bash
 #!/bin/bash
