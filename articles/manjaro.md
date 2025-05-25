@@ -1128,6 +1128,67 @@ Un éditeur de police de caractères.
 flatpak install --user org.fontforge.FontForge
 ```
 
+### [LanguageTool](https://languagetool.org/)
+
+Étant dysorthographique, il m'est assez difficile de pousser directement un texte sur internet sans l'avoir fait relire au préalable par un correcteur... Après de nombreuses années d'utilisation du logiciel [Antidote](https://www.antidote.info), l'ai du me résoudre à utiliser d'autres solutions en raison de l'absence complète de support pour Linux.
+
+LanguageTool est une solution comportant un backend en Java et des plugins à intégrer dans des applications.
+
+Dans un premier temps, il va falloir [télécharger le Backend en Java](https://dev.languagetool.org/http-server) et lui associé un utilisateur système :
+
+```bash
+export LANGUAGE_TOOL_DIR=/opt/LanguageTool
+export LANGUAGE_TOOL_VERSION=20250523
+
+sudo rm -Rf $LANGUAGE_TOOL_DIR
+
+sudo mkdir -p $LANGUAGE_TOOL_DIR
+wget https://internal1.languagetool.org/snapshots/LanguageTool-$LANGUAGE_TOOL_VERSION-snapshot.zip -O /tmp/LanguageTool.zip
+sudo unzip -d $LANGUAGE_TOOL_DIR /tmp/LanguageTool.zip
+sudo mv $LANGUAGE_TOOL_DIR/LanguageTool-*/* $LANGUAGE_TOOL_DIR
+sudo rmdir $LANGUAGE_TOOL_DIR/LanguageTool-*
+rm -f /tmp/LanguageTool.zip
+
+wget https://download.oracle.com/graalvm/21/latest/graalvm-jdk-21_linux-x64_bin.tar.gz -O /tmp/graalvm.tar.gz
+sudo tar xf /tmp/graalvm.tar.gz -C $LANGUAGE_TOOL_DIR
+sudo mv $LANGUAGE_TOOL_DIR/graalvm-jdk* $LANGUAGE_TOOL_DIR/java
+rm -f /tmp/graalvm.tar.gz
+
+sudo groupadd LanguageTool
+sudo useradd -g LanguageTool -M -d $LANGUAGE_TOOL_DIR LanguageTool
+
+sudo chown -R LanguageTool: $LANGUAGE_TOOL_DIR
+sudo chmod -R go-rwx $LANGUAGE_TOOL_DIR
+```
+
+Dans un second temps, il va falloir créer le service LanguageTool pour qu'il puisse être managé par systemd :
+
+```bash
+echo '[Unit]
+Description=LanguageTool Service
+After=network-online.target
+
+[Service]
+ExecStart=/opt/LanguageTool/java/bin/java -cp /opt/LanguageTool/languagetool-server.jar org.languagetool.server.HTTPServer --port 8081 --allow-origin "*"
+User=LanguageTool
+Group=LanguageTool
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target
+' | sudo tee /etc/systemd/system/LanguageTool.service
+
+sudo systemctl daemon-reload
+sudo systemctl enable LanguageTool
+sudo systemctl restart LanguageTool
+```
+
+Enfin, il est possible de rajouter des extensions dans différents logiciels :
+
+- [Firefox](https://addons.mozilla.org/fr/firefox/addon/languagetool/)
+- [Thunderbird](https://addons.thunderbird.net/fr/thunderbird/addon/grammar-and-spell-checker/)
+
 ### [Pandoc](https://pandoc.org/)
 
 Pandoc est un outil très puissant permettant de convertir de nombreux formats de fichier texte dans d'autres formats de fichier texte. Il est par exemple possible de transformer un fichier Markdown en document PDF en lui appliquant une feuille de style au format [LaTeX](https://www.latex-project.org/). Il est donc possible de rédiger des documents de qualité professionnelle simplement en Markdown et de les convertir plus tard dans le format que nous souhaitons exporter, pdf, doc, html, LaTex, epub...
