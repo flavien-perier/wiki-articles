@@ -109,7 +109,9 @@ sudo pacman -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 
 ### Configuration du réseau
 
-Par défaut, Manjaro utilise [NetworkManager](https://networkmanager.dev/) qui permet de gérer automatiquement le démon et est en règle générale plutôt efficace. Mon seul problème avec la configuration par défaut est que le DNS que l'on va inscrire dans le `resolve.conf` sera automatiquement remplacé par celui fourni par le DHCP. Je vais donc forcer manuellement l'utilisation des DNS [OpenDNS](https://www.opendns.com/), [Cloudflare](https://www.cloudflare.com/fr-fr/dns) et [OpenNIC](https://www.opennic.org/).
+A l'installation, Manjaro utilise [NetworkManager](https://networkmanager.dev/) qui permet de gérer le réseau de manière automatique. Cependant, le DNS inscrit dans le fichier `resolve.conf` sera automatiquement remplacé par celui fourni par le DHCP.
+
+Avec le code suivant, nous allons forcer l'utilisation des DNS [OpenDNS](https://www.opendns.com/), [Cloudflare](https://www.cloudflare.com/fr-fr/dns) et [OpenNIC](https://www.opennic.org/).
 
 ```bash
 cat << EOL | sudo tee /etc/NetworkManager/conf.d/90-dns.conf
@@ -398,6 +400,16 @@ iptables -t filter -A INPUT -p udp --dport 27031:27036 -j ACCEPT
 iptables -t filter -A INPUT -p tcp --dport 27036 -j ACCEPT
 iptables -t filter -A OUTPUT -p udp --dport 27000:27100 -j ACCEPT -m owner --uid-owner 1000
 
+## Moonlight
+iptables -t filter -A OUTPUT -p tcp --dport 47984 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p tcp --dport 47989 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p tcp --dport 48010 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p udp --dport 47998 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p udp --dport 47999 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p udp --dport 48000 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p udp --dport 48002 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p udp --dport 48010 -j ACCEPT -m owner --uid-owner 1000
+
 ## Sonos
 iptables -t filter -A INPUT -p tcp --dport 1400 -d 192.168.1.1/24 -j ACCEPT
 iptables -t filter -A OUTPUT -p tcp --dport 1400 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
@@ -410,12 +422,6 @@ iptables -t filter -A OUTPUT -p udp --dport 5353 -d 192.168.1.1/24 -j ACCEPT -m 
 # Synergy
 iptables -t filter -A INPUT -p tcp --dport 24800 -d 192.168.1.1/24 -j ACCEPT
 iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
-
-# Valent
-iptables -t filter -A INPUT -p tcp --dport 1714:1764 -d 192.168.1.1/24 -j ACCEPT
-iptables -t filter -A INPUT -p udp --dport 1714:1764 -d 192.168.1.1/24 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 1714:1764 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p udp --dport 1714:1764 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
 
 # Protections
 
