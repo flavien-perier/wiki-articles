@@ -410,15 +410,6 @@ iptables -t filter -A OUTPUT -p udp --dport 48000 -j ACCEPT -m owner --uid-owner
 iptables -t filter -A OUTPUT -p udp --dport 48002 -j ACCEPT -m owner --uid-owner 1000
 iptables -t filter -A OUTPUT -p udp --dport 48010 -j ACCEPT -m owner --uid-owner 1000
 
-## Sonos
-iptables -t filter -A INPUT -p tcp --dport 1400 -d 192.168.1.1/24 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 1400 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
-
-### Sonos with Spotify
-iptables -t filter -A INPUT -p udp --dport 1900 -d 192.168.1.1/24 -j ACCEPT
-iptables -t filter -A INPUT -p udp --dport 5353 -d 192.168.1.1/24 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 5353 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
-
 # Synergy
 iptables -t filter -A INPUT -p tcp --dport 24800 -d 192.168.1.1/24 -j ACCEPT
 iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
@@ -1053,39 +1044,6 @@ Soundux est un simple logiciel pour jouer des sons lors de conversations audio.
 flatpak install --user io.github.Soundux
 ```
 
-### [Spotify](https://www.spotify.com/fr/)
-
-Parce qu'on ne peut pas loger toute la musique du monde sur son petit SSD...
-
-```bash
-flatpak install --user com.spotify.Client
-```
-
-### [Noson](https://github.com/janbar/noson-app)
-
-Pour ceux, qui comme moi, possèdent du matériel [Sonos](https://www.sonos.com/fr-fr/home), l'application Noson permet de piloter les équipements de la marque. Ce logiciel va permettre en prime de streamer les musiques qui sont présentes sur le disque dur, chose qu'il n'est pas possible de faire aussi simplement sur Windows avec le client Sonos officiel.
-
-```bash
-flatpak install --user io.github.janbar.noson
-```
-
-Afin d'accélérer l'accès à l'enceinte au démarrage de l'application, j'ai configuré ma box avec un bail DHCP permanent afin que mon périphérique Sonos ait toujours la même adresse IP d'attribuée (dans mon cas `192.168.1.5`). Ensuite, il ne reste plus qu'à modifier le raccourci de lancement de l'application pour lui appliquer le paramètre `--deviceurl=http://192.168.1.5:1400`. Avec cette configuration, l'application n'a pas besoin de découverte réseau étant donné qu'elle sait d'avance où se situe l'enceinte.
-
-```bash
-cat << EOL > ~/.local/share/applications/io.github.janbar.noson.desktop
-[Desktop Entry]
-Name=noson
-Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=noson-app io.github.janbar.noson --deviceurl=http://192.168.1.5:1400/
-Icon=io.github.janbar.noson
-Terminal=false
-Type=Application
-Categories=AudioVideo;Audio;
-X-Flatpak=io.github.janbar.noson
-Comment=
-Path=
-StartupNotify=false
-```
-
 ### [NextCloud](https://nextcloud.com/)
 
 Pour ceux qui veulent déployer leur propre solution de stockage de fichier qui ne serait pas hébergée chez Google, Microsoft ou Amazon.
@@ -1368,6 +1326,14 @@ Un excellent analyseur de réseau pour ceux qui, comme moi, ne maitrisent pas to
 
 ```bash
 flatpak install --user org.wireshark.Wireshark
+```
+
+### [BurpSuite](https://portswigger.net/burp)
+
+BurpSuite est un logiciel essentiel pour le pentesting. Il permet de créer un proxy http à travers lequel il sera possible d'intercepter les requêtes entre une application et son backend.
+
+```bash
+sudo pacman -S blackarch/burpsuite
 ```
 
 ### [MacChanger](https://www.kali.org/tools/macchanger/)
@@ -2044,51 +2010,6 @@ curl -s https://dl.red.flag.domains/pihole/red.flag.domains.txt | grep -v "^#" |
 rm -f $BACKUP_HOSTS_PATH
 mv $HOSTS_PATH $BACKUP_HOSTS_PATH
 mv $NEW_HOSTS_PATH $HOSTS_PATH
-```
-
-#### Spotify-diff
-
-Un script un peu particulier puisqu'il permet d'afficher la différence entre les musiques présentes dans le dossier `~/Music` et une playlist [Spotify](https://www.spotify.com/). Ce script exploite d'un côté les métadonnées des fichiers et de l'autre l'API public Spotify pour fonctionner. Pour l'utiliser, il suffit de mettre la playlist en public et de remplacer les `**********` de `SPOTIFY_PLAYLIST_ID` par l'identifiant de la playlist en question.
-
-```bash
-#!/bin/bash
-
-SPOTIFY_PLAYLIST_ID=************
-SPOTIFY_BEARER=`curl 'https://open.spotify.com/get_access_token?reason=transport&productType=web_player' | jq -cM ".accessToken" | sed s/\"//g`
-
-BREAK=0
-OFFSET=0
-
-IFS=$'\n'
-while [ $BREAK -eq 0 ]
-do
-  COUNT=0
-
-  for LINE in `curl "https://api.spotify.com/v1/playlists/$SPOTIFY_PLAYLIST_ID/tracks?offset=$OFFSET&limit=100" -H "authorization: Bearer $SPOTIFY_BEARER" | jq -cM ".items[].track"`
-  do
-    ARTISTS=`echo $LINE | jq -cM .artists[].name | sed s/\"//g | tr "\n" ";" | sed -e "s/;/, /g" -e "s/, \$//g"`
-    TITLE=`echo $LINE | jq -cM .name | sed s/\"//g`
-    echo "$ARTISTS : $TITLE"
-    COUNT=`expr $COUNT + 1`
-  done
-
-  if [ $COUNT -eq 100 ]
-  then
-    OFFSET=`expr $OFFSET + 100`
-  else
-    BREAK=1
-  fi
-done | sort > /tmp/spotify-music.txt
-
-IFS=$';'
-for FILE in `ls ~/Music | tr "\n" ";"`
-do
-  ARTISTS=`ffprobe ~/Music/$FILE 2>&1 | grep artist | sed "s/ *artist *: //g"`
-  TITLE=`ffprobe ~/Music/$FILE 2>&1 | grep title | head -n 1 | sed "s/ *title *: //g"`
-  echo "$ARTISTS : $TITLE"
-done | sort > /tmp/local-music.txt
-
-diff -iyd /tmp/spotify-music.txt /tmp/local-music.txt
 ```
 
 ## Conclusion
