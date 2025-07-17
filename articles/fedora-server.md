@@ -94,8 +94,8 @@ echo "/var/swapfile sw swap sw   0 0" | tee -a /etc/fstab
 Par défaut, le système va commencer à utiliser le SWAP à partir de 40% d'occupation de la mémoire. Vu la taille du SWAP installé ici (et le fait que la machine possède quand même 32Go de RAM), la valeur va être remontée à 80% afin que le système utilise le SWAP le moins souvent possible.
 
 ```bash
-sysctl vm.swappiness=20
 echo "vm.swappiness=20" | tee /etc/sysctl.d/99-swappiness.conf
+sysctl -p
 ```
 
 ### Connection SSH
@@ -295,7 +295,10 @@ Puis au niveau de Linux, mettre les configurations suivantes :
 
 ```bash
 ethtool -s enp6s0 wol g
-echo 'ETHTOOL_OPTS="wol g"' > /etc/sysconfig/network-scripts/ifcfg-enp6s0
+echo 'DEVICE=enp6s0
+TYPE=Ethernet
+ONBOOT=yes
+ETHTOOL_OPTS="wol g"' | tee /etc/sysconfig/network-scripts/ifcfg-enp6s0
 ```
 
 ### Docker
@@ -541,29 +544,33 @@ La configuration de cette machine virtuelle est prévue pour le jeu. Dans le XML
 
 Avec [Virt manager](https://virt-manager.org/), il est possible de configurer l'hyperviseur à distance à travers un tunnel SSH.
 
+La configuration du Bridge :
+
+```bash
+echo "net.ipv4.conf.default.arp_filter = 1" | tee -a /etc/sysctl.conf
+sysctl -p
+
+nmcli connection add ifname br0 type bridge con-name br0
+nmcli connection add type bridge-slave ifname enp6s0 master br0
+nmcli connection modify br0 bridge.stp no
+nmcli connection up br0
+
+echo "allow br0" | tee -a /etc/qemu/bridge.conf
+
+shutdown -r now
+```
+
 Voici le XML de configuration utilisé pour l'interface réseau :
 
 ```xml
 <network>
-  <name>network</name>
+  <name>bridge</name>
   <uuid>******</uuid>
-  <forward dev="enp6s0" mode="nat">
-    <nat>
-      <port start="1024" end="65535"/>
-    </nat>
-    <interface dev="enp6s0"/>
-  </forward>
-  <bridge name="virbr1" stp="on" delay="0"/>
-  <mac address="52:54:00:2a:e1:56"/>
-  <domain name="network"/>
-  <ip address="192.168.2.1" netmask="255.255.255.0">
-    <dhcp>
-      <range start="192.168.2.1" end="192.168.2.254"/>
-    </dhcp>
-  </ip>
+  <forward mode="bridge"/>
+  <bridge name="br0"/>
 </network>
-```
 
+```
 
 Voici le XML de configuration utilisé pour la machine Windows 11 :
 
@@ -739,9 +746,9 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
       <address type="pci" domain="0x0000" bus="0x00" slot="0x1f" function="0x2"/>
     </controller>
     <interface type="network">
-      <mac address="52:54:00:e5:75:75"/>
-      <source network="network"/>
-      <model type="e1000e"/>
+      <mac address="52:54:00:04:ba:75"/>
+      <source network="bridge"/>
+      <model type="virtio"/>
       <address type="pci" domain="0x0000" bus="0x01" slot="0x00" function="0x0"/>
     </interface>
     <input type="tablet" bus="usb">
