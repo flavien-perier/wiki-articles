@@ -35,7 +35,7 @@ Toutes les commandes sont à exécuter en tant que root.
 Pour une mise à jour de l'os vers une nouvelle version de Fedora :
 
 ```bash
-dnf system-upgrade download --releasever=41
+dnf system-upgrade download --releasever=42
 dnf system-upgrade reboot
 ```
 
@@ -54,14 +54,13 @@ Installation des drivers Nvidia et configuration minimale du serveur :
 ```bash
 curl -s https://sh.flavien.io/shell.sh | bash -
 
-dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
-dnf config-manager --add-repo https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
-
-dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+rm -f /etc/yum.repos.d/cuda-fedora*
+dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
+dnf config-manager addrepo --from-repofile=https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
 
 dnf clean all
 dnf install kernel-devel kernel-headers
-dnf install cuda-toolkit-12-8 nvidia-open
+dnf install cuda-toolkit-12-9 nvidia-open
 dnf remove plymouth*
 ```
 
@@ -205,7 +204,7 @@ firewall-cmd --permanent --zone=trusted --add-service=openvpn
 firewall-cmd --permanent --zone=trusted --add-interface=tun0
 firewall-cmd --add-masquerade
 firewall-cmd --permanent --add-masquerade
-firewall-cmd --permanent --direct --passthrough ipv4 -t nat -A POSTROUTING -s 10.8.0.0/24 -o enp6s0 -j MASQUERADE
+firewall-cmd --permanent --direct --passthrough ipv4 -t nat -A POSTROUTING -s 10.8.0.0/24 -o $SERVER_IP -j MASQUERADE
 firewall-cmd --reload
 
 # OpenVPN configuration
@@ -280,7 +279,7 @@ EOL
 Il suffit alors de récupérer le fichier `~/vm-client.ovpn` sur sa machine à l'aide de SCP et de l'exécuter avec :
 
 ```bash
-sudo openvpn --config client.ovpn
+openvpn --config client.ovpn
 ```
 
 ### Wake on Lan
@@ -301,17 +300,14 @@ ONBOOT=yes
 ETHTOOL_OPTS="wol g"' | tee /etc/sysconfig/network-scripts/ifcfg-enp6s0
 ```
 
-### Docker
+### Podman
 
-Installation de Docker et de nvidia-docker :
+Installation de Podman et de nvidia-container :
 
 ```bash
-dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin nvidia-docker2 nvidia-container-toolkit
+dnf install podman podman-compose nvidia-container-toolkit
 
-systemctl enable docker
-systemctl start docker
-
-usermod -aG docker admin
+nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml
 
 cat << EOL > /etc/nvidia-container-runtime/config.toml
 disable-require = false
@@ -338,7 +334,6 @@ EOL
 Par la suite pour lancer le conteneur, il suffit de créer le fichier [docker-compose](https://docs.docker.com/compose/) avec les paramètres suivants :
 
 ```yaml
-version: "3.9"
 services:
   jupyter:
     image: flavienperier/jupyter
@@ -364,7 +359,7 @@ services:
               capabilities: [gpu]
 ```
 
-Et d'exécuter le fichier en question avec notre utilisateur par défaut grâce à la commande `docker-compose up -d`.
+Et d'exécuter le fichier en question avec notre utilisateur par défaut grâce à la commande `podman compose up -d`.
 
 ### Ollama
 
@@ -794,11 +789,7 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
 Cockpit est une interface web préinstallée sur Fedora Server permettant de manager notre serveur à distance. Certains modules sont déjà préinstallés (comme celui permettant de gérer [SELinux](https://selinuxproject.org/)), mais d'autres peuvent être installés afin de gérer Docker, KVM et quelques autres aspects du système directement depuis l'interface. Pour ce faire :
 
 ```bash
-dnf install cockpit-machines
-
-cd /tmp
-wget https://github.com/mrevjd/cockpit-docker/releases/download/v2.0.3/cockpit-docker.tar.gz
-tar xvf cockpit-docker.tar.gz -C /usr/share/cockpit
+dnf install cockpit-machines cockpit-podman
 
 systemctl restart cockpit
 ```
@@ -807,7 +798,6 @@ systemctl restart cockpit
 
 - [Arch Wiki - QEMU](https://wiki.archlinux.org/title/QEMU)
 - [How to Install or Upgrade Nvidia Drivers on Rocky Linux 8](https://www.linuxcapable.com/how-to-install-or-upgrade-nvidia-drivers-on-rocky-linux-8/)
-- [nvidia-docker Installation Guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html)
 - [Comprehensive guide to performance optimizations for gaming on virtual machines with KVM/QEMU and PCI passthrough](https://mathiashueber.com/performance-tweaks-gaming-on-virtual-machines/)
 - [Howto do QEMU full virtualization with bridged networking](https://ahelpme.com/linux/howto-do-qemu-full-virtualization-with-bridged-networking/)
 - [Creating a Windows 10 kvm VM on the AMD Ryzen 9 3900X using Qemu 4.0 and VGA Passthrough](https://www.heiko-sieger.info/creating-a-windows-10-vm-on-the-amd-ryzen-9-3900x-using-qemu-4-0-and-vga-passthrough/)
@@ -822,6 +812,8 @@ systemctl restart cockpit
 - [Enabling the RPM Fusion repositories](https://docs.fedoraproject.org/en-US/quick-docs/setup_rpmfusion/)
 - [Launch OpenVPN Access Server On Red Hat](https://openvpn.net/vpn-software-packages/redhat/)
 - [How To Install OpenVPN on CentOS/RHEL 8](https://tecadmin.net/install-openvpn-centos-8/)
-- [Arch Wiki - Easy-RSA](https://wiki.archlinux.org/title/Easy-RSA)
-- [Fedora Wiki - OpenVPN](https://fedoraproject.org/wiki/OpenVPN)
-- [Fedora docs : Installing Kernel from Koji](https://docs.fedoraproject.org/en-US/quick-docs/kernel-installing-from-koji/)
+- [Easy-RSA](https://wiki.archlinux.org/title/Easy-RSA)
+- [OpenVPN](https://fedoraproject.org/wiki/OpenVPN)
+- [Installing Kernel from Koji](https://docs.fedoraproject.org/en-US/quick-docs/kernel-installing-from-koji/)
+- [Installing Podman and the NVIDIA Container Toolkit](https://docs.nvidia.com/ai-enterprise/deployment/rhel-with-kvm/latest/podman.html)
+- [Installing the NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
