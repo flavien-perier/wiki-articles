@@ -10,7 +10,7 @@ date: 2021-11-23 18:00
 
 ## Objectifs
 
-- Le premier objectif va être d'installer [Docker](https://www.docker.com/) avec [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) afin de pouvoir utiliser la puissance de calcul de la carte graphique dans un conteneur [Jupyter](https://jupyter.org/) conteneurisé avec l'image [flavienperier/jupyter](https://hub.docker.com/r/flavienperier/jupyter).
+- Le premier objectif va être d'installer [Podman](https://podman.io/) avec [nvidia-container-toolkit](https://github.com/NVIDIA/nvidia-container-toolkit) afin de pouvoir utiliser la puissance de calcul de la carte graphique dans un conteneur [Jupyter](https://jupyter.org/) conteneurisé avec l'image [flavienperier/jupyter](https://hub.docker.com/r/flavienperier/jupyter).
 
 - Le second objectif est de bénéficier d'une machine virtuelle [KVM](https://www.linux-kvm.org/page/Main_Page) avec single GPU Passthrough, pour faire tourner un Windows sur lequel pourront s'exécuter des jeux.
 
@@ -345,11 +345,6 @@ services:
       - 8080:8080
     environment:
       JUPYTER_PASSWORD: password
-    devices:
-      - /dev/nvidia0:/dev/nvidia0
-      - /dev/nvidiactl:/dev/nvidiactl
-      - /dev/nvidia-uvm:/dev/nvidia-uvm
-      - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
     deploy:
       resources:
         reservations:
@@ -357,6 +352,18 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+```
+
+Ensuite il va falloir ouvrir le port 8080 sur firewalld :
+
+```bash
+echo '<service>
+  <short>Jupyter</short>
+  <description>Jupyter service</description>
+  <port protocol="tcp" port="8080"/>
+</service>' | tee /etc/firewalld/services/jupyter.xml
+firewall-cmd --reload
+firewall-cmd --permanent --add-service=jupyter
 ```
 
 Et d'exécuter le fichier en question avec notre utilisateur par défaut grâce à la commande `podman compose up -d`.
@@ -460,8 +467,6 @@ then
 
     # Stop services
     systemctl stop ollama
-    systemctl stop docker
-    systemctl stop containerd
 
     # Unbind VTconsoles
     echo 0 > /sys/class/vtconsole/vtcon0/bind
@@ -522,8 +527,6 @@ then
     modprobe drm
 
     # Start services
-    systemctl start containerd
-    systemctl start docker
     systemctl start ollama
 fi' | tee /etc/libvirt/hooks/qemu
 chmod 750 /etc/libvirt/hooks/qemu
@@ -786,7 +789,7 @@ Voici le XML de configuration utilisé pour la machine Windows 11 :
 
 ### [Cockpit](https://cockpit-project.org/)
 
-Cockpit est une interface web préinstallée sur Fedora Server permettant de manager notre serveur à distance. Certains modules sont déjà préinstallés (comme celui permettant de gérer [SELinux](https://selinuxproject.org/)), mais d'autres peuvent être installés afin de gérer Docker, KVM et quelques autres aspects du système directement depuis l'interface. Pour ce faire :
+Cockpit est une interface web préinstallée sur Fedora Server permettant de manager notre serveur à distance. Certains modules sont déjà préinstallés (comme celui permettant de gérer [SELinux](https://selinuxproject.org/)), mais d'autres peuvent être installés afin de gérer Podman, KVM et quelques autres aspects du système directement depuis l'interface. Pour ce faire :
 
 ```bash
 dnf install cockpit-machines cockpit-podman
