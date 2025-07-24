@@ -356,7 +356,7 @@ iptables -t filter -A OUTPUT -p udp --dport 53 -d 1.0.0.1 -j ACCEPT
 iptables -t filter -A OUTPUT -p udp --dport 53 -d 151.80.222.79 -j ACCEPT
 
 ## ntp
-iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT -m owner --uid-owner 979
+iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT
 
 ## http/s
 iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 0
@@ -380,6 +380,9 @@ ip6tables -t filter -A OUTPUT -p tcp --dport 22 -j ACCEPT -m owner --uid-owner 1
 
 ## ftp
 iptables -t filter -A OUTPUT -p tcp --dport 21 -j ACCEPT -m owner --uid-owner 1000
+
+# wol
+iptables -t filter -A OUTPUT -p udp --dport 7 -j ACCEPT -m owner --uid-owner 1000
 
 ## whoIs
 iptables -t filter -A OUTPUT -p tcp --dport 43 -j ACCEPT -m owner --uid-owner 1000
@@ -1867,8 +1870,9 @@ root-clean() {
   docker system prune -f
 
   echo "Chown user home"
-  find $USER_HOME ! -user $USER_NAME | xargs -r -d "\n" -P4 -L10 chown $USER_NAME
-  find $USER_HOME ! -group $USER_NAME | xargs -r -d "\n" -P4 -L10 chgrp $USER_NAME
+  find $USER_HOME ! -user $USER_NAME | xargs -r -d "\n" -P4 -L10 chown $USER_NAME &
+  find $USER_HOME ! -group $USER_NAME | xargs -r -d "\n" -P4 -L10 chgrp $USER_NAME &
+  wait
 
   echo "Adds access rights to vms for Qemu"
   mkdir -p $USER_HOME/Vms
@@ -1877,19 +1881,21 @@ root-clean() {
   chgrp -R libvirt-qemu $USER_HOME/Vms
 
   echo "Delete old /etc configuration"
-  find /etc -iname "*.old" -delete
-  find /etc -iname "*-" -delete
-  find /etc -iname "*~" -delete
+  find /etc -iname "*.old" -delete &
+  find /etc -iname "*-" -delete &
+  find /etc -iname "*~" -delete &
+  wait
 
   echo "Delete unused logs"
   journalctl --vacuum-time=1d
-  find $USER_HOME -type f -iname "*.log" -delete
-  find $USER_HOME -type f -iname "*.log.[0-9]" -delete
-  find /var/log -type f -iname "*.[0-9]" -delete
-  find /var/log -type f -iname "*.[0-9].log" -delete
-  find /var/log -type f -iname "*.old" -delete
-  rm -f /var/log/optimus-manager/daemon/*.log
-  rm -f /var/log/optimus-manager/switch/*.log
+  find $USER_HOME -type f -iname "*.log" -delete &
+  find $USER_HOME -type f -iname "*.log.[0-9]" -delete &
+  find /var/log -type f -iname "*.[0-9]" -delete &
+  find /var/log -type f -iname "*.[0-9].log" -delete &
+  find /var/log -type f -iname "*.old" -delete &
+  rm -f /var/log/optimus-manager/daemon/*.log &
+  rm -f /var/log/optimus-manager/switch/*.log &
+  wait
 
   echo "Clean root history"
   rm -f /root/.*_history
@@ -1919,25 +1925,30 @@ user-clean() {
   podman system prune -f
 
   echo "Remove user files"
-  rm -f $HOME/.xsession-errors*
-  rm -Rf $HOME/Downloads/*
-  rm -Rf $HOME/.local/share/Trash
-  rm -Rf $HOME/.local/share/RecentDocuments
-  rm -f $HOME/.local/share/recently-used.xbel*
-  find $HOME -type f -iname "*.old" -delete
+  rm -f $HOME/.xsession-errors* &
+  rm -Rf $HOME/Downloads/* &
+  rm -Rf $HOME/.local/share/Trash &
+  rm -Rf $HOME/.local/share/RecentDocuments &
+  rm -f $HOME/.local/share/recently-used.xbel* &
+  find $HOME -type f -iname "*.old" -delete &
+  wait
 
   echo "Chmod user files"
   find $HOME -type f -perm /077 | xargs -r -d "\n" -P4 -L10 chmod go-rwx
 
   for FOLDER in $PROTECTED_FOLDER
   do
-    find $HOME/$FOLDER -type d ! -perm 500 | xargs -r -d "\n" -P4 -L10 chmod 500
-    find $HOME/$FOLDER -type f ! -perm 400 | xargs -r -d "\n" -P4 -L10 chmod 400
+    find $HOME/$FOLDER -type d ! -perm 500 | xargs -r -d "\n" -P4 -L10 chmod 500 &
+    find $HOME/$FOLDER -type f ! -perm 400 | xargs -r -d "\n" -P4 -L10 chmod 400 &
   done
+  wait
+
   for FILETYPE in $PROTECTED_FILETYPE
   do
-    find $HOME -type f -name "*.$FILETYPE" | xargs -r -d "\n" -P4 -L10 chmod ugo-wx
+    find $HOME -type f -name "*.$FILETYPE" | xargs -r -d "\n" -P4 -L10 chmod ugo-wx &
   done
+  wait
+
   find $HOME/Vms -type d ! -perm 550 | xargs -r -d "\n" -P4 -L10 chmod 550
   find $HOME/Vms -type f ! -perm 770 | xargs -r -d "\n" -P4 -L10 chmod 770
   chmod 777 $HOME/Public
