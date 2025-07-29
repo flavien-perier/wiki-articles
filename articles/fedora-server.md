@@ -28,9 +28,7 @@ La distribution qui semble donc la plus appropriée pour cette installation est 
 
 ## Installation
 
-Utilisateur principal: admin
-
-Toutes les commandes sont à exécuter en tant que root.
+Toutes les commandes de cette documentation sont à exécuter en tant que root. L'utilisateur principal est admin.
 
 Pour une mise à jour de l'os vers une nouvelle version de Fedora :
 
@@ -97,7 +95,23 @@ echo "vm.swappiness=20" | tee /etc/sysctl.d/99-swappiness.conf
 sysctl -p
 ```
 
-### Connection SSH
+### Création du réseau bridge
+
+Pour la suite de l'installation, les machines virtuelles vont toutes utiliser un réseau de type bridge. C'est à dire qu'elles auront une ip sur le même réseau que l'hyperviseur.
+
+```bash
+echo "net.ipv4.conf.default.arp_filter = 1" | tee -a /etc/sysctl.conf
+sysctl -p
+
+nmcli connection add ifname br0 type bridge con-name br0
+nmcli connection add type bridge-slave ifname enp6s0 master br0
+nmcli connection modify br0 bridge.stp no
+nmcli connection up br0
+
+shutdown -r now
+```
+
+### Connexion SSH
 
 Pour accéder au serveur à distance, il est important de commencer par créer une clé SSH afin de s'y connecter.
 
@@ -135,7 +149,7 @@ EOL
 systemctl reload sshd
 ```
 
-### Connection VPN
+### Connexion VPN
 
 ```bash
 SERVER_IP=`ip route get 1.1.1.1 | awk 'NR==1 {print $(NF-2)}'`
@@ -145,7 +159,7 @@ dnf install openvpn
 echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
 sysctl -p
 
-wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.2.1/EasyRSA-3.2.1.tgz -O /tmp/EasyRSA.tgz
+wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.2.3/EasyRSA-3.2.3.tgz -O /tmp/EasyRSA.tgz
 mkdir -p /etc/openvpn/easy-rsa
 tar xvf /tmp/EasyRSA.tgz --strip-components=1 -C /etc/openvpn/easy-rsa
 rm -f /tmp/EasyRSA.tgz
@@ -211,7 +225,7 @@ firewall-cmd --reload
 echo 'port 1194
 server 10.8.0.0 255.255.255.0
 proto udp4
-dev tap
+dev tap0
 
 ca /etc/openvpn/server/ca.crt
 cert /etc/openvpn/server/flavien-server.crt
@@ -406,7 +420,7 @@ firewall-cmd --reload
 firewall-cmd --permanent --add-service=ollama
 ```
 
-### KVM & GPU Passtrough
+### KVM & GPU Passthrough
 
 Pour installer la base de KVM :
 
@@ -531,7 +545,7 @@ then
 fi' | tee /etc/libvirt/hooks/qemu
 chmod 750 /etc/libvirt/hooks/qemu
 
-echo "GPU_VMS='vm-windows vm-jeux'" > /etc/libvirt/hooks/kvm.conf
+echo "GPU_VMS='vm-jeux'" > /etc/libvirt/hooks/kvm.conf
 echo VIRSH_GPU_VIDEO=pci_0000_`lspci | grep -i nvidia | grep -i vga | cut -f1 -d ' ' | tr ':' '_' | tr '.' '_'` >> /etc/libvirt/hooks/kvm.conf
 echo VIRSH_GPU_AUDIO=pci_0000_`lspci | grep -i nvidia | grep -i audio | cut -f1 -d ' ' | tr ':' '_' | tr '.' '_'` >> /etc/libvirt/hooks/kvm.conf
 ```
@@ -542,23 +556,13 @@ La configuration de cette machine virtuelle est prévue pour le jeu. Dans le XML
 
 Avec [Virt manager](https://virt-manager.org/), il est possible de configurer l'hyperviseur à distance à travers un tunnel SSH.
 
-La configuration du Bridge :
+Tout d'abord on va pouvoir autoriser qemu à utiliser le bridge :
 
 ```bash
-echo "net.ipv4.conf.default.arp_filter = 1" | tee -a /etc/sysctl.conf
-sysctl -p
-
-nmcli connection add ifname br0 type bridge con-name br0
-nmcli connection add type bridge-slave ifname enp6s0 master br0
-nmcli connection modify br0 bridge.stp no
-nmcli connection up br0
-
 echo "allow br0" | tee -a /etc/qemu/bridge.conf
-
-shutdown -r now
 ```
 
-Voici le XML de configuration utilisé pour l'interface réseau :
+Ensuite on va pouvoir déclarer une interface réseau qemu (dans l'interface de l'hyperviseur) qui va se connecter à ce bridge :
 
 ```xml
 <network>
@@ -567,10 +571,15 @@ Voici le XML de configuration utilisé pour l'interface réseau :
   <forward mode="bridge"/>
   <bridge name="br0"/>
 </network>
-
 ```
 
-Voici le XML de configuration utilisé pour la machine Windows 11 :
+Ensuite, pour faire en sorte que cette interface démarre automatiquement, il est possible de taper la commande :
+
+```bash
+virsh net-autostart bridge
+```
+
+Enfin voici un exemple de configuration pour une vm de jeux sous Windows 11 :
 
 ```xml
 <domain type="kvm">
