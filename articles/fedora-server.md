@@ -151,6 +151,13 @@ systemctl reload sshd
 
 ### Connexion VPN
 
+La mise en place d'un serveur VPN (Virtual Private Network) sur notre machine permet d'établir une connexion sécurisée à distance avec le serveur et son réseau local. Cela offre plusieurs avantages :
+- Accès sécurisé aux ressources du réseau local depuis l'extérieur
+- Chiffrement du trafic pour protéger les données sensibles
+- Possibilité de se connecter aux machines virtuelles hébergées sur le serveur
+
+Dans cette section, nous allons installer et configurer OpenVPN, une solution VPN open-source robuste et largement utilisée.
+
 ```bash
 SERVER_IP=`ip route get 1.1.1.1 | awk 'NR==1 {print $(NF-2)}'`
 
@@ -316,6 +323,10 @@ ETHTOOL_OPTS="wol g"' | tee /etc/sysconfig/network-scripts/ifcfg-enp6s0
 
 ### Podman
 
+[Podman](https://podman.io/) est une alternative à Docker qui permet de gérer des conteneurs sans avoir besoin d'un démon s'exécutant en arrière-plan. Contrairement à Docker, Podman s'exécute sans privilèges root et utilise une architecture daemonless, ce qui améliore la sécurité et la stabilité du système. Podman est particulièrement bien intégré aux distributions basées sur RedHat comme Fedora.
+
+Dans notre cas, nous allons également installer nvidia-container-toolkit pour permettre aux conteneurs d'accéder à la puissance de calcul de la carte graphique NVIDIA. Cela sera particulièrement utile pour exécuter des charges de travail liées à l'intelligence artificielle ou au calcul scientifique dans des conteneurs.
+
 Installation de Podman et de nvidia-container :
 
 ```bash
@@ -436,7 +447,16 @@ usermod -a -G kvm admin
 setfacl -m g:qemu:rx /home/admin
 ```
 
-Pour que le GPU Passtrough puisse fonctionner :
+Le GPU Passthrough est une technique qui permet de donner à une machine virtuelle un accès direct et exclusif à une carte graphique physique. Contrairement à la virtualisation graphique standard où les performances sont limitées, le GPU Passthrough offre des performances natives, ce qui est essentiel pour des applications exigeantes comme les jeux vidéo ou le machine learning.
+
+Dans notre configuration, nous allons mettre en place un "Single GPU Passthrough", ce qui signifie que nous allons utiliser la même carte graphique à la fois pour l'hôte et pour la machine virtuelle, mais pas simultanément. Lorsque la VM démarre, le système hôte libère la carte graphique qui est ensuite attachée à la VM. Lorsque la VM s'arrête, la carte est réattachée à l'hôte.
+
+Cette configuration nécessite plusieurs étapes :
+- Activer les technologies IOMMU dans le BIOS et dans les paramètres du noyau Linux 
+- Configurer GRUB pour préparer le système à cette utilisation
+- Mettre en place des hooks libvirt qui détacheront/réattacheront automatiquement la carte graphique
+
+Pour que le GPU Passthrough puisse fonctionner :
 
 ```bash
 echo 'GRUB_TIMEOUT=3
