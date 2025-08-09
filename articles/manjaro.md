@@ -167,8 +167,10 @@ echo "home	/dev/sdb	none	luks2" >> /etc/crypttab
 
 ```bash
 sudo su
-echo "/dev/mapper/home	/home	btrfs	defaults,relatime,discard=async,ssd 0 0" >> /etc/fstab
+echo "/dev/mapper/home	/home	btrfs	defaults,noatime,discard=async,compress-force=zstd:15,ssd 0 0" >> /etc/fstab
 ```
+
+Au niveau de la compression, j’ai forcé zstd à son niveau maximal. Ça ralentit le disque, mais le PC portable que j’utilise a été conçu pour un disque dur et non un SSD. Du coup, le SSD que j’ai monté à l’intérieur est trop rapide pour la carte mère. C’est donc une bonne chose de le ralentir (cela évite des problèmes de congestion de buffer). Sur une configuration plus « normale » (c’est-à-dire un PC qui n’a pas 7 ans d’âge), il est pertinent de remplacer compress-force=zstd:15 par compress=zstd (qui correspond au niveau 3).
 
 ### Configuration du Shell
 
@@ -612,7 +614,7 @@ Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est po
 
 ```bash
 cd /tmp
-wget https://download-cdn.jetbrains.com/toolbox/jetbrains-toolbox-2.1.3.18901.tar.gz -O /tmp/toolbox.tar.gz
+wget https://download-cdn.jetbrains.com/toolbox/jetbrains-toolbox-2.8.0.51430.tar.gz -O /tmp/toolbox.tar.gz
 tar xvf /tmp/toolbox.tar.gz
 mv jetbrains* jetbrains
 ./jetbrains/jetbrains-toolbox
@@ -679,10 +681,10 @@ for VERSION in $HOME/.sdkman/candidates/* ;
   set -gx PATH $PATH $VERSION/current/bin
 end' | tee ~/.config/fish/conf.d/sdkman.fish
 
-# Install GraalVM 21
-sdk install java 21-graal
+# Install GraalVM 24
+sdk install java 24-graal
 sdk install maven
-sdk use java 21-graal
+sdk use java 24-graal
 ```
 
 ### Autres langages
