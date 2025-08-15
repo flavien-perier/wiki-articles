@@ -53,7 +53,7 @@ Installation des drivers Nvidia et configuration minimale du serveur :
 curl -s https://sh.flavien.io/shell.sh | bash -
 
 rm -f /etc/yum.repos.d/cuda-fedora*
-dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
+dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora42/x86_64/cuda-fedora42.repo
 dnf config-manager addrepo --from-repofile=https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
 
 dnf clean all
@@ -365,7 +365,7 @@ services:
     container_name: jupyter
     restart: always
     volumes:
-      - ./data/jupyter:/opt/notebooks
+      - /var/lib/jupyter:/opt/notebooks:z
     ports:
       - 8080:8080
     environment:
@@ -379,7 +379,44 @@ services:
               capabilities: [gpu]
 ```
 
-Ensuite il va falloir ouvrir le port 8080 sur firewalld :
+#### WIP: Quadlet
+
+Les étapes suivantes vont ce faire avec un utilisateur non root :
+
+Tout d'abord, on va utiliser Quadlets pour gérer le service Jupyter à travers systemd :
+
+```bash
+mkdir -p $HOME/.config/containers/systemd
+mkdir -p $HOME/.config/containers/volumes/jupyter
+
+echo '
+[Unit]
+Description=Jupyter notebook
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Image=docker.io/flavienperier/jupyter:latest
+ContainerName=jupyter
+AutoUpdate=registry
+PublishPort=5432:5432
+Volume=%h/.config/containers/volumes/jupyter:/opt/notebooks:Z
+Environment=JUPYTER_PASSWORD=password
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target' | tee /home/admin/.config/containers/systemd/jupyter.container
+
+loginctl enable-linger
+
+systemctl --user daemon-reload
+systemctl --user enable jupyter
+systemctl --user start jupyter
+```
+
+Enfin il va falloir ouvrir le port 8080 sur firewalld :
 
 ```bash
 echo '<service>
@@ -398,17 +435,19 @@ Et d'exécuter le fichier en question avec notre utilisateur par défaut grâce 
 [Ollama](https://ollama.com/) est une technologie permettant d'exécuter des modèles de langages avec des templates. L'architecture de l'application s'inspire globalement de Docker, ce qui rend pertinent son installation au niveau de l'hyperviseur et non sur un sous-système conteneurisé / virtualisé.
 
 ```bash
-curl -fsSL https://ollama.com/install.sh | sh
-ollama pull mixtral
-ollama pull mistral-nemo
-ollama pull codestral
+dnf install ollama
+
+mkdir -p /var/lib/ollama
+groupadd ollama
+useradd -g ollama -M -d /var/lib/ollama ollama
+chown ollama: /var/lib/ollama
 
 echo '[Unit]
 Description=Ollama Service
 After=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/ollama serve
+ExecStart=/usr/bin/ollama serve
 User=ollama
 Group=ollama
 Restart=always
@@ -420,7 +459,13 @@ Environment="OLLAMA_HOST=0.0.0.0:11434"
 WantedBy=default.target' | tee /etc/systemd/system/ollama.service
 
 systemctl daemon-reload
-systemctl restart ollama
+systemctl enable ollama
+systemctl start ollama
+
+ollama pull mixtral
+ollama pull mistral-nemo
+ollama pull codestral
+ollama pull gpt-oss
 
 echo '<service>
   <short>Ollama</short>
