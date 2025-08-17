@@ -16,7 +16,7 @@ date: 2021-11-23 18:00
 
 ## Configuration matérielle
 
-Le serveur est doté d'un [AMD Ryzen 9 5900X](https://www.amd.com/fr/products/cpu/amd-ryzen-9-5900x), d'une [Nvidia RTX-3080Ti](https://www.nvidia.com/fr-fr/geforce/graphics-cards/30-series/rtx-3080-3080ti/) ainsi que de 32Go de RAM.
+Le serveur est doté d'un [AMD Ryzen 9 5900X](https://www.amd.com/fr/products/cpu/amd-ryzen-9-5900x), d'une [Nvidia RTX-3080Ti](https://www.nvidia.com/fr-fr/geforce/graphics-cards/30-series/rtx-3080-3080ti/) ainsi que de 32 Go de RAM.
 
 ## OS
 
@@ -30,7 +30,7 @@ La distribution qui semble donc la plus appropriée pour cette installation est 
 
 Toutes les commandes de cette documentation sont à exécuter en tant que root. L'utilisateur principal est admin.
 
-Pour une mise à jour de l'os vers une nouvelle version de Fedora :
+Pour une mise à jour de l'OS vers une nouvelle version de Fedora :
 
 ```bash
 dnf system-upgrade download --releasever=42
@@ -88,7 +88,7 @@ swapon /var/swapfile
 echo "/var/swapfile sw swap sw   0 0" | tee -a /etc/fstab
 ```
 
-Par défaut, le système va commencer à utiliser le SWAP à partir de 40% d'occupation de la mémoire. Vu la taille du SWAP installé ici (et le fait que la machine possède quand même 32Go de RAM), la valeur va être remontée à 80% afin que le système utilise le SWAP le moins souvent possible.
+Par défaut, le système va commencer à utiliser le SWAP à partir de 40% d'occupation de la mémoire. Vu la taille du SWAP installé ici (et le fait que la machine possède quand même 32 Go de RAM), la valeur va être remontée à 80% afin que le système utilise le SWAP le moins souvent possible.
 
 ```bash
 echo "vm.swappiness=20" | tee /etc/sysctl.d/99-swappiness.conf
@@ -97,7 +97,7 @@ sysctl -p
 
 ### Création du réseau bridge
 
-Pour la suite de l'installation, les machines virtuelles vont toutes utiliser un réseau de type bridge. C'est à dire qu'elles auront une ip sur le même réseau que l'hyperviseur.
+Pour la suite de l'installation, les machines virtuelles vont toutes utiliser un réseau de type bridge. C'est-à-dire qu'elles auront une IP sur le même réseau que l'hyperviseur.
 
 ```bash
 echo "net.ipv4.conf.default.arp_filter = 1" | tee -a /etc/sysctl.conf
@@ -303,9 +303,9 @@ Il suffit alors de récupérer le fichier `~/vm-client.ovpn` sur sa machine à l
 openvpn --config client.ovpn
 ```
 
-### Wake on Lan
+### Wake-on-LAN
 
-La configuration [Wake on Lan](https://fr.wikipedia.org/wiki/Wake-on-LAN) permet à un ordinateur d'être démarré par le réseau. Une fois en place, le seul prérequis pour pouvoir allumer un ordinateur dont le WoL est actif est de posséder son adresse MAC et d'être sur le même réseau que lui.
+La configuration [Wake-on-LAN](https://fr.wikipedia.org/wiki/Wake-on-LAN) permet à un ordinateur d'être démarré par le réseau. Une fois en place, le seul prérequis pour pouvoir allumer un ordinateur dont le WoL est actif est de posséder son adresse MAC et d'être sur le même réseau que lui.
 
 Une partie de la carte réseau de la machine écoutera donc constamment le réseau même quand l'ordinateur est éteint. Si elle reçoit un paquet contenant les octets FF FF FF FF FF FF suivi de 16 répétitions de l'adresse MAC, le reste de la machine va démarrer (magic packet).
 
@@ -356,34 +356,11 @@ ldconfig = "@/sbin/ldconfig"
 EOL
 ```
 
-Par la suite pour lancer le conteneur, il suffit de créer le fichier [docker-compose](https://docs.docker.com/compose/) avec les paramètres suivants :
+#### Quadlet
 
-```yaml
-services:
-  jupyter:
-    image: flavienperier/jupyter
-    container_name: jupyter
-    restart: always
-    volumes:
-      - /var/lib/jupyter:/opt/notebooks:z
-    ports:
-      - 8080:8080
-    environment:
-      JUPYTER_PASSWORD: password
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
-```
+Quadlet est une technologie intégrée à Podman permettant à des conteneurs d'être managés par systemd. Ainsi, les conteneurs peuvent être gérés comme des démons classiques.
 
-#### WIP: Quadlet
-
-Les étapes suivantes vont ce faire avec un utilisateur non root :
-
-Tout d'abord, on va utiliser Quadlets pour gérer le service Jupyter à travers systemd :
+Les étapes suivantes vont devoir se faire avec un utilisateur non root :
 
 ```bash
 mkdir -p $HOME/.config/containers/systemd
@@ -399,9 +376,10 @@ Wants=network-online.target
 Image=docker.io/flavienperier/jupyter:latest
 ContainerName=jupyter
 AutoUpdate=registry
-PublishPort=5432:5432
-Volume=%h/.config/containers/volumes/jupyter:/opt/notebooks:Z
+PublishPort=8080:8080
+Volume=%h/.config/containers/volumes/jupyter:/data:Z
 Environment=JUPYTER_PASSWORD=password
+AddDevice=nvidia.com/gpu=all
 
 [Service]
 Restart=always
@@ -416,7 +394,7 @@ systemctl --user enable jupyter
 systemctl --user start jupyter
 ```
 
-Enfin il va falloir ouvrir le port 8080 sur firewalld :
+Enfin, il va falloir ouvrir le port 8080 sur firewalld (cette fois-ci avec l'utilisateur root) :
 
 ```bash
 echo '<service>
@@ -427,8 +405,6 @@ echo '<service>
 firewall-cmd --reload
 firewall-cmd --permanent --add-service=jupyter
 ```
-
-Et d'exécuter le fichier en question avec notre utilisateur par défaut grâce à la commande `podman compose up -d`.
 
 ### Ollama
 
@@ -615,19 +591,19 @@ echo VIRSH_GPU_VIDEO=pci_0000_`lspci | grep -i nvidia | grep -i vga | cut -f1 -d
 echo VIRSH_GPU_AUDIO=pci_0000_`lspci | grep -i nvidia | grep -i audio | cut -f1 -d ' ' | tr ':' '_' | tr '.' '_'` >> /etc/libvirt/hooks/kvm.conf
 ```
 
-#### XML de configuration de la vm Windows 11
+#### XML de configuration de la VM Windows 11
 
 La configuration de cette machine virtuelle est prévue pour le jeu. Dans le XML ci-dessous, un certain nombre d'optimisations ont pour but d'améliorer la performance du CPU vis-à-vis de la VM, mais également de dissimuler au mieux le fait qu'il s'agisse d'une machine virtuelle. En effet, les anti-cheats tels qu'[Easy Anti-Cheat](https://www.easy.ac/) peuvent essayer de bloquer les jeux dans des machines virtuelles. Ces optimisations devraient rendre la détection beaucoup plus compliquée.
 
-Avec [Virt manager](https://virt-manager.org/), il est possible de configurer l'hyperviseur à distance à travers un tunnel SSH.
+Avec [virt-manager](https://virt-manager.org/), il est possible de configurer l'hyperviseur à distance à travers un tunnel SSH.
 
-Tout d'abord on va pouvoir autoriser qemu à utiliser le bridge :
+Tout d'abord, on va pouvoir autoriser qemu à utiliser le bridge :
 
 ```bash
 echo "allow br0" | tee -a /etc/qemu/bridge.conf
 ```
 
-Ensuite on va pouvoir déclarer une interface réseau qemu (dans l'interface de l'hyperviseur) qui va se connecter à ce bridge :
+Ensuite, on va pouvoir déclarer une interface réseau qemu (dans l'interface de l'hyperviseur) qui va se connecter à ce bridge :
 
 ```xml
 <network>
@@ -644,7 +620,7 @@ Ensuite, pour faire en sorte que cette interface démarre automatiquement, il es
 virsh net-autostart bridge
 ```
 
-Enfin voici un exemple de configuration pour une vm de jeux sous Windows 11 :
+Enfin, voici un exemple de configuration pour une VM de jeux sous Windows 11 :
 
 ```xml
 <domain type="kvm">
