@@ -100,6 +100,8 @@ sysctl -p
 Pour la suite de l'installation, les machines virtuelles vont toutes utiliser un réseau de type bridge. C'est-à-dire qu'elles auront une IP sur le même réseau que l'hyperviseur.
 
 ```bash
+dnf install bridge-utils
+
 echo "net.ipv4.conf.default.arp_filter = 1" | tee -a /etc/sysctl.conf
 sysctl -p
 
@@ -458,7 +460,7 @@ Pour installer la base de KVM :
 
 ```bash
 dnf install @virtualization
-dnf install bridge-utils libvirt virt-install qemu-kvm libvirt-devel virt-top libguestfs-tools
+dnf install libvirt virt-install qemu-kvm libvirt-devel virt-top libguestfs-tools
 
 systemctl enable libvirtd
 systemctl start libvirtd
@@ -653,15 +655,14 @@ Enfin, voici un exemple de configuration pour une VM de jeux sous Windows 11 :
     <iothreadpin iothread="2" cpuset="2-3"/>
   </cputune>
   <os firmware="efi">
-    <type arch="x86_64" machine="pc-q35-8.1">hvm</type>
+    <type arch="x86_64" machine="pc-q35-9.2">hvm</type>
     <firmware>
       <feature enabled="yes" name="enrolled-keys"/>
       <feature enabled="yes" name="secure-boot"/>
     </firmware>
     <loader readonly="yes" secure="yes" type="pflash" format="qcow2">/usr/share/edk2/ovmf/OVMF_CODE_4M.secboot.qcow2</loader>
-    <nvram template="/usr/share/edk2/ovmf/OVMF_VARS_4M.secboot.qcow2" format="qcow2">/var/lib/libvirt/qemu/nvram/vm-jeux_VARS.qcow2</nvram>
+    <nvram template="/usr/share/edk2/ovmf/OVMF_VARS_4M.secboot.qcow2" templateFormat="qcow2" format="qcow2">/var/lib/libvirt/qemu/nvram/vm-jeux_VARS.fd</nvram>
     <boot dev="hd"/>
-    <smbios mode="host"/>
   </os>
   <features>
     <acpi/>
@@ -790,44 +791,41 @@ Enfin, voici un exemple de configuration pour une VM de jeux sous Windows 11 :
       <target chassis="14" port="0x1d"/>
       <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x5"/>
     </controller>
+    <controller type="pci" index="15" model="pcie-root-port">
+      <model name="pcie-root-port"/>
+      <target chassis="15" port="0x1e"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x6"/>
+    </controller>
+    <controller type="pci" index="16" model="pcie-to-pci-bridge">
+      <model name="pcie-pci-bridge"/>
+      <address type="pci" domain="0x0000" bus="0x03" slot="0x00" function="0x0"/>
+    </controller>
     <controller type="sata" index="0">
       <address type="pci" domain="0x0000" bus="0x00" slot="0x1f" function="0x2"/>
     </controller>
     <interface type="network">
-      <mac address="52:54:00:04:ba:75"/>
+      <mac address="52:54:00:**:**:**"/>
       <source network="bridge"/>
-      <model type="virtio"/>
+      <model type="e1000e"/>
       <address type="pci" domain="0x0000" bus="0x01" slot="0x00" function="0x0"/>
     </interface>
-    <input type="tablet" bus="usb">
-      <address type="usb" bus="0" port="1"/>
-    </input>
     <input type="mouse" bus="ps2"/>
     <input type="keyboard" bus="ps2"/>
     <tpm model="tpm-crb">
       <backend type="emulator" version="2.0"/>
     </tpm>
-    <graphics type="spice" autoport="yes">
-      <listen type="address"/>
-    </graphics>
-    <audio id="1" type="spice"/>
-    <video>
-      <model type="vga" vram="16384" heads="1" primary="yes">
-        <resolution x="1920" y="1080"/>
-      </model>
-      <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x0"/>
-    </video>
+    <audio id="1" type="none"/>
     <hostdev mode="subsystem" type="pci" managed="yes">
       <source>
         <address domain="0x0000" bus="0x0a" slot="0x00" function="0x0"/>
       </source>
-      <address type="pci" domain="0x0000" bus="0x03" slot="0x00" function="0x0"/>
+      <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
     </hostdev>
     <hostdev mode="subsystem" type="pci" managed="yes">
       <source>
         <address domain="0x0000" bus="0x0a" slot="0x00" function="0x1"/>
       </source>
-      <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
+      <address type="pci" domain="0x0000" bus="0x06" slot="0x00" function="0x0"/>
     </hostdev>
     <watchdog model="itco" action="reset"/>
     <memballoon model="virtio">
