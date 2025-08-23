@@ -613,11 +613,7 @@ Je fais personnellement le choix d'installer mes différents outils directement 
 Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est possible d'installer les différents IDEs de l'entreprise à partir de la [JetBrains toolbox](https://www.jetbrains.com/toolbox-app/). C'est au travers de cette interface qu'il est par la suite possible d'installer [Intellij](https://www.jetbrains.com/idea/), [Clion](https://www.jetbrains.com/fr-fr/clion/), [PyCharm](https://www.jetbrains.com/pycharm/), [DataGrip](https://www.jetbrains.com/datagrip/)... et de les maintenir à jour.
 
 ```bash
-cd /tmp
-wget https://download-cdn.jetbrains.com/toolbox/jetbrains-toolbox-2.8.0.51430.tar.gz -O /tmp/toolbox.tar.gz
-tar xvf /tmp/toolbox.tar.gz
-mv jetbrains* jetbrains
-./jetbrains/jetbrains-toolbox
+yay -S jetbrains-toolbox
 ```
 
 Il est également possible d'utiliser GraalVM pour lancer ces différentes IDEs, ce qui aura un impact extrêmement positif sur leurs performances.
