@@ -399,7 +399,7 @@ NEXTCLOUD_ADMIN_PASSWORD=password
 
 Et voici le contenu de la configuration nginx.conf :
 
-```conf
+```nginx
 include /etc/nginx/modules-enabled/*.conf;
 
 events {
@@ -495,7 +495,7 @@ http {
 
 Voici l'architecture des fichiers :
 
-```text
+```txt
 folder
 ├── .env
 ├── docker-compose.yaml
