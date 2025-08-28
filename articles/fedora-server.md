@@ -137,7 +137,7 @@ EOL
 
 Par la suite, il faut modifier la configuration du serveur ssh avec la commande :
 
-```sh
+```bash
 cat << EOL > /etc/ssh/sshd_config
 PubkeyAuthentication yes
 PasswordAuthentication no

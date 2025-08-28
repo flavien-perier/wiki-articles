@@ -61,7 +61,7 @@ Je détaille néanmoins ici les étapes d'installation :
 
 - Puis taper les commandes :
 
-```sh
+```bash
 fastboot oem unlock
 
 fastboot flash recovery recovery.img
@@ -90,14 +90,14 @@ Pour aller plus loin, il est également possible d'utiliser [GadgetBridge](https
 
 Pour se connecter à la montre, il faut aller dans les paramètres de la montre puis configurer le mode USB sur `Mode ADB`, puis taper les commandes sur un pc pendant que la montre est connectée :
 
-```sh
+```bash
 adb usb
 adb shell
 ```
 
 Ensuite, pour se connecter en WiFi, il faut taper les commandes :
 
-```sh
+```bash
 WIFI_SSID=*********
 WIFI_PASSWORD=*********
 
@@ -147,7 +147,7 @@ De même, des upgrades globaux (`opkg upgrade`) peuvent introduire des instabili
 
 L'objectif de ce script est simplement d'afficher l'IP de la montre avec une notification quand cette dernière se connecte à un WiFi.
 
-```sh
+```bash
 echo '#!/bin/sh
 
 if [ ! -f /tmp/network-state ]

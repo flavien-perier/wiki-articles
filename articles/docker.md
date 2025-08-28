@@ -150,12 +150,12 @@ Voici les instructions de base pour construire un Dockerfile :
 
 Par exemple pour installer bind9 sur Alpine ou Debian :
 
-```Dockerfile
+```dockerfile
 FROM alpine:3.18.3
 RUN apk --update --no-cache add bind
 ```
 
-```Dockerfile
+```dockerfile
 FROM debian:11.7
 RUN apt-get update && apt-get install -y bind && rm -rf /var/lib/apt/lists/*
 ```
@@ -164,7 +164,7 @@ RUN apt-get update && apt-get install -y bind && rm -rf /var/lib/apt/lists/*
 
 Dans l'exemple suivant on créer un utilisateur `my-user` sur une image Alpine et sur une image Debian. Il peut être préférable de fixer l'UID et le GID de l'utilisateur étant donné que la première valeur est 1000 sur la plupart des distributions, mais pas Alpine ou la première valeur est 100.
 
-```Dockerfile
+```dockerfile
 FROM alpine:3.18.3
 
 ARG DOCKER_UID="1000" \
@@ -176,7 +176,7 @@ RUN addgroup -g $DOCKER_GID my-user && \
 USER my-user
 ```
 
-```Dockerfile
+```dockerfile
 FROM debian:11.7
 
 ARG DOCKER_UID="1000" \
@@ -196,7 +196,7 @@ USER my-user
 
 Pour exemple voici le Dockerfile de ce site :
 
-```Dockerfile
+```dockerfile
 FROM node:hydrogen-alpine as builder
 
 WORKDIR /opt/flavien
