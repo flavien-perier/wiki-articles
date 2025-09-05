@@ -24,7 +24,7 @@ D'un point de vue de la configuration, le menu le plus important est celui conce
 
 Avec la configuration proposée plus haut, le navigateur devrait avoir un niveau de sécurité optimal et un minimum en termes de privacy (sur ce point, ce sont les extensions qui vont faire l'essentiel du travail).
 
-Pour aller plus loin, il est possible de cliquer sur le bonton "Paramètre" en face de "Vider l’historique lors de la fermeture de Firefox" afin de préciser quels éléments conserver et lesquelles supprimer au moment de la fermeture du navigateur.
+Pour aller plus loin, il est possible de cliquer sur le bouton "Paramètres" en face de "Vider l’historique lors de la fermeture de Firefox" afin de préciser quels éléments conserver et lesquels supprimer au moment de la fermeture du navigateur.
 
 ![Configuration "Paramètres d'effacement de l'historique"](https://medias.flavien.io/articles/firefox/configuration-history.webp)
 
@@ -40,7 +40,7 @@ Il est également possible d'aller plus loin en allant dans les paramètres avan
 
 - `geo.enabled`: false
 
-#### Désactivation de la télémétry en profondeur
+#### Désactivation de la télémétrie en profondeur
 
 - `browser.send_pings`: false
 - `browser.newtabpage.activity-stream.feeds.telemetry`: false
@@ -68,9 +68,9 @@ Il est également possible d'aller plus loin en allant dans les paramètres avan
 
 ### Vie privée
 
-#### [uBloc Origin](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/)
+#### [uBlock Origin](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/)
 
-![uBloc Origin logo](https://medias.flavien.io/articles/firefox/ublock-origin.webp)
+![uBlock Origin logo](https://medias.flavien.io/articles/firefox/ublock-origin.webp)
 
 Cette extension permet de bloquer les pubs que l'on peut trouver sur différents sites internet, ou avant les vidéos YouTube.
 
@@ -81,7 +81,7 @@ Cette extension permet de bloquer les pubs que l'on peut trouver sur différents
 Cette extension permet de bloquer les traqueurs présents sur le web. Cela va par exemple empêcher les modules [Google Analytics](https://fr.wikipedia.org/wiki/Google_Analytics) de s'exécuter.
 
 Il existe actuellement de nombreuses extensions permettant d'améliorer la vie privée. Mais les trois principales qui ont pour objectif de limiter le champ d'action des traqueurs sont :
-- [Ghostery](https://addons.mozilla.org/en-US/firefox/addon/ghostery) qui est également un AdBlock, mais qui cause de nombreux dysfonctionnements, car trop agressifs.
+- [Ghostery](https://addons.mozilla.org/en-US/firefox/addon/ghostery) qui est également un AdBlock, mais qui cause de nombreux dysfonctionnements, car trop agressive.
 - [Disconnect](https://addons.mozilla.org/en-US/firefox/addon/disconnect/) qui est plutôt efficace, mais moins populaire que les deux autres.
 - [Privacy Badger](https://addons.mozilla.org/en-US/firefox/addon/privacy-badger17/) qui se base sur des méthodes d'apprentissage pour bloquer les contenus indésirables.
 
@@ -89,7 +89,7 @@ Il existe actuellement de nombreuses extensions permettant d'améliorer la vie p
 
 ![NoScript logo](https://medias.flavien.io/articles/firefox/noscript.webp)
 
-Il s'agit d'une extension très puissante, mais qui va nécessiter une attention toute particulière. En effet, NoScript va tout simplement bloquer tous les contenus JavaScript au sein des sites web que nous visitons. Le problème est qu'en 2020, beaucoup de sites fonctionnant exclusivement avec des frameworks écrits dans ce langage de programmation. Il va donc falloir régulièrement ajouter des exceptions afin que les sites puissent continuer à fonctionner.
+Il s'agit d'une extension très puissante, mais qui va nécessiter une attention toute particulière. En effet, NoScript va tout simplement bloquer tous les contenus JavaScript au sein des sites web que nous visitons. Le problème est qu'en 2020, beaucoup de sites fonctionnent exclusivement avec des frameworks écrits dans ce langage de programmation. Il va donc falloir régulièrement ajouter des exceptions afin que les sites puissent continuer à fonctionner.
 
 Il existe cependant au sein du logiciel une option nommée "Définir temporairement les sites de haut niveau comme FIABLES" permettant d'autoriser automatiquement les scripts provenant du même domaine que les sites que nous visitons.
 
@@ -99,7 +99,7 @@ Il existe cependant au sein du logiciel une option nommée "Définir temporairem
 
 ![ClearURLs logo](https://medias.flavien.io/articles/firefox/clearurls.webp)
 
-Une autre extension ayant pour but de renforcer la vie privée. Cette dernière nettoie les URLs des informations superflues qui pourrait donner des informations aux sites quant au chemin que l'utilisateur à emprunter dans sa navigation.
+Une autre extension ayant pour but de renforcer la vie privée. Cette dernière nettoie les URL des informations superflues qui pourraient donner des informations aux sites quant au chemin que l'utilisateur a emprunté dans sa navigation.
 
 Dans les paramètres de cette application, je désactive l'option `Filtrer ETag`. En effet, les [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) sont une composante importante de la mécanique de cache de nos navigateurs, les désactiver revient à rendre cette mécanique inopérante. Ce que je trouve personnellement très dommage.
 
@@ -107,7 +107,7 @@ Dans les paramètres de cette application, je désactive l'option `Filtrer ETag`
 
 ![Decentraleyes logo](https://medias.flavien.io/articles/firefox/decentraleyes.webp)
 
-Avec les extensions précédentes, nous pouvons bloquer de manière assez efficace les différents composants d'un site web ayant pour vocation de nous traquer. Cependant, parmi toutes les méthodes pouvant être utilisées pour nous suivre à la trace, on peut trouver les CDN. Un CDN est un site mettant à la disposition d'autres sites différents contenus tel que des scripts JavaScript, des polices de caractères... Les systèmes de tracking peuvent donc profiter du fait que les clients vont envoyer des requêtes pour récupérer ces contenus afin de savoir sur quel site nous sommes. Le problème, c'est que ces contenus sont bien souvent nécessaires au bon fonctionnement d'un site. Par exemple, de nombreux sites ont besoin de JQuery pour fonctionner, ce dernier étant généralement délivré à travers des CDN. L'extension Decentraleyes va simplement régler le problème en téléchargeant les scripts délivrés par les CDN sur la machine de l'utilisateur. De cette manière, le nombre de requêtes transmises aux CDN se trouve grandement réduit. De plus pour les connexions limitées ceci a aussi pour avantage d'éviter les retéléchargements inutiles de contenu que l'on a déjà. Ce qui permet d'économiser de la bande passante.
+Avec les extensions précédentes, nous pouvons bloquer de manière assez efficace les différents composants d'un site web ayant pour vocation de nous traquer. Cependant, parmi toutes les méthodes pouvant être utilisées pour nous suivre à la trace, on peut trouver les CDN. Un CDN est un site mettant à la disposition d'autres sites différents contenus tels que des scripts JavaScript, des polices de caractères... Les systèmes de tracking peuvent donc profiter du fait que les clients vont envoyer des requêtes pour récupérer ces contenus afin de savoir sur quel site nous sommes. Le problème, c'est que ces contenus sont bien souvent nécessaires au bon fonctionnement d'un site. Par exemple, de nombreux sites ont besoin de jQuery pour fonctionner, ce dernier étant généralement délivré à travers des CDN. L'extension Decentraleyes va simplement régler le problème en téléchargeant les scripts délivrés par les CDN sur la machine de l'utilisateur. De cette manière, le nombre de requêtes transmises aux CDN se trouve grandement réduit. De plus, pour les connexions limitées, ceci a aussi pour avantage d'éviter les retéléchargements inutiles de contenus que l'on a déjà. Ce qui permet d'économiser de la bande passante.
 
 #### [Random User-Agent](https://addons.mozilla.org/en-US/firefox/addon/random_user_agent/)
 
@@ -115,13 +115,13 @@ Avec les extensions précédentes, nous pouvons bloquer de manière assez effica
 
 Lorsqu'un navigateur envoie une requête à un site web, il envoie dans sa requête un User-Agent. Cette information permet au site de savoir quel navigateur est utilisé, sa version et éventuellement le système d'exploitation qui le porte.
 
-Grâce à cette extension, cette information est falsifiée et régénérée toutes les 10 minutes. Ainsi, les trekkeurs peuvent très bien croire que vous utilisez Google Chrome sur un Mac alors que vous utilisez en réalité Firefox sur un Windows. Cela vous rend plus difficile à suivre et protège donc un peu plus votre anonymat.
+Grâce à cette extension, cette information est falsifiée et régénérée toutes les 10 minutes. Ainsi, les traqueurs peuvent très bien croire que vous utilisez Google Chrome sur un Mac alors que vous utilisez en réalité Firefox sur un Windows. Cela vous rend plus difficile à suivre et protège donc un peu plus votre anonymat.
 
-Cependant, cette application peut aussi causer quelques petits désagréments. Par exemple, si on pense que vous êtes sur Internet Explorer ou sur un mobile, il est probable que certains sites n'activent pas les mêmes options. Je vous conseille donc de configurer la liste des User-Agents que l'application peut utiliser et de ne cocher que les "Firefox", "Chrome" et "Edge" sur "Windows", "Mac" et "Linux". Il s'agit des combinaisons les plus supportées et qui, en général, posent le moins problème.
+Cependant, cette application peut aussi causer quelques petits désagréments. Par exemple, si on pense que vous êtes sur Internet Explorer ou sur un mobile, il est probable que certains sites n'activent pas les mêmes options. Je vous conseille donc de configurer la liste des User-Agents que l'application peut utiliser et de ne cocher que les "Firefox", "Chrome" et "Edge" sur "Windows", "Mac" et "Linux". Il s'agit des combinaisons les plus supportées et qui, en général, posent le moins de problèmes.
 
 ![Configuration de Random User-Agent](https://medias.flavien.io/articles/firefox/random_user_agent-configuration.webp)
 
-Cette extension peut également poser quelques problèmes sur des sites de téléchargement, ou l'on va nous proposer de télécharger les versions "Mac" ou "Linux" de nos applications favorites.
+Cette extension peut également poser quelques problèmes sur des sites de téléchargement, où l’on va nous proposer de télécharger les versions "Mac" ou "Linux" de nos applications favorites.
 
 #### [Auto Tab Discard](https://addons.mozilla.org/en-US/firefox/addon/auto-tab-discard/)
 
@@ -137,33 +137,33 @@ Les extensions présentées dans cette catégorie ne doivent pas rester install�
 
 ![Cookie Quick Manager logo](https://medias.flavien.io/articles/firefox/cookie-quick-manager.webp)
 
-Un simple gestionnaire de Cookies. Permets de les modifier, de les supprimer ou encore de les sauvegarder.
+Un simple gestionnaire de Cookies. Permet de les modifier, de les supprimer ou encore de les sauvegarder.
 
 #### [ModHeader](https://addons.mozilla.org/en-US/firefox/addon/modheader-firefox/)
 
 ![Cookie Quick Manager logo](https://medias.flavien.io/articles/firefox/modheader.webp)
 
-Permets de rajouter des informations dans l'entête des requêtes envoyées par le navigateur.
+Permet de rajouter des informations dans l’en-tête des requêtes envoyées par le navigateur.
 
 #### [Shodan](https://addons.mozilla.org/en-US/firefox/addon/shodan-addon/)
 
 ![Shodan logo](https://medias.flavien.io/articles/firefox/shodan.webp)
 
-[Shodan](https://www.shodan.io/) est un site référençant pour chaque site et IPs accessible depuis internet les services exposés. De rapides tests de sécurités automatiques sont également effectués de manière automatique (test de mot de passe par défaut en fonction de l'équipement, version d'un service possédant une vulnérabilité de sécurité référence, mauvaise configuration...).
+[Shodan](https://www.shodan.io/) est un site référençant, pour chaque site et adresses IP accessibles depuis Internet, les services exposés. De rapides tests de sécurité sont également effectués (tests de mot de passe par défaut en fonction de l'équipement, version d'un service possédant une vulnérabilité de sécurité référencée, mauvaise configuration...).
 
-Cette extension permet donc tout simplement d'accéder à toutes ces informations sur les sites que nous visitons. Elle permet ainsi de contrôler facilement si une infrastructure n'expose pas trop d'information par rapport à ce qu'elle devrait et que les différents services exposés ne souffrent pas d'anomalies de configuration.
+Cette extension permet donc tout simplement d'accéder à toutes ces informations sur les sites que nous visitons. Elle permet ainsi de contrôler facilement si une infrastructure n'expose pas trop d'informations par rapport à ce qu'elle devrait et que les différents services exposés ne souffrent pas d'anomalies de configuration.
 
 #### [Wappalyzer](https://addons.mozilla.org/en-US/firefox/addon/wappalyzer/)
 
 ![GreenIT-Analysis logo](https://medias.flavien.io/articles/firefox/wappalyzer.webp)
 
-[Wappalyzer](https://www.wappalyzer.com/) est une application permettant d'identifier les différentes technologies utilisées pour un site web donné. Que ce soit des technologies ayant servi à le concevoir tel que [Wordpress](https://wordpress.com/), [FontAwesome](https://fontawesome.com/) ou [Bootstrap](https://getbootstrap.com/)... Ou autre des technologies serveur tel que [Nginx](https://nginx.org/) ou [Apache HTTPD](https://httpd.apache.org/).
+[Wappalyzer](https://www.wappalyzer.com/) est une application permettant d'identifier les différentes technologies utilisées pour un site web donné. Que ce soit des technologies ayant servi à le concevoir telles que [WordPress](https://wordpress.com/), [FontAwesome](https://fontawesome.com/) ou [Bootstrap](https://getbootstrap.com/)... Ou encore des technologies serveur telles que [Nginx](https://nginx.org/) ou [Apache HTTPD](https://httpd.apache.org/).
 
 #### [GreenIT-Analysis](https://addons.mozilla.org/en-US/firefox/addon/greenit-analysis/)
 
 ![GreenIT-Analysis logo](https://medias.flavien.io/articles/firefox/gereenit-analysis.webp)
 
-Cette application open source permet d'analyser les éléments d'un site web qui ne serait pas conforme à une démarche d'écoconception. Elle peut donc nous aider afin de savoir que regarder pour améliorer les performances de son site et réduire son empreinte énergétique.
+Cette application open source permet d'analyser les éléments d'un site web qui ne seraient pas conformes à une démarche d'écoconception. Elle peut donc nous aider afin de savoir que regarder pour améliorer les performances de son site et réduire son empreinte énergétique.
 
 ### Confort
 

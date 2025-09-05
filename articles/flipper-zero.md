@@ -123,7 +123,6 @@ rm -Rf ./music_player/FlipperMusicRTTTL/Unsorted\ 10k\ Song\ Archive.zip
 find . -type f -name "*.md" -delete
 find . -type f -name ".git*" -delete
 find . -type f -name "*.exe" -delete
-find . -type f -name "*.py" -delete
 
 find . -type d -name ".git" -exec rm -Rf {} \;
 find . -type d -name ".github" -exec rm -Rf {} \;

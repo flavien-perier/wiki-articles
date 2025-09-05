@@ -997,6 +997,14 @@ Le célèbre éditeur d'images bitmap très complet et très adapté pour la ret
 flatpak install --user org.gimp.GIMP
 ```
 
+### [Upscayl](https://github.com/upscayl/upscayl)
+
+Logiciel permettant d'agrandir des images grâce à un modèle d'intelligence artificielle. Il a l'avantage de s'exécuter sur la carte graphique local et non sur un serveur distant.
+
+```bash
+flatpak install --user org.upscayl.Upscayl
+```
+
 ### [Krita](https://krita.org/)
 
 Tout comme GIMP, Krita est un éditeur d'image au format bitmap. Ce logiciel est cependant plus adapté pour le dessin.
