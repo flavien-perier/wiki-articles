@@ -58,7 +58,7 @@ dnf config-manager addrepo --from-repofile=https://nvidia.github.io/libnvidia-co
 
 dnf clean all
 dnf install kernel-devel kernel-headers
-dnf install cuda-toolkit-12-9 nvidia-open
+dnf install cuda-toolkit nvidia-open
 dnf remove plymouth*
 ```
 
