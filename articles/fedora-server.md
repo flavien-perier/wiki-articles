@@ -45,7 +45,7 @@ Pour donner un nom à une machine, il suffit d'exécuter la commande :
 echo "flavien-server" > /etc/hostname
 ```
 
-### Base
+## Base
 
 Installation des drivers Nvidia et configuration minimale du serveur :
 
@@ -62,7 +62,7 @@ dnf install cuda-toolkit nvidia-open
 dnf remove plymouth*
 ```
 
-### SELinux
+## SELinux
 
 SELinux est un élément de sécurité ajouté aux systèmes RedHat. En théorie, l'installation fonctionnerait au global avec SELinux d'actif, mais de nombreux problèmes de stabilité peuvent survenir. C'est pourquoi nous allons désactiver la partie blocage de ce composant, tout en conservant la partie monitoring.
 
@@ -70,7 +70,7 @@ SELinux est un élément de sécurité ajouté aux systèmes RedHat. En théorie
 sed -i "s/SELINUX=enforcing/SELINUX=permissive/" /etc/selinux/config
 ```
 
-### fichier SWAP
+## fichier SWAP
 
 Par défaut, Fedora utilise une mécanique nommée zRam qui permet de compresser la mémoire plutôt que de l'écrire dans le disque. C'est assez malin et globalement beaucoup plus rapide que du SWAP. Cependant, avec cette mécanique, on ne peut pas mettre autant de SWAP que de mémoire, ce qui peut malheureusement être pratique quand on veut traiter de très gros volumes de données (mais qui aura un impact très important sur les performances). Sur cette machine, zRam va donc être désinstallé et un fichier de SWAP va être rajouté. Comme la machine possède beaucoup de mémoire, cette solution ne devrait pas dégrader les performances pour la majorité des usages.
 
@@ -95,7 +95,7 @@ echo "vm.swappiness=20" | tee /etc/sysctl.d/99-swappiness.conf
 sysctl -p
 ```
 
-### Création du réseau bridge
+## Création du réseau bridge
 
 Pour la suite de l'installation, les machines virtuelles vont toutes utiliser un réseau de type bridge. C'est-à-dire qu'elles auront une IP sur le même réseau que l'hyperviseur.
 
@@ -113,7 +113,7 @@ nmcli connection up br0
 shutdown -r now
 ```
 
-### Connexion SSH
+## Connexion SSH
 
 Pour accéder au serveur à distance, il est important de commencer par créer une clé SSH afin de s'y connecter.
 
@@ -151,7 +151,7 @@ EOL
 systemctl reload sshd
 ```
 
-### Connexion VPN
+## Connexion VPN
 
 La mise en place d'un serveur VPN (Virtual Private Network) sur notre machine permet d'établir une connexion sécurisée à distance avec le serveur et son réseau local. Cela offre plusieurs avantages :
 - Accès sécurisé aux ressources du réseau local depuis l'extérieur
@@ -305,7 +305,7 @@ Il suffit alors de récupérer le fichier `~/vm-client.ovpn` sur sa machine à l
 openvpn --config client.ovpn
 ```
 
-### Wake-on-LAN
+## Wake-on-LAN
 
 La configuration [Wake-on-LAN](https://fr.wikipedia.org/wiki/Wake-on-LAN) permet à un ordinateur d'être démarré par le réseau. Une fois en place, le seul prérequis pour pouvoir allumer un ordinateur dont le WoL est actif est de posséder son adresse MAC et d'être sur le même réseau que lui.
 
@@ -323,7 +323,7 @@ ONBOOT=yes
 ETHTOOL_OPTS="wol g"' | tee /etc/sysconfig/network-scripts/ifcfg-enp6s0
 ```
 
-### Podman
+## Podman
 
 [Podman](https://podman.io/) est une alternative à Docker qui permet de gérer des conteneurs sans avoir besoin d'un démon s'exécutant en arrière-plan. Contrairement à Docker, Podman s'exécute sans privilèges root et utilise une architecture daemonless, ce qui améliore la sécurité et la stabilité du système. Podman est particulièrement bien intégré aux distributions basées sur RedHat comme Fedora.
 
@@ -358,9 +358,13 @@ ldconfig = "@/sbin/ldconfig"
 EOL
 ```
 
-#### Quadlet
+### Quadlet
 
 Quadlet est une technologie intégrée à Podman permettant à des conteneurs d'être managés par systemd. Ainsi, les conteneurs peuvent être gérés comme des démons classiques.
+
+#### Jupyter
+
+Jupyter est un environnement permettant de faire de la data-science en Python.
 
 Les étapes suivantes vont devoir se faire avec un utilisateur non root :
 
@@ -408,7 +412,7 @@ firewall-cmd --reload
 firewall-cmd --permanent --add-service=jupyter
 ```
 
-### Ollama
+## Ollama
 
 [Ollama](https://ollama.com/) est une technologie permettant d'exécuter des modèles de langages avec des templates. L'architecture de l'application s'inspire globalement de Docker, ce qui rend pertinent son installation au niveau de l'hyperviseur et non sur un sous-système conteneurisé / virtualisé.
 
@@ -454,7 +458,7 @@ firewall-cmd --reload
 firewall-cmd --permanent --add-service=ollama
 ```
 
-### KVM & GPU Passthrough
+## KVM & GPU Passthrough
 
 Pour installer la base de KVM :
 
@@ -593,7 +597,7 @@ echo VIRSH_GPU_VIDEO=pci_0000_`lspci | grep -i nvidia | grep -i vga | cut -f1 -d
 echo VIRSH_GPU_AUDIO=pci_0000_`lspci | grep -i nvidia | grep -i audio | cut -f1 -d ' ' | tr ':' '_' | tr '.' '_'` >> /etc/libvirt/hooks/kvm.conf
 ```
 
-#### XML de configuration de la VM Windows 11
+### XML de configuration de la VM Windows 11
 
 La configuration de cette machine virtuelle est prévue pour le jeu. Dans le XML ci-dessous, un certain nombre d'optimisations ont pour but d'améliorer la performance du CPU vis-à-vis de la VM, mais également de dissimuler au mieux le fait qu'il s'agisse d'une machine virtuelle. En effet, les anti-cheats tels qu'[Easy Anti-Cheat](https://www.easy.ac/) peuvent essayer de bloquer les jeux dans des machines virtuelles. Ces optimisations devraient rendre la détection beaucoup plus compliquée.
 
@@ -835,7 +839,7 @@ Enfin, voici un exemple de configuration pour une VM de jeux sous Windows 11 :
 </domain>
 ```
 
-### [Cockpit](https://cockpit-project.org/)
+## [Cockpit](https://cockpit-project.org/)
 
 Cockpit est une interface web préinstallée sur Fedora Server permettant de manager notre serveur à distance. Certains modules sont déjà préinstallés (comme celui permettant de gérer [SELinux](https://selinuxproject.org/)), mais d'autres peuvent être installés afin de gérer Podman, KVM et quelques autres aspects du système directement depuis l'interface. Pour ce faire :
 
