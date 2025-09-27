@@ -677,10 +677,10 @@ for VERSION in $HOME/.sdkman/candidates/* ;
   set -gx PATH $PATH $VERSION/current/bin
 end' | tee ~/.config/fish/conf.d/sdkman.fish
 
-# Install GraalVM 24
-sdk install java 24-graal
+# Install GraalVM 25
+sdk install java 25-graal
 sdk install maven
-sdk use java 24-graal
+sdk use java 25-graal
 ```
 
 ### Autres langages
