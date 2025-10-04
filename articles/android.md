@@ -189,7 +189,7 @@ Forcément pas de Google Chrome en vue, mais du [Chromium](https://www.chromium.
 
 #### Le launcher
 
-Appelé Bliss Launcher, le lanceur d'applications de la distribution est une copie de l'interface Apple, avec des fonctionnalités en moins et des bugs en plus. Pour avoir testé beaucoup d'autres launchers tels que [NovaLauncher](https://novalauncher.com/) ou [Lawnchair](https://lawnchair.app/), je peux affirmer qu'il manque beaucoup de fonctionnalités comme la gestion des gestes, un tiroir et des paramètres de manière générale. Cependant, contrairement à d'autres lanceurs d'applications tels que [Microsoft Launcher](https://apkpure.com/fr/microsoft-launcher/com.microsoft.launcher), celui-ci a l'immense avantage de respecter notre vie privée, de ne pas passer son temps à interagir avec le réseau, d'être open source et d'économe en batterie. Il ne s'agit donc clairement pas de l'application de l'année, mais elle fait néanmoins bien ce qu'on lui demande.
+Appelé Bliss Launcher, le lanceur d'applications de la distribution est une copie de l'interface Apple, avec des fonctionnalités en moins et des bugs en plus. Pour avoir testé beaucoup d'autres launchers tels que [NovaLauncher](https://novalauncher.com/) ou [Lawnchair](https://lawnchair.app/), je peux affirmer qu'il manque beaucoup de fonctionnalités comme la gestion des gestes, un tiroir et des paramètres de manière générale. Cependant, contrairement à d'autres lanceurs d'applications tels que [Microsoft Launcher](https://apkpure.com/fr/microsoft-launcher/com.microsoft.launcher), celui-ci a l'immense avantage de respecter notre vie privée, de ne pas passer son temps à interagir avec le réseau, d'être open source et économe en batterie. Il ne s'agit donc clairement pas de l'application de l'année, mais elle fait néanmoins bien ce qu'on lui demande.
 
 #### [Magic Earth](https://www.magicearth.com/)
 
@@ -216,7 +216,7 @@ Android étant un système d'exploitation particulièrement vulnérable, il est 
 
 J'ai personnellement utilisé l'antivirus [Kaspersky Internet Security](https://www.kaspersky.fr/internet-security) pendant plusieurs années. Cependant, ce dernier étant conçu en Russie par d’anciens membres des services de renseignement, plusieurs entreprises et organismes conseillent d'éviter son utilisation dans le contexte de [guerre entre la Russie et l'Ukraine](https://fr.wikipedia.org/wiki/Guerre_du_Donbass). Un [article de Zataz](https://www.zataz.com/kaspersky-dangereux-ou-pas/) détaille la situation en pesant les arguments pour et contre l'utilisation de Kaspersky.
 
-Même si je n'ai aucune preuve tangible que cet antivirus est néfaste (et au demeurant, je ne pense personnellement pas qu'il le soit), il vaut mieux s'appuyer sur une solution sur laquelle on peut avoir toute confiance. C'est pourquoi je me suis orienté vers [Avira security](https://www.avira.com/fr/free-antivirus-android).
+Même si je n'ai aucune preuve tangible que cet antivirus est néfaste (et au demeurant, je ne pense personnellement pas qu'il le soit), il vaut mieux s'appuyer sur une solution sur laquelle on peut avoir toute confiance.
 
 De manière générale les performances des antivirus sont changeantes d'une année sur l'autre. Il peut donc être pertinent de consulter fréquemment le site [AV-Test](https://www.av-test.org/fr/antivirus/portables/) afin de voir les derniers comparatifs de ces solutions de sécurité.
 
@@ -273,17 +273,15 @@ Un lecteur de flux RSS qu'il est possible de synchroniser avec une instance Next
 
 ### [Collabora Office](https://www.collaboraoffice.com/)
 
-Pendant assez longtemps, la distribution possédait son implémentation d'une visionneuse de document office. Cependant, étant donné qu'il n'y a pas d'implémentation officielle, cela semble compliqué à maintenir dans le temps (d'autant plus que l'implémentation qui avait été choisie n'était pas des plus efficaces).
-
-Cependant, Collabora semble [avoir le soutien de la fondation LibreOffice](https://fr.libreoffice.org/download/android-et-ios/) et se trouve être basé sur leur solution. Il s'agit donc pour moi de la meilleure solution pour le moment.
-
-### [Aegis](https://getaegis.app/)
-
-Aegis est une application de calcul des seconds facteurs d'authentification complètement open source. Elle a l'avantage de ne comporter aucun traqueur, avec la possibilité d'être déverrouillée par empreinte digitale. Il est possible d'importer facilement les données d'une autre application 2FA tels que [AndOTP](https://github.com/andOTP/andOTP), [Google Authenticator](https://apkpure.com/fr/google-authenticator/com.google.android.apps.authenticator2), [Microsoft Authenticator](https://apkpure.com/fr/microsoft-authenticator/com.azure.authenticator) et bien d'autres.
+Collabora Office est un pack office basé sur LibreOffice et optimisé pour un usage mobile. L'application est assez lourde, mais très pratique pour lire et éditer des documents. Il est à noter que LibreOffice dispose depuis peu d'une [visionneuse sur mobile](https://f-droid.org/fr/packages/org.documentfoundation.libreoffice/). Cette dernière est plus légère, mais ne permet pas l'édition.
 
 ### [KeePassDX](https://www.keepassdx.com/)
 
 KeePassDX est comme son nom l'indique une application permettant de gérer des fichiers KeePass. Elle est légère et, comme les autres outils de cette sélection, open source.
+
+### [Proton](https://proton.me/)
+
+La suite Proton fournit de nombreux outils tels qu'un service e-mail, un calendrier, une solution cloud, un gestionnaire de mots de passe, un VPN... Le tout très bien intégré avec Android et avec une philosophie tournée vers l'open source et la vie privée.
 
 ### [PhyPhox](https://phyphox.org/)
 

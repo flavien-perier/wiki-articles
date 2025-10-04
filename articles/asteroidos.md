@@ -82,9 +82,7 @@ fastboot continue
 
 ## Application téléphone
 
-Par défaut, il est possible d'utiliser [l'application mobile officielle d'AsteroidOs](https://f-droid.org/fr/packages/org.asteroidos.sync/). Elle fonctionne plutôt bien, mais reste assez minimaliste.
-
-Pour aller plus loin, il est également possible d'utiliser [GadgetBridge](https://f-droid.org/fr/packages/nodomain.freeyourgadget.gadgetbridge/), une alternative plus complète également en mesure de piloter des montres qui ne fonctionnent pas sous AsteroidOs. Il manque cependant actuellement plusieurs fonctionnalités mineures comme la capture d'écrans (ce qui n'est certainement pas la fonctionnalité principale).
+Par défaut, il est possible d'utiliser [l'application mobile officielle d'AsteroidOs](https://f-droid.org/fr/packages/org.asteroidos.sync/). Cependant, cette dernière est assez peu maintenue et relativement instable. Il est donc préférable d'utiliser [GadgetBridge](https://f-droid.org/fr/packages/nodomain.freeyourgadget.gadgetbridge/), une alternative plus complète également en mesure de piloter des montres qui ne fonctionnent pas sous AsteroidOs.
 
 ## Connexion Wi-Fi
 
