@@ -1502,7 +1502,7 @@ conky.config = {
     draw_outline = false,
     draw_shades = false,
     extra_newline = false,
-    font = 'JetBrains Mono NL Medium:size=15',
+    font = 'JetBrains Mono Medium:size=15',
     gap_x = 60,
     gap_y = 60,
     minimum_height = 5,
