@@ -1502,7 +1502,7 @@ conky.config = {
     draw_outline = false,
     draw_shades = false,
     extra_newline = false,
-    font = 'JetBrains Mono Medium:size=15',
+    font = 'JetBrainsMonoNerdFont-Medium:size=15',
     gap_x = 60,
     gap_y = 60,
     minimum_height = 5,
@@ -1783,8 +1783,7 @@ copy-theme() {
     DEST_PATH=$DEST/$SRC_FILE
     if [ ! -e $DEST_PATH ]
     then
-      cp -Rf $SRC/$SRC_FILE $DEST_PATH
-      find $DEST_PATH ! -perm /400 | xargs -r -d "\n" -P4 -L10 chmod go-rwx
+      cp --reflink=always -Rf $SRC/$SRC_FILE $DEST_PATH
     fi
   done
 
@@ -1815,11 +1814,15 @@ flatpak update --noninteractive -y &
 wait
 
 echo "Update Flatpak themes"
+chmod -R u-w,go-rwx $HOME/.themes
+chmod -R u-w,go-rwx $HOME/.icons
+chmod -R u-w,go-rwx $HOME/.fonts
+
 for PLATFORM in `ls $HOME/.local/share/flatpak/runtime`
 do
   for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
   do
-    FLATPAK_DIR=$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share
+    FLATPAK_DIR="$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share"
 
     copy-theme $HOME/.themes $FLATPAK_DIR/themes &
     copy-theme $HOME/.icons $FLATPAK_DIR/icons &
@@ -1845,9 +1848,9 @@ Comme son nom l'indique, ce script permet de nettoyer différents éléments du 
 ```bash
 #!/bin/bash
 
-PROTECTED_FOLDER=".ssh .themes .icons .fonts Templates Pictures Videos Music"
-PROTECTED_FILETYPE="pdf zip tar gz 7z wav mp3 mp4 mkv mov"
-HISTORY_PREFIX_TO_CLEAN="pacman yay flatpak clear ls ll rm mv rmdir touch tar 7z unzip unrar"
+PROTECTED_FOLDER=(".ssh" ".themes" ".icons" ".fonts" "Templates" "Pictures" "Videos" "Music")
+PROTECTED_FILETYPE=("pdf" "zip" "tar" "gz" "7z" "wav" "mp3" "mp4" "mkv" "mov")
+HISTORY_PREFIX_TO_CLEAN=("pacman" "yay" "flatpak" "clear" "ls" "ll" "rm" "mv" "rmdir" "touch" "tar" "7z" "unzip" "unrar")
 
 get-used-space() {
    df | tr -s " " | cut -f3 -d " " | tail -n +2 | sed -z 's/\n/+/g;s/+$/\n/' | bc
@@ -1878,11 +1881,11 @@ root-clean() {
   echo "Chown user home"
   find $USER_HOME ! -user $USER_NAME | xargs -r -d "\n" -P4 -L10 chown $USER_NAME &
   find $USER_HOME ! -group $USER_NAME | xargs -r -d "\n" -P4 -L10 chgrp $USER_NAME &
+  setfacl -R --remove-all $USER_HOME &
   wait
 
   echo "Adds access rights to vms for Qemu"
   mkdir -p $USER_HOME/Vms
-  setfacl -R --remove-all $USER_HOME
   setfacl -m g:libvirt-qemu:rx $USER_HOME
   chgrp -R libvirt-qemu $USER_HOME/Vms
 
@@ -1914,7 +1917,7 @@ user-clean() {
   yay -Scc --noconfirm
 
   echo "Clean flatpak"
-  flatpak uninstall --unused -y
+  flatpak uninstall --unused --delete-data -y
   rm -Rf $HOME/.local/share/flatpak/.removed/
 
   if [ $CLEAN_CACHE -eq 1 ]
@@ -1942,14 +1945,14 @@ user-clean() {
   echo "Chmod user files"
   find $HOME -type f -perm /077 | xargs -r -d "\n" -P4 -L10 chmod go-rwx
 
-  for FOLDER in $PROTECTED_FOLDER
+  for FOLDER in ${PROTECTED_FOLDER[@]}
   do
     find $HOME/$FOLDER -type d ! -perm 500 | xargs -r -d "\n" -P4 -L10 chmod 500 &
     find $HOME/$FOLDER -type f ! -perm 400 | xargs -r -d "\n" -P4 -L10 chmod 400 &
   done
   wait
 
-  for FILETYPE in $PROTECTED_FILETYPE
+  for FILETYPE in ${PROTECTED_FILETYPE[@]}
   do
     find $HOME -type f -name "*.$FILETYPE" | xargs -r -d "\n" -P4 -L10 chmod ugo-wx &
   done
@@ -1964,7 +1967,7 @@ user-clean() {
   rm -f $HOME/.*_history
   rm -f $HOME/.wget-hsts
   rm -f $HOME/.lesshst
-  for COMMAND in $(echo "$HISTORY_PREFIX_TO_CLEAN")
+  for COMMAND in ${HISTORY_PREFIX_TO_CLEAN[@]}
   do
     yes all | fish -c "history delete --prefix '$COMMAND '"
   done
