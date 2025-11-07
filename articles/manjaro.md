@@ -194,10 +194,23 @@ Pour mettre en place ma configuration, il suffit d'exécuter le script :
 curl -s https://sh.flavien.io/xfce.sh | bash -
 ```
 
-Le thème `Sweet Dark` étant un thème [GTK2](https://www.gtk.org/), les applications développées avec [QT](https://www.qt.io/) ne sont pas compatibles. Étant donné que les applications QT que j'utilise passent toutes par flatpak, j'installe simplement le thème [Adwaita](https://www.gnomelibre.fr/tag/adwaita/) sur cet environnement.
+Le thème `Sweet Dark` étant un thème [GTK](https://www.gtk.org/), les applications développées avec [QT](https://www.qt.io/) ne sont pas compatibles. Étant donné que les applications QT que j'utilise passent toutes par flatpak, j'installe simplement le thème [Adwaita](https://www.gnomelibre.fr/tag/adwaita/) sur cet environnement.
 
 ```bash
 flatpak install --user org.kde.KStyle.Adwaita
+```
+
+Pour rendre accessible les thèmes, icons et polices pour les applications flatpak il suffit de taper les commandes :
+
+```bash
+flatpak override --user --reset
+
+flatpak override --user --filesystem=$HOME/.themes
+flatpak override --user --filesystem=$HOME/.icons
+flatpak override --user --filesystem=$HOME/.fonts
+
+flatpak override --user --env=GTK_THEME="Sweet-Dark-v40"
+flatpak override --user --env=ICON_THEME="Sweet-Rainbow"
 ```
 
 ### Nommage des dossiers
@@ -1771,25 +1784,6 @@ Un petit script qui met à jour toutes nos applications avec les différents ges
 
 set -e
 
-copy-theme() {
-  SRC=$1
-  DEST=$2
-
-  mkdir -p $DEST
-  chmod 700 $DEST
-
-  for SRC_FILE in `ls $SRC`
-  do
-    DEST_PATH=$DEST/$SRC_FILE
-    if [ ! -e $DEST_PATH ]
-    then
-      cp --reflink=always -Rf $SRC/$SRC_FILE $DEST_PATH
-    fi
-  done
-
-  chmod 500 $DEST
-}
-
 source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 echo "Update pacman"
@@ -1812,31 +1806,6 @@ echo "Update Flatpak"
 flatpak update --noninteractive -y &
 
 wait
-
-echo "Update Flatpak themes"
-chmod -R u-w,go-rwx $HOME/.themes
-chmod -R u-w,go-rwx $HOME/.icons
-chmod -R u-w,go-rwx $HOME/.fonts
-
-for PLATFORM in `ls $HOME/.local/share/flatpak/runtime`
-do
-  for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
-  do
-    FLATPAK_DIR="$HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share"
-
-    copy-theme $HOME/.themes $FLATPAK_DIR/themes &
-    copy-theme $HOME/.icons $FLATPAK_DIR/icons &
-    copy-theme $HOME/.fonts $FLATPAK_DIR/fonts &
-
-    wait
-  done
-done
-
-if [ -d $HOME/.local/share/flatpak/.removed/ ]
-then
-  chmod -R u+w $HOME/.local/share/flatpak/.removed/
-  rm -Rf $HOME/.local/share/flatpak/.removed/
-fi
 
 echo "End of update"
 ```
@@ -2062,3 +2031,4 @@ Si vous rencontrez des problèmes, n'hésitez pas à me contacter par mail sur [
 - [ProtonVPN - How to manually set up port forwarding](https://protonvpn.com/support/port-forwarding-manual-setup/#linux)
 - [Sonos - Configure your firewall to work with Sonos](https://support.sonos.com/s/article/688)
 - [Steam - Ports nécessaires à Steam](https://help.steampowered.com/fr/faqs/view/2EA8-4D75-DA21-31EB)
+- [IT'S FOSS - Flatpak Apps Look Out of Place? Here's How to Apply GTK Themes on Flatpak Applications](https://itsfoss.com/flatpak-app-apply-theme/)
