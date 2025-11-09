@@ -1260,40 +1260,23 @@ flatpak install --user /tmp/synerg.flatpak
 Un logiciel permettant de gérer les claviers et souris [Logitech](https://www.logitech.com/) (personnellement, j'utilise un clavier [MX Mechanical Mini](https://www.logitech.com/fr-fr/products/keyboards/mx-mechanical.html) avec une souris [MX Master 3](https://www.logitech.com/fr-fr/products/mice/mx-master-3s.910-006559.html)).
 
 ```bash
-sudo pacman -S solaar 
+sudo pacman -S solaar
+```
+
+### [Rio](https://rioterm.com/)
+
+Rio est un émulateur de terminal développé en Rust, GPU‑accéléré et compatible Wayland/X11, offrant toutes les fonctionnalités que l’on attend d’un terminal moderne (split, affichage d’images, etc.). Il est léger et surtout très configurable via un fichier `~/.config/rio/config.toml`.
+
+```bash
+sudo pacman -S rio
 ```
 
 ### [Tmux](https://github.com/tmux/tmux)
 
-J'ai utilisé pendant un grand moment [Terminator](https://github.com/janisozaur/terminator) comme émulateur de terminal afin de pouvoir multiplexer mes consoles. Cependant, XFCE dispose déjà d'un terminal codé en C et donc extrêmement performant et bien intégré avec le reste de l'environnement. Le seul défaut de ce dernier est qu'il ne gère pas le split d'écran. La solution que j'ai choisie, est donc de l'associer avec des logiciels de multiplexage plus bas niveau tel que [GNU Screen](https://www.gnu.org/software/screen/) ou [Tmux](https://github.com/tmux/tmux).
+Tmux est un multiplexeur de terminaux bas niveau : il permet de gérer des onglets et des splits au sein d’un terminal. Le logiciel étant lui‑même un démon, il est possible de fermer son émulateur de terminal et de retrouver sa session plus tard. Clairement l’un des meilleurs logiciels pour améliorer sa productivité en ligne de commande.
 
 ```bash
-sudo pacman -S tmux xclip
-
-cat << EOL > ~/.tmux.conf
-set-option -g default-shell /usr/bin/fish
-set -g default-command /usr/bin/fish
-
-bind '"' split-window -c "#{pane_current_path}"
-bind % split-window -h -c "#{pane_current_path}"
-
-set -g status off
-set -g history-limit 999999999
-set -g mouse on
-
-setw -g mode-keys vi
-
-set-option -s set-clipboard off
-
-bind P paste-buffer
-bind-key -T copy-mode-vi v send-keys -X begin-selection
-bind-key -T copy-mode-vi y send-keys -X rectangle-toggle
-unbind -T copy-mode-vi Enter
-bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel 'xclip -se c -i'
-bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel 'xclip -se c -i'
-EOL
-
-tmux source-file ~/.tmux.conf
+sudo pacman -S tmux
 ```
 
 ### [TLPUI](https://github.com/d4nj1/TLPUI)
