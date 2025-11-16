@@ -24,7 +24,7 @@ L'autre avantage de Manjaro, est qu'elle est basée sur la distribution [Arch Li
 
 ### Mise à jour de Manjaro
 
-Maintenant que Manjaro est installé, nous allons le mettre à jour grâce à l'un des gestionnaires de paquets intègres de la distribution. Pour ma part, j'utilise `pacman`, qui est le gestionnaire de paquet de la distribution Arch. Il est relativement difficile à utiliser et très peu intuitif, c'est pour cette raison que les développeurs de la distribution Manjaro ont rajouté un outil permettant de simplifier son utilisation `pamac`. Pour les utilisateurs venant d'une distribution basée sur [Debian](https://www.debian.org/), ou [RedHat](https://www.redhat.com/), il semblera sans aucun doute plus intuitif.
+Maintenant que Manjaro est installé, nous allons le mettre à jour grâce à l'un des gestionnaires de paquets intégrés de la distribution. Pour ma part, j'utilise `pacman`, qui est le gestionnaire de paquet de la distribution Arch. Il est relativement difficile à utiliser et très peu intuitif, c'est pour cette raison que les développeurs de la distribution Manjaro ont rajouté un outil permettant de simplifier son utilisation `pamac`. Pour les utilisateurs venant d'une distribution basée sur [Debian](https://www.debian.org/), ou [RedHat](https://www.redhat.com/), il semblera sans aucun doute plus intuitif.
 
 La raison pour laquelle j'utilise néanmoins `pacman` est qu'il offre beaucoup plus de possibilités que sa surcouche. Ce wiki peut néanmoins être suivi en recopiant les commandes `pacman` et par la suite utilisé à titre personnel `pamac`. Ce dernier étant simplement une surcouche, cela ne devrait pas poser de problème de compatibilité.
 
@@ -109,7 +109,7 @@ sudo pacman -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 
 ### Configuration du réseau
 
-A l'installation, Manjaro utilise [NetworkManager](https://networkmanager.dev/) qui permet de gérer le réseau de manière automatique. Cependant, le DNS inscrit dans le fichier `resolve.conf` sera automatiquement remplacé par celui fourni par le DHCP.
+À l'installation, Manjaro utilise [NetworkManager](https://networkmanager.dev/) qui permet de gérer le réseau de manière automatique. Cependant, le DNS inscrit dans le fichier `resolve.conf` sera automatiquement remplacé par celui fourni par le DHCP.
 
 Avec le code suivant, nous allons forcer l'utilisation des DNS [OpenDNS](https://www.opendns.com/), [Cloudflare](https://www.cloudflare.com/fr-fr/dns) et [OpenNIC](https://www.opennic.org/).
 
@@ -688,13 +688,13 @@ Il est également possible d'utiliser GraalVM pour lancer ces différentes IDEs,
 
 ### [NeoVim](https://neovim.io/)
 
-NeoVim est une version améliorée de l'IDE en ligne de commande [Vim](https://www.vim.org/) qui est lui méême une version évoluée de [VI](https://ex-vi.sourceforge.net/).
+NeoVim est une version améliorée de l'IDE en ligne de commande [Vim](https://www.vim.org/) qui est lui même une version évoluée de [VI](https://ex-vi.sourceforge.net/).
 
 Tout comme Vim, NeoVim offre la possibilité d'être enrichie grâce à une mécanique de plugins.
 
-Cependant, il peut-être long est fastidieux de mettre en place un environnement de trouvé les plugins qui vont réellement nous faciliter la vie.
+Cependant, il peut être long et fastidieux de mettre en place un environnement et de trouver les plugins qui vont réellement nous faciliter la vie.
 
-C'est pourquoi j'utilise personellement un set de plugins nommé LazyVim, qui permet d'ajouter à NeoVim de nombreuses fonctionalitées, de quoi en faire un véritable IDE.
+C'est pourquoi j'utilise personnellement un set de plugins nommé LazyVim, qui permet d'ajouter à NeoVim de nombreuses fonctionnalités, de quoi en faire un véritable IDE.
 
 ```bash
 sudo pacman -S neovim
@@ -729,14 +729,14 @@ code --install-extension k--kato.intellij-idea-keybindings
 
 ### [Claude Code](https://www.claude.com/product/claude-code)
 
-Claude Code est l'agent d'aide au développement développé par [Anthropic](https://www.anthropic.com/). Il a l'avanatage de fonctionner en ligne de commande et donc d'être indépendant d'un IDE. De plus il est possible de payer au tocken et non au mois. Ce qui peut s'avéré intéréssent pour ne pas se retrouver frustré les mois ou on utilise beaucoup l'IA et payé pour rien les mois ou on ne l'utilise pas.
+Claude Code est l'agent d'aide au développement développé par [Anthropic](https://www.anthropic.com/). Il a l'avantage de fonctionner en ligne de commande et donc d'être indépendant d'un IDE. De plus il est possible de payer au token et non au mois. Ce qui peut s'avérer intéressant pour ne pas se retrouver frustré les mois où on utilise beaucoup l'IA et payer pour rien les mois où on ne l'utilise pas.
 
 ```bash
 yay -S claude-code
 claude install
 ```
 
-Voici une configuration de claude code par default pour qu'il s'exécute dans un environnement sandboxé, qu'il envoi moins de telemetry et qu'il pose moins de question sur les commande qu'il a le droit ou non d'exécuter :
+Voici une configuration de claude code par défaut pour qu'il s'exécute dans un environnement sandboxé, qu'il envoie moins de télémétrie et qu'il pose moins de questions sur les commandes qu'il a le droit ou non d'exécuter :
 
 ```bash
 echo '{
@@ -1239,7 +1239,7 @@ flatpak install --user org.fontforge.FontForge
 
 LanguageTool est une solution comportant un backend en Java et des plugins à intégrer dans des applications.
 
-Dans un premier temps, il va falloir [télécharger le Backend en Java](https://dev.languagetool.org/http-server) et lui associé un utilisateur système :
+Dans un premier temps, il va falloir [télécharger le Backend en Java](https://dev.languagetool.org/http-server) et lui associer un utilisateur système :
 
 ```bash
 export LANGUAGE_TOOL_DIR=/opt/LanguageTool
@@ -1462,7 +1462,7 @@ sudo pacman -S blackarch/burpsuite
 
 ### [MacChanger](https://www.kali.org/tools/macchanger/)
 
-Un simple script permettant de changer d'adresse mac. Cela peut-être relativement utile dans les lieux publics ou une limite de temps d'utilisation est imposée.
+Un simple script permettant de changer d'adresse mac. Cela peut être relativement utile dans les lieux publics où une limite de temps d'utilisation est imposée.
 
 ```bash
 sudo pacman -S macchanger
@@ -1480,7 +1480,7 @@ Pour revenir à l'adresse de base :
 macchanger -p eth0
 ```
 
-Enfin dans certains cas (en général des scénarios d'attaque) il peut-être utile de prendre une adresse mac spécifique :
+Enfin dans certains cas (en général des scénarios d'attaque) il peut être utile de prendre une adresse mac spécifique :
 
 ```bash
 macchanger --mac=XX:XX:XX:XX:XX:XX eth0

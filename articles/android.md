@@ -117,13 +117,13 @@ Si on ne souhaite pas rooter le téléphone, il est préférable de locker le bo
 fastboot flashing lock_critical
 ```
 
-Et après le reboot :
+Et après le redémarrage :
 
 ```bash
 fastboot flashing lock
 ```
 
-Remarque : Avec le root le bootloader ne devra jamais être reverrouillé. Visiblement une vérification d'intégrité est effectuée à ce moment-là et le root est considéré comme une anomalie.
+Remarque : Avec le root le bootloader ne devra jamais être reverrouillé. Visiblement, une vérification d'intégrité est effectuée à ce moment-là et le root est considéré comme une anomalie.
 
 ## Configuration de l'APN Bouygues Telecom
 

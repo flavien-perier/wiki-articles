@@ -284,7 +284,7 @@ docker exec -it container-test sh
 
 Dive est un outil indispensable en ligne de commandes qui permet de visualiser les modifications effectuées par un layer sur le système de fichiers par rapport au layer précédent. Il est ainsi possible de détecter facilement les fichiers inutiles qui pourront être supprimés sur les versions suivantes de l'image.
 
-#### Un peut de nettoyage
+#### Un peu de nettoyage
 
 Quand on utilise fréquemment Docker des ressources orphelines s'accumulent sur notre système. Elles peuvent très rapidement représenter une place très importante sur notre système.
 
@@ -314,7 +314,7 @@ docker container prune -f
 
 ### docker-compose
 
-Docker compose est une application développer par la communauté Docker. Elle permet de décrire une infrastructure basée sur Docker. On va donc pouvoir décrire l'ordre de lancement des conteneurs, les réseaux sur lesquels ils vont être connectés, les volumes auxquels ils auront accès...
+Docker compose est une application développée par la communauté Docker. Elle permet de décrire une infrastructure basée sur Docker. On va donc pouvoir décrire l'ordre de lancement des conteneurs, les réseaux sur lesquels ils vont être connectés, les volumes auxquels ils auront accès...
 
 Les commandes de base sont :
 
@@ -322,7 +322,7 @@ Les commandes de base sont :
 - `docker-compose down`: Pour arrêter l'infrastructure.
 - `docker-compose logs -f`: Pour afficher les logs de l'application.
 
-Chacune de ces commandes peut être suivie par le nom d'un d'un conteneur pour n'appliquer l'opération qu'à lui seul.
+Chacune de ces commandes peut être suivie par le nom d'un conteneur pour n'appliquer l'opération qu'à lui seul.
 
 Voici un exemple simple qui permet d'instancier une application Nextcloud avec sa base de données PostgreSQL derrière un reverse proxy Nginx exposé sur la machine hôte.
 
@@ -544,7 +544,7 @@ Bien évidemment, il existe des cas où ces règles peuvent être transgressées
 
 [Podman](https://podman.io/) est une autre solution de conteneurisation équivalente à Docker. Au niveau de l'architecture, la principale différence est que Podman ne possède pas de backend lancé en tant que démon. Il n'a donc pas accès au droit root. Si la solution monte un volume sur disque, le contenu de ce dossier appartiendra donc forcément à l'utilisateur qui a lancé le conteneur. De même, il ne va pas être possible d'effectuer un mapping de port sur l'un des 1024 premières valeurs si l'administrateur du système ne l'a pas autorisé.
 
-Dans l'absolu, Podman ne possède pas de réels avantages sur une machine de production. Cependant, il peut être intéressent sur une machine de développer, car il peut permettre à l'administrateur de s'assurer que les utilisateurs ne peuvent pas effectuer d'augmentation de privilège par le biais de la conteneurisation.
+Dans l'absolu, Podman ne possède pas de réels avantages sur une machine de production. Cependant, il peut être intéressant sur une machine de développement, car il peut permettre à l'administrateur de s'assurer que les utilisateurs ne peuvent pas effectuer d'augmentation de privilège par le biais de la conteneurisation.
 
 Certaines distributions telles que Fedora poussent de plus en plus l'utilisation de cette solution par rapport à Docker. Après, l'un dans l'autre, elles respectent toutes les deux la même norme, donc pas de changement majeur en termes de paradigme, ni même de commandes (juste remplace la commande docker par podman ce qui suit ne change pas).
 

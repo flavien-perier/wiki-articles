@@ -65,7 +65,7 @@ Il est également possible d'aller plus loin en allant dans les paramètres avan
 - `dom.animations-api.getAnimations.enabled`: false
 - `dom.animations-api.timelines.enabled`: false
 
-#### Désactivation des fonctionalitées d'intelligence artificielle
+#### Désactivation des fonctionnalités d'intelligence artificielle
 
 - `browser.ml.enabled`: false
 - `browser.ml.chat.enabled`: false

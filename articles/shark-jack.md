@@ -9,9 +9,9 @@ author: Flavien PERIER <perier@flavien.io>
 date: 2021-11-10 18:00
 ---
 
-Je tiens avant toute chose à préciser que cet article est rédigé uniquement à but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous couter jusqu'a deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
+Je tiens avant toute chose à préciser que cet article est rédigé uniquement à but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous coûter jusqu'à deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
 
-La [Shark Jack](https://shop.hak5.org/products/shark-jack) est un dispositif d'attaque physique vendu par [Hak5](https://hak5.org/). Elle permet d'effectuer des attaques réseau assez simplement. D'un point de vue physique, elle mesure seulement 6cm de long et possède une prise RJ45 mâle. D'un point de vue plus logiciel elle dispose d'un système d'exploitation Linux fortement alléger, un espace disque de quelques méga-octets et quelques outils tels que [nmap](https://nmap.org/) ou [tcpdump](https://www.tcpdump.org/).
+La [Shark Jack](https://shop.hak5.org/products/shark-jack) est un dispositif d'attaque physique vendu par [Hak5](https://hak5.org/). Elle permet d'effectuer des attaques réseau assez simplement. D'un point de vue physique, elle mesure seulement 6cm de long et possède une prise RJ45 mâle. D'un point de vue plus logiciel elle dispose d'un système d'exploitation Linux fortement allégé, un espace disque de quelques méga-octets et quelques outils tels que [nmap](https://nmap.org/) ou [tcpdump](https://www.tcpdump.org/).
 
 ![Shark Jack](https://medias.flavien.io/articles/shark-jack/shark-jack.webp)
 
@@ -39,7 +39,7 @@ Tous les vecteurs d'attaque avec ce dispositif ont pour point commun que le hack
 
 La seule protection efficace contre ce genre d'attaque est un contrôle strict des accès au réseau autant physique, que numérique. Les équipements doivent être placés dans baies sécurisées dont seuls les employés habilités peuvent s'approcher. Et leur mot de passe d'accès ne doit pas être celui par défaut.
 
-Etant donné qu'un utilisateur qui se branche physiquement à un réseau n'a pas besoin de mot de passe pour y accèder, il faut faire en sorte que les prises RJ45 soient le moins accèssible possible. Donc ne pas en mettre ailleur que dans les bureaux.
+Etant donné qu'un utilisateur qui se branche physiquement à un réseau n'a pas besoin de mot de passe pour y accèder, il faut faire en sorte que les prises RJ45 soient le moins accessible possible. Donc ne pas en mettre ailleurs que dans les bureaux.
 
 ## Comment s'en servir
 
@@ -55,7 +55,7 @@ ssh root@172.16.24.1
 
 ### Quelques exemples de scripts
 
-Il existe plusieurs sites qui proposent des scripts déjà tout faits. Il est intéressent de passer par la afin de s'en inspirer :
+Il existe plusieurs sites qui proposent des scripts déjà tout faits. Il est intéressant de passer par là afin de s'en inspirer :
 
 - [GitHub de Hak5](https://github.com/hak5/sharkjack-payloads)
 

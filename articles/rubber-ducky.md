@@ -9,7 +9,7 @@ author: Flavien PERIER <perier@flavien.io>
 date: 2021-10-31 18:00
 ---
 
-Je tiens avant toute chose à préciser que cet article est rédigé uniquement à but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous couter jusqu'à deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
+Je tiens avant toute chose à préciser que cet article est rédigé uniquement à but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous coûter jusqu'à deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
 
 La [Rubber Ducky](https://www.usbrubberducky.com/) est un dispositif d'attaque physique vendu par [Hak5](https://hak5.org/). Extérieurement, elle ressemble à une vulgaire clé USB. Cependant, une fois connectée à un ordinateur, elle est reconnue comme un clavier et va pouvoir exécuter une série d'instructions prédéfinie par l'attaquant.
 
@@ -25,11 +25,11 @@ Il existe de nombreux scénarios d'attaque imaginables avec ce type d'appareil. 
 
 - Dans le cas où un hacker arriverait à pénétrer physiquement dans les locaux d'une entreprise, ce type d'équipement pourrait lui permettre de gagner du temps dans le cas où il trouverait, un pc déverrouillé. Il lui suffit de brancher la Rubber Ducky et d'attendre que le script se déroule (généralement seulement quelques secondes).
 
-- Autres scénarios où le hacker n'arriverait pas à accéder aux locaux, il serait envisageable d'abandonner le dispositif dans un lieu fréquenté par les employés de cette entreprise (comme par exemple le parking de l'entreprise). Dans la plupart des cas, la personne qui va trouver le dispositif va le brancher afin de visualiser son contenu. Erreur qui pourrait être fatale et permettre au hacker de s'infiltrer dans le réseau d'une entreprise sans même avoir à y accéder physiquement.
+- Autre scénario où le hacker n'arriverait pas à accéder aux locaux, il serait envisageable d'abandonner le dispositif dans un lieu fréquenté par les employés de cette entreprise (comme par exemple le parking de l'entreprise). Dans la plupart des cas, la personne qui va trouver le dispositif va le brancher afin de visualiser son contenu. Erreur qui pourrait être fatale et permettre au hacker de s'infiltrer dans le réseau d'une entreprise sans même avoir à y accéder physiquement.
 
 ## Comment s'en défendre
 
-Comme nous l'avons vu, une attaque effectuée par une Rubber Ducky est indétectable par nos antivirus. Pour s'en défendre, il faut donc une approche qui ne soit pas logiciel.
+Comme nous l'avons vu, une attaque effectuée par une Rubber Ducky est indétectable par nos antivirus. Pour s'en défendre, il faut donc une approche qui ne soit pas logicielle.
 
 La plupart des entreprises interdisent à leurs employés de connecter des clés USB à leurs ordinateurs, mais ne les empêchent pas non plus de le faire... Conclusion, ils ne se privent pas.
 
@@ -39,13 +39,13 @@ Il est cependant évident qu'il n'est pas forcément nécessaire d'en arriver l�
 
 ## Comment s'en servir
 
-La première étape consiste à démonter la Rubber Ducky. À l'intérieur ce trouve une carte micros-sd c'est sur cette dernière que nous allons travailler et pouvoir déposer notre payload.
+La première étape consiste à démonter la Rubber Ducky. À l'intérieur se trouve une carte micros-sd c'est sur cette dernière que nous allons travailler et pouvoir déposer notre payload.
 
 ### Installation de l'environnement
 
 Le langage de la Rubber Ducky (le [Ducky Script](https://docs.hak5.org/hc/en-us/articles/360049449314-Ducky-Script-Command-Reference)) est compilé. Il faut donc utiliser un logiciel afin de transformer notre code en instruction compris par notre équipement.
 
-Il est possible d'utiliser [le compiler en ligne proposée par Hak5](https://shop.hak5.org/pages/ducky-encoder) ou d'installer directement [l'outil java en ligne de commande](https://github.com/hak5darren/USB-Rubber-Ducky/releases/download/v2.6.3/encoder.jar).
+Il est possible d'utiliser [le compilateur en ligne proposé par Hak5](https://shop.hak5.org/pages/ducky-encoder) ou d'installer directement [l'outil java en ligne de commande](https://github.com/hak5darren/USB-Rubber-Ducky/releases/download/v2.6.3/encoder.jar).
 
 Pour utiliser l'outil, il suffit d'utiliser la ligne de commande suivante :
 
@@ -57,7 +57,7 @@ Une fois notre code compilé d'une façon ou d'une autre, il suffit de le mettre
 
 ### Quelques exemples de scripts
 
-Il existe plusieurs sites qui proposent des scripts déjà tous faits. Il est intéressant de passer par la afin de s'en inspirer :
+Il existe plusieurs sites qui proposent des scripts déjà tous faits. Il est intéressant de passer par là afin de s'en inspirer :
 
 - [GitHub de Hak5](https://github.com/hak5/usbrubberducky-payloads)
 - [Hacktoday](https://thehacktoday.com/60-best-rubber-ducky-usb-payloads/)
@@ -76,7 +76,7 @@ Il existe plusieurs sites qui proposent des scripts déjà tous faits. Il est in
 
 Un premier petit payload, qui est en réalité assez inoffensif pour les entreprises dans la mesure ou le script demande un accès administrateur (qui n'est en général pas offert aux employés).
 
-Le but est ici de transformer les disques `C:` et `D:` d'un Windows en lecteurs réseaux. L'attaquant n'aura par la suite qu'à récupérer les fichiers qu'ils contiennent. Cela implique cependant que l'attaquant ait accès au réseau et connaisse l'IP de ça vctime.
+Le but est ici de transformer les disques `C:` et `D:` d'un Windows en lecteurs réseaux. L'attaquant n'aura par la suite qu'à récupérer les fichiers qu'ils contiennent. Cela implique cependant que l'attaquant ait accès au réseau et connaisse l'IP de sa victime.
 
 ```txt
 REM Flavien PERIER <perier@flavien.io>
