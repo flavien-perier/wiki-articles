@@ -86,7 +86,7 @@ flatpak remote-add --user flathub https://flathub.org/repo/flathub.flatpakrepo
 ```bash
 cd /tmp
 sudo pacman -S --needed base-devel
-git clone https://aur.archlinux.org/yay.git
+git clone -q --depth 1 -- https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
@@ -621,54 +621,6 @@ chmod 500 ~/bin
 
 Je fais personnellement le choix d'installer mes différents outils directement au niveau de mon système et non pas dans des conteneurs Flatpak. S'agissant de mes outils de travail, je fais cela afin de réduire au maximum les désagréments que pourrait causer la non-accessibilité d'une ressource du système depuis un conteneur. Il est cependant possible d'installer la plupart de ces outils au travers de Flatpak.
 
-### Outils [JetBrains](https://www.jetbrains.com/)
-
-Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est possible d'installer les différents IDEs de l'entreprise à partir de la [JetBrains toolbox](https://www.jetbrains.com/toolbox-app/). C'est au travers de cette interface qu'il est par la suite possible d'installer [Intellij](https://www.jetbrains.com/idea/), [Clion](https://www.jetbrains.com/fr-fr/clion/), [PyCharm](https://www.jetbrains.com/pycharm/), [DataGrip](https://www.jetbrains.com/datagrip/)... et de les maintenir à jour.
-
-```bash
-yay -S jetbrains-toolbox
-```
-
-Il est également possible d'utiliser GraalVM pour lancer ces différentes IDEs, ce qui aura un impact extrêmement positif sur leurs performances.
-
-### [VisualStudio code](https://code.visualstudio.com/)
-
-Sur les dépôts pacman, il n'y a pas de trace de [Microsoft VisualStudio Code](https://code.visualstudio.com/). En revanche, on peut trouver un fork nommé [Code OSS](https://appimage.github.io/Code_OSS/) sur lequel les traqueurs Microsoft ont été enlevés et les composants propriétaires remplacés (le logo par exemple). Ce fork est également compatible avec la plupart des extensions de l'IDE de base.
-
-```bash
-sudo pacman -S code
-
-code --install-extension ms-azuretools.vscode-docker
-code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
-
-code --install-extension ms-vscode.hexeditor
-code --install-extension ms-python.python
-code --install-extension ms-toolsai.jupyter
-code --install-extension redhat.vscode-xml
-code --install-extension redhat.vscode-yaml
-code --install-extension efoerster.texlab
-
-code --install-extension arjun.swagger-viewer
-code --install-extension janisdd.vscode-edit-csv
-code --install-extension naumovs.color-highlight
-
-code --install-extension k--kato.intellij-idea-keybindings
-```
-
-### Environnement Node.js
-
-Quand on travaille sur différents projets JavaScript, on peut être amené à utiliser différentes versions de [Node.js](https://nodejs.org/en/) en fonction des projets. Il est alors possible de passer par [NVM (Node Version Manager)](https://github.com/nvm-sh/nvm), qui va permettre de changer de version de Node.js en seulement quelques commandes.
-
-```bash
-sudo pacman -S nvm
-
-echo "source /usr/share/nvm/init-nvm.sh" >> ~/.bashrc
-echo "source /usr/share/nvm/init-nvm.sh" >> ~/.zshrc
-
-nvm install --lts
-nvm use stable
-```
-
 ### Environnement Java/Kotlin
 
 De la même façon que NVM gère les versions de Node.js, il est possible d'utiliser [SdkMan](https://sdkman.io/) afin de gérer les versions d'[Open JDK](https://openjdk.java.net/), [GraalVM](https://www.graalvm.org/) ou encore [Maven](https://maven.apache.org/) nécessaires au fonctionnement de nos projets.
@@ -696,6 +648,25 @@ sdk install maven
 sdk use java 25-graal
 ```
 
+### Environnement Node.js
+
+Quand on travaille sur différents projets JavaScript, on peut être amené à utiliser différentes versions de [Node.js](https://nodejs.org/en/) en fonction des projets. Il est alors possible de passer par [NVM (Node Version Manager)](https://github.com/nvm-sh/nvm), qui va permettre de changer de version de Node.js en seulement quelques commandes.
+
+```bash
+sudo pacman -S nvm
+
+chmod u+w ~/.bashrc
+echo "source /usr/share/nvm/init-nvm.sh" >> ~/.bashrc
+chmod u-w ~/.bashrc
+
+chmod u+w ~/.zshrc
+echo "source /usr/share/nvm/init-nvm.sh" >> ~/.zshrc
+chmod u-w ~/.zshrc
+
+nvm install --lts
+nvm use stable
+```
+
 ### Autres langages
 
 Même si je ne code pas directement dans ces technologies, le [GO](https://golang.org/) de Google et le [Rust](https://www.rust-lang.org/) de Mozilla, sont deux langages de programmation de bas niveau qui sont en train de s'imposer. Je les installe afin d'avoir la possibilité de compiler différents projets quand c'est nécessaire.
@@ -703,6 +674,154 @@ Même si je ne code pas directement dans ces technologies, le [GO](https://golan
 ```bash
 sudo pacman -S go rustup
 rustup default stable
+```
+
+### Outils [JetBrains](https://www.jetbrains.com/)
+
+Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est possible d'installer les différents IDEs de l'entreprise à partir de la [JetBrains toolbox](https://www.jetbrains.com/toolbox-app/). C'est au travers de cette interface qu'il est par la suite possible d'installer [Intellij](https://www.jetbrains.com/idea/), [Clion](https://www.jetbrains.com/fr-fr/clion/), [PyCharm](https://www.jetbrains.com/pycharm/), [DataGrip](https://www.jetbrains.com/datagrip/)... et de les maintenir à jour.
+
+```bash
+yay -S jetbrains-toolbox
+```
+
+Il est également possible d'utiliser GraalVM pour lancer ces différentes IDEs, ce qui aura un impact extrêmement positif sur leurs performances.
+
+### [NeoVim](https://neovim.io/)
+
+NeoVim est une version améliorée de l'IDE en ligne de commande [Vim](https://www.vim.org/) qui est lui méême une version évoluée de [VI](https://ex-vi.sourceforge.net/).
+
+Tout comme Vim, NeoVim offre la possibilité d'être enrichie grâce à une mécanique de plugins.
+
+Cependant, il peut-être long est fastidieux de mettre en place un environnement de trouvé les plugins qui vont réellement nous faciliter la vie.
+
+C'est pourquoi j'utilise personellement un set de plugins nommé LazyVim, qui permet d'ajouter à NeoVim de nombreuses fonctionalitées, de quoi en faire un véritable IDE.
+
+```bash
+sudo pacman -S neovim
+
+rm -Rf ~/.config/nvim
+git clone -q --depth 1 -- https://github.com/LazyVim/starter ~/.config/nvim
+```
+
+### [VisualStudio code](https://code.visualstudio.com/)
+
+Sur les dépôts pacman, il n'y a pas de trace de [Microsoft VisualStudio Code](https://code.visualstudio.com/). En revanche, on peut trouver un fork nommé [Code OSS](https://appimage.github.io/Code_OSS/) sur lequel les traqueurs Microsoft ont été enlevés et les composants propriétaires remplacés (le logo par exemple). Ce fork est également compatible avec la plupart des extensions de l'IDE de base.
+
+```bash
+sudo pacman -S code
+
+code --install-extension ms-azuretools.vscode-docker
+code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+
+code --install-extension ms-vscode.hexeditor
+code --install-extension ms-python.python
+code --install-extension ms-toolsai.jupyter
+code --install-extension redhat.vscode-xml
+code --install-extension redhat.vscode-yaml
+code --install-extension efoerster.texlab
+
+code --install-extension arjun.swagger-viewer
+code --install-extension janisdd.vscode-edit-csv
+code --install-extension naumovs.color-highlight
+
+code --install-extension k--kato.intellij-idea-keybindings
+```
+
+### [Claude Code](https://www.claude.com/product/claude-code)
+
+Claude Code est l'agent d'aide au développement développé par [Anthropic](https://www.anthropic.com/). Il a l'avanatage de fonctionner en ligne de commande et donc d'être indépendant d'un IDE. De plus il est possible de payer au tocken et non au mois. Ce qui peut s'avéré intéréssent pour ne pas se retrouver frustré les mois ou on utilise beaucoup l'IA et payé pour rien les mois ou on ne l'utilise pas.
+
+```bash
+yay -S claude-code
+claude install
+```
+
+Voici une configuration de claude code par default pour qu'il s'exécute dans un environnement sandboxé, qu'il envoi moins de telemetry et qu'il pose moins de question sur les commande qu'il a le droit ou non d'exécuter :
+
+```bash
+echo '{
+  "companyAnnouncements": [
+    "flavien.io configuration"
+  ],
+
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "excludedCommands": ["git", "docker", "podman"],
+    "network": {
+      "allowUnixSockets": [
+        "/var/run/docker.sock"
+      ],
+      "allowLocalBinding": true
+    }
+  },
+
+  "env": {
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+  },
+
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ -n \"$CLAUDE_TOOL_FILE_PATH\" ]] && git rev-parse --git-dir >/dev/null 2>&1; then git add \"$CLAUDE_TOOL_FILE_PATH\" 2>/dev/null || true; fi"
+          }
+        ]
+      }
+    ]
+  },
+
+  "permissions": {
+    "allow": [
+      "Read",
+      "Write",
+      "Bash(tree:*)",
+      "Bash(mkdir:*)",
+      "Bash(rmdir:*)",
+      "Bash(touch:*)",
+      "Bash(docker compose up:*)",
+      "Bash(docker compose down:*)",
+      "Bash(docker compose build:*)",
+      "Bash(docker compose logs:*)",
+      "Bash(docker run:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker build:*)",
+      "Bash(docker buildx:*)",
+      "Bash(docker logs:*)",
+      "Bash(podman run:*)",
+      "Bash(podman exec:*)",
+      "Bash(podman build:*)",
+      "Bash(podman logs:*)",
+      "Bash(java:*)",
+      "Bash(mvn:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(cargo:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Bash(git:*)",
+      "Bash(curl:*)",
+      "Bash(sudo:*)",
+      "Bash(pacman:*)",
+      "Bash(yay:*)",
+      "Bash(dnf:*)",
+      "Bash(yum:*)",
+      "Bash(apk:*)",
+      "Bash(apt:*)",
+      "Bash(apt-get:*)",
+      "Bash(dpkg:*)",
+      "Bash(flatpak:*)",
+      "Bash(docker-compose:*)"
+    ]
+  }
+}' | tee ~/.claude/settings.json
 ```
 
 ### [OpenAPI-generator](https://openapi-generator.tech/)
@@ -1802,7 +1921,7 @@ Comme son nom l'indique, ce script permet de nettoyer différents éléments du 
 
 PROTECTED_FOLDER=(".ssh" ".themes" ".icons" ".fonts" "Templates" "Pictures" "Videos" "Music")
 PROTECTED_FILETYPE=("pdf" "zip" "tar" "gz" "7z" "wav" "mp3" "mp4" "mkv" "mov")
-HISTORY_PREFIX_TO_CLEAN=("pacman" "yay" "flatpak" "clear" "ls" "ll" "rm" "mv" "rmdir" "touch" "tar" "7z" "unzip" "unrar")
+HISTORY_PREFIX_TO_CLEAN=("pacman" "yay" "flatpak" "clear" "ls" "ll" "rm" "mv" "mkdir" "rmdir" "touch" "tar" "7z" "zip" "unzip" "unrar")
 
 get-used-space() {
    df | tr -s " " | cut -f3 -d " " | tail -n +2 | sed -z 's/\n/+/g;s/+$/\n/' | bc

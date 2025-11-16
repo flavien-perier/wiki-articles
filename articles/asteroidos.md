@@ -127,7 +127,7 @@ J'utilise une watchface custom pour la montre. Pour l'installer, il suffit de ta
 
 ```bash
 cd /tmp
-git clone https://github.com/flavien-perier/asteroid-watchface.git
+git clone -q --depth 1 -- https://github.com/flavien-perier/asteroid-watchface.git
 cd asteroid-watchface
 adb push usr/ /
 adb shell systemctl restart user@1000

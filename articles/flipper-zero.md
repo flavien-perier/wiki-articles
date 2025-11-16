@@ -104,17 +104,17 @@ mkdir -p ./music_player
 
 # Install Flipper-IRDB
 rm -Rf ./infrared/Flipper-IRDB
-git clone https://github.com/logickworkshop/Flipper-IRDB.git ./infrared/Flipper-IRDB
+git clone -q --depth 1 -- https://github.com/logickworkshop/Flipper-IRDB.git ./infrared/Flipper-IRDB
 
 # Install flipperzero-bruteforce
 rm -Rf ./subghz/flipperzero-bruteforce
-git clone https://github.com/tobiabocchi/flipperzero-bruteforce.git ./subghz/flipperzero-bruteforce
+git clone -q --depth 1 -- https://github.com/tobiabocchi/flipperzero-bruteforce.git ./subghz/flipperzero-bruteforce
 mv ./subghz/flipperzero-bruteforce/sub_files/* ./subghz/flipperzero-bruteforce
 rmdir ./subghz/flipperzero-bruteforce/sub_files
 
 # Install FlipperMusicRTTTL
 rm -Rf ./music_player/FlipperMusicRTTTL
-git clone https://github.com/neverfa11ing/FlipperMusicRTTTL.git ./music_player/FlipperMusicRTTTL
+git clone -q --depth 1 -- https://github.com/neverfa11ing/FlipperMusicRTTTL.git ./music_player/FlipperMusicRTTTL
 mkdir -p ./music_player/FlipperMusicRTTTL/Other
 unzip ./music_player/FlipperMusicRTTTL/Unsorted\ 10k\ Song\ Archive.zip -d ./music_player/FlipperMusicRTTTL/Other
 rm -Rf ./music_player/FlipperMusicRTTTL/Unsorted\ 10k\ Song\ Archive.zip
