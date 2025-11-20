@@ -88,7 +88,7 @@ Cette extension permet de bloquer les pubs que l'on peut trouver sur différents
 Cette extension permet de bloquer les traqueurs présents sur le web. Cela va par exemple empêcher les modules [Google Analytics](https://fr.wikipedia.org/wiki/Google_Analytics) de s'exécuter.
 
 Il existe actuellement de nombreuses extensions permettant d'améliorer la vie privée. Mais les trois principales qui ont pour objectif de limiter le champ d'action des traqueurs sont :
-- [Ghostery](https://addons.mozilla.org/en-US/firefox/addon/ghostery) qui est également un AdBlock, mais qui cause de nombreux dysfonctionnements, car trop agressive.
+- [Ghostery](https://addons.mozilla.org/en-US/firefox/addon/ghostery) qui est également un AdBlock, mais qui cause de nombreux dysfonctionnements, car trop aggressive.
 - [Disconnect](https://addons.mozilla.org/en-US/firefox/addon/disconnect/) qui est plutôt efficace, mais moins populaire que les deux autres.
 - [Privacy Badger](https://addons.mozilla.org/en-US/firefox/addon/privacy-badger17/) qui se base sur des méthodes d'apprentissage pour bloquer les contenus indésirables.
 
@@ -156,7 +156,7 @@ Permet de rajouter des informations dans l’en-tête des requêtes envoyées pa
 
 ![Shodan logo](https://medias.flavien.io/articles/firefox/shodan.webp)
 
-[Shodan](https://www.shodan.io/) est un site référençant, pour chaque site et adresses IP accessibles depuis Internet, les services exposés. De rapides tests de sécurité sont également effectués (tests de mot de passe par défaut en fonction de l'équipement, version d'un service possédant une vulnérabilité de sécurité référencée, mauvaise configuration...).
+[Shodan](https://www.shodan.io/) est un site référençant, pour chaque site et chaque adresse IP accessibles depuis Internet, les services exposés. De rapides tests de sécurité sont également effectués (tests de mot de passe par défaut en fonction de l'équipement, version d'un service possédant une vulnérabilité de sécurité référencée, mauvaise configuration...).
 
 Cette extension permet donc tout simplement d'accéder à toutes ces informations sur les sites que nous visitons. Elle permet ainsi de contrôler facilement si une infrastructure n'expose pas trop d'informations par rapport à ce qu'elle devrait et que les différents services exposés ne souffrent pas d'anomalies de configuration.
 
@@ -168,11 +168,17 @@ Cette extension permet donc tout simplement d'accéder à toutes ces information
 
 #### [GreenIT-Analysis](https://addons.mozilla.org/en-US/firefox/addon/greenit-analysis/)
 
-![GreenIT-Analysis logo](https://medias.flavien.io/articles/firefox/gereenit-analysis.webp)
+![GreenIT-Analysis logo](https://medias.flavien.io/articles/firefox/greenit-analysis.webp)
 
 Cette application open source permet d'analyser les éléments d'un site web qui ne seraient pas conformes à une démarche d'écoconception. Elle peut donc nous aider afin de savoir que regarder pour améliorer les performances de son site et réduire son empreinte énergétique.
 
 ### Confort
+
+#### [Floccus](https://floccus.org/)
+
+![Floccus logo](https://medias.flavien.io/articles/firefox/floccus.webp)
+
+Il s'agit d'une application de synchronisation des favoris qui existe également sur les autres navigateurs. Elle a comme principale caractéristique d'implémenter [Nextcloud Bookmarks](https://apps.nextcloud.com/apps/bookmarks). Il est donc possible de gérer ses propres sauvegarde de favoris sur un nas à la maison et de synchroniser ces favoris entre différents navigateurs si nécessaire.
 
 #### [I still don't care about cookies](https://addons.mozilla.org/en-US/firefox/addon/istilldontcareaboutcookies/)
 
