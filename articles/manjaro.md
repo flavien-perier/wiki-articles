@@ -779,7 +779,12 @@ echo '{
     "allow": [
       "Read",
       "Write",
+      "Update",
       "Bash(tree:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
       "Bash(mkdir:*)",
       "Bash(rmdir:*)",
       "Bash(touch:*)",
@@ -804,10 +809,14 @@ echo '{
       "Bash(python3:*)",
       "Bash(cargo:*)"
     ],
+    "ask": [
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ],
     "deny": [
       "Read(./.env)",
       "Bash(git:*)",
-      "Bash(curl:*)",
+      "Bash(cat:*)",
       "Bash(sudo:*)",
       "Bash(pacman:*)",
       "Bash(yay:*)",
@@ -1201,12 +1210,12 @@ Pack Office gratuit pour Linux... Pour les gros utilisateurs des outils Microsof
 flatpak install --user org.libreoffice.LibreOffice
 ```
 
-### [Evince](https://wiki.gnome.org/Apps/Evince)
+### [Papers](https://apps.gnome.org/en/Papers/)
 
 Un autre logiciel Gnome. Celui-ci permet simplement d'afficher des fichiers PDF. Il embarque notamment de la reconnaissance de caractère au sein des images. Ce qui permet de faire des copier-coller de documents photocopiés.
 
 ```bash
-flatpak install --user org.gnome.Evince
+flatpak install --user org.gnome.Papers
 ```
 
 ### [Scribus](https://www.scribus.net/)
@@ -1753,8 +1762,7 @@ application/octet-stream=code-oss.desktop;
 application/x-gettext-translation=code-oss.desktop;
 application/xml=code-oss.desktop;
 application/x-wine-extension-ini=code-oss.desktop;
-application/pdf=org.gnome.Evince.desktop;
-
+application/pdf=org.gnome.Papers.desktop;
 application/vnd.oasis.opendocument.text=org.libreoffice.LibreOffice.desktop;
 application/vnd.oasis.opendocument.spreadsheet=org.libreoffice.LibreOffice.desktop;
 application/vnd.oasis.opendocument.presentation=org.libreoffice.LibreOffice.desktop;
@@ -1782,11 +1790,20 @@ video/mp4=org.videolan.VLC.desktop;
 
 audio/mpeg=org.videolan.VLC.desktop;
 
-x-scheme-handler/http=org.mozilla.firefox.desktop;
-x-scheme-handler/https=org.mozilla.firefox.desktop;
-x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop;
+x-scheme-handler/http=xfce4-web-browser.desktop
+x-scheme-handler/https=xfce4-web-browser.desktop
+x-scheme-handler/mailto=xfce4-mail-reader.desktop
+inode/directory=xfce4-file-manager.desktop
+x-scheme-handler/trash=xfce4-file-manager.desktop
+
+[Added Associations]
+x-scheme-handler/http=xfce4-web-browser.desktop;
+x-scheme-handler/https=xfce4-web-browser.desktop;
+x-scheme-handler/mailto=xfce4-mail-reader.desktop;
+inode/directory=xfce4-file-manager.desktop;
+x-scheme-handler/trash=xfce4-file-manager.desktop;
 EOL
-xdg-settings set default-web-browser org.mozilla.firefox.desktop
+xdg-settings set default-web-browser org.mozilla.firefox
 ```
 
 ### Ajout de modèles de fichiers
