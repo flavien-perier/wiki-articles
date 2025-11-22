@@ -411,7 +411,14 @@ iptables -t filter -A OUTPUT -p udp --dport 1194 -j ACCEPT -m owner --uid-owner 
 iptables -A OUTPUT -o tun+ -j ACCEPT -m owner --uid-owner 0
 
 ## Discord
-iptables -t filter -A OUTPUT -p udp --dport 50000:65535 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p tcp --dport 2053 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p tcp --dport 2083 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p tcp --dport 2087 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p tcp --dport 2096 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p tcp --dport 8443 -j ACCEPT -m owner --uid-owner 1000
+
+iptables -t filter -A OUTPUT -p udp --dport 19294:19344 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p udp --dport 50000:50032 -j ACCEPT -m owner --uid-owner 1000
 
 ## Steam (Remote Play)
 iptables -t filter -A INPUT -p udp --dport 27031:27036 -j ACCEPT

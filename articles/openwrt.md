@@ -31,41 +31,6 @@ ssh-keygen -f ~/.ssh/openwrt -t rsa -b 4096
 ssh-copy-id -i ~/.ssh/openwrt root@192.168.1.1
 ```
 
-## Connexion à l'opérateur
-
-Afin de se connecter à un opérateur, il va falloir deux informations :
-
-- L'adresse mac du modem fourni par l'opérateur: 
-- Le numéro client: Qui est inscrit en haut de sa facture.
-
-Une fois ces informations en notre possession, il faut modifier le fichier `/etc/config/network` pour y ajouter la configuration suivante :
-
-```
-config device
-	option name 'eth2'
-	option macaddr '$MAC_ADDRESS'
-	option ipv6 '0'
-
-config device
-	option type '8021q'
-	option ifname 'eth2'
-	option vid '100'
-	option macaddr '$MAC_ADDRESS'
-	option name 'eth2.100'
-	option ipv6 '0'
-
-config interface 'wan'
-	option proto 'dhcp'
-	option clientid '$CLIENT_ID'
-	option vendorid 'BYGTELIAD'
-	option hostname '*'
-	option macaddr '$MAC_ADDRESS'
-	option device 'eth2.100'
-	option delegate '0'
-	option peerdns '0'
-	option dns '1.1.1.1 1.0.0.1'
-```
-
 ## Sources
 
 - [Getting Started BPI-R4](https://docs.banana-pi.org/en/BPI-R4/GettingStarted_BPI-R4)
