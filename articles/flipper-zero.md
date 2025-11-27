@@ -45,7 +45,7 @@ Pour les zones vraiment sensibles d'une infrastructure (par exemple l'accès à 
 
 Dans les grosses structures, demander à des employés de garder en évidence constamment des badges avec leur matricule peut permettre de repérer plus facilement un intrus.
 
-Il est possible de protéger ses cartes sans contact grâce à des étuis spécialisés. Ces derniers contiennent de fins filaments de cuivre qui font cage de faraday et empêchent donc la lecture de la carte en sans contact, tant qu'elle est dans leur étui.
+Il est possible de protéger ses cartes sans contact grâce à des étuis spécialisés. Ces derniers contiennent de fins filaments de cuivre qui font cage de Faraday et empêchent donc la lecture de la carte en sans contact, tant qu'elle est dans leur étui.
 
 Il est malheureux de noter que cet appareil peut également permettre de s'introduire dans des immeubles d'habitations. Il est possible de répliquer une télécommande radio ou un badge d'accès. Ça, cumulé au fait, qu'il est aujourd'hui possible de se procurer facilement et légalement un jeu de clés PTT (utilisées pour la distribution du courrier afin de rentrer dans les bâtiments et ouvrir les boites aux lettres). Une personne mal intentionnée et bien préparée n'aura donc aucune difficulté à rentrer dans un immeuble dit "sécurisé". La seule sécurité restante est la serrure de son appartement. C'est pourquoi, investir dans une serrure 3 points ou posséder un ou plusieurs verrous peut être une bonne solution. L'idéal étant d'avoir une serrure conçue pour ne pas être crochetée facilement, comme celles proposées par la marque française [Point Fort Fichet](https://www.fichet-pointfort.com/fr/fr/products/serrure-de-securite).
 
@@ -71,8 +71,8 @@ L'exemple suivant permet d'installer le dispositif sur une distribution [Manjaro
 
 ```bash
 sudo pacman -S libfido2 pam-u2f
-mkdir -p ~/.config/Yubico
 
+mkdir -p ~/.config/Yubico
 pamu2fcfg >> ~/.config/Yubico/u2f_keys
 ```
 
@@ -92,7 +92,7 @@ Voici quelques ressources qui peuvent être intéressantes à installer sur l'ap
 - [FlipperMusicRTTTL](https://github.com/neverfa11ing/FlipperMusicRTTTL.git): Une liste de musiques à jouer avec le synthé du Flipper Zero.
 
 
-Voici un script à jouer à la racine de la carte microSD afin d'avoir accès a quelques catalogues de ressources.
+Voici un script à jouer à la racine de la carte microSD afin d'avoir accès à quelques catalogues de ressources.
 
 ```bash
 #!/bin/bash

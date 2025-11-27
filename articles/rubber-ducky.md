@@ -9,7 +9,7 @@ author: Flavien PERIER <perier@flavien.io>
 date: 2021-10-31 18:00
 ---
 
-Je tiens avant toute chose à préciser que cet article est rédigé uniquement à but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous coûter jusqu'à deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
+Je tiens avant toute chose à préciser que cet article est rédigé uniquement dans un but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous coûter jusqu'à deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
 
 La [Rubber Ducky](https://www.usbrubberducky.com/) est un dispositif d'attaque physique vendu par [Hak5](https://hak5.org/). Extérieurement, elle ressemble à une vulgaire clé USB. Cependant, une fois connectée à un ordinateur, elle est reconnue comme un clavier et va pouvoir exécuter une série d'instructions prédéfinie par l'attaquant.
 

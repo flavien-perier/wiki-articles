@@ -548,9 +548,9 @@ Dans l'absolu, Podman ne possède pas de réels avantages sur une machine de pro
 
 Certaines distributions telles que Fedora poussent de plus en plus l'utilisation de cette solution par rapport à Docker. Après, l'un dans l'autre, elles respectent toutes les deux la même norme, donc pas de changement majeur en termes de paradigme, ni même de commandes (juste remplace la commande docker par podman ce qui suit ne change pas).
 
-## Impacte sur les développements
+## Impact sur les développements
 
-### Applications Statless
+### Applications Stateless
 
 Il est évident que toutes les applications ne sont pas compatibles avec la conteneurisation. La principale caractéristique d'une application fonctionnant de manière optimale sur un conteneur est qu'elle doit être en elle-même sans état. Cela signifie que tous les états doivent être portés par des bases de données. Le principe étant que l'application doit ce comporter de la même manière si elle ne possède qu'une seule instance ou plusieurs. Il faut donc par exemple oublier les mécanismes de session et préférer l'utilisation d'autres mécaniques telle que le [JWT](https://jwt.io/).
 

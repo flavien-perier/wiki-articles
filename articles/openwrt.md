@@ -1,6 +1,6 @@
 ---
 title: OpenWrt
-type: WIP
+type: WIKI
 categories:
   - system
   - security
@@ -31,10 +31,57 @@ ssh-keygen -f ~/.ssh/openwrt -t rsa -b 4096
 ssh-copy-id -i ~/.ssh/openwrt root@192.168.1.1
 ```
 
+## Mise à jour
+
+OpenWRT utilise le gestionnaire de paquets apk. Il suffit de faire un `apk update` puis un `apk upgrade` pour mettre la distribution à jour.
+
+Un routeur étant un équipement réseau particulièrement sensible il est conseillé de le faire assez régulièrement.
+
+## [CrowdSec](https://www.crowdsec.net/)
+
+CrowdSec est une suite de sécurité. Un bon scénario est d'installer un serveur CrowdSec quelque part dans son infrastructure. Ce dernier va analyser les fichiers de logs produits par nos serveurs (un Nginx par exemple) afin de prendre des décisions concernant des blocages d'IP.
+
+Cependant, même si ce serveur CrowdSec prend des décisions de blocage, il faut un autre composant qui va faire la jonction entre CrowdSec et un firewall. Ce composant est nommé un `Bouncer`. Il en existe différents types que ce soit pour iptables, le firewall Windows... Et bien évidemment pour OpenWRT.
+
+Tout d'abord sur la machine qui a CrowdSec d'installé (donc pas notre routeur), il faut enregistrer la machine avec un token d'authentification :
+
+```bash
+cscli bouncers add OpenWrt
+```
+
+Ensuite, au niveau du routeur, il faut installer notre configuration en mettant le bon nom d'hôte pour la machine CrowdSec et la bonne api key :
+
+```bash
+apk add crowdsec-firewall-bouncer
+
+cat << EOF > /etc/config/crowdsec
+config bouncer
+	option enabled '1'
+	option ipv4 '1'
+	option ipv6 '1'
+	option api_url 'http://$CROWDSEC_IP:8080/'
+	option api_key '$CROWDSEC_API_KEY'
+	option deny_action 'drop'
+	option deny_log '0'
+	option log_prefix 'crowdsec: '
+	option log_level 'info'
+	option filter_input '1'
+	option filter_forward '1'
+	list interface 'br-wan'
+EOF
+
+service crowdsec-firewall-bouncer reload
+```
+
+## Configuration
+
+Les fichiers de configuration d'OpenWRT se situent dans `/etc/config`. C'est ce dossier qu'il faudra versionner ou au moins sauvegarder pour garder une trace de sa configuration réseau.
+
 ## Sources
 
+- [OpenWRT : ISP Configurations](https://openwrt.org/docs/guide-user/network/wan/isp-configurations)
+- [OpenWRT : Sinovoip BananaPi BPi-R4](https://openwrt.org/inbox/toh/sinovoip/bananapi_bpi-r4)
+- [OpenWRT : CrowdSec](https://openwrt.org/docs/guide-user/services/crowdsec)
+- [LaFibre.info : [TUTORIEL] Remplacer sa bbox par un routeur OpenWRT (Avec IPTV)](https://lafibre.info/remplacer-bbox/tutoriel-remplacer-sa-bbox-par-un-routeur-openwrt-avec-iptv/)
+- [LaFibre.info : Config OpenWRT derrière ONT Bouygues](https://lafibre.info/remplacer-bbox/config-openwrt-derriere-ont-bouygues/)
 - [Getting Started BPI-R4](https://docs.banana-pi.org/en/BPI-R4/GettingStarted_BPI-R4)
-- [Sinovoip BananaPi BPi-R4](https://openwrt.org/inbox/toh/sinovoip/bananapi_bpi-r4)
-- [ISP Configurations](https://openwrt.org/docs/guide-user/network/wan/isp-configurations)
-- [[TUTORIEL] Remplacer sa bbox par un routeur OpenWRT (Avec IPTV)](https://lafibre.info/remplacer-bbox/tutoriel-remplacer-sa-bbox-par-un-routeur-openwrt-avec-iptv/)
-- [Config OpenWRT derrière ONT Bouygues](https://lafibre.info/remplacer-bbox/config-openwrt-derriere-ont-bouygues/)

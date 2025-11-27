@@ -9,7 +9,7 @@ author: Flavien PERIER <perier@flavien.io>
 date: 2021-11-10 18:00
 ---
 
-Je tiens avant toute chose à préciser que cet article est rédigé uniquement à but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous coûter jusqu'à deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
+Je tiens avant toute chose à préciser que cet article est rédigé uniquement dans un but pédagogique. Je n'ai jamais projeté d'attaquer quelque entreprise que ce soit. Si vos intentions en vous rendant sur ce site sont malveillantes je vous invite à consulter [l'article 323-1 du Code pénal](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000030939438/) qui stipule que les intrusions dans un système informatique peuvent vous coûter jusqu'à deux ans d'emprisonnement et 60 000 € d'amende. Cela étant dit, je décline toute responsabilité de ce que vous ferez du contenu de cet article.
 
 La [Shark Jack](https://shop.hak5.org/products/shark-jack) est un dispositif d'attaque physique vendu par [Hak5](https://hak5.org/). Elle permet d'effectuer des attaques réseau assez simplement. D'un point de vue physique, elle mesure seulement 6cm de long et possède une prise RJ45 mâle. D'un point de vue plus logiciel elle dispose d'un système d'exploitation Linux fortement allégé, un espace disque de quelques méga-octets et quelques outils tels que [nmap](https://nmap.org/) ou [tcpdump](https://www.tcpdump.org/).
 
