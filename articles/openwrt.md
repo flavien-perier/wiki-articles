@@ -31,11 +31,62 @@ ssh-keygen -f ~/.ssh/openwrt -t rsa -b 4096
 ssh-copy-id -i ~/.ssh/openwrt root@192.168.1.1
 ```
 
+- Une fois connecté en SSH, il peut être pertinent d'installer openssh-sftp-server afin de pouvoir transférer facilement des fichiers entre sa machine et son routeur : 
+
+```bash
+apk add openssh-sftp-server
+```
+
 ## Mise à jour
 
 OpenWRT utilise le gestionnaire de paquets apk. Il suffit de faire un `apk update` puis un `apk upgrade` pour mettre la distribution à jour.
 
 Un routeur étant un équipement réseau particulièrement sensible il est conseillé de le faire assez régulièrement.
+
+## [WireGuard](https://www.wireguard.com/)
+
+WireGuard est un VPN. Pour l'installer, [la documentation officielle](https://openwrt.org/docs/guide-user/services/vpn/wireguard/server) de OpenWRT est très bien faite.
+
+```bash
+apk add wireguard-tools
+```
+
+Pour créer un fichier de configuration pour un nouveau client :
+
+```bash
+CLIENT="pc-flavien"
+CLIENT_IP="192.168.255.2"
+SERVER_IP="XXX.XXX.XXX.XXX"
+
+wg genkey | tee $CLIENT.key | wg pubkey > $CLIENT.pub
+wg genpsk > $CLIENT.psk
+
+uci set network.wgclient="wireguard_vpn"
+uci set network.wgclient.public_key="$(cat $CLIENT.pub)"
+uci set network.wgclient.preshared_key="$(cat $CLIENT.psk)"
+uci add_list network.wgclient.allowed_ips="$CLIENT_IP/32"
+uci commit network
+service network restart
+
+cat << EOF > $CLIENT.conf
+[Interface]
+PrivateKey = $(cat $CLIENT.key)
+Address = $CLIENT_IP/24
+DNS = 208.67.222.222
+
+[Peer]
+PublicKey = $(wg show vpn public-key)
+AllowedIPs = 0.0.0.0/0
+Endpoint = $SERVER_IP:51820
+PersistentKeepalive = 25
+EOF
+```
+
+Ensuite une fois ce fichier transféré vers l'ordinateur du client, il suffit de taper la commande (sur l'ordinateur du client) :
+
+```bash
+nmcli connection import type wireguard file $CLIENT.conf
+```
 
 ## [CrowdSec](https://www.crowdsec.net/)
 
@@ -82,6 +133,7 @@ Les fichiers de configuration d'OpenWRT se situent dans `/etc/config`. C'est ce 
 - [OpenWRT : ISP Configurations](https://openwrt.org/docs/guide-user/network/wan/isp-configurations)
 - [OpenWRT : Sinovoip BananaPi BPi-R4](https://openwrt.org/inbox/toh/sinovoip/bananapi_bpi-r4)
 - [OpenWRT : CrowdSec](https://openwrt.org/docs/guide-user/services/crowdsec)
+- [OpenWRT : WireGuard](https://openwrt.org/docs/guide-user/services/vpn/wireguard/server)
 - [LaFibre.info : [TUTORIEL] Remplacer sa bbox par un routeur OpenWRT (Avec IPTV)](https://lafibre.info/remplacer-bbox/tutoriel-remplacer-sa-bbox-par-un-routeur-openwrt-avec-iptv/)
 - [LaFibre.info : Config OpenWRT derrière ONT Bouygues](https://lafibre.info/remplacer-bbox/config-openwrt-derriere-ont-bouygues/)
 - [Getting Started BPI-R4](https://docs.banana-pi.org/en/BPI-R4/GettingStarted_BPI-R4)
