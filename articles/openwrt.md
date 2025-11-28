@@ -76,8 +76,9 @@ DNS = 208.67.222.222
 
 [Peer]
 PublicKey = $(wg show vpn public-key)
-AllowedIPs = 0.0.0.0/0
+PresharedKey = $(cat $CLIENT.psk)
 Endpoint = $SERVER_IP:51820
+AllowedIPs = 0.0.0.0/0
 PersistentKeepalive = 25
 EOF
 ```
