@@ -370,24 +370,30 @@ iptables -t filter -A OUTPUT -p udp --dport 53 -d 1.1.1.1 -j ACCEPT
 iptables -t filter -A OUTPUT -p udp --dport 53 -d 1.0.0.1 -j ACCEPT
 iptables -t filter -A OUTPUT -p udp --dport 53 -d 151.80.222.79 -j ACCEPT
 
+## dhcp
+iptables -A OUTPUT -p udp --dport 67:68 --sport 67:68 -d 10.0.0.0/8 -j ACCEPT
+iptables -A INPUT -p udp --dport 67:68 --sport 67:68 -d 10.0.0.0/8 -j ACCEPT
+
+iptables -A OUTPUT -p udp --dport 67:68 --sport 67:68 -d 172.16.0.0/12 -j ACCEPT
+iptables -A INPUT -p udp --dport 67:68 --sport 67:68 -d 172.16.0.0/12 -j ACCEPT
+
+iptables -A OUTPUT -p udp --dport 67:68 --sport 67:68 -d 192.168.0.0/16 -j ACCEPT
+iptables -A INPUT -p udp --dport 67:68 --sport 67:68 -d 192.168.0.0/16 -j ACCEPT
+
 ## ntp
 iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT
 
 ## http/s
-iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 0
-ip6tables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 0
-iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 0
-ip6tables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 0
-iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 1000
-ip6tables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 1000
-ip6tables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
+ip6tables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
+ip6tables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
 
-## QUIC
-iptables -t filter -A OUTPUT -p udp --dport 80 -j ACCEPT -m owner --uid-owner 1000
-ip6tables -t filter -A OUTPUT -p udp --dport 80 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p udp --dport 443 -j ACCEPT -m owner --uid-owner 1000
-ip6tables -t filter -A OUTPUT -p udp --dport 443 -j ACCEPT -m owner --uid-owner 1000
+## quic
+iptables -t filter -A OUTPUT -p udp --dport 80 -j ACCEPT
+ip6tables -t filter -A OUTPUT -p udp --dport 80 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 443 -j ACCEPT
+ip6tables -t filter -A OUTPUT -p udp --dport 443 -j ACCEPT
 
 ## ssh
 iptables -t filter -A OUTPUT -p tcp --dport 22 -j ACCEPT -m owner --uid-owner 1000
@@ -406,9 +412,18 @@ iptables -t filter -A OUTPUT -p tcp --dport 43 -j ACCEPT -m owner --uid-owner 10
 iptables -t filter -A OUTPUT -p tcp --dport 587 -j ACCEPT -m owner --uid-owner 1000
 iptables -t filter -A OUTPUT -p tcp --dport 993 -j ACCEPT -m owner --uid-owner 1000
 
-## protonvpn
-iptables -t filter -A OUTPUT -p udp --dport 1194 -j ACCEPT -m owner --uid-owner 0
-iptables -A OUTPUT -o tun+ -j ACCEPT -m owner --uid-owner 0
+## vpn
+iptables -A OUTPUT -o tun+ -j ACCEPT
+iptables -A OUTPUT -o wg+ -j ACCEPT
+iptables -A OUTPUT -o proton+ -j ACCEPT
+### OpenVPN
+iptables -t filter -A OUTPUT -p tcp --dport 1194 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 1194 -j ACCEPT
+### WireGuard
+iptables -t filter -A OUTPUT -p udp --dport 51820 -j ACCEPT
+### IKEv2
+iptables -t filter -A OUTPUT -p udp --dport 500 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 4500 -j ACCEPT
 
 ## Discord
 iptables -t filter -A OUTPUT -p tcp --dport 2053 -j ACCEPT -m owner --uid-owner 1000
