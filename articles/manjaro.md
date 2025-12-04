@@ -451,8 +451,8 @@ iptables -t filter -A OUTPUT -p udp --dport 48002 -j ACCEPT -m owner --uid-owner
 iptables -t filter -A OUTPUT -p udp --dport 48010 -j ACCEPT -m owner --uid-owner 1000
 
 # Synergy
-iptables -t filter -A INPUT -p tcp --dport 24800 -d 192.168.1.1/24 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 192.168.1.1/24 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A INPUT -p tcp --dport 24800 -d 10.42.1.1/16 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 10.42.1.1/16 -j ACCEPT -m owner --uid-owner 1000
 
 # Protections
 
@@ -2053,7 +2053,7 @@ user-clean() {
   wait
 
   echo "Chmod user files"
-  find $HOME -type f -perm /077 | xargs -r -d "\n" -P4 -L10 chmod go-rwx
+  chmod -R go-rwx $HOME
 
   for FOLDER in ${PROTECTED_FOLDER[@]}
   do
