@@ -43,6 +43,15 @@ OpenWRT utilise le gestionnaire de paquets apk. Il suffit de faire un `apk updat
 
 Un routeur étant un équipement réseau particulièrement sensible il est conseillé de le faire assez régulièrement.
 
+## WiFi
+
+Il est possible de rajouter une carte WiFi sur ce routeur notamment avec la carte [BPI-R4-NIC-BE14](https://openwrt.org/inbox/toh/sinovoip/bananapi_bpi-r4#bpi-r4-nic-be14). Le problème, c'est que la distribution fournie par OpenWRT ne gère pas bien cette carte (on se retrouve avec une puissance inférieure à ce qu'elle devrait être). Il va donc être nécessaire de rajouter le driver officiel fourni par BananaPi.
+
+- La première étape consiste à télécharger une version modifiée du driver [ici](https://drive.google.com/file/d/1qneVF1a6ZGMDoLLPpQw2LPYZsRKXto1T/view?usp=sharing).
+- Il ne faut jamais avoir complète confiance dans un lien Google Drive... Un petit coup de [VirusTotal](https://www.virustotal.com/) s'impose.
+- Enfin il faut placer ce fichier sur notre routeur à l'emplacement : `/lib/firmware/mediatek/mt7996/mt7996_eeprom_233_2i5i6i.bin`.
+- Rebooter le routeur.
+
 ## [WireGuard](https://www.wireguard.com/)
 
 WireGuard est un VPN. Pour l'installer, [la documentation officielle](https://openwrt.org/docs/guide-user/services/vpn/wireguard/server) de OpenWRT est très bien faite.
@@ -135,6 +144,8 @@ Les fichiers de configuration d'OpenWRT se situent dans `/etc/config`. C'est ce 
 - [OpenWRT : Sinovoip BananaPi BPi-R4](https://openwrt.org/inbox/toh/sinovoip/bananapi_bpi-r4)
 - [OpenWRT : CrowdSec](https://openwrt.org/docs/guide-user/services/crowdsec)
 - [OpenWRT : WireGuard](https://openwrt.org/docs/guide-user/services/vpn/wireguard/server)
+- [BananaPi : Banana Pi BPI-R4](https://wiki.banana-pi.org/Banana_Pi_BPI-R4)
+- [GitHub : BPI-R4, wifi got worse with the latest snapshot](https://github.com/openwrt/openwrt/issues/18693)
 - [LaFibre.info : [TUTORIEL] Remplacer sa bbox par un routeur OpenWRT (Avec IPTV)](https://lafibre.info/remplacer-bbox/tutoriel-remplacer-sa-bbox-par-un-routeur-openwrt-avec-iptv/)
 - [LaFibre.info : Config OpenWRT derrière ONT Bouygues](https://lafibre.info/remplacer-bbox/config-openwrt-derriere-ont-bouygues/)
 - [Getting Started BPI-R4](https://docs.banana-pi.org/en/BPI-R4/GettingStarted_BPI-R4)

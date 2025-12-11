@@ -39,7 +39,7 @@ Tous les vecteurs d'attaque avec ce dispositif ont pour point commun que le hack
 
 La seule protection efficace contre ce genre d'attaque est un contrôle strict des accès au réseau autant physique, que numérique. Les équipements doivent être placés dans baies sécurisées dont seuls les employés habilités peuvent s'approcher. Et leur mot de passe d'accès ne doit pas être celui par défaut.
 
-Etant donné qu'un utilisateur qui se branche physiquement à un réseau n'a pas besoin de mot de passe pour y accèder, il faut faire en sorte que les prises RJ45 soient le moins accessible possible. Donc ne pas en mettre ailleurs que dans les bureaux.
+Étant donné qu'un utilisateur qui se branche physiquement à un réseau n'a pas besoin de mot de passe pour y accèder, il faut faire en sorte que les prises RJ45 soient le moins accessibles possible. Donc ne pas en mettre ailleurs que dans les bureaux.
 
 ## Comment s'en servir
 

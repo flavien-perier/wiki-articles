@@ -140,18 +140,6 @@ Cette extension permet d'optimiser la gestion de la mémoire au sein des onglets
 
 Les extensions présentées dans cette catégorie ne doivent pas rester installées en permanence. En effet, certaines d'entre elles peuvent fortement dégrader les performances du navigateur et donc nuire à l'expérience utilisateur.
 
-#### [Cookie Quick Manager](https://addons.mozilla.org/en-US/firefox/addon/cookie-quick-manager/)
-
-![Cookie Quick Manager logo](https://medias.flavien.io/articles/firefox/cookie-quick-manager.webp)
-
-Un simple gestionnaire de Cookies. Permet de les modifier, de les supprimer ou encore de les sauvegarder.
-
-#### [ModHeader](https://addons.mozilla.org/en-US/firefox/addon/modheader-firefox/)
-
-![Cookie Quick Manager logo](https://medias.flavien.io/articles/firefox/modheader.webp)
-
-Permet de rajouter des informations dans l’en-tête des requêtes envoyées par le navigateur.
-
 #### [Shodan](https://addons.mozilla.org/en-US/firefox/addon/shodan-addon/)
 
 ![Shodan logo](https://medias.flavien.io/articles/firefox/shodan.webp)
@@ -162,15 +150,9 @@ Cette extension permet donc tout simplement d'accéder à toutes ces information
 
 #### [Wappalyzer](https://addons.mozilla.org/en-US/firefox/addon/wappalyzer/)
 
-![GreenIT-Analysis logo](https://medias.flavien.io/articles/firefox/wappalyzer.webp)
+![Wappalyzer logo](https://medias.flavien.io/articles/firefox/wappalyzer.webp)
 
 [Wappalyzer](https://www.wappalyzer.com/) est une application permettant d'identifier les différentes technologies utilisées pour un site web donné. Que ce soit des technologies ayant servi à le concevoir telles que [WordPress](https://wordpress.com/), [FontAwesome](https://fontawesome.com/) ou [Bootstrap](https://getbootstrap.com/)... Ou encore des technologies serveur telles que [Nginx](https://nginx.org/) ou [Apache HTTPD](https://httpd.apache.org/).
-
-#### [GreenIT-Analysis](https://addons.mozilla.org/en-US/firefox/addon/greenit-analysis/)
-
-![GreenIT-Analysis logo](https://medias.flavien.io/articles/firefox/greenit-analysis.webp)
-
-Cette application open source permet d'analyser les éléments d'un site web qui ne seraient pas conformes à une démarche d'écoconception. Elle peut donc nous aider afin de savoir que regarder pour améliorer les performances de son site et réduire son empreinte énergétique.
 
 ### Confort
 

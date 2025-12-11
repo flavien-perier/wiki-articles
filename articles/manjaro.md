@@ -20,11 +20,11 @@ Pour ma part, je me base sur la version minimale de la distribution [Manjaro](ht
 
 Quant au choix de Manjaro, il s'agit d'une distribution de type rolling, c'est-à-dire qu'elle est constamment mise à jour et qu'on n’aura donc pas de réinstallation complète du système à faire toutes les quelques années pour le passage à la version majeure suivante. Ce type de distribution est assez adapté à des configurations desktop, mais complètement inadapté à des configurations serveurs, car les paquets et le noyau du système d'exploitation étant constamment mis à jour vers les dernières versions, des instabilités peuvent fréquemment survenir. Inacceptable pour un système de production, mais rarement vraiment bloquant (du moins pas longtemps, jusqu’à la mise à jour suivante) sur un pc personnel.
 
-L'autre avantage de Manjaro, est qu'elle est basée sur la distribution [Arch Linux](https://archlinux.org/). Cette dernière disposant d'une communauté très importante mettant à jour un [Wiki](https://wiki.archlinux.org/) réputé comme étant très complet. Cette source de documentation peut donc servir à se débloquer dans de très nombreuses situations. À mon sens les avantages de Manjaro sur Arch sont la simplicité et la stabilité. En effet, Arch étant une base de système d'exploitation quasiment vierge, c'est à l'utilisateur d'installer les composants dont il aura besoin. Cela nécessite une bonne connaissance de tous ces modules (et beaucoup de temps à lire leur documentation) et cela résulte bien souvent sur des installations instables. Manjaro offre une base déjà installée et configurée et permet donc d'être utilisé par des personnes ayant une moindre connaissance des composants Linux. Il est néanmoins très enrichissant d'installer et de configurer une Arch, mais je réserve cela davantage à de l'expérimentation qu'à la mise en place d'un système d'exploitation destiné à être utilisé tous les jours.
+L'autre avantage de Manjaro est qu'elle est basée sur la distribution [Arch Linux](https://archlinux.org/). Cette dernière disposant d'une communauté très importante mettant à jour un [Wiki](https://wiki.archlinux.org/) réputé comme étant très complet. Cette source de documentation peut donc servir à se débloquer dans de très nombreuses situations. À mon sens, les avantages de Manjaro sur Arch sont la simplicité et la stabilité. En effet, Arch étant une base de système d'exploitation quasiment vierge, c'est à l'utilisateur d'installer les composants dont il aura besoin. Cela nécessite une bonne connaissance de tous ces modules (et beaucoup de temps à lire leur documentation) et cela résulte bien souvent sur des installations instables. Manjaro offre une base déjà installée et configurée et permet donc d'être utilisé par des personnes ayant une moindre connaissance des composants Linux. Il est néanmoins très enrichissant d'installer et de configurer une Arch, mais je réserve cela davantage à de l'expérimentation qu'à la mise en place d'un système d'exploitation destiné à être utilisé tous les jours.
 
 ### Mise à jour de Manjaro
 
-Maintenant que Manjaro est installé, nous allons le mettre à jour grâce à l'un des gestionnaires de paquets intégrés de la distribution. Pour ma part, j'utilise `pacman`, qui est le gestionnaire de paquet de la distribution Arch. Il est relativement difficile à utiliser et très peu intuitif, c'est pour cette raison que les développeurs de la distribution Manjaro ont rajouté un outil permettant de simplifier son utilisation `pamac`. Pour les utilisateurs venant d'une distribution basée sur [Debian](https://www.debian.org/), ou [RedHat](https://www.redhat.com/), il semblera sans aucun doute plus intuitif.
+Maintenant que Manjaro est installé, nous allons le mettre à jour grâce à l'un des gestionnaires de paquets intégrés de la distribution. Pour ma part, j'utilise `pacman`, qui est le gestionnaire de paquets de la distribution Arch. Il est relativement difficile à utiliser et très peu intuitif, c'est pour cette raison que les développeurs de la distribution Manjaro ont rajouté un outil permettant de simplifier son utilisation `pamac`. Pour les utilisateurs venant d'une distribution basée sur [Debian](https://www.debian.org/), ou [RedHat](https://www.redhat.com/), il semblera sans aucun doute plus intuitif.
 
 La raison pour laquelle j'utilise néanmoins `pacman` est qu'il offre beaucoup plus de possibilités que sa surcouche. Ce wiki peut néanmoins être suivi en recopiant les commandes `pacman` et par la suite utilisé à titre personnel `pamac`. Ce dernier étant simplement une surcouche, cela ne devrait pas poser de problème de compatibilité.
 
@@ -130,7 +130,7 @@ EOL
 
 ### Mise en place d'un second disque chiffré
 
-Pour cette installation, nous allons utiliser une architecture assez classique dans le monde de Linux : avoir un SSD pour accueillir le système (monté sur le `/`) et un second SSD pour accueillir les données (monté sur le `/home`).
+Pour cette installation, nous allons utiliser une architecture assez classique dans le monde Linux : avoir un SSD pour accueillir le système (monté sur `/`) et un second SSD pour accueillir les données (monté sur `/home`).
 
 Pour maximiser la sécurité du système, nous allons également chiffrer le SSD contenant les données. De nombreuses distributions Linux modernes proposent lors de l'installation de chiffrer les données sur une partition [LVM](https://wiki.archlinux.fr/LVM) (Logical Volume Manager). Je ne suis personnellement pas entièrement convaincu par cette option, car LVM est une couche d'abstraction entre les volumes physiques et les volumes logiques. Cette solution permet par exemple de créer une unique partition reposant sur plusieurs disques physiques, ou de créer une partition avec des clusters non adjacents. À mon sens, cette technologie prend son intérêt sur une infrastructure serveur, car elle va offrir de la flexibilité sur le stockage. Cependant, je suis beaucoup plus sceptique quant à son utilisation dans un ordinateur personnel où un volume physique va correspondre à un volume logique. C'est pour cette raison que je vais plutôt m'orienter sur l'utilisation de [LUKS](https://gitlab.com/cryptsetup/cryptsetup) (Linux Unified Key Setup) avec son utilitaire `cryptsetup`. L'avantage de cette technologie est qu'elle est directement intégrée dans le noyau Linux et va donc garantir un bon niveau de performance.
 
@@ -243,7 +243,7 @@ XDG_VIDEOS_DIR="$HOME/Videos"' | tee ~/.config/user-dirs.dirs
 
 Personnellement, je dispose actuellement d'un Asus ZenBook UX410UQK. Il s'agit d'un très bon PC disposant de deux cartes graphiques: un IGP Intel (Intel HD Graphics 620) et une carte graphique NVIDIA (NVIDIA GeForce 940MX). Le problème de cette configuration sous Linux, c'est que le système va surexploiter le GPU Nvidia qui est bien plus énergivore que le GPU Intel. L'autonomie de la machine va donc s’en trouver grandement affectée et la chauffe constante risque d'affecter la durée de vie de l'appareil...
 
-Dans cette configuration, c'est donc le logiciel `optimus-manager` qui va permettre de passer d'un GPU à l'autre.
+Dans cette configuration, c'est le logiciel `optimus-manager` qui va permettre de passer d'un GPU à l'autre.
 
 ```bash
 sudo pacman -S intel-media-driver
@@ -451,8 +451,14 @@ iptables -t filter -A OUTPUT -p udp --dport 48002 -j ACCEPT -m owner --uid-owner
 iptables -t filter -A OUTPUT -p udp --dport 48010 -j ACCEPT -m owner --uid-owner 1000
 
 # Synergy
-iptables -t filter -A INPUT -p tcp --dport 24800 -d 10.42.1.1/16 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 10.42.1.1/16 -j ACCEPT -m owner --uid-owner 1000
+iptables -t filter -A INPUT -p tcp --dport 24800 -d 10.0.0.0/8 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 10.0.0.0/8 -j ACCEPT -m owner --uid-owner 1000
+
+iptables -t filter -A INPUT -p tcp --dport 24800 -d 172.16.0.0/12 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 172.16.0.0/12 -j ACCEPT -m owner --uid-owner 1000
+
+iptables -t filter -A INPUT -p tcp --dport 24800 -d 192.168.0.0/16 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 192.168.0.0/16 -j ACCEPT -m owner --uid-owner 1000
 
 # Protections
 
@@ -716,7 +722,7 @@ Tout comme Vim, NeoVim offre la possibilité d'être enrichie grâce à une méc
 
 Cependant, il peut être long et fastidieux de mettre en place un environnement et de trouver les plugins qui vont réellement nous faciliter la vie.
 
-C'est pourquoi j'utilise personnellement un set de plugins nommé LazyVim, qui permet d'ajouter à NeoVim de nombreuses fonctionnalités, de quoi en faire un véritable IDE.
+C'est pourquoi j'utilise personnellement un ensemble de plugins nommé LazyVim, qui permet d'ajouter à NeoVim de nombreuses fonctionnalités, de quoi en faire un véritable IDE.
 
 ```bash
 sudo pacman -S neovim
@@ -727,7 +733,7 @@ git clone -q --depth 1 -- https://github.com/LazyVim/starter ~/.config/nvim
 
 ### [VisualStudio code](https://code.visualstudio.com/)
 
-Sur les dépôts pacman, il n'y a pas de trace de [Microsoft VisualStudio Code](https://code.visualstudio.com/). En revanche, on peut trouver un fork nommé [Code OSS](https://appimage.github.io/Code_OSS/) sur lequel les traqueurs Microsoft ont été enlevés et les composants propriétaires remplacés (le logo par exemple). Ce fork est également compatible avec la plupart des extensions de l'IDE de base.
+Sur les dépôts pacman, il n'y a pas de trace de [Microsoft VisualStudio Code](https://code.visualstudio.com/). En revanche, on peut trouver un fork nommé [Code OSS](https://appimage.github.io/Code_OSS/) sur lequel les traceurs Microsoft ont été enlevés et les composants propriétaires remplacés (le logo par exemple). Ce fork est également compatible avec la plupart des extensions de l'IDE de base.
 
 ```bash
 sudo pacman -S code
@@ -1162,7 +1168,7 @@ flatpak install --user org.gimp.GIMP
 
 ### [Upscayl](https://github.com/upscayl/upscayl)
 
-Logiciel permettant d'agrandir des images grâce à un modèle d'intelligence artificielle. Il a l'avantage de s'exécuter sur la carte graphique local et non sur un serveur distant.
+Logiciel permettant d'agrandir des images grâce à un modèle d'intelligence artificielle. Il a l'avantage de s'exécuter sur la carte graphique locale et non sur un serveur distant.
 
 ```bash
 flatpak install --user org.upscayl.Upscayl
@@ -1234,7 +1240,7 @@ flatpak install --user org.libreoffice.LibreOffice
 
 ### [Papers](https://apps.gnome.org/en/Papers/)
 
-Un autre logiciel Gnome. Celui-ci permet simplement d'afficher des fichiers PDF. Il embarque notamment de la reconnaissance de caractère au sein des images. Ce qui permet de faire des copier-coller de documents photocopiés.
+Un autre logiciel Gnome. Celui-ci permet simplement d'afficher des fichiers PDF. Il embarque notamment de la reconnaissance de caractères au sein des images. Ce qui permet de faire des copier-coller de documents photocopiés.
 
 ```bash
 flatpak install --user org.gnome.Papers
@@ -1266,11 +1272,11 @@ flatpak install --user org.fontforge.FontForge
 
 ### [LanguageTool](https://languagetool.org/)
 
-Étant dysorthographique, il m'est assez difficile de pousser directement un texte sur internet sans l'avoir fait relire au préalable par un correcteur... Après de nombreuses années d'utilisation du logiciel [Antidote](https://www.antidote.info), j'ai dû me résoudre à utiliser d'autres solutions en raison de l'absence complète de support pour Linux.
+Étant dyslexique, il m'est assez difficile de pousser directement un texte sur internet sans l'avoir fait relire au préalable par un correcteur... Après de nombreuses années d'utilisation du logiciel [Antidote](https://www.antidote.info), j'ai dû me résoudre à utiliser d'autres solutions en raison de l'absence complète de support pour Linux.
 
 LanguageTool est une solution comportant un backend en Java et des plugins à intégrer dans des applications.
 
-Dans un premier temps, il va falloir [télécharger le Backend en Java](https://dev.languagetool.org/http-server) et lui associer un utilisateur système :
+Dans un premier temps, il va falloir [télécharger le backend en Java](https://dev.languagetool.org/http-server) et lui associer un utilisateur système :
 
 ```bash
 export LANGUAGE_TOOL_DIR=/opt/LanguageTool
@@ -1327,11 +1333,11 @@ Enfin, il est possible de rajouter des extensions dans différents logiciels :
 
 ### [Pandoc](https://pandoc.org/)
 
-Pandoc est un outil très puissant permettant de convertir de nombreux formats de fichier texte dans d'autres formats de fichier texte. Il est par exemple possible de transformer un fichier Markdown en document PDF en lui appliquant une feuille de style au format [LaTeX](https://www.latex-project.org/). Il est donc possible de rédiger des documents de qualité professionnelle simplement en Markdown et de les convertir plus tard dans le format que nous souhaitons exporter, pdf, doc, html, LaTex, epub...
+Pandoc est un outil très puissant permettant de convertir de nombreux formats de fichier texte dans d'autres formats de fichier texte. Il est par exemple possible de transformer un fichier Markdown en document PDF en lui appliquant une feuille de style au format [LaTeX](https://www.latex-project.org/). Il est donc possible de rédiger des documents de qualité professionnelle simplement en Markdown et de les convertir plus tard dans le format que nous souhaitons exporter : pdf, doc, html, LaTeX, epub...
 
-Je vois plusieurs avantages à cette solution par rapport au traditionnel Microsoft Word, mais la plus importante à mon sens est le découpage du flux de travail. En effet, je considère que lors de la rédaction d'un document nous avons 3 grandes phases de travail, l'écriture du contenu, une phase de relecture durant lesquelles nous pouvons corriger fautes d'orthographe et mauvaises tournures de phrases et enfin la mise en page. Le problème avec Microsoft Word est que nous devons gérer ces 3 phases simultanément, ce qui a pour inconvénient de nous rendre moins efficaces sur chacune d'entre elles et résulte sur des documents de moindre qualité. La plupart des universitaires se sont donc tournés vers le format LaTex, mais le problème reste similaire, avec ses nombreuses annotations ce format reste lourd et nous devons donc gérer la rédaction et une partie de la mise en page simultanément. Le meilleur compromis à mon sens est le Markdown qui est très léger en écriture et surtout très intuitif.
+Je vois plusieurs avantages à cette solution par rapport au traditionnel Microsoft Word, mais le plus important à mon sens est le découpage du flux de travail. En effet, je considère que lors de la rédaction d'un document nous avons 3 grandes phases de travail : l'écriture du contenu, une phase de relecture durant laquelle nous pouvons corriger fautes d'orthographe et mauvaises tournures de phrases, et enfin la mise en page. Le problème avec Microsoft Word est que nous devons gérer ces 3 phases simultanément, ce qui a pour inconvénient de nous rendre moins efficaces sur chacune d'entre elles et résulte sur des documents de moindre qualité. La plupart des universitaires se sont donc tournés vers le format LaTeX, mais le problème reste similaire, avec ses nombreuses annotations ce format reste lourd et nous devons donc gérer la rédaction et une partie de la mise en page simultanément. Le meilleur compromis à mon sens est le Markdown qui est très léger en écriture et surtout très intuitif.
 
-Ainsi avec les différents logiciels que j'utilise, je peux garantir un flux de travail efficace sur ces trois axes. Je commence par rédiger en Markdown le contenu de mon document dans un simple IDE (généralement Visual Studio Code ou VIM), puis je corrige les fautes en utilisant un logiciel de correction et enfin, j'utilise Pandoc pour la mise en page. J'ai créé [un projet GitHub](https://github.com/flavien-perier/pandoc-template) qui me sert de base pour les documents que je rédige. Il utilise la feuille de style LaTex [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) afin de mettre en forme mes documents Markdown dans le format PDF.
+Ainsi avec les différents logiciels que j'utilise, je peux garantir un flux de travail efficace sur ces trois axes. Je commence par rédiger en Markdown le contenu de mon document dans un simple IDE (généralement Visual Studio Code ou VIM), puis je corrige les fautes en utilisant un logiciel de correction et enfin, j'utilise Pandoc pour la mise en page. J'ai créé [un projet GitHub](https://github.com/flavien-perier/pandoc-template) qui me sert de base pour les documents que je rédige. Il utilise la feuille de style LaTeX [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) afin de mettre en forme mes documents Markdown dans le format PDF.
 
 ```bash
 pacman -Syyu pandoc pandoc-citeproc
@@ -1397,7 +1403,7 @@ flatpak install --user io.github.antimicrox.antimicrox
 
 Synergy est un logiciel permettant d'utiliser différents ordinateurs comme s'il s'agissait d'écrans. L'ordinateur principal (celui disposant d'un clavier et d'une souris) sera le serveur et tous les autres les clients.
 
-Il s'agit d'une application payante, mais open source. Un fork populaire est [Barrier](https://github.com/debauchee/barrier). Cependant, ce dernier ne supporte pas Wayland et n'est pas maintenu. La meilleure solution est donc à mon sens de payer.
+Il s'agit d'une application payante, mais open source. Un fork populaire est [Barrier](https://github.com/debauchee/barrier). Cependant, ce dernier ne supporte pas Wayland et n'est plus maintenu. La meilleure solution est donc à mon sens de payer.
 
 ```bash
 wget "https://api-functions.stage.a.symless.com/download-log?synergyVersion=3.0.79.1-rc3&operatingSystem=Linux&architecture=flatpak&downloadUrl=https%3A%2F%2Frc.symless.com%2Fsynergy3%2Fv3.0.79.1-rc3%2Fsynergy-linux_x64-libssl3-v3.0.79.1-rc3.flatpak&userId=1452232" -O /tmp/synerg.flatpak
@@ -1415,7 +1421,7 @@ sudo pacman -S solaar
 
 ### [Rio](https://rioterm.com/)
 
-Rio est un émulateur de terminal développé en Rust, GPU‑accéléré et compatible Wayland/X11, offrant toutes les fonctionnalités que l’on attend d’un terminal moderne (split, affichage d’images, etc.). Il est léger et surtout très configurable via un fichier `~/.config/rio/config.toml`.
+Rio est un émulateur de terminal développé en Rust, GPU-accéléré et compatible Wayland/X11, offrant toutes les fonctionnalités que l'on attend d'un terminal moderne (split, affichage d'images, etc.). Il est léger et surtout très configurable via un fichier `~/.config/rio/config.toml`.
 
 ```bash
 sudo pacman -S rio
@@ -1423,7 +1429,7 @@ sudo pacman -S rio
 
 ### [Tmux](https://github.com/tmux/tmux)
 
-Tmux est un multiplexeur de terminaux bas niveau : il permet de gérer des onglets et des splits au sein d’un terminal. Le logiciel étant lui‑même un démon, il est possible de fermer son émulateur de terminal et de retrouver sa session plus tard. Clairement l’un des meilleurs logiciels pour améliorer sa productivité en ligne de commande.
+Tmux est un multiplexeur de terminaux bas niveau : il permet de gérer des onglets et des splits au sein d'un terminal. Le logiciel étant lui-même un démon, il est possible de fermer son émulateur de terminal et de retrouver sa session plus tard. Clairement l'un des meilleurs logiciels pour améliorer sa productivité en ligne de commande.
 
 ```bash
 sudo pacman -S tmux
@@ -1477,7 +1483,7 @@ flatpak install --user org.ghidra_sre.Ghidra
 
 ### [WireShark](https://www.wireshark.org/)
 
-Un excellent analyseur de réseau pour ceux qui, comme moi, ne maitrisent pas toute la puissance de `tcpdump`.
+Un excellent analyseur de réseau pour ceux qui, comme moi, ne maîtrisent pas toute la puissance de `tcpdump`.
 
 ```bash
 flatpak install --user org.wireshark.Wireshark
@@ -1585,7 +1591,7 @@ echo '{"values": [{"name": "a"}, {"name": "b"}, {"name": "c"}]}' | jq -cM ".valu
 
 ### [Smartmontools](https://www.smartmontools.org/)
 
-Smartmontools est un outil permettant de récupérer [les données SMART](https://fr.wikipedia.org/wiki/Self-Monitoring,_Analysis_and_Reporting_Technology) concernant l'état de santé d'un disque dur ou SSD : Vitesse d'écriture, lecture si des secteurs ont été détectés comme défaillant... Faire des analyses de temps à autre peut s'avérer pertinent afin d'éventuellement faire passer un disque dur ou SSD interne en simple support de sauvegarde externe externe.
+Smartmontools est un outil permettant de récupérer [les données SMART](https://fr.wikipedia.org/wiki/Self-Monitoring,_Analysis_and_Reporting_Technology) concernant l'état de santé d'un disque dur ou SSD : Vitesse d'écriture, lecture si des secteurs ont été détectés comme défaillants... Faire des analyses de temps à autre peut s'avérer pertinent afin d'éventuellement faire passer un disque dur ou SSD interne en simple support de sauvegarde externe.
 
 ```bash
 sudo pacman -S smartmontools
@@ -1607,7 +1613,7 @@ sudo smartctl -H /dev/sda -a
 
 ### [WhoIs](https://www.whois.com/)
 
-Permets de donner un certain nombre d'informations concernant une adresse IP (localisation, FAI...).
+Permet de donner un certain nombre d'informations concernant une adresse IP (localisation, FAI...).
 
 ```bash
 sudo pacman -S whois
@@ -1619,7 +1625,7 @@ L'outil [Neofetch](https://github.com/dylanaraps/neofetch) était une vraie reli
 
 Le projet Fastfetch a donc pris le relais.
 
-Il s'agit sans aucun doute de l'outil le plus inutile de la sélection... Il permet d'afficher un certain nombre de caractéristiques de sa machine sous un format coloré. Un vrai Linuxien se doit de toujours laisser un Neofetch/Fastfetch tourné dans un coin de terminale sur chaque capture d'écran qu'il envoie. Cela permet de prouver au reste de la communauté la supériorité de sa distribution.
+Il s'agit sans aucun doute de l'outil le plus inutile de la sélection... Il permet d'afficher un certain nombre de caractéristiques de sa machine sous un format coloré. Un vrai Linuxien se doit de toujours laisser un Neofetch/Fastfetch en cours d'exécution dans un coin de terminal sur chaque capture d'écran qu'il envoie. Cela permet de prouver au reste de la communauté la supériorité de sa distribution.
 
 ```bash
 sudo pacman -S fastfetch
@@ -1627,7 +1633,7 @@ sudo pacman -S fastfetch
 
 ### [Conky](https://wiki.archlinux.org/title/Conky)
 
-Conky est un outil permettant de rajouter des informations personnalisées sur le bureau. On peut par exemple l'utiliser pour afficher son IP, la fréquence des différents coeurs du processeur, la consommation de RAM, la température de tel ou tel composant...
+Conky est un outil permettant de rajouter des informations personnalisées sur le bureau. On peut par exemple l'utiliser pour afficher son IP, la fréquence des différents cœurs du processeur, la consommation de RAM, la température de tel ou tel composant...
 
 ```bash
 sudo pacman -S conky
@@ -1730,11 +1736,11 @@ Comment=Autostart conky at login
 EOL
 ```
 
-## Configuration de l'environnent applicatif
+## Configuration de l'environnement applicatif
 
 ### Faire en sorte que les applications Flatpak puissent utiliser le thème XFCE
 
-L'isolation proposée par Flatpak présente de nombreux avantages en termes de sécurité, mais peu également causés quelques désagréments en termes d'usage. L'un des problèmes, qui peut au premier abord paraitre anodin, est le fait d'avoir le même thème entre chacune de ses applications. En effet Flatpak n'ayant pas accès au dossier `~/.themes`, les applications auront tout le temps leur thème par défaut. Si vous êtes un utilisateur d'un thème standard tel qu'[Adwaita dark pour GTK](https://github.com/axxapy/Adwaita-dark-gtk2) et que ce thème est disponible dans le Flathub, vous pourrez simplement l'installer et Flatpak se chargera de l'activer (par exemple: `flatpak install --user org.gtk.Gtk3theme.Adwaita-dark`). Cependant, s’il s'agit d'un thème non présent dans le store ou custom, il n'est pas possible de l'utiliser dans les applications Flatpak. Une solution, est donc de copier les fichiers du thème utilisé dans les runtimes `freedesktop`, `kde` et `gnome` de Flatpak. Le problème est qu'il faut refaire les copies à chaque nouvelle version de ces runtimes. L'avantage est qu'avec cette solution, il n'est pas nécessaire de modifier les configurations par défaut de Flatpak ni réduire le niveau d'isolation.
+L'isolation proposée par Flatpak présente de nombreux avantages en termes de sécurité, mais peut également causer quelques désagréments en termes d'usage. L'un des problèmes, qui peut au premier abord paraître anodin, est le fait d'avoir le même thème entre chacune de ses applications. En effet Flatpak n'ayant pas accès au dossier `~/.themes`, les applications auront tout le temps leur thème par défaut. Si vous êtes un utilisateur d'un thème standard tel qu'[Adwaita dark pour GTK](https://github.com/axxapy/Adwaita-dark-gtk2) et que ce thème est disponible dans le Flathub, vous pourrez simplement l'installer et Flatpak se chargera de l'activer (par exemple: `flatpak install --user org.gtk.Gtk3theme.Adwaita-dark`). Cependant, s’il s'agit d'un thème non présent dans le store ou custom, il n'est pas possible de l'utiliser dans les applications Flatpak. Une solution, est donc de copier les fichiers du thème utilisé dans les runtimes `freedesktop`, `kde` et `gnome` de Flatpak. Le problème est qu'il faut refaire les copies à chaque nouvelle version de ces runtimes. L'avantage est qu'avec cette solution, il n'est pas nécessaire de modifier les configurations par défaut de Flatpak ni réduire le niveau d'isolation.
 
 ```bash
 for PLATFORM in `ls $HOME/.local/share/flatpak/runtime | grep "Platform$"`
@@ -2070,8 +2076,9 @@ user-clean() {
 
   find $HOME/Vms -type d ! -perm 550 | xargs -r -d "\n" -P4 -L10 chmod 550
   find $HOME/Vms -type f ! -perm 770 | xargs -r -d "\n" -P4 -L10 chmod 770
-  chmod 777 $HOME/Public
   chmod 750 $HOME
+  chmod 777 $HOME/Public
+  chmod 700 $HOME/.ssh/agent
 
   echo "Clean history"
   rm -f $HOME/.*_history
@@ -2144,9 +2151,9 @@ mv $NEW_HOSTS_PATH $HOSTS_PATH
 
 ## Conclusion
 
-Je pense que la principale différence entre un utilisateur de Windows ou de Mac par rapport à un utilisateur de Linux et que l'un adapte son usage à ce que lui propose son système et l'autre adapte son système à son besoin. L'installation que je propose dans cet article n'est pas une installation orientée légèreté, beaucoup de logiciels sont installés, mais ils répondent tous à un besoin et aucun d'entre eux n'est superflux (sauf peut-être neofetch). Libre à vous à présent de vous inspirer (ou non) de mon installation et de construire la vôtre, qui répondra à votre besoin.
+Je pense que la principale différence entre un utilisateur de Windows ou de Mac par rapport à un utilisateur de Linux est que l'un adapte son usage à ce que lui propose son système et l'autre adapte son système à son besoin. L'installation que je propose dans cet article n'est pas une installation orientée légèreté, beaucoup de logiciels sont installés, mais ils répondent tous à un besoin et aucun d'entre eux n'est superflu (sauf peut-être neofetch). Libre à vous à présent de vous inspirer (ou non) de mon installation et de construire la vôtre, qui répondra à vos besoins.
 
-Il est à noter que cette page est régulièrement mise à jour et que par extension, des paragraphes puissent être incomplets à un instant donné.
+Il est à noter que cette page est régulièrement mise à jour et que par extension, des paragraphes peuvent être incomplets à un instant donné.
 
 Si vous rencontrez des problèmes, n'hésitez pas à me contacter par mail sur [perier@flavien.io](mailto:perier@flavien.io).
 
