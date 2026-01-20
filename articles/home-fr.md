@@ -5,10 +5,10 @@ categories:
   - accueil
 description: Page d'accueil du site flavien.io.
 author: Flavien PERIER <perier@flavien.io>
-date: 2020-09-27 18:00
+date: 2026-01-20 20:00
 ---
 
-Actuellement développeur dans l'entreprise Tixeo, je travaille essentiellement avec les technologies Java Spring, Vue.js (version 3), Python et Docker.
+Actuellement développeur dans l'entreprise Dawex, je travaille essentiellement avec les technologies Java Spring, Vue.js (version 3), Python et Docker.
 
 En ce qui concerne les systèmes d'exploitation, j'ai des bonnes bases sur Windows, mais mon système de prédilection est Linux. J'ai des bases assez avancées sur les distributions issues de Debian, RedHat, Alpine et Arch.
 
