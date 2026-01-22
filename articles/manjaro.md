@@ -1738,22 +1738,6 @@ EOL
 
 ## Configuration de l'environnement applicatif
 
-### Faire en sorte que les applications Flatpak puissent utiliser le thème XFCE
-
-L'isolation proposée par Flatpak présente de nombreux avantages en termes de sécurité, mais peut également causer quelques désagréments en termes d'usage. L'un des problèmes, qui peut au premier abord paraître anodin, est le fait d'avoir le même thème entre chacune de ses applications. En effet Flatpak n'ayant pas accès au dossier `~/.themes`, les applications auront tout le temps leur thème par défaut. Si vous êtes un utilisateur d'un thème standard tel qu'[Adwaita dark pour GTK](https://github.com/axxapy/Adwaita-dark-gtk2) et que ce thème est disponible dans le Flathub, vous pourrez simplement l'installer et Flatpak se chargera de l'activer (par exemple: `flatpak install --user org.gtk.Gtk3theme.Adwaita-dark`). Cependant, s’il s'agit d'un thème non présent dans le store ou custom, il n'est pas possible de l'utiliser dans les applications Flatpak. Une solution, est donc de copier les fichiers du thème utilisé dans les runtimes `freedesktop`, `kde` et `gnome` de Flatpak. Le problème est qu'il faut refaire les copies à chaque nouvelle version de ces runtimes. L'avantage est qu'avec cette solution, il n'est pas nécessaire de modifier les configurations par défaut de Flatpak ni réduire le niveau d'isolation.
-
-```bash
-for PLATFORM in `ls $HOME/.local/share/flatpak/runtime | grep "Platform$"`
-do
-    for VERSION in `ls $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64`
-    do
-        cp -R $HOME/.themes/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/themes
-        cp -R $HOME/.icons/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/icons
-        cp -R $HOME/.fonts/* $HOME/.local/share/flatpak/runtime/$PLATFORM/x86_64/$VERSION/active/files/share/fonts
-    done
-done
-```
-
 ### Réparer les liens cliquables Flatpak
 
 Il arrive que les liens cliquables ne mènent plus au navigateur pour les applications Flatpak. Ceci est lié à un problème de configuration de [xdg-desktop-portal](https://github.com/flatpak/xdg-desktop-portal). Ce composant permet de faire la passerelle entre la machine hôte de Flatpak pour un certain nombre de tâches.
