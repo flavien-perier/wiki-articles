@@ -808,6 +808,7 @@ echo '{
       "Read",
       "Write",
       "Update",
+      "Bash(git:*)",
       "Bash(tree:*)",
       "Bash(find:*)",
       "Bash(grep:*)",
@@ -843,7 +844,6 @@ echo '{
     ],
     "deny": [
       "Read(./.env)",
-      "Bash(git:*)",
       "Bash(cat:*)",
       "Bash(sudo:*)",
       "Bash(pacman:*)",
