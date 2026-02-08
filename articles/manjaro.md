@@ -22,7 +22,7 @@ Quant au choix de Manjaro, il s'agit d'une distribution de type rolling, c'est-�
 
 L'autre avantage de Manjaro est qu'elle est basée sur la distribution [Arch Linux](https://archlinux.org/). Cette dernière disposant d'une communauté très importante mettant à jour un [wiki](https://wiki.archlinux.org/) réputé comme étant très complet. Cette source de documentation peut donc servir à se débloquer dans de très nombreuses situations. L'avantage de Manjaro par rapport à Arch, repose essentiellement sur le fait que les paquets sont un minimum testés avant d'être publié. Manjaro est donc de manière général un peu plus stable que Arch.
 
-Le live cd de Manjaro permet d'installer très simplement la distribution à travers une interface. Cependant, elle negère pas bien un aspect qui me semble essentiel pour un pc portable : le chiffrement du disque avec [LUKS](https://fr.wikipedia.org/wiki/LUKS). C'est pourquoi j'ai développé un script qui permet d'installer soit un Arch Linux (en exécutant le script sur le livecd de Arch Linux), soit un Manjaro (en exécutant le script sur le live cd de Manjaro) avec la prise en charge de LUKS intégré. Ce script réalisera une installation avec uniquement les paquets minimals.
+Le live cd de Manjaro permet d'installer très simplement la distribution à travers une interface. Cependant, elle ne gère pas bien un aspect qui me semble essentiel pour un pc portable : le chiffrement du disque avec [LUKS](https://fr.wikipedia.org/wiki/LUKS). C'est pourquoi j'ai développé un script qui permet d'installer soit un Arch Linux (en exécutant le script sur le livecd de Arch Linux), soit un Manjaro (en exécutant le script sur le live cd de Manjaro) avec la prise en charge de LUKS intégré. Ce script réalisera une installation avec uniquement les paquets minimals.
 
 ```bash
 sudo su
@@ -88,7 +88,7 @@ sudo pacman -S flatpak
 flatpak remote-add --user flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
 
-À d'autres moments, il sera nécessaire d'utiliser des paquets provenant de la communauté (les [AUR d'Arch Linux](https://aur.archlinux.org/)). Pour ce faire, il faut installer `yay` qui est un gestionnaire de paquets qui prend la succession de `yaourt`. Il est cepednant important de noté que les AUR sont optimisés pour Arch Linux et peuvent venir avec certaines instabilitées sur une distribution comme Manjaro.
+À d'autres moments, il sera nécessaire d'utiliser des paquets provenant de la communauté (les [AUR d'Arch Linux](https://aur.archlinux.org/)). Pour ce faire, il faut installer `yay` qui est un gestionnaire de paquets qui prend la succession de `yaourt`. Il est cependant important de noter que les AUR sont optimisés pour Arch Linux et peuvent venir avec certaines instabilités sur une distribution comme Manjaro.
 
 ```bash
 cd /tmp
