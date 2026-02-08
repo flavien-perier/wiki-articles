@@ -14,13 +14,20 @@ Cet article traite de la mise en place d'un poste de développeur sous Manjaro. 
 
 ![Desktop Neofetch](https://medias.flavien.io/articles/manjaro/desktop-neofetch.webp)
 
-## Mise en place du système
+## Installation du système
 
-Pour ma part, je me base sur la version minimale de la distribution [Manjaro](https://manjaro.org/downloads/official/xfce/) avec l'environnement [XFCE](https://xfce.org/). Cet environnement est plus léger que [Gnome](https://www.gnome.org/) ou [KDE](https://kde.org/), mais présente néanmoins tous les avantages d'un véritable gestionnaire de bureau. Malgré sa légèreté, il n'y a pas de compromis sur les fonctionnalités.
+Pour ma part, je me base sur la version minimale de la distribution [Manjaro](https://manjaro.org/products/download/x86) avec l'environnement [XFCE](https://xfce.org/). Cet environnement est plus léger que [Gnome](https://www.gnome.org/) ou [KDE](https://kde.org/), mais présente néanmoins tous les avantages d'un véritable gestionnaire de bureau. Malgré sa légèreté, il n'y a pas de compromis sur les fonctionnalités.
 
 Quant au choix de Manjaro, il s'agit d'une distribution de type rolling, c'est-à-dire qu'elle est constamment mise à jour et qu'on n’aura donc pas de réinstallation complète du système à faire toutes les quelques années pour le passage à la version majeure suivante. Ce type de distribution est assez adapté à des configurations desktop, mais complètement inadapté à des configurations serveurs, car les paquets et le noyau du système d'exploitation étant constamment mis à jour vers les dernières versions, des instabilités peuvent fréquemment survenir. Inacceptable pour un système de production, mais rarement vraiment bloquant (du moins pas longtemps, jusqu’à la mise à jour suivante) sur un pc personnel.
 
-L'autre avantage de Manjaro est qu'elle est basée sur la distribution [Arch Linux](https://archlinux.org/). Cette dernière disposant d'une communauté très importante mettant à jour un [Wiki](https://wiki.archlinux.org/) réputé comme étant très complet. Cette source de documentation peut donc servir à se débloquer dans de très nombreuses situations. À mon sens, les avantages de Manjaro sur Arch sont la simplicité et la stabilité. En effet, Arch étant une base de système d'exploitation quasiment vierge, c'est à l'utilisateur d'installer les composants dont il aura besoin. Cela nécessite une bonne connaissance de tous ces modules (et beaucoup de temps à lire leur documentation) et cela résulte bien souvent sur des installations instables. Manjaro offre une base déjà installée et configurée et permet donc d'être utilisé par des personnes ayant une moindre connaissance des composants Linux. Il est néanmoins très enrichissant d'installer et de configurer une Arch, mais je réserve cela davantage à de l'expérimentation qu'à la mise en place d'un système d'exploitation destiné à être utilisé tous les jours.
+L'autre avantage de Manjaro est qu'elle est basée sur la distribution [Arch Linux](https://archlinux.org/). Cette dernière disposant d'une communauté très importante mettant à jour un [wiki](https://wiki.archlinux.org/) réputé comme étant très complet. Cette source de documentation peut donc servir à se débloquer dans de très nombreuses situations. L'avantage de Manjaro par rapport à Arch, repose essentiellement sur le fait que les paquets sont un minimum testés avant d'être publié. Manjaro est donc de manière général un peu plus stable que Arch.
+
+Le live cd de Manjaro permet d'installer très simplement la distribution à travers une interface. Cependant, elle negère pas bien un aspect qui me semble essentiel pour un pc portable : le chiffrement du disque avec [LUKS](https://fr.wikipedia.org/wiki/LUKS). C'est pourquoi j'ai développé un script qui permet d'installer soit un Arch Linux (en exécutant le script sur le livecd de Arch Linux), soit un Manjaro (en exécutant le script sur le live cd de Manjaro) avec la prise en charge de LUKS intégré. Ce script réalisera une installation avec uniquement les paquets minimals.
+
+```bash
+sudo su
+curl https://sh.flavien.io/arch.sh | bash
+```
 
 ### Mise à jour de Manjaro
 
@@ -81,7 +88,7 @@ sudo pacman -S flatpak
 flatpak remote-add --user flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
 
-À d'autres moments, il sera nécessaire d'utiliser des paquets provenant de la communauté (les [AUR d'Arch Linux](https://aur.archlinux.org/)). Pour ce faire, il faut installer `yay` qui est un gestionnaire de paquets qui prend la succession de `yaourt`.
+À d'autres moments, il sera nécessaire d'utiliser des paquets provenant de la communauté (les [AUR d'Arch Linux](https://aur.archlinux.org/)). Pour ce faire, il faut installer `yay` qui est un gestionnaire de paquets qui prend la succession de `yaourt`. Il est cepednant important de noté que les AUR sont optimisés pour Arch Linux et peuvent venir avec certaines instabilitées sur une distribution comme Manjaro.
 
 ```bash
 cd /tmp
@@ -104,7 +111,7 @@ curl -s https://blackarch.org/strap.sh | sudo bash -
 Parfois, certains logiciels vont avoir besoin des headers Linux afin d'être compilés. Il est donc bon d'avoir la dernière version de ces derniers installés sur sa machine.
 
 ```bash
-sudo pacman -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
+sudo pacman -S linux$(uname -r | cut -f1,2 -d. | tr -d ".")-headers
 ```
 
 ### Configuration du réseau
@@ -114,67 +121,28 @@ sudo pacman -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
 Avec le code suivant, nous allons forcer l'utilisation des DNS [OpenDNS](https://www.opendns.com/), [Cloudflare](https://www.cloudflare.com/fr-fr/dns) et [OpenNIC](https://www.opennic.org/).
 
 ```bash
-cat << EOL | sudo tee /etc/NetworkManager/conf.d/90-dns.conf
+mkdir -p /etc/NetworkManager/conf.d
+cat << EOL > /etc/NetworkManager/conf.d/90-dns.conf
 [main]
-dns=none
+dns=systemd-resolved
 EOL
 
-cat << EOL | sudo tee /etc/resolv.conf
-nameserver 208.67.222.222
-nameserver 208.67.220.220
-nameserver 1.1.1.1
-nameserver 1.0.0.1
-nameserver 151.80.222.79
+cat << EOL > /etc/systemd/resolved.conf
+[Resolve]
+DNS=208.67.222.222 1.1.1.1 151.80.222.79
+FallbackDNS=208.67.220.220 1.0.0.1
 EOL
+
+rm -f /etc/resolv.conf
+ln -s /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+
+systemctl enable systemd-resolved
+systemctl enable NetworkManage
 ```
-
-### Mise en place d'un second disque chiffré
-
-Pour cette installation, nous allons utiliser une architecture assez classique dans le monde Linux : avoir un SSD pour accueillir le système (monté sur `/`) et un second SSD pour accueillir les données (monté sur `/home`).
-
-Pour maximiser la sécurité du système, nous allons également chiffrer le SSD contenant les données. De nombreuses distributions Linux modernes proposent lors de l'installation de chiffrer les données sur une partition [LVM](https://wiki.archlinux.fr/LVM) (Logical Volume Manager). Je ne suis personnellement pas entièrement convaincu par cette option, car LVM est une couche d'abstraction entre les volumes physiques et les volumes logiques. Cette solution permet par exemple de créer une unique partition reposant sur plusieurs disques physiques, ou de créer une partition avec des clusters non adjacents. À mon sens, cette technologie prend son intérêt sur une infrastructure serveur, car elle va offrir de la flexibilité sur le stockage. Cependant, je suis beaucoup plus sceptique quant à son utilisation dans un ordinateur personnel où un volume physique va correspondre à un volume logique. C'est pour cette raison que je vais plutôt m'orienter sur l'utilisation de [LUKS](https://gitlab.com/cryptsetup/cryptsetup) (Linux Unified Key Setup) avec son utilitaire `cryptsetup`. L'avantage de cette technologie est qu'elle est directement intégrée dans le noyau Linux et va donc garantir un bon niveau de performance.
-
-- Dans un premier temps, il faut rechercher l'emplacement du second disque grâce à la commande `sudo fdisk -l`. Dans la plupart des cas, il sera localisé dans `/dev/sdb1`.
-
-- Par la suite, pour chiffrer le lecteur, il faudra utiliser la commande `sudo cryptsetup luksFormat --type luks2 /dev/sdb`. Lors de cette opération, toutes les données stockées sur le lecteur seront perdues, il faut donc être extrêmement vigilant lors de cette opération.
-
-- Maintenant que le lecteur est chiffré, nous allons pouvoir le formater et le monter à un endroit où nous pourrons copier les fichiers que nous voudrons garder quand il sera en `/home`.
-
-```bash
-sudo mkdir -p /mnt/data
-sudo cryptsetup luksOpen /dev/sdb home
-sudo mkfs.btrfs /dev/mapper/home
-sudo mount /dev/mapper/home /mnt/data
-
-sudo cp -Rp $HOME /mnt/data
-```
-
-- Après avoir copié tous les éléments dont nous aurons besoin, nous pouvons démonter le lecteur.
-
-```bash
-sudo umount /mnt/data
-sudo cryptsetup luksClose home
-```
-
-- Nous allons à présent faire en sorte que le lecteur soit déchiffré automatiquement au démarrage de la machine. Pour ce faire, nous allons l'ajouter à la `crypttab` du système.
-
-```bash
-sudo su
-echo "home	/dev/sdb	none	luks2" >> /etc/crypttab
-```
-
-- Maintenant, nous n'avons plus qu'à ajouter le volume déchiffré à la `fstable`.
-
-```bash
-sudo su
-echo "/dev/mapper/home	/home	btrfs	defaults,noatime,discard=async,compress-force=zstd:15,ssd 0 0" >> /etc/fstab
-```
-
-Au niveau de la compression, j’ai forcé zstd à son niveau maximal. Ça ralentit le disque, mais le PC portable que j’utilise a été conçu pour un disque dur et non un SSD. Du coup, le SSD que j’ai monté à l’intérieur est trop rapide pour la carte mère. C’est donc une bonne chose de le ralentir (cela évite des problèmes de congestion de buffer). Sur une configuration plus « normale » (c’est-à-dire un PC qui n’a pas 7 ans d’âge), il est pertinent de remplacer compress-force=zstd:15 par compress=zstd (qui correspond au niveau 3).
 
 ### Configuration du Shell
 
-Pour configurer mon shell, j'ai développé un petit script que je maintiens sur github : [linux-shell-configuration](https://github.com/flavien-perier/linux-shell-configuration).
+Pour configurer mon shell, j'ai développé un script que je maintiens sur github : [linux-shell-configuration](https://github.com/flavien-perier/linux-shell-configuration).
 
 Ce dernier introduit plusieurs raccourcis ainsi que des configurations pour les Shells [bash](https://www.gnu.org/software/bash/), [fish](https://fishshell.com/) et [zsh](https://www.zsh.org/).
 
@@ -237,79 +205,6 @@ XDG_DOCUMENTS_DIR="$HOME/Documents"
 XDG_MUSIC_DIR="$HOME/Music"
 XDG_PICTURES_DIR="$HOME/Pictures"
 XDG_VIDEOS_DIR="$HOME/Videos"' | tee ~/.config/user-dirs.dirs
-```
-
-### PC portable disposant de plusieurs GPUs
-
-Personnellement, je dispose actuellement d'un Asus ZenBook UX410UQK. Il s'agit d'un très bon PC disposant de deux cartes graphiques: un IGP Intel (Intel HD Graphics 620) et une carte graphique NVIDIA (NVIDIA GeForce 940MX). Le problème de cette configuration sous Linux, c'est que le système va surexploiter le GPU Nvidia qui est bien plus énergivore que le GPU Intel. L'autonomie de la machine va donc s’en trouver grandement affectée et la chauffe constante risque d'affecter la durée de vie de l'appareil...
-
-Dans cette configuration, c'est le logiciel `optimus-manager` qui va permettre de passer d'un GPU à l'autre.
-
-```bash
-sudo pacman -S intel-media-driver
-sudo mhwd -a pci nonfree 0300
-
-yay -S libsndio-61-compat
-sudo pacman -S libva-utils
-
-sudo pacman -S optimus-manager
-sudo systemctl enable optimus-manager
-```
-
-Par la suite, il n'y a plus qu'à redémarrer la machine et utiliser les commandes:
-
-- `sudo optimus-manager --switch nvidia`: Pour utiliser le GPU NVIDIA.
-- `sudo optimus-manager --switch integrated`: Pour utiliser IGP Intel.
-- `sudo optimus-manager --switch hybrid`: Un fonctionnement similaire à Windows où le GPU Nvidia sera utilisé pour les tâches gourmandes en ressources et l'IGP Intel le reste du temps.
-
-Il est à noter qu'à chaque fois que la carte graphique est changée, il faudra redémarrer l'interface avec `sudo systemctl restart lightdm`.
-
-Quand optimus-manager est en mode hybride, il suffit de passer quelques variables d'environnement à un programme pour qu'il démarre sur la carte graphique. Par exemple pour lancer Steam dans son flatpak :
-
-```bash
-flatpak run --env=__NV_PRIME_RENDER_OFFLOAD=1 --env=__GLX_VENDOR_LIBRARY_NAME="nvidia" --env=__VK_LAYER_NV_optimus="NVIDIA_only" --branch=stable --arch=x86_64 --command=/app/bin/steam --file-forwarding com.valvesoftware.Steam @@u %U @@
-```
-
-Si le programme que l'on souhaite lancer est une simple application, on peut l'appeler en ligne de commande à travers la commande `prime-run`.
-
-Enfin pour afficher les processus qui utilisent actuellement le GPU, il suffit d'utiliser la commande : `nvidia-smi`.
-
-Il est également possible de configurer optimus-manager dans `/etc` afin de rendre la configuration permanente :
-
-```bash
-cat << EOL | sudo tee /etc/optimus-manager/optimus-manager.conf
-[optimus]
-switching=none
-pci_power_control=no
-pci_remove=no
-pci_reset=no
-auto_logout=yes
-startup_mode=hybrid
-startup_auto_battery_mode=integrated
-startup_auto_extpower_mode=nvidia
-
-[intel]
-driver=modesetting
-accel=
-tearfree=
-DRI=3
-modeset=yes
-
-[amd]
-driver=modesetting
-tearfree=
-DRI=3
-
-[nvidia]
-modeset=yes
-PAT=yes
-DPI=96
-ignore_abi=no
-allow_external_gpus=no
-options=overclocking
-dynamic_power_management=no
-dynamic_power_management_memory_threshold=
-EOL
 ```
 
 ### Installation de l'antivirus
@@ -1005,32 +900,6 @@ qemu-img convert -O qcow2 old.qcow2 new.qcow2
 
 ## Logiciels
 
-### Désinstallation des logiciels inutiles
-
-Même en version lite, Manjaro contient de nombreux outils qui ne sont pas réellement utiles. Ce chapitre va se concentrer sur leur désinstallation.
-
-- Manjaro Hello est un menu au démarrage de l'OS qui présente la distribution Manjaro.
-
-```bash
-sudo pacman -Rsn manjaro-hello
-```
-
-- Plusieurs logiciels plus ou moins pertinents sont préinstallés avec le système. Certains d'entre eux peuvent être désinstallés si on souhaite avoir une distribution plus adaptée à son besoin.
-
-```bash
-sudo pacman -Rsn parole mousepad gufw gparted
-```
-
-- Il est également possible de désinstaller quelques thèmes par défaut.
-
-```bash
-sudo pacman -Rsn manjaro-xfce-minimal-settings manjaro-application-utility manjaro-zsh-config xfce4-screensaver
-sudo pacman -Rsn kvantum kvantum-theme-matcha matcha-gtk-theme
-sudo pacman -Rsn xcursor-simpleandsoft xcursor-vanilla-dmz-aa
-
-sudo pacman -S zsh
-```
-
 ### [KeePassXC](https://keepassxc.org/)
 
 KeePassXC est pour moi un composant central dans mon architecture de sécurité. Non seulement il stocke la totalité des mots de passe de mes comptes, mais il contient aussi mes différentes clés pour mes connexions SSH (GitHub et GitLab comprises). Le lien de démarrage que je propose permet donc de rajouter au logiciel l'autorisation d'accéder aux clés SSH du système.
@@ -1259,7 +1128,7 @@ flatpak install --user net.scribus.Scribus
 Personnellement, je dispose d'une liseuse [Bookeen Diva HD](https://bookeen.com/products/diva-hd) (produit d'excellente qualité et française au demeurant). Afin de centraliser mon catalogue de livre acquis sur différentes plateformes, je les stocke au format epub sans DRM. Pour cela, j'utilise Calibre avec l'extension [DeDRM_tools](https://github.com/apprenticeharper/DeDRM_tools).
 
 ```bash
-  flatpak install --user com.calibre_ebook.calibre
+flatpak install --user com.calibre_ebook.calibre
 ```
 
 ### [FontForge](https://fontforge.org/)
