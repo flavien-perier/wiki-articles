@@ -159,7 +159,7 @@ Sans plus entrer dans les détails, j'utilise personnellement le thème [Sweet D
 Pour mettre en place ma configuration, il suffit d'exécuter le script :
 
 ```bash
-curl -s https://sh.flavien.io/xfce.sh | bash -
+curl -s https://sh.flavien.io/desktop.sh | bash -
 ```
 
 Le thème `Sweet Dark` étant un thème [GTK](https://www.gtk.org/), les applications développées avec [QT](https://www.qt.io/) ne sont pas compatibles. Étant donné que les applications QT que j'utilise passent toutes par flatpak, j'installe simplement le thème [Adwaita](https://www.gnomelibre.fr/tag/adwaita/) sur cet environnement.
