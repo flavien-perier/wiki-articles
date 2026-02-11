@@ -189,22 +189,22 @@ Pour des questions d'habitude, il est souvent plus simple d'utiliser la conventi
 echo "en_EN" > ~/.config/user-dirs.locale
 
 mv ~/Bureau ~/Desktop
-mv ~/Téléchargements ~/Downloads
-mv ~/Modèles ~/Templates
-mv ~/Public ~/Public
 mv ~/Documents ~/Documents
+mv ~/Téléchargements ~/Downloads
 mv ~/Musique ~/Music
 mv ~/Images ~/Pictures
 mv ~/Vidéos ~/Videos
+mv ~/Public ~/Public
+mv ~/Modèles ~/Templates
 
 echo 'XDG_DESKTOP_DIR="$HOME/Desktop"
-XDG_DOWNLOAD_DIR="$HOME/Downloads"
-XDG_TEMPLATES_DIR="$HOME/Templates"
-XDG_PUBLICSHARE_DIR="$HOME/Public"
 XDG_DOCUMENTS_DIR="$HOME/Documents"
+XDG_DOWNLOAD_DIR="$HOME/Downloads"
 XDG_MUSIC_DIR="$HOME/Music"
 XDG_PICTURES_DIR="$HOME/Pictures"
-XDG_VIDEOS_DIR="$HOME/Videos"' | tee ~/.config/user-dirs.dirs
+XDG_VIDEOS_DIR="$HOME/Videos"
+XDG_PUBLICSHARE_DIR="$HOME/Public"
+XDG_TEMPLATES_DIR="$HOME/Templates"' | tee ~/.config/user-dirs.dirs
 ```
 
 ### Installation de l'antivirus
@@ -604,6 +604,7 @@ rustup default stable
 Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est possible d'installer les différents IDEs de l'entreprise à partir de la [JetBrains toolbox](https://www.jetbrains.com/toolbox-app/). C'est au travers de cette interface qu'il est par la suite possible d'installer [Intellij](https://www.jetbrains.com/idea/), [Clion](https://www.jetbrains.com/fr-fr/clion/), [PyCharm](https://www.jetbrains.com/pycharm/), [DataGrip](https://www.jetbrains.com/datagrip/)... et de les maintenir à jour.
 
 ```bash
+sudo pacman -S gnome-keyring
 yay -S jetbrains-toolbox
 ```
 
@@ -822,7 +823,7 @@ Avant de commencer, il est indispensable de vérifier au préalable que la virtu
 Il existe dans l'univers Linux de nombreuses solutions de virtualisation. Cependant, le choix de KVM plutôt qu'une autre repose sur le fait qu'il s'agisse d'un hyperviseur de niveau 1, ce qui signifie qu'il est directement intégré au niveau du noyau du système d'exploitation. Cette solution est donc particulièrement efficace dans un environnement Linux.
 
 ```bash
-sudo pacman -S virt-manager qemu-full vde2 ebtables dnsmasq bridge-utils openbsd-netcat x11-ssh-askpass
+sudo pacman -S virt-manager pipewire-jack qemu-full vde2 ebtables dnsmasq openbsd-netcat x11-ssh-askpass
 
 sudo systemctl enable libvirtd.service
 sudo systemctl start libvirtd.service
@@ -963,6 +964,7 @@ sudo pacman -S w3m
 Quand on utilise Linux, les notions de sécurité et de vie privée sont importantes. Donc, utiliser une boîte e-mail sécurisée ça l'est tout autant. Le ProtonMailBridge permet de se connecter de manière sécurisée à son compte ProtonMail avec un client lourd de messagerie telle que Thunderbird.
 
 ```bash
+sudo pacman -S libfido2 gnome-keyring
 flatpak install --user ch.protonmail.protonmail-bridge
 ```
 
@@ -1149,7 +1151,7 @@ Dans un premier temps, il va falloir [télécharger le backend en Java](https://
 
 ```bash
 export LANGUAGE_TOOL_DIR=/opt/LanguageTool
-export LANGUAGE_TOOL_VERSION=20250523
+export LANGUAGE_TOOL_VERSION=20260127
 
 sudo rm -Rf $LANGUAGE_TOOL_DIR
 
