@@ -1510,22 +1510,21 @@ Conky est un outil permettant de rajouter des informations personnalisées sur l
 sudo pacman -S conky
 mkdir -p ~/.config/conky
 
-cat << EOL > ~/.config/conky/conky.conf
-conky.config = {
-    alignment = 'bottom_right',
+echo 'conky.config = {
+    alignment = "bottom_right",
     background = false,
     border_width = 1,
     cpu_avg_samples = 2,
-    default_color = 'white',
-    default_outline_color = 'white',
-    default_shade_color = 'white',
+    default_color = "white",
+    default_outline_color = "white",
+    default_shade_color = "white",
     double_buffer = true,
     draw_borders = false,
     draw_graph_borders = true,
     draw_outline = false,
     draw_shades = false,
     extra_newline = false,
-    font = 'JetBrainsMonoNerdFont-Medium:size=15',
+    font = "JetBrainsMonoNerdFont-Medium:size=15",
     gap_x = 60,
     gap_y = 60,
     minimum_height = 5,
@@ -1537,10 +1536,10 @@ conky.config = {
     out_to_stderr = false,
     out_to_x = true,
     own_window = true,
-    own_window_class = 'Conky',
+    own_window_class = "Conky",
     own_window_transparent = false,
-    own_window_type = 'desktop',
-    own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+    own_window_type = "desktop",
+    own_window_hints = "undecorated,below,sticky,skip_taskbar,skip_pager",
     own_window_argb_visual = true,
     own_window_argb_value = 0,
     show_graph_range = false,
@@ -1548,15 +1547,17 @@ conky.config = {
     stippled_borders = 0,
     update_interval = 3.0,
     uppercase = false,
-    use_spacer = 'none',
+    use_spacer = "none",
     use_xft = true,
     xinerama_head = 1,
 }
 
 conky.text = [[
 ${color grey}CPU:
-${color}${exec expr `sensors | grep 'Core 0' | cut -d+ -f2 | cut -d\( -f1 | cut -d. -f1`}°C${goto 85}1: ${cpubar cpu0 6,100} ${cpu cpu0}%${goto 300}3: ${cpubar cpu2 6,100} ${cpu cpu2}%
-${color}${exec expr `sensors | grep 'Core 1' | cut -d+ -f2 | cut -d\( -f1 | cut -d. -f1`}°C${goto 85}2: ${cpubar cpu1 6,100} ${cpu cpu1}%${goto 300}4: ${cpubar cpu3 6,100} ${cpu cpu3}%
+${color}${exec sensors | awk "/Core 0/ {print int(\$3)}"}°C${goto 85}0: ${cpubar cpu0 6,100} ${cpu cpu0}%${goto 300}1: ${cpubar cpu1 6,100} ${cpu cpu1}%
+${color}${exec sensors | awk "/Core 1/ {print int(\$3)}"}°C${goto 85}2: ${cpubar cpu2 6,100} ${cpu cpu2}%${goto 300}3: ${cpubar cpu3 6,100} ${cpu cpu3}%
+${color}${exec sensors | awk "/Core 2/ {print int(\$3)}"}°C${goto 85}4: ${cpubar cpu4 6,100} ${cpu cpu4}%${goto 300}5: ${cpubar cpu5 6,100} ${cpu cpu5}%
+${color}${exec sensors | awk "/Core 3/ {print int(\$3)}"}°C${goto 85}6: ${cpubar cpu6 6,100} ${cpu cpu6}%${goto 300}7: ${cpubar cpu7 6,100} ${cpu cpu7}%
 
 ${color grey}Memory:
 ${color}RAM${goto 120}${membar 6,100} ${memperc}%${goto 300}(${mem})
@@ -1564,47 +1565,38 @@ ${color}SWAP${goto 120}${swapbar 6,100} ${swapperc}%${goto 300}(${swap})
 
 ${color grey}Storage:
 ${color}/${color}${goto 120}${fs_bar 6,100 /} ${fs_used_perc /}%${goto 300}(${fs_used /})
-${color}/home${color}${goto 120}${fs_bar 6,100 /home} ${fs_used_perc /home}%${goto 300}(${fs_used /home})
 
 ${color grey}System:
-${color}Kernel${goto 120}${exec uname -r}
+${color}Kernel${goto 120}${kernel}
 ${color}Uptime${goto 120}${uptime}
 ${color}Process${goto 120}${processes}
-${color}Podman${goto 120}${exec podman ps -q | wc -l}
-${color}Docker${goto 120}${exec pgrep -f -U 0 -c "docker run"}
-${color}KVM${goto 120}${exec pgrep -f -c qemu-system-x86_64}
+${color}Podman${goto 120}${exec podman ps -q 2>/dev/null | wc -l}
+${color}Docker${goto 120}${exec docker ps -q 2>/dev/null | wc -l}
+${color}KVM${goto 120}${exec pgrep -f -c "qemu-system-x86_64"}
 
 ${color grey}Network:
-${if_existing /proc/net/route wlp2s0}${color}Local${goto 120}${addr wlp2s0}
-${color}Public${goto 120}${texeci 7200 curl -s ipinfo.io/ip}
-${color}Download${goto 120}${downspeedf wlp2s0}k/s
-${color}Upload${goto 120}${upspeedf wlp2s0}k/s
-${else}${if_existing /proc/net/route enp0s20f0u4u4}${color}Local${goto 120}${addr enp0s20f0u4u4}
-${color}Public${goto 120}${texeci 7200 curl -s ipinfo.io/ip}
-${color}Download${goto 120}${downspeedf enp0s20f0u4u4}}k/s
-${color}Upload${goto 120}${upspeedf enp0s20f0u4u4}k/s
-${else}${color}Local${goto 120}-
+${if_existing /proc/net/route wlo1}${color}Local${goto 120}${addr wlo1}
+${color}Public${goto 120}${texeci 7200 curl -s https://ipinfo.io/ip}
+${color}Download${goto 120}${downspeedf wlo1}k/s
+${color}Upload${goto 120}${upspeedf wlo1}k/s${else}${color}Local${goto 120}-
 ${color}Public${goto 120}-
-${color}Download${goto 120}-k/s
-${color}Upload${goto 120}-k/s${endif}${endif}
+${color}Download${goto 120}- k/s
+${color}Upload${goto 120}- k/s${endif}
 $hr
 
 ${color grey}Name${goto 215}CPU${goto 305}MEM
-${color grey}${top name 1}${color}${goto 190}${top cpu 1}%${goto 280}${top mem 1}%
-${color grey}${top name 2}${color}${goto 190}${top cpu 2}%${goto 280}${top mem 2}%
-${color grey}${top name 3}${color}${goto 190}${top cpu 3}%${goto 280}${top mem 3}%
-${color grey}${top name 4}${color}${goto 190}${top cpu 4}%${goto 280}${top mem 4}%
-${color grey}${top name 5}${color}${goto 190}${top cpu 5}%${goto 280}${top mem 5}%
-]]
-EOL
+${color}${top name 1}${goto 190}${top cpu 1}%${goto 280}${top mem 1}%
+${color}${top name 2}${goto 190}${top cpu 2}%${goto 280}${top mem 2}%
+${color}${top name 3}${goto 190}${top cpu 3}%${goto 280}${top mem 3}%
+${color}${top name 4}${goto 190}${top cpu 4}%${goto 280}${top mem 4}%
+${color}${top name 5}${goto 190}${top cpu 5}%${goto 280}${top mem 5}%
+]]' > ~/.config/conky/conky.conf
 
-cat << EOL > ~/.config/autostart/conky.desktop
-[Desktop Entry]
+echo '[Desktop Entry]
 Type=Application
 Exec=sh -c "sleep 10; conky;"
 Name=Conky
-Comment=Autostart conky at login
-EOL
+Comment=Autostart conky at login' > ~/.config/autostart/conky.desktop
 ```
 
 ## Configuration de l'environnement applicatif
@@ -1790,22 +1782,25 @@ source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 echo "Update pacman"
 sudo pacman --noconfirm -q -Syyu
-sudo pacman --noconfirm -q -S linux`uname -r | cut -f1,2 -d. | tr -d "."`-headers
+sudo pacman --noconfirm -q -S "linux$(uname -r | cut -f1,2 -d. | tr -d ".")-headers"
 
 echo "Update yay"
 yay --noconfirm -q -Syyu
 
 echo "Update Docker"
-sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 sudo docker pull -q &
+sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -r -L1 sudo docker pull -q &
 
 echo "Update Podman"
-podman images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 podman pull -q &
+podman images --format "{{.Repository}}:{{.Tag}}" | xargs -r -L1 podman pull -q &
 
 echo "Update SDK"
 sdk update &
 
 echo "Update Flatpak"
 flatpak update --noninteractive -y &
+
+echo "Update Claude code"
+claude update &
 
 wait
 
