@@ -1315,7 +1315,9 @@ sudo pacman -S tmux
 Sur Linux [TLP](https://github.com/linrunner/TLP) est un démon permettant de gérer au mieux l'autonomie de sa machine. Sur Manjaro cet outil est préinstallé dans le système d'exploitation. TLPUI est tout simplement une interface pour cet outil.
 
 ```bash
-sudo pacman -S tlpui
+sudo pacman -S tlp tlpui
+sudo systemctl enable tlp
+sudo systemctl start tlp
 ```
 
 ### [fwupd](https://fwupd.org/)
