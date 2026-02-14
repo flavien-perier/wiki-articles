@@ -20,7 +20,7 @@ Pour ma part, je me base sur la version minimale de la distribution [Manjaro](ht
 
 Quant au choix de Manjaro, il s'agit d'une distribution de type rolling, c'est-à-dire qu'elle est constamment mise à jour et qu'on n’aura donc pas de réinstallation complète du système à faire toutes les quelques années pour le passage à la version majeure suivante. Ce type de distribution est assez adapté à des configurations desktop, mais complètement inadapté à des configurations serveurs, car les paquets et le noyau du système d'exploitation étant constamment mis à jour vers les dernières versions, des instabilités peuvent fréquemment survenir. Inacceptable pour un système de production, mais rarement vraiment bloquant (du moins pas longtemps, jusqu’à la mise à jour suivante) sur un pc personnel.
 
-L'autre avantage de Manjaro est qu'elle est basée sur la distribution [Arch Linux](https://archlinux.org/). Cette dernière disposant d'une communauté très importante mettant à jour un [wiki](https://wiki.archlinux.org/) réputé comme étant très complet. Cette source de documentation peut donc servir à se débloquer dans de très nombreuses situations. L'avantage de Manjaro par rapport à Arch, repose essentiellement sur le fait que les paquets sont un minimum testés avant d'être publié. Manjaro est donc de manière général un peu plus stable que Arch.
+L'autre avantage de Manjaro est qu'elle est basée sur la distribution [Arch Linux](https://archlinux.org/). Cette dernière disposant d'une communauté très importante mettant à jour un [wiki](https://wiki.archlinux.org/) réputé comme étant très complet. Cette source de documentation peut donc servir à se débloquer dans de très nombreuses situations. L'avantage de Manjaro par rapport à Arch, repose essentiellement sur le fait que les paquets sont un minimum testés avant d'être publiés. Manjaro est donc de manière générale un peu plus stable que Arch.
 
 Le live cd de Manjaro permet d'installer très simplement la distribution à travers une interface. Cependant, elle ne gère pas bien un aspect qui me semble essentiel pour un pc portable : le chiffrement du disque avec [LUKS](https://fr.wikipedia.org/wiki/LUKS). C'est pourquoi j'ai développé un script qui permet d'installer soit un Arch Linux (en exécutant le script sur le livecd de Arch Linux), soit un Manjaro (en exécutant le script sur le live cd de Manjaro) avec la prise en charge de LUKS intégré. Ce script réalisera une installation avec uniquement les paquets minimals.
 
@@ -33,7 +33,7 @@ curl https://sh.flavien.io/arch.sh | bash
 
 Maintenant que Manjaro est installé, nous allons le mettre à jour grâce à l'un des gestionnaires de paquets intégrés de la distribution. Pour ma part, j'utilise `pacman`, qui est le gestionnaire de paquets de la distribution Arch. Il est relativement difficile à utiliser et très peu intuitif, c'est pour cette raison que les développeurs de la distribution Manjaro ont rajouté un outil permettant de simplifier son utilisation `pamac`. Pour les utilisateurs venant d'une distribution basée sur [Debian](https://www.debian.org/), ou [RedHat](https://www.redhat.com/), il semblera sans aucun doute plus intuitif.
 
-La raison pour laquelle j'utilise néanmoins `pacman` est qu'il offre beaucoup plus de possibilités que sa surcouche. Ce wiki peut néanmoins être suivi en recopiant les commandes `pacman` et par la suite utilisé à titre personnel `pamac`. Ce dernier étant simplement une surcouche, cela ne devrait pas poser de problème de compatibilité.
+La raison pour laquelle j'utilise néanmoins `pacman` est qu'il offre beaucoup plus de possibilités que sa surcouche. Ce wiki peut néanmoins être suivi en recopiant les commandes `pacman` et par la suite utiliser à titre personnel `pamac`. Ce dernier étant simplement une surcouche, cela ne devrait pas poser de problème de compatibilité.
 
 #### Quelques commandes Pacman
 
@@ -137,7 +137,7 @@ rm -f /etc/resolv.conf
 ln -s /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
 systemctl enable systemd-resolved
-systemctl enable NetworkManage
+systemctl enable NetworkManager
 ```
 
 ### Configuration du Shell
@@ -186,7 +186,7 @@ flatpak override --user --env=ICON_THEME="Sweet-Rainbow"
 Pour des questions d'habitude, il est souvent plus simple d'utiliser la convention de nommage des dossiers en anglais. Pour les renommer dans XFCE, il est possible d'utiliser les commandes suivantes :
 
 ```bash
-echo "en_EN" > ~/.config/user-dirs.locale
+echo "en_US" > ~/.config/user-dirs.locale
 
 mv ~/Bureau ~/Desktop
 mv ~/Documents ~/Documents
@@ -542,7 +542,7 @@ chmod 500 ~/bin
 
 ## Outils de développement
 
-Je fais personnellement le choix d'installer mes différents outils directement au niveau de mon système et non pas dans des conteneurs Flatpak. S'agissant de mes outils de travail, je fais cela afin de réduire au maximum les désagréments que pourrait causer la non-accessibilité d'une ressource du système depuis un conteneur. Il est cependant possible d'installer la plupart de ces outils au travers de Flatpak.
+Je fais personnellement le choix d'installer mes différents outils directement au niveau de mon système et non pas dans des conteneurs Flatpak. S'agissant de mes outils de travail, je fais cela afin de réduire au maximum les désagréments que pourrait causer la non-accessibilité d'une ressource du système depuis un conteneur. Il est cependant possible d'installer la plupart de ces outils à travers de Flatpak.
 
 ### Environnement Java/Kotlin
 
@@ -601,7 +601,7 @@ rustup default stable
 
 ### Outils [JetBrains](https://www.jetbrains.com/)
 
-Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est possible d'installer les différents IDEs de l'entreprise à partir de la [JetBrains toolbox](https://www.jetbrains.com/toolbox-app/). C'est au travers de cette interface qu'il est par la suite possible d'installer [Intellij](https://www.jetbrains.com/idea/), [Clion](https://www.jetbrains.com/fr-fr/clion/), [PyCharm](https://www.jetbrains.com/pycharm/), [DataGrip](https://www.jetbrains.com/datagrip/)... et de les maintenir à jour.
+Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est possible d'installer les différents IDEs de l'entreprise à partir de la [JetBrains toolbox](https://www.jetbrains.com/toolbox-app/). C'est à travers de cette interface qu'il est par la suite possible d'installer [Intellij](https://www.jetbrains.com/idea/), [Clion](https://www.jetbrains.com/fr-fr/clion/), [PyCharm](https://www.jetbrains.com/pycharm/), [DataGrip](https://www.jetbrains.com/datagrip/)... et de les maintenir à jour.
 
 ```bash
 sudo pacman -S gnome-keyring
@@ -612,9 +612,9 @@ Il est également possible d'utiliser GraalVM pour lancer ces différentes IDEs,
 
 ### [NeoVim](https://neovim.io/)
 
-NeoVim est une version améliorée de l'IDE en ligne de commande [Vim](https://www.vim.org/) qui est lui même une version évoluée de [VI](https://ex-vi.sourceforge.net/).
+NeoVim est une version améliorée de l'IDE en ligne de commande [Vim](https://www.vim.org/) qui est lui-même une version évoluée de [VI](https://ex-vi.sourceforge.net/).
 
-Tout comme Vim, NeoVim offre la possibilité d'être enrichie grâce à une mécanique de plugins.
+Tout comme Vim, NeoVim offre la possibilité d'être enrichi grâce à une mécanique de plugins.
 
 Cependant, il peut être long et fastidieux de mettre en place un environnement et de trouver les plugins qui vont réellement nous faciliter la vie.
 
@@ -658,6 +658,9 @@ Claude Code est l'agent d'aide au développement développé par [Anthropic](htt
 ```bash
 yay -S claude-code
 claude install
+
+sudo pacman -S socat
+npm install -g @anthropic-ai/sandbox-runtime
 ```
 
 Voici une configuration de claude code par défaut pour qu'il s'exécute dans un environnement sandboxé, qu'il envoie moins de télémétrie et qu'il pose moins de questions sur les commandes qu'il a le droit ou non d'exécuter :
@@ -834,7 +837,7 @@ sudo usermod -a -G kvm $USER
 
 Par la suite pour récupérer une image Windows, il faut se rendre sur [le site officiel de Microsoft](https://www.microsoft.com/en-us/software-download/windows11) et télécharger l'image ISO du système d'exploitation.
 
-L'outil `virt-manager` va permettre de manager les différentes machines virtuelles au travers d'une interface. Il fournit également un certain nombre de profils déjà configuré pour faciliter la mise en place de Machines virtuelles avec des configurations complexes (comme c'est le cas d'un Windows 11 avec son TPM).
+L'outil `virt-manager` va permettre de manager les différentes machines virtuelles à travers une interface. Il fournit également un certain nombre de profils déjà configurés pour faciliter la mise en place de Machines virtuelles avec des configurations complexes (comme c'est le cas d'un Windows 11 avec son TPM).
 
 Pour installer facilement des Machines virtuelles en ligne de commande, il est aussi possible d'utiliser le script [Quickemu](https://github.com/quickemu-project/quickemu) avec la commande suivante :
 
@@ -1211,8 +1214,8 @@ Je vois plusieurs avantages à cette solution par rapport au traditionnel Micros
 Ainsi avec les différents logiciels que j'utilise, je peux garantir un flux de travail efficace sur ces trois axes. Je commence par rédiger en Markdown le contenu de mon document dans un simple IDE (généralement Visual Studio Code ou VIM), puis je corrige les fautes en utilisant un logiciel de correction et enfin, j'utilise Pandoc pour la mise en page. J'ai créé [un projet GitHub](https://github.com/flavien-perier/pandoc-template) qui me sert de base pour les documents que je rédige. Il utilise la feuille de style LaTeX [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) afin de mettre en forme mes documents Markdown dans le format PDF.
 
 ```bash
-pacman -Syyu pandoc pandoc-citeproc
-pacman -Syyu `pacman -Ss texlive | cut -f 1 -d " " | grep -v "^$"`
+sudo pacman -Syyu pandoc pandoc-citeproc
+sudo pacman -Syyu `pacman -Ss texlive | cut -f 1 -d " " | grep -v "^$"`
 ```
 
 ### [NewsFlash](https://gitlab.com/news-flash/news_flash_gtk)
@@ -1626,6 +1629,14 @@ systemctl --user restart xdg-desktop-portal.service xdg-desktop-portal-gtk.servi
 ```
 Une fois ces actions effectuées, les liens devraient être de nouveau cliquables dans les applications XFCE.
 
+### Faire fonctionner un écran tactile
+
+Certains ordinateurs sont équipés d'écran tactile. Pour un support complètement optimal, il est nécessaire d'installer le driver wacom :
+
+```bash
+sudo pacman -S xf86-input-wacom xf86-input-libinput
+```
+
 ### Activation des programmes par défaut
 
 Sur Linux, il ne suffit pas forcément qu'un programme soit installé pour qu'il soit utilisé par défaut pour ouvrir certains types de fichiers depuis l'explorateur de fichier (`thunar`) ou avec la commande `exo-open`. Pour utiliser la plupart des programmes précédemment installés comme programme par défaut il suffit de mettre à jour le fichier `~/.config/mimeapps.list` :
@@ -1648,7 +1659,7 @@ application/vnd.ms-powerpoint=org.libreoffice.LibreOffice.desktop;
 application/msword=org.libreoffice.LibreOffice.desktop;
 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=org.libreoffice.LibreOffice.desktop;
 application/vnd.openxmlformats-officedocument.presentationml.presentation=org.libreoffice.LibreOffice.desktop;
-iapplication/vnd.openxmlformats-officedocument.wordprocessingml.document=org.libreoffice.LibreOffice.desktop;
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=org.libreoffice.LibreOffice.desktop;
 
 text/plain=code-oss.desktop;
 
