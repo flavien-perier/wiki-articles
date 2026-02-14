@@ -45,10 +45,8 @@ Il est également possible d'aller plus loin en allant dans les paramètres avan
 - `browser.send_pings`: false
 - `browser.newtabpage.activity-stream.feeds.telemetry`: false
 - `browser.newtabpage.activity-stream.telemetry`: false
-- `browser.ping-centre.telemetry`: false
 - `toolkit.telemetry.bhrPing.enabled`: false
 - `toolkit.telemetry.firstShutdownPing.enabled`: false
-- `toolkit.telemetry.pioneer-new-studies-available`: false
 - `toolkit.telemetry.newProfilePing.enabled`: false
 - `toolkit.telemetry.reportingpolicy.firstRun`: false
 - `toolkit.telemetry.shutdownPingSender.enabled`: false
@@ -58,16 +56,9 @@ Il est également possible d'aller plus loin en allant dans les paramètres avan
 - `datareporting.healthreport.uploadEnabled`: false
 - `datareporting.policy.dataSubmissionEnabled`: false
 
-#### Désactivation des animations
-
-- `layout.css.animation-composition.enabled`: false
-- `dom.animations-api.compositing.enabled`: false
-- `dom.animations-api.getAnimations.enabled`: false
-- `dom.animations-api.timelines.enabled`: false
-
 #### Désactivation des fonctionnalités d'intelligence artificielle
 
-- `browser.ml.enabled`: false
+- `browser.ml.enable`: false
 - `browser.ml.chat.enabled`: false
 - `browser.tabs.groups.smart.enabled`: false
 

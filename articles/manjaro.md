@@ -1257,6 +1257,7 @@ yay -S xpadneo-dkms
 Moonlight est un logiciel de streaming pour pouvoir récupérer le flux vidéo de la technologie de streaming Nvidia.
 
 ```bash
+sudo pacman -S vulkan-validation-layers vulkan-tools vulkan-intel gamemode
 flatpak install com.moonlight_stream.Moonlight
 ```
 
