@@ -214,8 +214,9 @@ Pour garantir un niveau de sécurité minimal, la présence d'un antivirus est n
 ```bash
 sudo pacman -S clamav
 
-sudo systemctl enable clamav-daemon
-sudo systemctl start clamav-daemon
+sudo freshclam 
+
+sudo systemctl enable --now clamav-daemon
 ```
 
 ### Mise en place d'un pare-feu
@@ -790,8 +791,7 @@ echo '{
   }
 }' | sudo tee /etc/docker/daemon.json
 
-sudo systemctl enable docker
-sudo systemctl start docker
+sudo systemctl enable --now docker
 
 sudo groupadd docker
 
@@ -828,8 +828,7 @@ Il existe dans l'univers Linux de nombreuses solutions de virtualisation. Cepend
 ```bash
 sudo pacman -S virt-manager pipewire-jack qemu-full vde2 ebtables dnsmasq openbsd-netcat x11-ssh-askpass
 
-sudo systemctl enable libvirtd.service
-sudo systemctl start libvirtd.service
+sudo systemctl enable --now libvirtd.service
 
 sudo usermod -a -G libvirt $USER
 sudo usermod -a -G kvm $USER
@@ -1196,8 +1195,7 @@ WantedBy=default.target
 ' | sudo tee /etc/systemd/system/LanguageTool.service
 
 sudo systemctl daemon-reload
-sudo systemctl enable LanguageTool
-sudo systemctl restart LanguageTool
+sudo systemctl enable --now LanguageTool
 ```
 
 Enfin, il est possible de rajouter des extensions dans différents logiciels :
@@ -1316,8 +1314,7 @@ Sur Linux [TLP](https://github.com/linrunner/TLP) est un démon permettant de g�
 
 ```bash
 sudo pacman -S tlp tlpui
-sudo systemctl enable tlp
-sudo systemctl start tlp
+sudo systemctl enable --now tlp
 ```
 
 ### [fwupd](https://fwupd.org/)
@@ -1327,7 +1324,7 @@ Fwupd est un démon permettant de maintenir à jour les firmwares des composants
 
 ```bash
 sudo pacman -S fwupd
-sudo systemctl start fwupd
+sudo systemctl enable --now fwupd
 ```
 
 Pour rechercher les mises à jour, on utilise la commande :
@@ -1800,6 +1797,9 @@ sudo pacman --noconfirm -q -S "linux$(uname -r | cut -f1,2 -d. | tr -d ".")-head
 
 echo "Update yay"
 yay --noconfirm -q -Syyu
+
+echo "Update clamav"
+sudo freshclam
 
 echo "Update Docker"
 sudo docker images --format "{{.Repository}}:{{.Tag}}" | xargs -r -L1 sudo docker pull -q &
