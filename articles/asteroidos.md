@@ -35,15 +35,15 @@ On trouve comme fonctionnalités intégrées :
 
 ## La montre
 
-Ayant acheté une montre connectée dans l'unique objectif d'essayer cet OS, je suis parti sur celle qui avait la meilleure compatibilité à savoir la [LG Watch Urban](https://www.lg.com/fr/montres-connectees-lg-g-watch/lg-Watch-Urbane-W150).
+Ayant acheté une montre connectée dans l'unique objectif d'essayer cet OS, je suis parti sur l'une de celle qui a la meilleure compatibilité à savoir la [LG Watch Urban](https://www.lg.com/fr/montres-connectees-lg-g-watch/lg-Watch-Urbane-W150).
 
 Elle a notamment l'énorme avantage d'être connectable directement à un ordinateur sans devoir faire de bricolage au niveau du hardware.
 
-Son bracelet est facilement changeable puisqu'il s'agit d'attache standard pour montre. Et en cas de problème au niveau hardware, il semblerait que les équipes de [iFixit](https://fr.ifixit.com/News/7178/lg-watch-urbane) aient réussi à la démonter sans trop de difficultés.
+Son bracelet est facilement changeable puisqu'il s'agit d'attache standard pour montre. Et en cas de problème au niveau hardware, elle est facilement démontable, comme le prouve les équipes de [iFixit](https://fr.ifixit.com/News/7178/lg-watch-urbane).
 
 ## Installation
 
-Pour l'installation, il faut au préalable vérifier qu'[ADB](https://www.flavien.io/wiki/manjaro.md#android-adb) est bien installé sur son ordinateur.
+Pour l'installation, il faut au préalable vérifier qu'[ADB](https://www.flavien.io/wiki/manjaro.md#android_adb) est bien installé sur son ordinateur.
 
 Pour la suite, [le tutoriel présent sur le site](https://asteroidos.org/install/bass/) suffit pour installer facilement l'OS.
 
@@ -51,15 +51,13 @@ Je détaille néanmoins ici les étapes d'installation :
 
 - Dans un premier temps, il faut télécharger les fichiers de la dernière version de WearOS pour la montre : [Le kernel](https://androidfilehost.com/?fid=529152257862690904), [Le recovery](https://www.androidfilehost.com/?fid=457095661767128807) et [La ROM](https://androidfilehost.com/?fid=745425885120695961).
 
-- Puis les fichiers d'AsteroidOS : [Les données utilisateur](https://release.asteroidos.org/nightlies/bass/asteroid-image-bass.rootfs.ext4) et [La ROM](https://release.asteroidos.org/nightlies/bass/zImage-dtb-bass.fastboot).
+- Puis les fichiers d'AsteroidOS : [Les données utilisateur](https://release.asteroidos.org/2.0/bass/asteroid-image-bass.rootfs.ext4) et [La ROM](https://release.asteroidos.org/2.0/bass/zImage-dtb-bass.fastboot).
 
 - La stabilité de distribution étant ce qu'elle est, il peut-être bon de remplacer le recovery par [TWRP](https://dl.twrp.me/bass/). Cela peut permettre d'effectuer des backups.
 
 - Ensuite, il faut accéder au bootloader de l'appareil. Pour ce faire, il suffit d'éteindre la montre puis de la rallumer. Au démarrage quand le logo "LG" apparait il faut faire glisser son doigt du coin supérieur gauche de l'écran au coin inférieur droit.
 
-- Ensuite il faut brancher l'appareil à un ordinateur via le câble USB.
-
-- Puis taper les commandes :
+- Enfin il faut brancher l'appareil à un ordinateur via le câble USB et taper les commandes :
 
 ```bash
 fastboot oem unlock
@@ -104,7 +102,7 @@ rm -Rf /var/lib/connman/wifi*
 connmanctl enable wifi
 connmanctl scan wifi
 
-WIFI=`connmanctl services | grep $WIFI_SSID | tr -s " " | cut -f3 -d ' '`
+WIFI="$(connmanctl services | grep $WIFI_SSID | tr -s " " | cut -f3 -d ' ')"
 
 cat << EOL > /var/lib/connman/$WIFI.config
 [service_wifi_$WIFI]

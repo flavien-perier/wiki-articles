@@ -22,7 +22,7 @@ Quant au choix de Manjaro, il s'agit d'une distribution de type rolling, c'est-�
 
 L'autre avantage de Manjaro est qu'elle est basée sur la distribution [Arch Linux](https://archlinux.org/). Cette dernière disposant d'une communauté très importante mettant à jour un [wiki](https://wiki.archlinux.org/) réputé comme étant très complet. Cette source de documentation peut donc servir à se débloquer dans de très nombreuses situations. L'avantage de Manjaro par rapport à Arch, repose essentiellement sur le fait que les paquets sont un minimum testés avant d'être publiés. Manjaro est donc de manière générale un peu plus stable que Arch.
 
-Le live cd de Manjaro permet d'installer très simplement la distribution à travers une interface. Cependant, elle ne gère pas bien un aspect qui me semble essentiel pour un pc portable : le chiffrement du disque avec [LUKS](https://fr.wikipedia.org/wiki/LUKS). C'est pourquoi j'ai développé un script qui permet d'installer soit un Arch Linux (en exécutant le script sur le livecd de Arch Linux), soit un Manjaro (en exécutant le script sur le live cd de Manjaro) avec la prise en charge de LUKS intégré. Ce script réalisera une installation avec uniquement les paquets minimals.
+Le live cd de Manjaro permet d'installer très simplement la distribution à travers une interface. Cependant, elle ne gère pas bien un aspect qui me semble essentiel pour un pc portable : le chiffrement du disque avec [LUKS](https://fr.wikipedia.org/wiki/LUKS). C'est pourquoi j'ai développé un script qui permet d'installer soit un Arch Linux (en exécutant le script sur le livecd de Arch Linux), soit un Manjaro (en exécutant le script sur le live cd de Manjaro) avec la prise en charge de LUKS intégré. Ce script réalisera une installation avec uniquement les paquets minimaux.
 
 ```bash
 sudo su
@@ -543,7 +543,7 @@ chmod 500 ~/bin
 
 ## Outils de développement
 
-Je fais personnellement le choix d'installer mes différents outils directement au niveau de mon système et non pas dans des conteneurs Flatpak. S'agissant de mes outils de travail, je fais cela afin de réduire au maximum les désagréments que pourrait causer la non-accessibilité d'une ressource du système depuis un conteneur. Il est cependant possible d'installer la plupart de ces outils à travers de Flatpak.
+Je fais personnellement le choix d'installer mes différents outils directement au niveau de mon système et non pas dans des conteneurs Flatpak. S'agissant de mes outils de travail, je fais cela afin de réduire au maximum les désagréments que pourrait causer la non-accessibilité d'une ressource du système depuis un conteneur. Il est cependant possible d'installer la plupart de ces outils à travers Flatpak.
 
 ### Environnement Java/Kotlin
 
@@ -602,7 +602,7 @@ rustup default stable
 
 ### Outils [JetBrains](https://www.jetbrains.com/)
 
-Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est possible d'installer les différents IDEs de l'entreprise à partir de la [JetBrains toolbox](https://www.jetbrains.com/toolbox-app/). C'est à travers de cette interface qu'il est par la suite possible d'installer [Intellij](https://www.jetbrains.com/idea/), [Clion](https://www.jetbrains.com/fr-fr/clion/), [PyCharm](https://www.jetbrains.com/pycharm/), [DataGrip](https://www.jetbrains.com/datagrip/)... et de les maintenir à jour.
+Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est possible d'installer les différents IDEs de l'entreprise à partir de la [JetBrains toolbox](https://www.jetbrains.com/toolbox-app/). C'est à travers cette interface qu'il est par la suite possible d'installer [Intellij](https://www.jetbrains.com/idea/), [Clion](https://www.jetbrains.com/fr-fr/clion/), [PyCharm](https://www.jetbrains.com/pycharm/), [DataGrip](https://www.jetbrains.com/datagrip/)... et de les maintenir à jour.
 
 ```bash
 sudo pacman -S gnome-keyring
@@ -759,6 +759,14 @@ echo '{
     ]
   }
 }' | tee ~/.claude/settings.json
+```
+
+### [Open Code](https://opencode.ai/)
+
+Un client open source permettant d'utiliser n'importe quel backend d'IA (ChatGPT, Gemini, Claude, Ollama...) pour effectuer des tâches de code. C'est un équivalent de Claude Code relativement compatible avec ce dernier dans l'ensemble (il interprète les fichiers Claude.md et utilise les agents de ce dernier).
+
+```bash
+yay -S opencode-bin
 ```
 
 ### [OpenAPI-generator](https://openapi-generator.tech/)

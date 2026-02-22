@@ -57,14 +57,14 @@ Une fois notre code compilé d'une façon ou d'une autre, il suffit de le mettre
 
 ### Quelques exemples de scripts
 
-Il existe plusieurs sites qui proposent des scripts déjà tous faits. Il est intéressant de passer par là afin de s'en inspirer :
+Il existe plusieurs sites qui proposent des scripts déjà tout faits. Il est intéressant de passer par là afin de s'en inspirer :
 
 - [GitHub de Hak5](https://github.com/hak5/usbrubberducky-payloads)
 - [Hacktoday](https://thehacktoday.com/60-best-rubber-ducky-usb-payloads/)
 
 #### Quelques conseils
 
-- Toujours essayer de faire passer le script sur une unique ligne chainer avec des `&&` des `||` et des `;`. Cela permet de débrancher la clé USB au plus tôt. En effet, une fois la ligne tapée et lancée, le payload va poursuivre son exécution même si l'on débranche la clé.
+- Toujours essayer de faire passer le script sur une unique ligne chaîner avec des `&&` des `||` et des `;`. Cela permet de débrancher la clé USB au plus tôt. En effet, une fois la ligne tapée et lancée, le payload va poursuivre son exécution même si l'on débranche la clé.
 
 - Sur Windows, préférez l'utilisation de CMD à PowerShell (si on utilise des instructions PowerShell, les exécuter depuis le CMD). La raison est que CMD démarre beaucoup plus rapidement et que par extension, notre script à moins de chance de commencer à écrire avant que le terminal soit chargé.
 

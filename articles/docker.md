@@ -94,7 +94,7 @@ Si pour des besoins particuliers nous sommes amenés à déployer une registry �
 
 Les layers sont une optimisation également très efficace dans le cas de la registry. En effet Docker, ne va récupérer que les layers qu'il n'a pas déjà à sa disposition. Dans l'exemple précédent de notre packaging de l'image `image-test`, dans le cas ou `Alpine` serait déjà présent sur la machine, seul le layer contenant le fichier `hello.txt` aurait été téléchargé.
 
-Il est possible, pour le même nom d'image, de stocker plusieurs versions ou type types de packaging qui seront identifiés par des tags. Dans l'exemple précédent, aucun tag n'est précisé. Ce sera donc celui par défaut qui sera utilisé `latest`.
+Il est possible, pour le même nom d'image, de stocker plusieurs versions ou types de packaging qui seront identifiés par des tags. Dans l'exemple précédent, aucun tag n'est précisé. Ce sera donc celui par défaut qui sera utilisé `latest`.
 
 Il est à noter qu'il est possible pour l'éditeur d'une image de mettre à jour un tag. Ce qui peut donc poser des problèmes de sécurité si on ne choisit pas un tag approprié dans son infrastructure.
 
@@ -118,7 +118,7 @@ docker pull postgres:alpine
 docker pull postgres:16-alpine3.18
 ```
 
-C'est ce dernier type de tag qui serait le plus approprié dans une infrastructure. En effet, il est souvent préférable d'utiliser `Alpine` quand il est proposé par les éditeurs aux autres distributions, car bien adapté à Docker et surtout très léger. Ensuite, il faut surtout favoriser les tags qui donnent le plus de détail sur le numéro de version. Cela évite quand on met à jour son infrastructure d'avoir la mauvaise surprise d'une base de données plus compatible avec l'application qu'elle a en face.
+C'est ce dernier type de tag qui serait le plus approprié dans une infrastructure. En effet, il est souvent préférable d'utiliser `Alpine` quand il est proposé par les éditeurs aux autres distributions, car bien adapté à Docker et surtout très léger. Ensuite, il faut surtout favoriser les tags qui donnent le plus de détail sur le numéro de version. Cela évite quand on met à jour son infrastructure d'avoir la mauvaise surprise d'une base de données non compatible avec l'application qu'elle a en face.
 
 Si on souhaite visualiser les métadonnées d'une image, il est possible de les afficher avec la commande :
 

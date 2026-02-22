@@ -79,7 +79,7 @@ Cette extension permet de bloquer les pubs que l'on peut trouver sur différents
 Cette extension permet de bloquer les traqueurs présents sur le web. Cela va par exemple empêcher les modules [Google Analytics](https://fr.wikipedia.org/wiki/Google_Analytics) de s'exécuter.
 
 Il existe actuellement de nombreuses extensions permettant d'améliorer la vie privée. Mais les trois principales qui ont pour objectif de limiter le champ d'action des traqueurs sont :
-- [Ghostery](https://addons.mozilla.org/en-US/firefox/addon/ghostery) qui est également un AdBlock, mais qui cause de nombreux dysfonctionnements, car trop aggressive.
+- [Ghostery](https://addons.mozilla.org/en-US/firefox/addon/ghostery) qui est également un AdBlock, mais qui cause de nombreux dysfonctionnements, car trop agressive.
 - [Disconnect](https://addons.mozilla.org/en-US/firefox/addon/disconnect/) qui est plutôt efficace, mais moins populaire que les deux autres.
 - [Privacy Badger](https://addons.mozilla.org/en-US/firefox/addon/privacy-badger17/) qui se base sur des méthodes d'apprentissage pour bloquer les contenus indésirables.
 
