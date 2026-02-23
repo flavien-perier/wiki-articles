@@ -39,7 +39,7 @@ Il est cependant évident qu'il n'est pas forcément nécessaire d'en arriver l�
 
 ## Comment s'en servir
 
-La première étape consiste à démonter la Rubber Ducky. À l'intérieur se trouve une carte micros-sd c'est sur cette dernière que nous allons travailler et pouvoir déposer notre payload.
+La première étape consiste à démonter la Rubber Ducky. À l'intérieur se trouve une carte micro-sd c'est sur cette dernière que nous allons travailler et pouvoir déposer notre payload.
 
 ### Installation de l'environnement
 
@@ -66,7 +66,7 @@ Il existe plusieurs sites qui proposent des scripts déjà tout faits. Il est in
 
 - Toujours essayer de faire passer le script sur une unique ligne chaîner avec des `&&` des `||` et des `;`. Cela permet de débrancher la clé USB au plus tôt. En effet, une fois la ligne tapée et lancée, le payload va poursuivre son exécution même si l'on débranche la clé.
 
-- Sur Windows, préférez l'utilisation de CMD à PowerShell (si on utilise des instructions PowerShell, les exécuter depuis le CMD). La raison est que CMD démarre beaucoup plus rapidement et que par extension, notre script à moins de chance de commencer à écrire avant que le terminal soit chargé.
+- Sur Windows, préférez l'utilisation de CMD à PowerShell (si on utilise des instructions PowerShell, les exécuter depuis le CMD). La raison est que CMD démarre beaucoup plus rapidement et que par extension, notre script a moins de chance de commencer à écrire avant que le terminal soit chargé.
 
 - Bien penser à commencer le script par `color fe`. Cela va passer la couleur de CMD en Jaune claire sur blanc (rendant le déroulement illisible par un humain). Le temps que l'utilisateur comprenne ce qui se passe, il sera déjà trop tard.
 

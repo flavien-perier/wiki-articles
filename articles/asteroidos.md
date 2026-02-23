@@ -35,7 +35,7 @@ On trouve comme fonctionnalités intégrées :
 
 ## La montre
 
-Ayant acheté une montre connectée dans l'unique objectif d'essayer cet OS, je suis parti sur l'une de celle qui a la meilleure compatibilité à savoir la [LG Watch Urban](https://www.lg.com/fr/montres-connectees-lg-g-watch/lg-Watch-Urbane-W150).
+Ayant acheté une montre connectée dans l'unique objectif d'essayer cet OS, je suis parti sur l'une de celles qui a la meilleure compatibilité à savoir la [LG Watch Urban](https://www.lg.com/fr/montres-connectees-lg-g-watch/lg-Watch-Urbane-W150).
 
 Elle a notamment l'énorme avantage d'être connectable directement à un ordinateur sans devoir faire de bricolage au niveau du hardware.
 
@@ -53,7 +53,7 @@ Je détaille néanmoins ici les étapes d'installation :
 
 - Puis les fichiers d'AsteroidOS : [Les données utilisateur](https://release.asteroidos.org/2.0/bass/asteroid-image-bass.rootfs.ext4) et [La ROM](https://release.asteroidos.org/2.0/bass/zImage-dtb-bass.fastboot).
 
-- La stabilité de distribution étant ce qu'elle est, il peut-être bon de remplacer le recovery par [TWRP](https://dl.twrp.me/bass/). Cela peut permettre d'effectuer des backups.
+- La stabilité de distribution étant ce qu'elle est, il peut être bon de remplacer le recovery par [TWRP](https://dl.twrp.me/bass/). Cela peut permettre d'effectuer des backups.
 
 - Ensuite, il faut accéder au bootloader de l'appareil. Pour ce faire, il suffit d'éteindre la montre puis de la rallumer. Au démarrage quand le logo "LG" apparait il faut faire glisser son doigt du coin supérieur gauche de l'écran au coin inférieur droit.
 
@@ -119,6 +119,14 @@ ifconfig wlan0 up
 systemctl restart connman
 ```
 
+## System
+
+Le gestionnaire de paquet de la distribution est `opkg`. Il s'utilise globalement comme `apt-get` sur les systèmes [Debian](https://www.debian.org/).
+
+Il faut cependant être attentif à ne pas faire d'`opkg dist-upgrade`. Cela pose un problème au moment de la mise à jour de la [BusyBox](https://www.busybox.net/) et casse complètement l'OS... Donc obligé de tout réinstaller.
+
+De même, des upgrades globaux (`opkg upgrade`) peuvent introduire des instabilités plus ou moins graves... Chose malheureusement symptomatique des distributions mal ou insuffisamment testées. Une fois la distribution installée, le plus sage est donc malheureusement de ne plus toucher à rien.
+
 ## Watchface
 
 J'utilise une watchface custom pour la montre. Pour l'installer, il suffit de taper les commandes depuis un pc :
@@ -131,82 +139,84 @@ adb push usr/ /
 adb shell systemctl restart user@1000
 ```
 
-## System
+## Applications
 
-Le gestionnaire de paquet de la distribution est `opkg`. Il s'utilise globalement comme `apt-get` sur les systèmes [Debian](https://www.debian.org/).
+[Le site d'AsteroidOS](https://wiki.asteroidos.org/index.php/Applications) liste différentes applications installées par défaut, ou installables, qui peuvent s'avérer plus ou moins utiles.
 
-Il faut cependant être attentif à ne pas faire d'`opkg dist-upgrade`. Cela pose un problème au moment de la mise à jour de la [BusyBox](https://www.busybox.net/) et casse complètement l'OS... Donc obligé de tout réinstaller.
+### [Asteroid Health](https://wiki.asteroidos.org/index.php/Applications#asteroid-health)
 
-De même, des upgrades globaux (`opkg upgrade`) peuvent introduire des instabilités plus ou moins graves... Chose malheureusement symptomatique des distributions mal ou insuffisamment testées. Une fois la distribution installée, le plus sage est donc malheureusement de ne plus toucher à rien.
-
-## Affichage de l'IP après connexion au WiFi
-
-L'objectif de ce script est simplement d'afficher l'IP de la montre avec une notification quand cette dernière se connecte à un WiFi.
+Asteroid Health est une application de comptage de pas, ou les données restent exclusivement dans la montre. Pas de risque de fuite sur le cloud.
 
 ```bash
-echo '#!/bin/sh
+opkg install asteroid-health
+```
 
-if [ ! -f /tmp/network-state ]
+## Script de synchronisation
+
+L'os n'étant pas très complet de base, il peut être bon de rajouter un petit script qui permette de synchroniser son agenda quand la montre a accès à internet ainsi que d'afficher son adresse ip dans une notification.
+
+```bash
+opkg update
+opkg install curl
+
+echo "CALENDAR_URL=******" > /home/root/sync.conf
+
+echo '#!/bin/bash
+
+set -e
+
+STATE="$(connmanctl state | grep State | tr -d " " | cut -f2 -d=)"
+
+if connmanctl state | grep -q "State = ready"
 then
-  echo "ready" > /tmp/network-state
-fi
+  touch /tmp/calendar-sync-last-update
 
-STATE=`connmanctl state | grep State | tr -d " " | cut -f2 -d=`
-LAST_STATE=`cat /tmp/network-state`
+  SYNC_DATE="$(date +%F)"
+  LAST_SYNC_DATE="$(cat /tmp/calendar-sync-last-update)"
 
-if [ $STATE = "ready" ]
-then
-  ping -q -c 1 1.1.1.1
-  if [ $? -ne 0 ]
+  if [[ "$SYNC_DATE" != "$LAST_SYNC_DATE" ]]
   then
-    STATE="offline"
+    source /home/root/sync.conf
+
+    curl -s -o /tmp/calendar.ics "$CALENDAR_URL"
+    icalconverter import /tmp/calendar.ics -d
+
+    IP="$(ip -br -4 a show wlan0 | tr -s " " | cut -f3 -d " " | cut -f1 -d "/")"
+    su -l ceres -c "notificationtool -o add --icon=ios-wifi --application=\"System\" --urgency=3 --hint=\"x-nemo-preview-summary WiFi\" --hint=\"x-nemo-preview-body IP: $IP\" \"WiFi\" \"IP: $IP\"" || true
+
+    echo "$SYNC_DATE" > /tmp/calendar-sync-last-update
   fi
-fi
+fi' | tee /home/root/calendar-sync
+chmod 550 /home/root/calendar-sync
 
-if [ $STATE = $LAST_STATE ]
-then
-  exit
-fi
-
-if [ $STATE = "ready" ]
-then
-  IP=`ip -br -4 a show wlan0 | tr -s " " | cut -f3 -d " " | cut -f1 -d "/"`
-  su -l ceres -c "notificationtool -o add --icon=ios-wifi --application=\"System\" --urgency=3 --hint=\"x-nemo-preview-summary WiFi\" --hint=\"x-nemo-preview-body IP: $IP\" \"WiFi\" \"IP: $IP\""
-fi
-
-echo $STATE > /tmp/network-state' | tee /home/root/notification-wifi
-chmod 550 /home/root/notification-wifi
-
-cat << EOL > /etc/systemd/system/notification-wifi.service
+cat << EOL > /etc/systemd/system/calendar-sync.service
 [Unit]
-Description=Notification WiFi
-Wants=notification-wifi.timer
+Description=Calendar synchronization service
+Wants=calendar-sync.timer
 
 [Service]
-ExecStart=/home/root/notification-wifi
+ExecStart=/home/root/calendar-sync
 Type=oneshot
 
 [Install]
 WantedBy=network-online.target
 EOL
 
-cat << EOL > /etc/systemd/system/notification-wifi.timer
+cat << EOL > /etc/systemd/system/calendar-sync.timer
 [Unit]
-Description=Notification WiFi
-Requires=notification-wifi.service
+Description=Calendar synchronization service
+Requires=calendar-sync.service
 
 [Timer]
-Unit=notification-wifi.service
-OnUnitInactiveSec=2m
+Unit=calendar-sync.service
+OnUnitInactiveSec=5m
 
 [Install]
 WantedBy=timers.target
 EOL
 
-systemctl enable notification-wifi.service
-systemctl enable notification-wifi.timer
-systemctl start notification-wifi.service
-systemctl start notification-wifi.timer
+systemctl enable --now calendar-sync.service
+systemctl enable --now calendar-sync.timer
 systemctl daemon-reload
 ```
 

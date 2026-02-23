@@ -100,7 +100,7 @@ fastboot -w
 Une fois le système de base installé, il est possible de rooter le téléphone :
 
 - Dans un premier temps, il va falloir le démarrer et y installer l'application Magisk (grâce à l'APK précédemment récupérée).
-- Temps que le téléphone est branché à un ordinateur, nous allons en profiter pour déposer sur le stockage de l'appareil le fichier `boot.img`.
+- Tant que le téléphone est branché à un ordinateur, nous allons en profiter pour déposer sur le stockage de l'appareil le fichier `boot.img`.
 - Depuis l'application Magisk, il faut sélectionner le bouton `installer` depuis l'onglet `Magisk`. Par la suite, on sélectionne le fichier `boot.img`. L'application va alors appliquer ses correctifs root sur le fichier.
 - On récupère le fichier généré dans le dossier Téléchargement et on le dépose sur l'ordinateur.
 - On redémarre le téléphone sur le bootloader.
