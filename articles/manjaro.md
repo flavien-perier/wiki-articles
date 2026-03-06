@@ -569,6 +569,7 @@ end' | tee ~/.config/fish/conf.d/sdkman.fish
 # Install GraalVM 25
 sdk install java 25-graal
 sdk install maven
+sdk install gradle
 sdk use java 25-graal
 ```
 
