@@ -88,22 +88,20 @@ sudo pacman -S flatpak
 flatpak remote-add --user flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
 
-À d'autres moments, il sera nécessaire d'utiliser des paquets provenant de la communauté (les [AUR d'Arch Linux](https://aur.archlinux.org/)). Pour ce faire, il faut installer `yay` qui est un gestionnaire de paquets qui prend la succession de `yaourt`. Il est cependant important de noter que les AUR sont optimisés pour Arch Linux et peuvent venir avec certaines instabilités sur une distribution comme Manjaro.
-
-```bash
-cd /tmp
-sudo pacman -S --needed base-devel
-git clone -q --depth 1 -- https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-
-yay -Syyu
-```
-
 Pour ceux qui voudraient utiliser leur système pour faire du pentest, il est possible d'installer les repos de [BlackArch](https://www.blackarch.org/). Grâce à ces derniers, il sera possible d'installer la plupart des outils disponibles sur d'autres distributions orientées sécurités telles que [KaliLinux](https://www.kali.org/).
 
 ```bash
 curl -s https://blackarch.org/strap.sh | sudo bash -
+```
+
+À d'autres moments, il sera nécessaire d'utiliser des paquets provenant de la communauté (les [AUR d'Arch Linux](https://aur.archlinux.org/)). Pour ce faire, il faut installer `yay` qui est un gestionnaire de paquets qui prend la succession de `yaourt`. Il est cependant important de noter que les AUR sont optimisés pour Arch Linux et peuvent venir avec certaines instabilités sur une distribution comme Manjaro.
+
+YAY n'est pas directement disponible sur les repos de Manjaro, mais on peut le trouver sur ceux de BlackArch. L'alternative est de compiler directement le projet.
+
+```bash
+sudo pacman -S blackarch/yay
+
+yay -Syyu
 ```
 
 ### Installation des headers
@@ -551,11 +549,17 @@ De la même façon que NVM gère les versions de Node.js, il est possible d'util
 
 ```bash
 curl -s "https://get.sdkman.io" | bash
-echo 'source "$HOME/.sdkman/bin/sdkman-init.sh"' >> ~/.profile
 source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-# Fish compatibility
+chmod u+w ~/.bashrc
+echo 'source "$HOME/.sdkman/bin/sdkman-init.sh"' >> ~/.bashrc
+chmod u-w ~/.bashrc
 
+chmod u+w ~/.zshrc
+echo 'source "$HOME/.sdkman/bin/sdkman-init.sh"' >> ~/.zshrc
+chmod u-w ~/.zshrc
+
+# Fish compatibility
 echo '#!/usr/bin/fish
 
 function sdk
@@ -606,7 +610,7 @@ rustup default stable
 Disposant d'un pack [JetBrains](https://www.jetbrains.com/) complet, il m'est possible d'installer les différents IDEs de l'entreprise à partir de la [JetBrains toolbox](https://www.jetbrains.com/toolbox-app/). C'est à travers cette interface qu'il est par la suite possible d'installer [Intellij](https://www.jetbrains.com/idea/), [Clion](https://www.jetbrains.com/fr-fr/clion/), [PyCharm](https://www.jetbrains.com/pycharm/), [DataGrip](https://www.jetbrains.com/datagrip/)... et de les maintenir à jour.
 
 ```bash
-sudo pacman -S gnome-keyring
+sudo pacman -S gnome-keyring fakeroot
 yay -S jetbrains-toolbox
 ```
 
@@ -658,6 +662,7 @@ code --install-extension k--kato.intellij-idea-keybindings
 Claude Code est l'agent d'aide au développement développé par [Anthropic](https://www.anthropic.com/). Il a l'avantage de fonctionner en ligne de commande et donc d'être indépendant d'un IDE. De plus il est possible de payer au token et non au mois. Ce qui peut s'avérer intéressant pour ne pas se retrouver frustré les mois où on utilise beaucoup l'IA et payer pour rien les mois où on ne l'utilise pas.
 
 ```bash
+sudo pacman -S debugedit
 yay -S claude-code
 claude install
 
@@ -770,12 +775,17 @@ Un client open source permettant d'utiliser n'importe quel backend d'IA (ChatGPT
 yay -S opencode-bin
 ```
 
-### [OpenAPI-generator](https://openapi-generator.tech/)
+### [RTK](https://github.com/rtk-ai/rtk)
 
-OpenAPI est un standard de description d'api REST. OpenAPI-generator est un outil maintenu par une grande communauté permettant de transformer un fichier OpenAPI en code client ou serveur dans de nombreux langages de programmation. Ce qui peut être une très bonne pratique afin de limiter les divergences entre la documentation et le code.
+RTK est une lib permettant de compresser les requêtes envoyées par ClaudeCode ou OpenCode.
+
+Pour fonctionner ce système modifie les outputs des commandes shell pour récupérer uniquement les informations essentielles. De cette façon, rtk permet d'économiser beaucoup de token.
 
 ```bash
-sudo pacman -S jre11-openjdk openapi-generator
+yay -S rtk-bin
+
+rtk init --global # Install on ClaudeCode
+rtk init -g --opencode # Install on OpenCode
 ```
 
 ### Android ADB
@@ -959,7 +969,7 @@ flatpak install --user com.brave.Browser
 Pour accéder au réseau Tor.
 
 ```bash
-flatpak install --user com.github.micahflee.torbrowser-launcher
+flatpak install --user org.torproject.torbrowser-launcher
 ```
 
 ### [W3m](http://w3m.sourceforge.net/)
@@ -1268,7 +1278,7 @@ Moonlight est un logiciel de streaming pour pouvoir récupérer le flux vidéo d
 
 ```bash
 sudo pacman -S vulkan-validation-layers vulkan-tools vulkan-intel gamemode libde265
-flatpak install com.moonlight_stream.Moonlight
+flatpak install --user com.moonlight_stream.Moonlight
 ```
 
 Au niveau du serveur, il est possible d'utiliser la technologie de streaming du [Nvidia Shield](https://www.nvidia.com/fr-fr/shield/). Mais il semblerait que l'option la plus viable soit [Sunshine](https://github.com/LizardByte/Sunshine) qui est une réimplémentation open source du protocole.
@@ -1422,12 +1432,12 @@ Magika est un outil développé par Google permettant d'identifier le type d'un 
 yay -S python-magika
 ```
 
-### [Insomnia](https://insomnia.rest/)
+### [Bruno](https://www.usebruno.com/)
 
-Pour permettre aux développeurs back-end de tester les APIs REST qu'ils développent. Le logiciel est assez similaire à [Postman](https://www.postman.com/), mais offre à mon sens une meilleure gestion des formats [Swagger](https://swagger.io/) et [OpenAPI](https://www.openapis.org/).
+Pour permettre aux développeurs back-end de tester les APIs REST qu'ils développent. Le logiciel est assez similaire à [Postman](https://www.postman.com/), mais offre en plus la possibilité de source-controller ses fichiers.
 
 ```bash
-flatpak install --user rest.insomnia.Insomnia
+flatpak install --user com.usebruno.Bruno
 ```
 
 ### [Deluge](https://www.deluge-torrent.org/)
