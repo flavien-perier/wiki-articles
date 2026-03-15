@@ -33,7 +33,7 @@ Toutes les commandes de cette documentation sont à exécuter en tant que root. 
 Pour une mise à jour de l'OS vers une nouvelle version de Fedora :
 
 ```bash
-dnf system-upgrade download --releasever=42
+dnf system-upgrade download --releasever=43
 dnf system-upgrade reboot
 ```
 
@@ -53,7 +53,7 @@ Installation des drivers Nvidia et configuration minimale du serveur :
 curl -s https://sh.flavien.io/shell.sh | bash -
 
 rm -f /etc/yum.repos.d/cuda-fedora*
-dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora42/x86_64/cuda-fedora42.repo
+dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora43/x86_64/cuda-fedora43.repo
 dnf config-manager addrepo --from-repofile=https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
 
 dnf clean all
