@@ -627,7 +627,7 @@ Cependant, il peut être long et fastidieux de mettre en place un environnement 
 C'est pourquoi j'utilise personnellement un ensemble de plugins nommé LazyVim, qui permet d'ajouter à NeoVim de nombreuses fonctionnalités, de quoi en faire un véritable IDE.
 
 ```bash
-sudo pacman -S neovim
+sudo pacman -S neovim gcc
 
 rm -Rf ~/.config/nvim
 git clone -q --depth 1 -- https://github.com/LazyVim/starter ~/.config/nvim
@@ -793,7 +793,7 @@ rtk init -g --opencode # Install on OpenCode
 Pour ceux qui travaillent de près ou de loin avec [Android](https://www.android.com/), l'outil [ADB](https://developer.android.com/studio/command-line/adb) est indispensable.
 
 ```bash
-sudo pacman -S android-tools
+sudo pacman -S android-tools android-udev
 ```
 
 ## Installation de [Docker](https://www.docker.com/) et [Podman](https://podman.io/)

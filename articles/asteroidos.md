@@ -179,7 +179,7 @@ then
     source /home/root/sync.conf
 
     curl -s -o /tmp/calendar.ics "$CALENDAR_URL"
-    icalconverter import /tmp/calendar.ics -d
+    su -l ceres -c "icalconverter import /tmp/calendar.ics -d"
 
     IP="$(ip -br -4 a show wlan0 | tr -s " " | cut -f3 -d " " | cut -f1 -d "/")"
     su -l ceres -c "notificationtool -o add --icon=ios-wifi --application=\"System\" --urgency=3 --hint=\"x-nemo-preview-summary WiFi\" --hint=\"x-nemo-preview-body IP: $IP\" \"WiFi\" \"IP: $IP\"" || true
