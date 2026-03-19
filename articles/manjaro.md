@@ -1482,6 +1482,15 @@ Voici un exemple simple visant à extraire les valeurs "a", "b" et "c" au sein d
 echo '{"values": [{"name": "a"}, {"name": "b"}, {"name": "c"}]}' | jq -cM ".values[].name"
 ```
 
+### [BorgBackup](https://www.borgbackup.org/)
+
+Il s'agit d'une puissante solution de backup pour Linux. Bien qu'il existe des interfaces, l'utilitaire en ligne de commande est largement suffisant pour faire simplement des sauvegardes hors site à travers le protocole SSH.
+
+```bash
+sudo pacman -S borg
+```
+
+
 ### [Smartmontools](https://www.smartmontools.org/)
 
 Smartmontools est un outil permettant de récupérer [les données SMART](https://fr.wikipedia.org/wiki/Self-Monitoring,_Analysis_and_Reporting_Technology) concernant l'état de santé d'un disque dur ou SSD : Vitesse d'écriture, lecture si des secteurs ont été détectés comme défaillants... Faire des analyses de temps à autre peut s'avérer pertinent afin d'éventuellement faire passer un disque dur ou SSD interne en simple support de sauvegarde externe.
@@ -1654,6 +1663,20 @@ Certains ordinateurs sont équipés d'écran tactile. Pour un support complètem
 ```bash
 sudo pacman -S xf86-input-wacom xf86-input-libinput
 ```
+
+Pour initialiser un backup sur un serveur en remote voici la commande :
+
+```bash
+borg init --encryption=repokey ssh://mon-server/~/backup
+```
+
+Il est à noter que pour que borg pilote le remote il faut aussi l'installer sur le serveur en remote. Dans le cas présent il s'agit d'un serveur Fedora :
+
+```bash
+sudo dnf install borgbackup
+```
+
+Pour faire son script de backup personnalisé le plus simple est encore de se référer [à la documentation officielle](https://borgbackup.readthedocs.io/en/stable/quickstart.html).
 
 ### Activation des programmes par défaut
 
