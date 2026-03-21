@@ -262,8 +262,10 @@ firewall-cmd --permanent --add-service=jupyter
 
 [Ollama](https://ollama.com/) est une technologie permettant d'exécuter des modèles de langages avec des templates. L'architecture de l'application s'inspire globalement de Docker, ce qui rend pertinent son installation au niveau de l'hyperviseur et non sur un sous-système conteneurisé / virtualisé.
 
+Il existe dans les repos de fedora une version ancienne de Ollama, mais cette dernière ne permet pas de faire tourner de model à jour. Il est donc préférable d'utiliser une version plus récente.
+
 ```bash
-dnf install ollama
+curl -fsSL https://ollama.com/install.sh | sh
 
 mkdir -p /var/lib/ollama
 groupadd ollama
@@ -275,25 +277,23 @@ Description=Ollama Service
 After=network-online.target
 
 [Service]
-ExecStart=/usr/bin/ollama serve
+ExecStart=/usr/local/bin/ollama serve
 User=ollama
 Group=ollama
 Restart=always
 RestartSec=3
-Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/lib/snapd/snap/bin"
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 Environment="OLLAMA_HOST=0.0.0.0:11434"
 
 [Install]
 WantedBy=default.target' | tee /etc/systemd/system/ollama.service
 
 systemctl daemon-reload
-systemctl enable ollama
-systemctl start ollama
+systemctl enable --now ollama
 
-ollama pull mixtral
-ollama pull mistral-nemo
-ollama pull codestral
-ollama pull gpt-oss
+ollama pull llama4:16x17b
+ollama pull devstral-small-2
+ollama pull ServiceNow-AI/Apriel-1.6-15b-Thinker:Q4_K_M
 
 echo '<service>
   <short>Ollama</short>
@@ -312,8 +312,7 @@ Pour installer la base de KVM :
 dnf install @virtualization
 dnf install libvirt virt-install qemu-kvm libvirt-devel virt-top libguestfs-tools
 
-systemctl enable libvirtd
-systemctl start libvirtd
+systemctl enable --now libvirtd
 
 usermod -a -G libvirt admin
 usermod -a -G kvm admin

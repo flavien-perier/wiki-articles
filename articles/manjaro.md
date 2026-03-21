@@ -344,7 +344,10 @@ iptables -t filter -A OUTPUT -p udp --dport 48000 -j ACCEPT -m owner --uid-owner
 iptables -t filter -A OUTPUT -p udp --dport 48002 -j ACCEPT -m owner --uid-owner 1000
 iptables -t filter -A OUTPUT -p udp --dport 48010 -j ACCEPT -m owner --uid-owner 1000
 
-# Synergy
+## Ollama
+iptables -t filter -A OUTPUT -p tcp --dport 11434 -j ACCEPT -m owner --uid-owner 1000
+
+## Synergy
 iptables -t filter -A INPUT -p tcp --dport 24800 -d 10.0.0.0/8 -j ACCEPT
 iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 10.0.0.0/8 -j ACCEPT -m owner --uid-owner 1000
 
@@ -775,6 +778,35 @@ Un client open source permettant d'utiliser n'importe quel backend d'IA (ChatGPT
 yay -S opencode-bin
 ```
 
+Pour utiliser OpenCode avec un serveur Ollama local, il suffit de rajouter la configuartion suivante :
+
+```bash
+mkdir -p ~/.config/opencode
+
+echo '{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama",
+      "options": {
+        "baseURL": "http://192.168.1.XXX:11434/v1"
+      },
+      "models": {
+        "llama4": {
+          "name": "llama4:16x17b"
+        },
+        "devstral-small-2": {
+          "name": "devstral-small-2"
+        },
+        "ServiceNow-AI/Apriel-1.6-15b-Thinker": {
+          "name": "ServiceNow-AI/Apriel-1.6-15b-Thinker:Q4_K_M"
+        }
+      }
+    }
+  }
+}' > ~/.config/opencode/opencode.json
+
 ### [RTK](https://github.com/rtk-ai/rtk)
 
 RTK est une lib permettant de compresser les requêtes envoyées par ClaudeCode ou OpenCode.
@@ -785,7 +817,7 @@ Pour fonctionner ce système modifie les outputs des commandes shell pour récup
 yay -S rtk-bin
 
 rtk init --global # Install on ClaudeCode
-rtk init -g --opencode # Install on OpenCode
+rtk init --global --opencode # Install on OpenCode
 ```
 
 ### Android ADB
