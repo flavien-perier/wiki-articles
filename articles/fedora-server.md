@@ -292,8 +292,7 @@ systemctl daemon-reload
 systemctl enable --now ollama
 
 ollama pull llama4:16x17b
-ollama pull devstral-small-2
-ollama pull ServiceNow-AI/Apriel-1.6-15b-Thinker:Q4_K_M
+ollama pull qwen3-coder-next:latest
 
 echo '<service>
   <short>Ollama</short>

@@ -796,11 +796,8 @@ echo '{
         "llama4": {
           "name": "llama4:16x17b"
         },
-        "devstral-small-2": {
-          "name": "devstral-small-2"
-        },
-        "ServiceNow-AI/Apriel-1.6-15b-Thinker": {
-          "name": "ServiceNow-AI/Apriel-1.6-15b-Thinker:Q4_K_M"
+        "qwen3-coder-next": {
+          "name": "qwen3-coder-next:latest"
         }
       }
     }
@@ -1522,6 +1519,19 @@ Il s'agit d'une puissante solution de backup pour Linux. Bien qu'il existe des i
 sudo pacman -S borg
 ```
 
+Pour initialiser un backup sur un serveur en remote voici la commande :
+
+```bash
+borg init --encryption=repokey ssh://mon-server/~/backup
+```
+
+Il est à noter que pour que borg pilote le remote il faut aussi l'installer sur le serveur en remote. Dans le cas présent il s'agit d'un serveur Fedora :
+
+```bash
+sudo dnf install borgbackup
+```
+
+Pour faire son script de backup personnalisé le plus simple est encore de se référer [à la documentation officielle](https://borgbackup.readthedocs.io/en/stable/quickstart.html).
 
 ### [Smartmontools](https://www.smartmontools.org/)
 
@@ -1695,20 +1705,6 @@ Certains ordinateurs sont équipés d'écran tactile. Pour un support complètem
 ```bash
 sudo pacman -S xf86-input-wacom xf86-input-libinput
 ```
-
-Pour initialiser un backup sur un serveur en remote voici la commande :
-
-```bash
-borg init --encryption=repokey ssh://mon-server/~/backup
-```
-
-Il est à noter que pour que borg pilote le remote il faut aussi l'installer sur le serveur en remote. Dans le cas présent il s'agit d'un serveur Fedora :
-
-```bash
-sudo dnf install borgbackup
-```
-
-Pour faire son script de backup personnalisé le plus simple est encore de se référer [à la documentation officielle](https://borgbackup.readthedocs.io/en/stable/quickstart.html).
 
 ### Activation des programmes par défaut
 
