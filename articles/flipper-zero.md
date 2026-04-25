@@ -63,6 +63,13 @@ Le firmware [unleashed-firmware](https://github.com/DarkFlippers/unleashed-firmw
 
 Au moment du téléchargement, plusieurs versions du firmware sont proposées. La `n` ne contient que le firmware modifié, tandis que la `e` contient le firmware et [la plupart des outils communautaires](https://github.com/xMasterX/all-the-plugins). Il est donc bien plus intéressant de télécharger cette seconde version.
 
+Pour installer qFlipper (l'outil pour mettre à jour le firmware du Flipper Zero) sur Manjaro ou Arch Linux, il suffit de taper les commandes suivantes :
+
+```bash
+sudo usermod -aG uucp $USER
+yay -S qflipper
+```
+
 ### Utilisation en tant que clé de sécurité
 
 Dans ce cas précis, l'objectif est d'utiliser le Flipper Zero non pas comme un appareil offensif, mais défensif. Parmi les nombreux cas d'utilisation de l'appareil, il est possible de le connecter à un ordinateur afin de chiffrer ou signer des documents, ou encore l'utiliser comme moyen d'authentification. La clé privée utilisée est stockée sur la carte micro-sd de l'appareil et peut donc facilement être sauvegardée.
