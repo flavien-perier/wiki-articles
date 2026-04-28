@@ -262,7 +262,7 @@ firewall-cmd --permanent --add-service=jupyter
 
 [Ollama](https://ollama.com/) est une technologie permettant d'exécuter des modèles de langages avec des templates. L'architecture de l'application s'inspire globalement de Docker, ce qui rend pertinent son installation au niveau de l'hyperviseur et non sur un sous-système conteneurisé / virtualisé.
 
-Il existe dans les repos de fedora une version ancienne de Ollama, mais cette dernière ne permet pas de faire tourner de model à jour. Il est donc préférable d'utiliser une version plus récente.
+Il existe dans les repos de fedora une version ancienne de Ollama, mais cette dernière ne permet pas de faire tourner de modèle à jour. Il est donc préférable d'utiliser une version plus récente.
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh

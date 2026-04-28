@@ -29,6 +29,19 @@ sudo su
 curl https://sh.flavien.io/arch.sh | bash
 ```
 
+Si l'installation est faite sur un Arch Linux, il peut être nécessaire de se connecter à internet via la WiFi. Voici la procédure :
+
+```bash
+systemctl start iwd
+iwctl
+device list # liste les interfaces wifi détectées
+
+station wlan0 scan
+station wlan0 get-networks
+
+station wlan0 connect "SSID_NAME"
+```
+
 ### Mise à jour de Manjaro
 
 Maintenant que Manjaro est installé, nous allons le mettre à jour grâce à l'un des gestionnaires de paquets intégrés de la distribution. Pour ma part, j'utilise `pacman`, qui est le gestionnaire de paquets de la distribution Arch. Il est relativement difficile à utiliser et très peu intuitif, c'est pour cette raison que les développeurs de la distribution Manjaro ont rajouté un outil permettant de simplifier son utilisation `pamac`. Pour les utilisateurs venant d'une distribution basée sur [Debian](https://www.debian.org/), ou [RedHat](https://www.redhat.com/), il semblera sans aucun doute plus intuitif.
