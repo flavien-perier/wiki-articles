@@ -127,6 +127,21 @@ Il faut cependant être attentif à ne pas faire d'`opkg dist-upgrade`. Cela pos
 
 De même, des upgrades globaux (`opkg upgrade`) peuvent introduire des instabilités plus ou moins graves... Chose malheureusement symptomatique des distributions mal ou insuffisamment testées. Une fois la distribution installée, le plus sage est donc malheureusement de ne plus toucher à rien.
 
+## Optimisation
+
+La configuration de base d'AsteroidOS génère beaucoup de logs, ce qui finit par impacter l'autonomie de l'appareil et qui finit par remplir toute la place sur le disque (qui est fortement limité).
+
+Une solution peut donc être de réduire le spam de log et d'éviter de les stocker sur disque, mais d'uniquement les conserver en mémoire :
+
+```bash
+echo '
+Storage=volatile
+SystemMaxUse=32M
+RuntimeMaxUse=32M
+MaxLevelStore=warning
+' >> /etc/systemd/journald.conf
+```
+
 ## Watchface
 
 J'utilise une watchface custom pour la montre. Pour l'installer, il suffit de taper les commandes depuis un pc :

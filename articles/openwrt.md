@@ -43,14 +43,15 @@ OpenWRT utilise le gestionnaire de paquets apk. Il suffit de faire un `apk updat
 
 Un routeur étant un équipement réseau particulièrement sensible il est conseillé de le faire assez régulièrement.
 
-## WiFi
+Pour mettre à jour l'image de l'os, il faut télécharger le patch (sysupgrade) et exécuter la commande suivante sur la machine :
 
-Il est possible de rajouter une carte WiFi sur ce routeur notamment avec la carte [BPI-R4-NIC-BE14](https://openwrt.org/inbox/toh/sinovoip/bananapi_bpi-r4#bpi-r4-nic-be14). Le problème, c'est que la distribution fournie par OpenWRT ne gère pas bien cette carte (on se retrouve avec une puissance inférieure à ce qu'elle devrait être). Il va donc être nécessaire de rajouter le driver officiel fourni par BananaPi.
+Le fichier sysupgrade doit être placé dans le dossier /tmp sur le serveur à mettre à jour.
 
-- La première étape consiste à télécharger une version modifiée du driver [ici](https://drive.google.com/file/d/1qneVF1a6ZGMDoLLPpQw2LPYZsRKXto1T/view?usp=sharing).
-- Il ne faut jamais avoir complète confiance dans un lien Google Drive... Un petit coup de [VirusTotal](https://www.virustotal.com/) s'impose.
-- Enfin il faut placer ce fichier sur notre routeur à l'emplacement : `/lib/firmware/mediatek/mt7996/mt7996_eeprom_233_2i5i6i.bin`.
-- Rebooter le routeur.
+```bash
+sysupgrade -c -v /tmp/openwrt-mediatek-filogic-bananapi_bpi-r4-squashfs-sysupgrade.itb
+```
+
+À noter qu'ici la configuration (contenu dans `/etc`) est conservée, mais le reste de l'OS est réinitialisé. Il faut donc réinstaller les différents soft.
 
 ## [WireGuard](https://www.wireguard.com/)
 
