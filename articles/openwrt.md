@@ -82,7 +82,7 @@ cat << EOF > $CLIENT.conf
 [Interface]
 PrivateKey = $(cat $CLIENT.key)
 Address = $CLIENT_IP/24
-DNS = 208.67.222.222
+DNS = 1.1.1.1
 
 [Peer]
 PublicKey = $(wg show vpn public-key)

@@ -129,7 +129,7 @@ sudo pacman -S linux$(uname -r | cut -f1,2 -d. | tr -d ".")-headers
 
 À l'installation, Manjaro utilise [NetworkManager](https://networkmanager.dev/) qui permet de gérer le réseau de manière automatique. Cependant, le DNS inscrit dans le fichier `resolve.conf` sera automatiquement remplacé par celui fourni par le DHCP.
 
-Avec le code suivant, nous allons forcer l'utilisation des DNS [OpenDNS](https://www.opendns.com/), [Cloudflare](https://www.cloudflare.com/fr-fr/dns) et [OpenNIC](https://www.opennic.org/).
+Avec le code suivant, nous allons forcer l'utilisation des DNS [Cloudflare](https://www.cloudflare.com/fr-fr/dns), [Mullvad](https://mullvad.net/) et [OpenNIC](https://www.opennic.org/).
 
 ```bash
 mkdir -p /etc/NetworkManager/conf.d
@@ -140,15 +140,15 @@ EOL
 
 cat << EOL > /etc/systemd/resolved.conf
 [Resolve]
-DNS=208.67.222.222 1.1.1.1 151.80.222.79
-FallbackDNS=208.67.220.220 1.0.0.1
+DNS=1.1.1.1 194.242.2.2 94.247.43.254
+FallbackDNS=1.0.0.1 152.53.15.127
 EOL
 
 rm -f /etc/resolv.conf
 ln -s /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
-systemctl enable systemd-resolved
-systemctl enable NetworkManager
+systemctl enable --now systemd-resolved
+systemctl enable --now NetworkManager
 ```
 
 ### Configuration du Shell
@@ -271,11 +271,11 @@ iptables -t filter -A OUTPUT -p icmp --icmp-type 8 -j ACCEPT -m owner --uid-owne
 # Authorization to open port
 
 ## dns
-iptables -t filter -A OUTPUT -p udp --dport 53 -d 208.67.222.222 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 53 -d 208.67.220.220 -j ACCEPT
 iptables -t filter -A OUTPUT -p udp --dport 53 -d 1.1.1.1 -j ACCEPT
 iptables -t filter -A OUTPUT -p udp --dport 53 -d 1.0.0.1 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 53 -d 151.80.222.79 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 53 -d 194.242.2.2 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 53 -d 94.247.43.254 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 53 -d 152.53.15.127 -j ACCEPT
 
 ## dhcp
 iptables -A OUTPUT -p udp --dport 67:68 --sport 67:68 -d 10.0.0.0/8 -j ACCEPT
@@ -476,10 +476,8 @@ WantedBy=multi-user.target
 EOL
 
 systemctl daemon-reload
-systemctl enable custom-firewall-v4
-systemctl enable custom-firewall-v6
-systemctl start custom-firewall-v4
-systemctl start custom-firewall-v6
+systemctl enable --now custom-firewall-v4
+systemctl enable --now custom-firewall-v6
 ```
 
 Enfin, nous allons ajouter quelques commandes :
