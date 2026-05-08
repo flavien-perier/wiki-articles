@@ -180,16 +180,13 @@ echo '#!/bin/bash
 
 set -e
 
-STATE="$(connmanctl state | grep State | tr -d " " | cut -f2 -d=)"
+touch /tmp/calendar-sync-last-update
+SYNC_DATE="$(date +%F)"
+LAST_SYNC_DATE="$(cat /tmp/calendar-sync-last-update)"
 
-if connmanctl state | grep -q "State = ready"
+if [[ "$SYNC_DATE" != "$LAST_SYNC_DATE" ]]
 then
-  touch /tmp/calendar-sync-last-update
-
-  SYNC_DATE="$(date +%F)"
-  LAST_SYNC_DATE="$(cat /tmp/calendar-sync-last-update)"
-
-  if [[ "$SYNC_DATE" != "$LAST_SYNC_DATE" ]]
+  if connmanctl state | grep -q "State = ready"
   then
     source /home/root/sync.conf
 
@@ -224,7 +221,7 @@ Requires=calendar-sync.service
 
 [Timer]
 Unit=calendar-sync.service
-OnUnitInactiveSec=5m
+OnUnitInactiveSec=2hours
 
 [Install]
 WantedBy=timers.target
