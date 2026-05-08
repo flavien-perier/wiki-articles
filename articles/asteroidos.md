@@ -213,6 +213,7 @@ Type=oneshot
 [Install]
 WantedBy=network-online.target
 EOL
+chmod 755 /etc/systemd/system/calendar-sync.service
 
 cat << EOL > /etc/systemd/system/calendar-sync.timer
 [Unit]
@@ -226,6 +227,7 @@ OnUnitInactiveSec=2hours
 [Install]
 WantedBy=timers.target
 EOL
+chmod 755 /etc/systemd/system/calendar-sync.timer
 
 systemctl enable --now calendar-sync.service
 systemctl enable --now calendar-sync.timer
