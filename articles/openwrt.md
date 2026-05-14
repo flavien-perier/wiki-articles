@@ -54,13 +54,6 @@ chmod 700 /root/fix-wifi.sh
 reboot
 ```
 
-Une fois toutes ces manipulations effectuées, il est possible de changer le backend cryptographique pour la sécurisation du WiFi afin d'adopter OpenSSL, réputé plus testé et plus fiable :
-
-```bash
-apk del wpad-basic-mbedtls
-apk add wpad-openssl
-```
-
 ## Mise à jour
 
 OpenWRT utilise le gestionnaire de paquets apk. Il suffit de faire un `apk update` puis un `apk upgrade` pour mettre la distribution à jour.
