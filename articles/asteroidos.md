@@ -234,6 +234,22 @@ systemctl enable --now calendar-sync.timer
 systemctl daemon-reload
 ```
 
+## Fix techniques
+
+### Écran qui ne s'éteint pas
+
+Sur plusieurs de mes installations d'AsteroidOS, je me suis retrouvé face à un écran qui ne s'éteint plus de manière automatique (ce qui impacte évidemment énormément la batterie).
+
+La meilleure solution que j'ai trouvée est de réinitialiser [mce](https://github.com/sailfishos/mce) (un démon permettant des interactions avec le hardware).
+
+Pour ce faire, c'est relativement simple :
+
+```bash
+systemctl stop mce
+rm -f /var/lib/mce/builtin-gconf.values
+systemctl start mce
+```
+
 ## Sources
 
 - [AsteroidOS](https://asteroidos.org/)
