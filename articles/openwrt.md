@@ -37,6 +37,30 @@ ssh-copy-id -i ~/.ssh/openwrt root@192.168.1.1
 apk add openssh-sftp-server
 ```
 
+## WiFi
+
+Par défaut la carte Banana Pi R4 ne bénéficie pas de module WiFi. Il est donc nécessaire de rajouter le module [Banana Pi R4 NIC BE14](https://docs.banana-pi.org/en/BPI-R4/BananaPi_BPI-R4-NIC-BE14). Cependant, ce dernier a un problème avec les versions officielles de Banana Pi. Le problème a été récemment patché, mais il va quand même falloir exécuter le script suivant :
+
+```bash
+echo 'overlay="mt7988a-bananapi-bpi-r4-wifi-be14"
+current="$(fw_printenv -n bootconf_extra 2>/dev/null)"
+if [ -n "${current}" ]; then
+    fw_setenv bootconf_extra "${current}#${overlay}"
+else
+    fw_setenv bootconf_extra "${overlay}"
+fi' > /root/fix-wifi.sh
+chmod 700 /root/fix-wifi.sh
+/root/fix-wifi.sh
+reboot
+```
+
+Une fois toutes ces manipulations effectuées, il est possible de changer le backend cryptographique pour la sécurisation du WiFi afin d'adopter OpenSSL, réputé plus testé et plus fiable :
+
+```bash
+apk del wpad-basic-mbedtls
+apk add wpad-openssl
+```
+
 ## Mise à jour
 
 OpenWRT utilise le gestionnaire de paquets apk. Il suffit de faire un `apk update` puis un `apk upgrade` pour mettre la distribution à jour.
@@ -147,6 +171,7 @@ Les fichiers de configuration d'OpenWRT se situent dans `/etc/config`. C'est ce 
 - [OpenWRT : WireGuard](https://openwrt.org/docs/guide-user/services/vpn/wireguard/server)
 - [BananaPi : Banana Pi BPI-R4](https://wiki.banana-pi.org/Banana_Pi_BPI-R4)
 - [GitHub : BPI-R4, wifi got worse with the latest snapshot](https://github.com/openwrt/openwrt/issues/18693)
+- [GitHub : wifi txpower value is very low](https://github.com/openwrt/openwrt/issues/17489)
 - [LaFibre.info : [TUTORIEL] Remplacer sa bbox par un routeur OpenWRT (Avec IPTV)](https://lafibre.info/remplacer-bbox/tutoriel-remplacer-sa-bbox-par-un-routeur-openwrt-avec-iptv/)
 - [LaFibre.info : Config OpenWRT derrière ONT Bouygues](https://lafibre.info/remplacer-bbox/config-openwrt-derriere-ont-bouygues/)
 - [Getting Started BPI-R4](https://docs.banana-pi.org/en/BPI-R4/GettingStarted_BPI-R4)
