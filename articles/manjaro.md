@@ -1057,7 +1057,7 @@ while true ; do date ; natpmpc -a 1 0 udp 60 -g 10.2.0.1 && natpmpc -a 1 0 tcp 6
 Pour les utilisateurs du ProtonMailBridge, il faut penser à désactiver la sécurité pour le SMTP entre Thunderbird et le bridge. Il semblerait que Thunderbird n'autorise plus du tout les certificats autosignés générés par le Bridge pour les messages sortants.
 
 ```bash
-flatpak install --user org.mozilla.Thunderbird
+flatpak install --user org.mozilla.thunderbird_esr
 ```
 
 ### [Discord](https://discord.com/)
