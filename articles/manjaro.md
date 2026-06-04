@@ -684,7 +684,37 @@ sudo pacman -S socat
 npm install -g @anthropic-ai/sandbox-runtime
 ```
 
-Voici une configuration de claude code par défaut pour qu'il s'exécute dans un environnement sandboxé, qu'il envoie moins de télémétrie et qu'il pose moins de questions sur les commandes qu'il a le droit ou non d'exécuter :
+Pour améliorer son usage de Claude Code, il peut être intéressant de rajouter différents plugins. Il existe différents types d'extensions pour cet outil :
+
+- Les [LSP](https://fr.wikipedia.org/wiki/Language_Server_Protocol) (Language Server Protocol) : Il s'agit d'un type de module habituellement utilisé par les IDEs pour interpréter un langage. Utilisé dans Claude cela permet d'avoir une vérification syntaxique plus formelle :
+
+```bash
+claude plugin install kotlin-lsp@claude-plugins-official
+claude plugin install jdtls-lsp@claude-plugins-official
+claude plugin install typescript-lsp@claude-plugins-official
+```
+
+- Les [MCP](https://modelcontextprotocol.io/) (Model Context Protocol) : Il s'agit d'un standard défini par Anthropic permettant à un agent IA de piloter un outil. Dans une entreprise, il peut par exemple être intéressant de laisser la possibilité à un agent de contrôler son serveur GitLab :
+
+```bash
+sudo pacman -S glab
+claude mcp add --transport stdio gitlab -- glab mcp serve
+
+claude plugin install playwright@claude-plugins-official
+claude plugin install atlassian@claude-plugins-official
+claude plugin install figma@claude-plugins-official
+```
+
+- Les [Skills](https://agentskills.io/) : Il s'agit d'un autre standard du monde de l'IA permettant de préenregistrer un context avec des prompts, des agents, des outils...
+
+```bash
+claude plugin install superpowers@claude-plugins-official
+claude plugin install code-simplifier@claude-plugins-official
+claude plugin install code-review@claude-plugins-official
+claude plugin install frontend-design@claude-plugins-official
+```
+
+Pour finir Claude peut supporter de nombreux paramètres. Voici un exemple de configuration pour activer le sandboxing, réduire la télémétrie et limiter les interactions inutiles avec l'utilisateur :
 
 ```bash
 echo '{
@@ -814,6 +844,7 @@ echo '{
     }
   }
 }' > ~/.config/opencode/opencode.json
+```
 
 ### [RTK](https://github.com/rtk-ai/rtk)
 
