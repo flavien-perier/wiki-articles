@@ -714,6 +714,15 @@ claude plugin install code-review@claude-plugins-official
 claude plugin install frontend-design@claude-plugins-official
 ```
 
+Dans la liste des outils on peut rajouter [Playwright](https://playwright.dev/). Il s'agit initialement d'un framework de test front, mais grâce à son MCP, claude va pouvoir contrôler un navigateur. Malheureusement ça va être compliqué à faire fonctionner avec un navigateur sandboxé par flatpak. On va donc installer un navigateur chromium directement sur l'OS pour que claude puisse facilement y accéder.
+
+```bash
+sudo pacman -S chromium
+npm install -g playwright
+npx playwright install chromium
+npx @playwright/mcp install-browser chrome-for-testing
+```
+
 Pour finir Claude peut supporter de nombreux paramètres. Voici un exemple de configuration pour activer le sandboxing, réduire la télémétrie et limiter les interactions inutiles avec l'utilisateur :
 
 ```bash
@@ -1739,6 +1748,19 @@ echo 'XDG_CURRENT_DESKTOP=XFCE' | tee -a /etc/environment
 systemctl --user restart xdg-desktop-portal.service xdg-desktop-portal-gtk.service
 ```
 Une fois ces actions effectuées, les liens devraient être de nouveau cliquables dans les applications XFCE.
+
+### Partage de dossier avec Flatpak
+
+Chaque application Flatpak a ses propres paramètres, mais certaines d'entre elles ne peuvent pas du tout accéder aux fichiers de notre utilisateur.
+
+C'est un très bon point en terme de sécurité, mais nettement moins bon en terme d'usage.
+
+Un compromis est d'autoriser toutes les applications à accéder aux dossiers `~/Download` et `~/Public`. Ces dossiers ne doivent rien contenir d'important et ce n'est normalement pas problématique que toutes les applications puissent y accéder.
+
+```bash
+flatpak override --user --filesystem=$HOME/Public
+flatpak override --user --filesystem=$HOME/Downloads
+```
 
 ### Faire fonctionner un écran tactile
 
