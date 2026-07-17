@@ -820,6 +820,8 @@ echo '{
 }' | tee ~/.claude/settings.json
 ```
 
+Il est possible de démarrer Claude dirrectement en auto-mode : `claude --permission-mode auto`
+
 ### [Open Code](https://opencode.ai/)
 
 Un client open source permettant d'utiliser n'importe quel backend d'IA (ChatGPT, Gemini, Claude, Ollama...) pour effectuer des tâches de code. C'est un équivalent de Claude Code relativement compatible avec ce dernier dans l'ensemble (il interprète les fichiers Claude.md et utilise les agents de ce dernier).
@@ -1086,7 +1088,7 @@ sudo chmod +x "/etc/openvpn/update-resolv-conf"
 flatpak install --user com.protonvpn.www
 ```
 
-Par défaut, le p2p ne va pas fonctionner en upload. La commande suivante va permettre de créer un mapping de port avec le serveur VPN. Il n'y aura plus qu'à donner le port dans la configuration de deluge pour pouvoir uploader.
+Par défaut, le p2p ne va pas fonctionner en upload. La commande suivante va permettre de créer un mapping de port avec le serveur VPN. Il n'y aura plus qu'à donner le port dans la configuration de transmission pour pouvoir uploader.
 
 ```bash
 while true ; do date ; natpmpc -a 1 0 udp 60 -g 10.2.0.1 && natpmpc -a 1 0 tcp 60 -g 10.2.0.1 || { echo -e "ERROR with natpmpc command \a" ; break ; } ; sleep 45 ; done
@@ -1520,12 +1522,12 @@ Pour permettre aux développeurs back-end de tester les APIs REST qu'ils dévelo
 flatpak install --user com.usebruno.Bruno
 ```
 
-### [Deluge](https://www.deluge-torrent.org/)
+### [Transmission](https://transmissionbt.com/)
 
 Un client torrent complet.
 
 ```bash
-flatpak install --user org.deluge_torrent.deluge
+flatpak install --user com.transmissionbt.Transmission
 ```
 
 ### [7zip](http://www.7-zip.org/)
