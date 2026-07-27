@@ -62,6 +62,11 @@ Il est également possible d'aller plus loin en allant dans les paramètres avan
 - `browser.ml.chat.enabled`: false
 - `browser.tabs.groups.smart.enabled`: false
 
+#### Activation des fonctionnalités de protection contre le fingerprinting
+
+- `privacy.fingerprintingProtection`: true
+- `privacy.baselineFingerprintingProtection`: true
+
 ## Extensions
 
 ### Vie privée
@@ -71,6 +76,10 @@ Il est également possible d'aller plus loin en allant dans les paramètres avan
 ![uBlock Origin logo](https://medias.flavien.io/articles/firefox/ublock-origin.webp)
 
 Cette extension permet de bloquer les pubs que l'on peut trouver sur différents sites internet, ou avant les vidéos YouTube.
+
+Il s'agit davantage d'un framework de listes de blocage que d'une application clé en main.
+
+Il est donc possible d'activer de nombreuses listes de blocage supplémentaires qui peuvent aller beaucoup plus loin qu'un simple bloqueur de publicité. Parmi ces listes, je recommande notamment d'activer celles qui sont en rapport avec le blocage des bannières de cookies.
 
 #### [Privacy Badger](https://addons.mozilla.org/en-US/firefox/addon/privacy-badger17/)
 
@@ -107,20 +116,6 @@ Dans les paramètres de cette application, je désactive l'option `Filtrer ETag`
 
 Avec les extensions précédentes, nous pouvons bloquer de manière assez efficace les différents composants d'un site web ayant pour vocation de nous traquer. Cependant, parmi toutes les méthodes pouvant être utilisées pour nous suivre à la trace, on peut trouver les CDN. Un CDN est un site mettant à la disposition d'autres sites différents contenus tels que des scripts JavaScript, des polices de caractères... Les systèmes de tracking peuvent donc profiter du fait que les clients vont envoyer des requêtes pour récupérer ces contenus afin de savoir sur quel site nous sommes. Le problème, c'est que ces contenus sont bien souvent nécessaires au bon fonctionnement d'un site. Par exemple, de nombreux sites ont besoin de jQuery pour fonctionner, ce dernier étant généralement délivré à travers des CDN. L'extension Decentraleyes va simplement régler le problème en téléchargeant les scripts délivrés par les CDN sur la machine de l'utilisateur. De cette manière, le nombre de requêtes transmises aux CDN se trouve grandement réduit. De plus, pour les connexions limitées, ceci a aussi pour avantage d'éviter les retéléchargements inutiles de contenus que l'on a déjà. Ce qui permet d'économiser de la bande passante.
 
-#### [Random User-Agent](https://addons.mozilla.org/en-US/firefox/addon/random_user_agent/)
-
-![Random User-Agent logo](https://medias.flavien.io/articles/firefox/random_user_agent.webp)
-
-Lorsqu'un navigateur envoie une requête à un site web, il envoie dans sa requête un User-Agent. Cette information permet au site de savoir quel navigateur est utilisé, sa version et éventuellement le système d'exploitation qui le porte.
-
-Grâce à cette extension, cette information est falsifiée et régénérée toutes les 10 minutes. Ainsi, les traqueurs peuvent très bien croire que vous utilisez Google Chrome sur un Mac alors que vous utilisez en réalité Firefox sur un Windows. Cela vous rend plus difficile à suivre et protège donc un peu plus votre anonymat.
-
-Cependant, cette application peut aussi causer quelques petits désagréments. Par exemple, si on pense que vous êtes sur Internet Explorer ou sur un mobile, il est probable que certains sites n'activent pas les mêmes options. Je vous conseille donc de configurer la liste des User-Agents que l'application peut utiliser et de ne cocher que les "Firefox", "Chrome" et "Edge" sur "Windows", "Mac" et "Linux". Il s'agit des combinaisons les plus supportées et qui, en général, posent le moins de problèmes.
-
-![Configuration de Random User-Agent](https://medias.flavien.io/articles/firefox/random_user_agent-configuration.webp)
-
-Cette extension peut également poser quelques problèmes sur des sites de téléchargement, où l’on va nous proposer de télécharger les versions "Mac" ou "Linux" de nos applications favorites.
-
 #### [Auto Tab Discard](https://addons.mozilla.org/en-US/firefox/addon/auto-tab-discard/)
 
 ![Auto Tab Discard logo](https://medias.flavien.io/articles/firefox/auto-tab-discard.webp)
@@ -152,14 +147,6 @@ Cette extension permet donc tout simplement d'accéder à toutes ces information
 ![Floccus logo](https://medias.flavien.io/articles/firefox/floccus.webp)
 
 Il s'agit d'une application de synchronisation des favoris qui existe également sur les autres navigateurs. Elle a comme principale caractéristique d'implémenter [Nextcloud Bookmarks](https://apps.nextcloud.com/apps/bookmarks). Il est donc possible de gérer ses propres sauvegarde de favoris sur un nas à la maison et de synchroniser ces favoris entre différents navigateurs si nécessaire.
-
-#### [I still don't care about cookies](https://addons.mozilla.org/en-US/firefox/addon/istilldontcareaboutcookies/)
-
-![I still don't care about cookies logo](https://medias.flavien.io/articles/firefox/i-still-dont-care-about-cookies.webp)
-
-Cette application est un fork en open source de [I don't care about cookies](https://addons.mozilla.org/en-US/firefox/addon/i-dont-care-about-cookies/) qui avait été racheté par Avast.
-
-Si vous en avez marre de tous les bandeaux "Acceptez les cookies", cette application se charge automatiquement de cliquer sur "J'accepte" (ce n’est pas comme si on nous laisse vraiment le choix d'un autre côté) et de nous cacher les bandeaux en question. Simple et efficace pour une navigation sans encombre.
 
 #### [SponsorBlock](https://addons.mozilla.org/en-US/firefox/addon/sponsorblock/)
 
