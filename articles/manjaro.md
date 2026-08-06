@@ -673,7 +673,7 @@ code --install-extension k--kato.intellij-idea-keybindings
 
 ### [Claude Code](https://www.claude.com/product/claude-code)
 
-Claude Code est l'agent d'aide au développement développé par [Anthropic](https://www.anthropic.com/). Il a l'avantage de fonctionner en ligne de commande et donc d'être indépendant d'un IDE. De plus il est possible de payer au token et non au mois. Ce qui peut s'avérer intéressant pour ne pas se retrouver frustré les mois où on utilise beaucoup l'IA et payer pour rien les mois où on ne l'utilise pas.
+Claude Code est l'agent d'aide au développement développé par [Anthropic](https://www.anthropic.com/). Il est actuellement l'outil de ce genre le plus avancé du marché. Son seul petit problème pourrait être son prix... Avec un abonnement à 20€ par mois on peut avoir un assistant assez vite limité, mais à partir de 100€ par mois on a accès à un assistant très avancé pouvant nous aider dans des tâches très complexes. 
 
 ```bash
 sudo pacman -S debugedit
@@ -723,7 +723,7 @@ npx playwright install chromium
 npx @playwright/mcp install-browser chrome-for-testing
 ```
 
-Pour finir Claude peut supporter de nombreux paramètres. Voici un exemple de configuration pour activer le sandboxing, réduire la télémétrie et limiter les interactions inutiles avec l'utilisateur :
+Ensuite, on peut ajouter un peu de configuration à Claude peut supporter de nombreux paramètres. Voici un exemple de configuration pour activer le sandboxing, réduire la télémétrie et limiter les interactions inutiles avec l'utilisateur :
 
 ```bash
 echo '{
@@ -743,11 +743,6 @@ echo '{
     }
   },
 
-  "env": {
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
-    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
-  },
-
   "hooks": {
     "PostToolUse": [
       {
@@ -765,12 +760,12 @@ echo '{
   "permissions": {
     "allow": [
       "Read",
-      "Write",
-      "Update",
+      "Bash(ls:*)",
       "Bash(git:*)",
       "Bash(tree:*)",
       "Bash(find:*)",
       "Bash(grep:*)",
+      "Bash(rg:*)",
       "Bash(head:*)",
       "Bash(tail:*)",
       "Bash(mkdir:*)",
@@ -820,7 +815,27 @@ echo '{
 }' | tee ~/.claude/settings.json
 ```
 
-Il est possible de démarrer Claude dirrectement en auto-mode : `claude --permission-mode auto`
+Utilisant fish dans la vie de tous les jours, ma session Claude devrait se retrouver également obligé d'utiliser ce shell. Pour résoudre le problème, il suffit d'écrire un petit wrapper permettant d'obliger le lancement de Claude à travers zsh (qui est beaucoup mieux supporté par l'agent) :
+
+```bash
+# Create wrapper
+chmod 700 ~/bin
+
+echo '#!/bin/zsh
+
+SHELL='/bin/zsh' zsh -lc "claude --permission-mode auto $@"
+' | tee ~/bin/claude-zsh
+
+chmod 500 ~/bin/claude-zsh
+chmod 500 ~/bin
+
+# Create alias
+chmod 600 ~/.alias
+
+echo 'alias use-zsh="claude-zsh"' >> ~/.alias
+
+chmod 400 ~/.alias
+```
 
 ### [Open Code](https://opencode.ai/)
 
@@ -830,7 +845,7 @@ Un client open source permettant d'utiliser n'importe quel backend d'IA (ChatGPT
 yay -S opencode-bin
 ```
 
-Pour utiliser OpenCode avec un serveur Ollama local, il suffit de rajouter la configuartion suivante :
+Pour utiliser OpenCode avec un serveur Ollama local, il suffit de rajouter la configuration suivante :
 
 ```bash
 mkdir -p ~/.config/opencode
@@ -855,6 +870,28 @@ echo '{
     }
   }
 }' > ~/.config/opencode/opencode.json
+```
+
+De la même façon que pour claude-code, si on utilise opencode depuis un shell fish, on peut rencontrer des problèmes liés au fait que l'agent ne va pas utiliser bash ou zsh (et donc un shell qui respecte moins les standards POSIX).
+
+```bash
+# Create wrapper
+chmod 700 ~/bin
+
+echo '#!/bin/zsh
+
+SHELL='/bin/zsh' zsh -lc "opencode $@"
+' | tee ~/bin/opencode-zsh
+
+chmod 500 ~/bin/opencode-zsh
+chmod 500 ~/bin
+
+# Create alias
+chmod 600 ~/.alias
+
+echo 'alias use-zsh="opencode-zsh"' >> ~/.alias
+
+chmod 400 ~/.alias
 ```
 
 ### [RTK](https://github.com/rtk-ai/rtk)
@@ -960,6 +997,7 @@ Le script suivant permet d'exposer facilement le dossier `~/Public` sur un lecte
 
 ```bash
 chmod 700 ~/bin
+
 echo '#!/bin/bash
 
 case $1 in
