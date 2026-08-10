@@ -823,7 +823,7 @@ chmod 700 ~/bin
 
 echo '#!/bin/zsh
 
-SHELL='/bin/zsh' zsh -lc "claude --permission-mode auto $@"
+SHELL="/bin/zsh" zsh -lc "claude --permission-mode auto $@"
 ' | tee ~/bin/claude-zsh
 
 chmod 500 ~/bin/claude-zsh
@@ -880,7 +880,7 @@ chmod 700 ~/bin
 
 echo '#!/bin/zsh
 
-SHELL='/bin/zsh' zsh -lc "opencode $@"
+SHELL="/bin/zsh" zsh -lc "opencode $@"
 ' | tee ~/bin/opencode-zsh
 
 chmod 500 ~/bin/opencode-zsh
