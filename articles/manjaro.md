@@ -915,6 +915,38 @@ Pour ceux qui travaillent de près ou de loin avec [Android](https://www.android
 sudo pacman -S android-tools android-udev
 ```
 
+Le package contient deux commandes :
+
+- `adb`: Qui permet de piloter son téléphone (accès aux logs, au shell, possibilité de déposer ou récupérer des fichiers, d'installer des apps...).
+- `fastboot` Qui permet de piloter le secteur de boot du téléphone. C'est lui qu'on utilise notamment pour flasher un nouvel OS.
+
+Quelques commandes utiles :
+
+- `adb usb`: Permet de connecter son téléphone en USB.
+- `adb shell`: Accès en ligne de commandes au téléphone.
+- `adb logcat`: Accès aux logs du téléphone.
+- `adb install app.apk`: Permet d'installer une application sur son téléphone depuis son pc.
+- `adb pull remote/file local/file`: Permet de récupérer un fichier stocké sur le téléphone.
+- `adb push local/file remote/file`: Permet de pousser un fichier stocké sur son pc.
+
+### [Ansible](https://www.redhat.com/en/ansible-collaborative)
+
+Ansible est un outil développé par RedHat permettant de faire de l'IaC (Infrastructure as Code). C'est-à-dire permettre de source contrôler la configuration de serveur et donc de la rendre reproductible.
+
+Ansible a une philosophie basée sur les états, on ne va donc pas écrire de façon à dire "install nginx", mais plutôt "vérifie que nginx est bien installé". Ce qui signifie qu'Ansible ne refera pas une opération qui a déjà été faite et va donc limiter la plupart des erreurs liées au fait de rejouer un script qui a déjà été exécuté.
+
+Pour l'installer rien de plus simple :
+
+```bash
+sudo pacman -S ansible
+```
+
+Pour exécuter un playbook ansible :
+
+```bash
+ansible-playbook playbooks/playbook.yml
+```
+
 ## Installation de [Docker](https://www.docker.com/) et [Podman](https://podman.io/)
 
 Pour installer Docker :
@@ -993,7 +1025,7 @@ quickemu --fullscreen --display spice --vm macos-big-sur.conf
 
 SMB avec son implémentation [Samba](https://www.samba.org/) est une solution qui peut s'avérer indispensable quand il s'agit de transférer des fichiers d'une machine à l'autre. Cependant, ce protocole très utilisé est très prisé par les hackers. Installer un serveur Samba directement sur sa machine hôte afin de partager des fichiers avec une machine virtuelle ne semble donc pas être une bonne solution. Une alternative plus sécurisée consiste simplement à utiliser une implémentation de Samba pour Docker. De cette façon, en cas de vulnérabilité, le système hôte n'est pas exposé, son arborescence non plus et pas même les utilisateurs.
 
-Le script suivant permet d'exposer facilement le dossier `~/Public` sur un lecteur Samba :
+Le script suivant permet d'exposer facilement le dossier `~/Public` sur un lecteur Samba (à travers un conteneur Docker pour plus de sécurité) :
 
 ```bash
 chmod 700 ~/bin
