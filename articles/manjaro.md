@@ -234,250 +234,176 @@ sudo systemctl enable --now clamav-daemon
 
 Autre composante importante de la politique de sécurité, le pare-feu. L'objectif va être ici de limiter au strict minimum les interactions avec le réseau. Malheureusement, certains logiciels tels que Discord nécessitent de grandes plages d'ouverture de port, ce qui réduit la sécurité du système. Un compromis est de n'autoriser les connexions à ces plages de port qu'à l'utilisateur principal. Il ne faut donc pas hésiter à supprimer ces règles si les programmes auxquels elles se rapportent ne sont pas installés.
 
-Pour faire cela, nous allons utiliser le proxy `iptables` intégré à la plupart des distributions Linux.
+Pour faire cela, nous allons utiliser le pare-feu `nftables` intégré à la plupart des distributions Linux.
 
 ```bash
+sudo pacman -S nftables
+
 sudo su
 
-# Reset parameters
-iptables -t filter -F
-ip6tables -t filter -F
-iptables -t filter -X
-ip6tables -t filter -X
+cat << 'EOL' | sudo tee /etc/nftables.conf
+#!/usr/sbin/nft -f
 
-# Traffic Blocking
-iptables -t filter -P INPUT DROP
-ip6tables -t filter -P INPUT DROP
-iptables -t filter -P FORWARD DROP
-ip6tables -t filter -P FORWARD DROP
-iptables -t filter -P OUTPUT DROP
-ip6tables -t filter -P OUTPUT DROP
+# Recreate only this table, Docker iptables-nft rules are left untouched.
+destroy table inet filter
 
-# Authorization of already established connections
-iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-ip6tables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-ip6tables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+table inet filter {
+    # Private networks
+    define PRIVATE_NETS = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
 
-# Loopback authorization
-iptables -t filter -A INPUT -i lo -j ACCEPT
-ip6tables -t filter -A INPUT -i lo -j ACCEPT
-iptables -t filter -A OUTPUT -o lo -j ACCEPT
-ip6tables -t filter -A OUTPUT -o lo -j ACCEPT
+    # Malformed packets / anti-DDoS protections (former mangle PREROUTING)
+    chain prerouting {
+        type filter hook prerouting priority mangle; policy accept;
 
-# Allow PING to user
-iptables -t filter -A OUTPUT -p icmp --icmp-type 8 -j ACCEPT -m owner --uid-owner 1000
+        # Drop invalid packets
+        ct state invalid drop
 
-# Authorization to open port
+        # Drop TCP packets that are new and are not SYN
+        tcp flags & (syn|ack|fin|rst) != syn ct state new drop
 
-## dns
-iptables -t filter -A OUTPUT -p udp --dport 53 -d 1.1.1.1 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 53 -d 1.0.0.1 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 53 -d 194.242.2.2 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 53 -d 94.247.43.254 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 53 -d 152.53.15.127 -j ACCEPT
+        # Drop SYN packets with suspicious MSS value
+        ct state new tcp option maxseg size 1-535 drop
+        ct state new tcp option maxseg missing drop
 
-## dhcp
-iptables -A OUTPUT -p udp --dport 67:68 --sport 67:68 -d 10.0.0.0/8 -j ACCEPT
-iptables -A INPUT -p udp --dport 67:68 --sport 67:68 -d 10.0.0.0/8 -j ACCEPT
+        # Block packets with bogus TCP flags
+        tcp flags & (fin|syn|rst|psh|ack|urg) == 0 drop
+        tcp flags & (fin|syn) == (fin|syn) drop
+        tcp flags & (syn|rst) == (syn|rst) drop
+        tcp flags & (fin|rst) == (fin|rst) drop
+        tcp flags & (fin|ack) == fin drop
+        tcp flags & (ack|urg) == urg drop
+        tcp flags & (ack|psh) == psh drop
+        tcp flags & (fin|syn|rst|psh|ack|urg) == (fin|syn|rst|psh|ack|urg) drop
+        tcp flags & (fin|syn|rst|psh|ack|urg) == (fin|psh|urg) drop
+        tcp flags & (fin|syn|rst|psh|ack|urg) == (syn|fin|psh|urg) drop
+        tcp flags & (fin|syn|rst|psh|ack|urg) == (syn|rst|ack|fin|urg) drop
 
-iptables -A OUTPUT -p udp --dport 67:68 --sport 67:68 -d 172.16.0.0/12 -j ACCEPT
-iptables -A INPUT -p udp --dport 67:68 --sport 67:68 -d 172.16.0.0/12 -j ACCEPT
+        # Drop IPv4 fragments (non-first fragments)
+        ip frag-off & 0x1fff != 0 drop
+    }
 
-iptables -A OUTPUT -p udp --dport 67:68 --sport 67:68 -d 192.168.0.0/16 -j ACCEPT
-iptables -A INPUT -p udp --dport 67:68 --sport 67:68 -d 192.168.0.0/16 -j ACCEPT
+    chain input {
+        type filter hook input priority filter; policy drop;
 
-## ntp
-iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT
+        # Allow already established connections
+        ct state established,related accept
 
-## http/s
-iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
-ip6tables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
-ip6tables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
+        # Allow loopback
+        iifname "lo" accept
 
-## quic
-iptables -t filter -A OUTPUT -p udp --dport 80 -j ACCEPT
-ip6tables -t filter -A OUTPUT -p udp --dport 80 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 443 -j ACCEPT
-ip6tables -t filter -A OUTPUT -p udp --dport 443 -j ACCEPT
+        # Limit connections per source IP
+        meta l4proto tcp ct count over 111 reject with tcp reset
 
-## ssh
-iptables -t filter -A OUTPUT -p tcp --dport 22 -j ACCEPT -m owner --uid-owner 1000
-ip6tables -t filter -A OUTPUT -p tcp --dport 22 -j ACCEPT -m owner --uid-owner 1000
+        # Limit RST packets
+        tcp flags & rst == rst limit rate 2/second burst 2 packets accept
+        tcp flags & rst == rst drop
 
-## ftp
-iptables -t filter -A OUTPUT -p tcp --dport 21 -j ACCEPT -m owner --uid-owner 1000
+        # Open ports
 
-# wol
-iptables -t filter -A OUTPUT -p udp --dport 7 -j ACCEPT -m owner --uid-owner 1000
+        ## dhcp
+        udp sport 67-68 udp dport 67-68 ip daddr $PRIVATE_NETS accept
 
-## whoIs
-iptables -t filter -A OUTPUT -p tcp --dport 43 -j ACCEPT -m owner --uid-owner 1000
+        ## Steam (Remote Play)
+        udp dport 27031-27036 accept
+        tcp dport 27036 accept
 
-## mail (Outlook)
-iptables -t filter -A OUTPUT -p tcp --dport 587 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p tcp --dport 993 -j ACCEPT -m owner --uid-owner 1000
+        ## Synergy
+        tcp dport 24800 ip daddr $PRIVATE_NETS accept
 
-## vpn
-iptables -A OUTPUT -o tun+ -j ACCEPT
-iptables -A OUTPUT -o wg+ -j ACCEPT
-iptables -A OUTPUT -o proton+ -j ACCEPT
-### OpenVPN
-iptables -t filter -A OUTPUT -p tcp --dport 1194 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 1194 -j ACCEPT
-### WireGuard
-iptables -t filter -A OUTPUT -p udp --dport 51820 -j ACCEPT
-### IKEv2
-iptables -t filter -A OUTPUT -p udp --dport 500 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 4500 -j ACCEPT
+        # Drop other new TCP connections
+        meta l4proto tcp ct state new drop
+    }
 
-## Discord
-iptables -t filter -A OUTPUT -p tcp --dport 2053 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p tcp --dport 2083 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p tcp --dport 2087 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p tcp --dport 2096 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p tcp --dport 8443 -j ACCEPT -m owner --uid-owner 1000
+    chain forward {
+        type filter hook forward priority filter; policy drop;
 
-iptables -t filter -A OUTPUT -p udp --dport 19294:19344 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p udp --dport 50000:50032 -j ACCEPT -m owner --uid-owner 1000
+        # Docker & libvirt containers/VMs (they manage their own filtering rules)
+        iifname { "docker*", "br-*", "virbr*", "veth*" } accept
+        oifname { "docker*", "br-*", "virbr*", "veth*" } accept
+    }
 
-## Steam (Remote Play)
-iptables -t filter -A INPUT -p udp --dport 27031:27036 -j ACCEPT
-iptables -t filter -A INPUT -p tcp --dport 27036 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 27000:27100 -j ACCEPT -m owner --uid-owner 1000
+    chain output {
+        type filter hook output priority filter; policy drop;
 
-## Moonlight
-iptables -t filter -A OUTPUT -p tcp --dport 47984 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p tcp --dport 47989 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p tcp --dport 48010 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p udp --dport 47998 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p udp --dport 47999 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p udp --dport 48000 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p udp --dport 48002 -j ACCEPT -m owner --uid-owner 1000
-iptables -t filter -A OUTPUT -p udp --dport 48010 -j ACCEPT -m owner --uid-owner 1000
+        # Allow already established connections
+        ct state established,related accept
 
-## Ollama
-iptables -t filter -A OUTPUT -p tcp --dport 11434 -j ACCEPT -m owner --uid-owner 1000
+        # Allow loopback
+        oifname "lo" accept
 
-## Synergy
-iptables -t filter -A INPUT -p tcp --dport 24800 -d 10.0.0.0/8 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 10.0.0.0/8 -j ACCEPT -m owner --uid-owner 1000
+        # Allow PING to user
+        icmp type echo-request meta skuid 1000 accept
 
-iptables -t filter -A INPUT -p tcp --dport 24800 -d 172.16.0.0/12 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 172.16.0.0/12 -j ACCEPT -m owner --uid-owner 1000
+        # Open ports
 
-iptables -t filter -A INPUT -p tcp --dport 24800 -d 192.168.0.0/16 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 24800 -d 192.168.0.0/16 -j ACCEPT -m owner --uid-owner 1000
+        ## dns
+        udp dport 53 ip daddr { 1.1.1.1, 1.0.0.1, 194.242.2.2, 94.247.43.254, 152.53.15.127 } accept
 
-# Protections
+        ## dhcp
+        udp sport 67-68 udp dport 67-68 ip daddr $PRIVATE_NETS accept
 
-## DDos (https://javapipe.com/blog/iptables-ddos-protection/)
+        ## ntp
+        udp dport 123 accept
 
-### Drop invalid packets
-iptables -t mangle -A PREROUTING -m conntrack --ctstate INVALID -j DROP
-ip6tables -t mangle -A PREROUTING -m conntrack --ctstate INVALID -j DROP
+        ## http/s
+        tcp dport { 80, 443 } accept
 
-### Drop TCP packets that are new and are not SYN
-iptables -t mangle -A PREROUTING -p tcp ! --syn -m conntrack --ctstate NEW -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp ! --syn -m conntrack --ctstate NEW -j DROP
+        ## quic
+        udp dport { 80, 443 } accept
 
-### Drop SYN packets with suspicious MSS value
-iptables -t mangle -A PREROUTING -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP
+        ## ssh
+        tcp dport 22 meta skuid 1000 accept
 
-### Block packets with bogus TCP flags
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,RST FIN,RST -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,RST FIN,RST -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,ACK FIN -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags FIN,ACK FIN -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,URG URG -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,URG URG -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,FIN FIN -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,FIN FIN -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,PSH PSH -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ACK,PSH PSH -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL ALL -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ALL ALL -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL NONE -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ALL NONE -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP
-iptables -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP
-ip6tables -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP
+        ## ftp
+        tcp dport 21 meta skuid 1000 accept
 
-### Drop fragments in all chains
-iptables -t mangle -A PREROUTING -f -j DROP
+        ## wol
+        udp dport 7 meta skuid 1000 accept
 
-### Limit connections per source IP
-iptables -A INPUT -p tcp -m connlimit --connlimit-above 111 -j REJECT --reject-with tcp-reset
-ip6tables -A INPUT -p tcp -m connlimit --connlimit-above 111 -j REJECT --reject-with tcp-reset
+        ## whoIs
+        tcp dport 43 meta skuid 1000 accept
 
-### Limit RST packets
-iptables -A INPUT -p tcp --tcp-flags RST RST -m limit --limit 2/s --limit-burst 2 -j ACCEPT
-ip6tables -A INPUT -p tcp --tcp-flags RST RST -m limit --limit 2/s --limit-burst 2 -j ACCEPT
-iptables -A INPUT -p tcp --tcp-flags RST RST -j DROP
-ip6tables -A INPUT -p tcp --tcp-flags RST RST -j DROP
+        ## mail (Outlook)
+        tcp dport { 587, 993 } meta skuid 1000 accept
 
-### Limit new TCP connections per second per source IP
-iptables -A INPUT -p tcp -m conntrack --ctstate NEW -m limit --limit 60/s --limit-burst 20 -j ACCEPT
-ip6tables -A INPUT -p tcp -m conntrack --ctstate NEW -m limit --limit 60/s --limit-burst 20 -j ACCEPT
-iptables -A INPUT -p tcp -m conntrack --ctstate NEW -j DROP
-ip6tables -A INPUT -p tcp -m conntrack --ctstate NEW -j DROP
+        ## vpn
+        oifname { "tun*", "wg*", "proton*" } accept
+        ### OpenVPN
+        meta l4proto { tcp, udp } th dport 1194 accept
+        ### WireGuard
+        udp dport 51820 accept
+        ### IKEv2
+        udp dport { 500, 4500 } accept
 
-## Port scan
-iptables -N port-scanning
-ip6tables -N port-scanning
-iptables -A port-scanning -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/s --limit-burst 2 -j RETURN
-ip6tables -A port-scanning -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/s --limit-burst 2 -j RETURN
-iptables -A port-scanning -j DROP
-ip6tables -A port-scanning -j DROP
+        ## Discord
+        tcp dport { 2053, 2083, 2087, 2096, 8443 } meta skuid 1000 accept
+        udp dport 19294-19344 meta skuid 1000 accept
+        udp dport 50000-50032 meta skuid 1000 accept
 
-# Save table
-iptables-save > /etc/iptables.v4.rules
-ip6tables-save > /etc/iptables.v6.rules
+        ## Steam (Remote Play)
+        udp dport 27000-27100 meta skuid 1000 accept
 
-cat << EOL > /etc/systemd/system/custom-firewall-v4.service
-[Unit]
-Description=Custom firewall IPv4
-After=network.target
-Before=docker.service
-Before=libvirtd.service
+        ## Moonlight
+        tcp dport { 47984, 47989, 48010 } meta skuid 1000 accept
+        udp dport { 47998, 47999, 48000, 48002, 48010 } meta skuid 1000 accept
 
-[Service]
-ExecStart=iptables-restore /etc/iptables.v4.rules
-Type=oneshot
+        ## Ollama
+        tcp dport 11434 meta skuid 1000 accept
 
-[Install]
-WantedBy=multi-user.target
+        ## Synergy
+        tcp dport 24800 ip daddr $PRIVATE_NETS meta skuid 1000 accept
+
+        # SMB (rules added dynamically by the smb script)
+        jump smb
+    }
+
+    # SMB chain (rules added dynamically by the smb script)
+    chain smb {
+    }
+}
 EOL
 
-cat << EOL > /etc/systemd/system/custom-firewall-v6.service
-[Unit]
-Description=Custom firewall IPv6
-After=network.target
-Before=docker.service
-Before=libvirtd.service
-
-[Service]
-ExecStart=ip6tables-restore /etc/iptables.v6.rules
-Type=oneshot
-
-[Install]
-WantedBy=multi-user.target
-EOL
-
-systemctl daemon-reload
-systemctl enable --now custom-firewall-v4
-systemctl enable --now custom-firewall-v6
+sudo systemctl enable --now nftables
 ```
 
 Enfin, nous allons ajouter quelques commandes :
@@ -486,6 +412,9 @@ Enfin, nous allons ajouter quelques commandes :
 - `firewall start`: Pour réactiver la protection.
 - `firewall input-stop`: Pour désactiver la protection pour le trafic entrant.
 - `firewall output-stop`: Pour désactiver la protection pour le trafic sortant.
+- `firewall full-start`: Pour recharger la configuration depuis le fichier.
+- `firewall full-stop`: Pour vider complètement le pare-feu.
+- `firewall allow-local`: Pour autoriser l'accès aux réseaux locaux pour l'utilisateur courant.
 
 ```bash
 chmod 700 ~/bin
@@ -496,56 +425,31 @@ USER_ID=$(id -u)
 
 case $1 in
 start)
-  sudo iptables -t filter -P INPUT DROP
-  sudo ip6tables -t filter -P INPUT DROP
-  sudo iptables -t filter -P FORWARD DROP
-  sudo ip6tables -t filter -P FORWARD DROP
-  sudo iptables -t filter -P OUTPUT DROP
-  sudo ip6tables -t filter -P OUTPUT DROP
+  sudo nft -f /etc/nftables.conf
 ;;
 stop)
-  sudo iptables -t filter -P INPUT ACCEPT
-  sudo ip6tables -t filter -P INPUT ACCEPT
-  sudo iptables -t filter -P FORWARD ACCEPT
-  sudo ip6tables -t filter -P FORWARD ACCEPT
-  sudo iptables -t filter -P OUTPUT ACCEPT
-  sudo ip6tables -t filter -P OUTPUT ACCEPT
+  sudo nft insert rule inet filter input accept
+  sudo nft insert rule inet filter forward accept
+  sudo nft insert rule inet filter output accept
 ;;
 input-stop)
-  sudo iptables -t filter -P INPUT ACCEPT
-  sudo ip6tables -t filter -P INPUT ACCEPT
+  sudo nft insert rule inet filter input accept
 ;;
 output-stop)
-  sudo iptables -t filter -P OUTPUT ACCEPT
-  sudo ip6tables -t filter -P OUTPUT ACCEPT
+  sudo nft insert rule inet filter output accept
 ;;
 full-start)
-  sudo iptables-restore /etc/iptables.v4.rules
-  sudo ip6tables-restore /etc/iptables.v6.rules
+  sudo nft -f /etc/nftables.conf
 ;;
 full-stop)
-  sudo iptables -t filter -F
-  sudo ip6tables -t filter -F
-  sudo iptables -t filter -X
-  sudo ip6tables -t filter -X
-  sudo iptables -t filter -P INPUT ACCEPT
-  sudo ip6tables -t filter -P INPUT ACCEPT
-  sudo iptables -t filter -P FORWARD ACCEPT
-  sudo ip6tables -t filter -P FORWARD ACCEPT
-  sudo iptables -t filter -P OUTPUT ACCEPT
-  sudo ip6tables -t filter -P OUTPUT ACCEPT
+  sudo nft flush ruleset
 ;;
 allow-local)
-  sudo iptables -t filter -A OUTPUT -p tcp -d 10.0.0.0/8 -j ACCEPT -m owner --uid-owner $USER_ID
-  sudo iptables -t filter -A OUTPUT -p udp -d 10.0.0.0/8 -j ACCEPT -m owner --uid-owner $USER_ID
-  sudo iptables -t filter -A OUTPUT -p tcp -d 192.168.0.0/16 -j ACCEPT -m owner --uid-owner $USER_ID
-  sudo iptables -t filter -A OUTPUT -p udp -d 192.168.0.0/16 -j ACCEPT -m owner --uid-owner $USER_ID
-  sudo iptables -t filter -A OUTPUT -p tcp -d 172.16.0.0/12 -j ACCEPT -m owner --uid-owner $USER_ID
-  sudo iptables -t filter -A OUTPUT -p udp -d 172.16.0.0/12 -j ACCEPT -m owner --uid-owner $USER_ID
+  sudo nft add rule inet filter output meta l4proto { tcp, udp } ip daddr { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 } meta skuid $USER_ID accept
 ;;
 *)
   echo "Usage: firewall (start|stop|input-stop|output-stop|full-start|full-stop|allow-local)"
-  exit -1
+  exit 1
 ;;
 esac' | tee ~/bin/firewall
 
@@ -1034,27 +938,21 @@ echo '#!/bin/bash
 
 case $1 in
 start)
-    sudo iptables -t filter -A OUTPUT -p udp --dport 137 -j ACCEPT
-    sudo iptables -t filter -A OUTPUT -p udp --dport 138 -j ACCEPT
-    sudo iptables -t filter -A OUTPUT -p tcp --dport 139 -j ACCEPT
-    sudo iptables -t filter -A OUTPUT -p tcp --dport 445 -j ACCEPT
-    sudo iptables -t filter -A OUTPUT -p udp --dport 445 -j ACCEPT
+    sudo nft add rule inet filter smb udp dport { 137, 138 } accept
+    sudo nft add rule inet filter smb tcp dport 139 accept
+    sudo nft add rule inet filter smb meta l4proto { tcp, udp } th dport 445 accept
 
     sudo docker run --rm -d --name smb -p 137:137/udp -p 138:138/udp -p 139:139 -p 445:445 -p 445:445/udp -v $HOME/Public:/share/folder elswork/samba -u "1000:1000:$USER:$USER:password" -s "Public:/share/folder:rw:$USER"
     sudo docker logs smb
 ;;
 stop)
-    sudo iptables -t filter -A OUTPUT -p udp --dport 137 -j DROP
-    sudo iptables -t filter -A OUTPUT -p udp --dport 138 -j DROP
-    sudo iptables -t filter -A OUTPUT -p tcp --dport 139 -j DROP
-    sudo iptables -t filter -A OUTPUT -p tcp --dport 445 -j DROP
-    sudo iptables -t filter -A OUTPUT -p udp --dport 445 -j DROP
+    sudo nft flush chain inet filter smb
 
     sudo docker rm -f smb
 ;;
 *)
     echo "Usage: smb (start|stop)"
-    exit -1
+    exit 1
 ;;
 esac' | tee ~/bin/smb
 
