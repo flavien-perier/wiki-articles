@@ -251,12 +251,14 @@ table inet filter {
     # Private networks
     define PRIVATE_NETS = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
 
-    # Malformed packets / anti-DDoS protections (former mangle PREROUTING)
-    chain prerouting {
-        type filter hook prerouting priority mangle; policy accept;
+    chain input {
+        type filter hook input priority filter; policy drop;
 
-        # Drop invalid packets
-        ct state invalid drop
+        # Allow already established connections, drop invalid
+        ct state vmap { established : accept, related : accept, invalid : drop }
+
+        # Allow loopback
+        iifname "lo" accept
 
         # Drop TCP packets that are new and are not SYN
         tcp flags & (syn|ack|fin|rst) != syn ct state new drop
@@ -280,16 +282,6 @@ table inet filter {
 
         # Drop IPv4 fragments (non-first fragments)
         ip frag-off & 0x1fff != 0 drop
-    }
-
-    chain input {
-        type filter hook input priority filter; policy drop;
-
-        # Allow already established connections
-        ct state established,related accept
-
-        # Allow loopback
-        iifname "lo" accept
 
         # Limit connections per source IP
         meta l4proto tcp ct count over 111 reject with tcp reset
@@ -316,6 +308,12 @@ table inet filter {
 
     chain forward {
         type filter hook forward priority filter; policy drop;
+
+        # Allow already established connections, drop invalid
+        ct state vmap { established : accept, related : accept, invalid : drop }
+
+        # Drop IPv4 fragments (non-first fragments)
+        ip frag-off & 0x1fff != 0 drop
 
         # Docker & libvirt containers/VMs (they manage their own filtering rules)
         iifname { "docker*", "br-*", "virbr*", "veth*" } accept
@@ -860,10 +858,15 @@ sudo pacman -S docker docker-buildx docker-compose
 
 sudo mkdir -p /etc/docker
 echo '{
+  "firewall-backend": "nftables",
   "features": {
     "buildkit" : true
   }
 }' | sudo tee /etc/docker/daemon.json
+
+echo 'net.ipv4.ip_forward=1
+net.ipv6.conf.all.forwarding=1' | sudo tee /etc/sysctl.d/99-docker-forward.conf
+sudo sysctl --system
 
 sudo systemctl enable --now docker
 
