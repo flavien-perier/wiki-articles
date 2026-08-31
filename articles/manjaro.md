@@ -1364,6 +1364,14 @@ Un logiciel permettant de gérer les claviers et souris [Logitech](https://www.l
 sudo pacman -S solaar
 ```
 
+Recharger les règles du dongle s’il ne s’affiche pas dans l’interface, puis redémarrer le système :
+
+```bash
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+sudo systemctl soft-reboot
+```
+
 ### [Rio](https://rioterm.com/)
 
 Rio est un émulateur de terminal développé en Rust, GPU-accéléré et compatible Wayland/X11, offrant toutes les fonctionnalités que l'on attend d'un terminal moderne (split, affichage d'images, etc.). Il est léger et surtout très configurable via un fichier `~/.config/rio/config.toml`.
