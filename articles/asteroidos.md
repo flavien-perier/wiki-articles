@@ -113,8 +113,8 @@ Security = psk
 AutoConnect=true
 EOL
 
-ifconfig wlan0 down
-ifconfig wlan0 up
+ip link set wlan0 down
+ip link set wlan0 up
 
 systemctl restart connman
 ```
