@@ -45,13 +45,13 @@ Là aussi il existe de nombreux algorithmes qui permettent de hasher des éléme
 - MD5
 - sha
 
-### Explication d'un échange Diffie-Hellman de base
+### Explication d'un échange de clés de base
 
-Le but d'un échange Diffie-Hellman est de créer un canal de communication sécurisé entre deux interlocuteurs. Ici Alice et Bob.
+Le but d'un échange de clés est de créer un canal de communication sécurisé entre deux interlocuteurs. Ici Alice et Bob.
 
 Cette méthode peut être appliquée quel que soit le support, mais elle est à la base de toutes les communications chiffrées sur internet.
 
-Voici le déroulé d'un échange Diffie-Hellman :
+Voici le déroulé d'un échange de clés :
 - Au préalable Alice et Bob disposent tous deux d'une paire de clés générée dans un algorithme asymétrique de leur choix : clé privée / clé publique.
 - Ils vont échanger leur clé publique.
 - Chacun de son côté va générer un secret qui va correspondre à un nombre ou une chaîne aléatoire.
@@ -92,7 +92,7 @@ Voici quelques exemples de cipher TLS 1.2 avec et sans clé temporaire :
 - `TLS_RSA_WITH_AES_128_GCM_SHA256`: Pas de clé temporaire + authentification RSA + chiffrement symétrique en AES-128-GCM + fonction de hashage SHA-256
 
 Voici quelques exemples de cipher TLS 1.3 :
-- `TLS_AES_256_GCM_SHA384`: Chiffrement ymétrique en AES-256-GCM + fonction de hashage SHA-384
+- `TLS_AES_256_GCM_SHA384`: Chiffrement symétrique en AES-256-GCM + fonction de hashage SHA-384
 - `TLS_CHACHA20_POLY1305_SHA256`: Chiffrement symétrique en CHACHA20 + fonction de hashage en SHA-256
 
 En TLS 1.3, le cipher ne contient plus quel algorithme asymétrique on veut utiliser pour l'authentification, ni l'information que la clé est temporaire. En effet on a maintenant les informations `signature_algorithms` et `supported_groups` qui nous permettent de préciser quel sont les algorithmes de chiffrement asymétrique qu'on autorise.
