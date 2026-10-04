@@ -56,7 +56,7 @@ Voici le déroulé d'un échange Diffie-Hellman :
 - Ils vont échanger leur clé publique.
 - Chacun de son côté va générer un secret qui va correspondre à un nombre ou une chaîne aléatoire.
 - Ils vont échanger leur secret, donc Bob va envoyer la chaîne qu'il a générée à Alice en la chiffrant avec la clé publique de cette dernière et Alice va faire la même chose avec la chaîne qu'elle a générée et la clé publique de Bob.
-- Les deux interlocuteurs vont alors pouvoir déchiffrer le message qui leur a été envoyé grâce à leur clés privées respectives.
+- Les deux interlocuteurs vont alors pouvoir déchiffrer le message qui leur a été envoyé grâce à leurs clés privées respectives.
 - Ils sont donc à ce stade tous les deux en possession du secret de l'autre et de leur propre secret.
 - Ils n'ont donc plus qu'à additionner leur propre secret avec celui de leur correspondant·e pour obtenir un nouveau secret.
 - Leurs futurs échanges pourront donc être réalisés en utilisant un algorithme symétrique dont la clé de chiffrement sera le secret obtenu à l'étape précédente. 
@@ -87,8 +87,15 @@ Quant aux clés privées de ces autorités de certification (ou clés primaires)
 Dans un échange TLS, le cipher permet de définir quels sont les algorithmes qui vont être utilisés. Sur toutes les versions de SSL/TLS, il permet de définir l'algorithme symétrique et la fonction de hashage. Mais depuis TLS 1.2 il laisse aussi la possibilité de sélectionner un algorithme asymétrique. En effet TLS 1.2 laisse la possibilité de créer une paire de clés temporaire. Ainsi la paire de clés de base du serveur (celle signée par l'autorité de certification) ne sert plus qu'à faire des opérations de signature et la paire de clés temporaire ne sert quant à elle plus qu'à faire des opérations de chiffrement. Cette mécanique n'apparaît plus dans TLS 1.3 (2018), car il s'agit aujourd'hui du mode par défaut. La clé de chiffrement est maintenant toujours différente de la clé de signature.
 
 Voici quelques exemples de cipher TLS 1.2 avec et sans clé temporaire :
+- `TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256`: Clé elliptique temporaire + authentification RSA + chiffrement symétrique en AES-128-GCM + fonction de hashage SHA-256
+- `TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256`: Clé elliptique temporaire + authentification ECDSA + chiffrement symétrique en AES-128-GCM + fonction de hashage SHA-256
+- `TLS_RSA_WITH_AES_128_GCM_SHA256`: Pas de clé temporaire + authentification RSA + chiffrement symétrique en AES-128-GCM + fonction de hashage SHA-256
 
 Voici quelques exemples de cipher TLS 1.3 :
+- `TLS_AES_256_GCM_SHA384`: Chiffrement asymétrique et AES-128-GCM + fonction de hashage SHA-384
+- `TLS_CHACHA20_POLY1305_SHA256`: Chiffrement symétrique en CHACHA20 + fonction de hashage en SHA-256
+
+En TLS 1.3, le cipher ne contient plus quel algorithme asymétrique on veut utiliser pour l'authentification, ni l'information que la clé est temporaire. En effet on a maintenant les informations `signature_algorithms` et `supported_groups` qui nous permettent de préciser quel sont les algorithmes de chiffrement asymétrique qu'on autorise.
 
 ### Explication du protocole TLS 1.3
 
@@ -124,15 +131,42 @@ Pour les algorithmes symétriques, on peut continuer d'utiliser les algorithmes 
 
 ## Contre-mesure applicable aujourd'hui
 
-- Utiliser les bons ciphers.
+Dans TLS 1.3 nous l'avons vu précédemment, le cipher ne précise plus l'algorithme asymétrique qui va être utilisé pour l'échange de clé. C'est maintenant les champs `signature_algorithms` et `supported_groups` qui contiennent l'information.
 
 ## Évolutions à venir dans nos infrastructures
 
-- Utiliser des clés ML-DSA (CRYSTALS-Dilithium).
+Comme vu précédemment, grâce aux évolutions récentes des protocoles que nous utilisons, l'informatique grand public commence à être prêt pour pouvoir survivre au Q-day, mais il y a encore beaucoup d'étapes pour que tout soit prêt. Par exemple :
+
+- SSH ne supporte actuellement pas les identity files avec des algorithmes post-quantiques... Quand ce sera disponible il faudra commencer à migrer ses clés d'authentification.
+- Les autorités de certifications n'utilisent pas encore d'algorithme post-quantique pour signer nos certificats... Et nos certificats ne peuvent pas être post-quantiques non plus.
+- Sur [ProtonMail](https://mail.proton.me/), il n'est pas encore possible de sécuriser son compte avec du chiffrement post-quantique. Il faut rester alerte et faire la transition quand cela devient possible. Le provider de mail [TutaNota](https://tuta.com/) est quant à lui bien compatible.
+- Les clés [YubiKey](https://www.yubico.com/get-yubikey/) ne supportent actuellement pas le chiffrement post-quantique. Étant donné qu'elles ne peuvent pas être mises à jour, au moment du Q-day elles devront être toutes détruites. Cependant en France on a [Thales qui fait des supports FIDO2](https://cpl.thalesgroup.com/fr/access-management/authenticators/fido-devices) qui sont compatibles.
+
+## Le Q-day c'est pour quand ???
+
+En février 2025 Microsoft a sorti un processeur [Majorana 1](https://news.microsoft.com/source/emea/2025/02/microsoft-devoile-majorana-1-le-premier-processeur-quantique-au-monde-alimente-par-des-qubits-topologiques/?lang=fr) censé être une révolution qui permettrait de mettre plusieurs millions de qubits sur une seule puce (et donc de passer le Q-day). Plus d'un an et demi après on a toujours pas de papier de recherche associé et la communauté scientifique ne s'accorde toujours pas sur le fait que cette puce a une chance ou non de fonctionner...
+
+Quand on observe un ordinateur quantique, il y a deux paramètres à observer, le nombre de qubits et le nombre de qubits stables. En effet contrairement à un ordinateur traditionnel, une même opération peut donner des résultats différents entre ses exécutions sur un ordinateur quantique... On a aujourd'hui des ordinateurs qui dépassent le millier de qubits, mais le nombre de qubits stables ne dépasse pas aujourd'hui les 60. Et ce depuis en réalité plusieurs années. Si bien que certains chercheurs sont en train de se demander s'il n'y a pas une limite physique empêchant la construction d'un ordinateur quantique opérationnel.
+
+De plus avec l'émergence de l'intelligence artificielle, il y a potentiellement certains usages que l'on voulait déléguer à des ordinateurs quantiques qui peuvent être réalisés, certes de manière moins efficace, mais néanmoins de manière assez satisfaisante par des IAs. On peut citer deux axes de recherches où l'IA a des résultats satisfaisants et où on misait beaucoup sur l'informatique quantique :
+
+- La recherche en matériaux : De manière traditionnelle, il est assez difficile de rechercher de nouveaux matériaux sans tester de les faire en laboratoire et tester leurs propriétés. Avec un ordinateur quantique, il serait potentiellement possible de simuler les propriétés de matériaux à partir de leur structure atomique. Mais certains projets d'intelligence artificielle comme [Google GNoME](https://deepmind.google/blog/millions-of-new-materials-discovered-with-deep-learning/) semblent montrer des résultats spectaculaires grâce à une structure de réseaux de neurones bien pensée. Est-ce qu'un ordinateur quantique ferait mieux ? Peut-être, mais aujourd'hui on a déjà ça et ça a le mérite de déjà fonctionner contrairement à l'ordinateur quantique qui devient de plus en plus hypothétique au fur et à mesure que les années passent.
+- Le parcours de graphes : Il existe de nombreuses problématiques impliquant des parcours de graphes qui sont aujourd'hui sous-optimaux. On peut prendre pour exemple le [problème du voyageur de commerce](https://fr.wikipedia.org/wiki/Probl%C3%A8me_du_voyageur_de_commerce), ou plus simplement la façon dont Amazon range ses entrepôts. Une optimisation algorithmique de ces façons de parcourir un graphe se traduit pour le secteur de la logistique par des économies à tous les étages. Là encore, de nombreux algorithmes d'intelligence artificielle permettent de s'approcher de l'optimum. Même si contrairement à un ordinateur quantique ils s'approchent de l'optimum, ils ne le trouvent pas. Reste qu'il s'agit d'une avancée majeure et que contrairement à l'informatique quantique elle est déjà là.
+
+## Conclusion
+
+Le risque qu'on passe le Q-day est réel, il faut donc anticiper ce risque. Il est néanmoins assez peu probable qu'un ordinateur quantique capable de briser nos méthodes de chiffrement actuelles apparaisse du jour au lendemain.
+
+Mais au-delà de la question de l'apparition d'un ordinateur quantique, un papier récent nommé "[Forging 1024-bit RSA signatures in nearly SNFS time](https://eprint.iacr.org/2026/2131)" montre qu'ils arrivent à falsifier dans certains cas assez spécifiques et avec un peu de temps une clé RSA1024, et mettent en évidence qu'il faut "commencer à abandonner RSA pendant la transition vers le post-quantique". Pour aller plus loin avec les résultats de tels papiers, il faudrait commencer à systématiquement utiliser des combinaisons d'algorithmes : un algorithme "traditionnel" et un algorithme post-quantique.
+
+Une mise à jour de ce document sera nécessaire quand les autorités de certifications vont commencer à passer sur des algorithmes de signature post-quantique.
+
+En attendant pour les administrateurs système et les développeurs il est nécessaire de se mettre en veille peut-être que le Q-day n'arrivera jamais... Mais s'il arrive, on doit tous être préparés pour ne pas risquer l'intégrité des infrastructures qu'on est censé protéger et d'exposer les données de nos utilisateurs.
 
 ## Sources
 
 - [Barbhack : Crypto post-quantique : intérêt, enjeux, et perspectives](https://www.barbhack.fr/2023/assets/slides/barbhack23_public_deneuville.pdf)
 - [USI event : La lévitation quantique: Julien Bobroff](https://www.youtube.com/watch?v=6kg2yV_3B1Q&list=PL_wN0FeVwhX5VSlQBioX21WNgRUoTTS5F)
+- [RFC 9846 : TLS 1.3](https://www.rfc-editor.org/info/rfc9846/) 
 - [Wikipedia : cryptographie post-quantique](https://fr.wikipedia.org/wiki/Cryptographie_post-quantique)
 
