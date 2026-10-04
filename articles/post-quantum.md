@@ -92,7 +92,7 @@ Voici quelques exemples de cipher TLS 1.2 avec et sans clé temporaire :
 - `TLS_RSA_WITH_AES_128_GCM_SHA256`: Pas de clé temporaire + authentification RSA + chiffrement symétrique en AES-128-GCM + fonction de hashage SHA-256
 
 Voici quelques exemples de cipher TLS 1.3 :
-- `TLS_AES_256_GCM_SHA384`: Chiffrement asymétrique et AES-128-GCM + fonction de hashage SHA-384
+- `TLS_AES_256_GCM_SHA384`: Chiffrement ymétrique en AES-256-GCM + fonction de hashage SHA-384
 - `TLS_CHACHA20_POLY1305_SHA256`: Chiffrement symétrique en CHACHA20 + fonction de hashage en SHA-256
 
 En TLS 1.3, le cipher ne contient plus quel algorithme asymétrique on veut utiliser pour l'authentification, ni l'information que la clé est temporaire. En effet on a maintenant les informations `signature_algorithms` et `supported_groups` qui nous permettent de préciser quel sont les algorithmes de chiffrement asymétrique qu'on autorise.
@@ -105,7 +105,7 @@ Comme dit dans la partie précédente, aujourd'hui les méthodes de chiffrement 
 
 Toutes les familles de clés asymétriques sont hypothétiquement cassables dans le cas où un ordinateur quantique serait déployé. L'algorithme qui permet de briser ces clés est l'[algorithme de Shor](https://fr.wikipedia.org/wiki/Algorithme_de_Shor). Cet algorithme permet de ramener la complexité de la décomposition d'un nombre en facteurs premiers (problème sous-jacent de RSA) ou la résolution d'un logarithme discret (problématique derrière DSA ou ECC) en un temps polynomial, c'est-à-dire en un temps techniquement accessible avec un ordinateur quantique.
 
-Dans le cas des algorithmes symétriques, leur complexité est divisée. Par exemple une clé AES256 a une complexité équivalente à une clé AES128 pour un ordinateur quantique. L'algorithme qui permet de réduire cette complexité est l'[algorithme de Grover](https://fr.wikipedia.org/wiki/Algorithme_de_Grover).
+Dans le cas des algorithmes symétriques, leur complexité est réduite à leur racine carrée. Par exemple une clé AES256 a une complexité équivalente à une clé AES128 pour un ordinateur quantique. L'algorithme qui permet de réduire cette complexité est l'[algorithme de Grover](https://fr.wikipedia.org/wiki/Algorithme_de_Grover).
 
 L'algorithme de Grover impacte aussi les fonctions de hashage. Par exemple un hash en SHA-512 a une complexité équivalente à un SHA-256 pour un ordinateur quantique.
 
@@ -127,7 +127,7 @@ Les 3 algorithmes restant sont donc :
 - [FIPS204](https://csrc.nist.gov/pubs/fips/204/final) ou ML-DSA anciennement appelé CRYSTALS-Dilithium : Pour la partie signature.
 - [FIPS205](https://csrc.nist.gov/pubs/fips/205/final) ou SLH-DSA anciennement appelé SPHINCS+ : Un autre algorithme de signature.
 
-Il faut cependant garder une certaine méfience envers ces algorithmes. Non pas qu'ils ne soient pas fiables (il y a de grande chance qu'ils le soient), mais que comme dit précédemment, sur 82 algorithmes initialment présenté de nombreux ont été mathématiquement brisé. On a actuellement moins de recul sur ces algorithmes post-quantique que sur les algorithmes de chiffrement asymétrique plus traditionnel.
+Il faut cependant garder une certaine méfiance envers ces algorithmes. Non pas qu'ils ne soient pas fiables (il y a de grande chance qu'ils le soient), mais que comme dit précédemment, sur 82 algorithmes initialement présentés de nombreux ont été mathématiquement brisés. On a actuellement moins de recul sur ces algorithmes post-quantique que sur les algorithmes de chiffrement asymétrique plus traditionnel.
 
 Pour les algorithmes symétriques, on peut continuer d'utiliser les algorithmes connus, il faut "simplement" augmenter leur complexité afin que même divisée par deux par un ordinateur quantique, la sécurité des secrets chiffrés ne soit pas mise à mal.
 
