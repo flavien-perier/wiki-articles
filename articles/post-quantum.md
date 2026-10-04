@@ -99,7 +99,11 @@ En TLS 1.3, le cipher ne contient plus quel algorithme asymétrique on veut util
 
 ### Explication du protocole TLS 1.3
 
-Comme dit dans la partie précédente, aujourd'hui les méthodes de chiffrement sont 
+```mermaid
+Faire le code d'un diagram mermaid en diagram de séquence pour expliquer les interactions entre le client et le serveur.
+```
+
+Faire le descriptif de chaque étape dans le diagram mermaid.
 
 ## Impact des ordinateurs quantiques sur les algorithmes actuels
 
@@ -134,6 +138,23 @@ Pour les algorithmes symétriques, on peut continuer d'utiliser les algorithmes 
 ## Contre-mesure applicable aujourd'hui
 
 Dans TLS 1.3 nous l'avons vu précédemment, le cipher ne précise plus l'algorithme asymétrique qui va être utilisé pour l'échange de clé. C'est maintenant les champs `signature_algorithms` et `supported_groups` qui contiennent l'information.
+
+Aujourd'hui le plus adapté est d'utiliser une mécanique hybride en utilisant à la fois une clé elliptique et à la fois ml-kem. Il est également possible d'utiliser ml-dsa pour la partie signature.
+
+Voici un exemple de configuration valable :
+
+- `signature_algorithms`: `mldsa44`
+- `supported_groups`: `SecP256r1MLKEM768`
+
+Petite note, il existe plusieurs variantes de ML-KEM et ML-DSA :
+
+| Catégorie NIST | ML-KEM | ML-DSA |
+|----------------|--------|--------|
+| 1 | `ML-KEM-512` | `ML-DSA-44` |
+| 3 | `ML-KEM-768` | `ML-DSA-65` |
+| 5 | `ML-KEM-1024` | `ML-DSA-87` |
+
+Ce qui signifie que dans l'exemple précédent l'algorithme de signature utilisé est de catégorie 1 et l'algorithme de chiffrement est de catégorie 3.
 
 ## Évolutions à venir dans nos infrastructures
 
