@@ -100,10 +100,50 @@ En TLS 1.3, le cipher ne contient plus quel algorithme asymétrique on veut util
 ### Explication du protocole TLS 1.3
 
 ```mermaid
-Faire le code d'un diagram mermaid en diagram de séquence pour expliquer les interactions entre le client et le serveur.
+sequenceDiagram
+    participant Client
+    participant Serveur
+
+    Note over Client: Génère une paire de clés<br/>temporaire avec les groupes<br/>supportés (ex: X25519)
+
+    Client->>Serveur: ClientHello<br/>(supported_groups, signature_algorithms,<br/>key_share du client)
+
+    Note over Serveur: Choisit les paramètres<br/>parmi ceux proposés<br/>Génère son propre key_share
+
+    Serveur->>Client: ServerHello<br/>(selected_version, key_share du serveur)
+    Serveur->>Client: EncryptedExtensions<br/>(paramètres additionnels)
+    Serveur->>Client: Certificate<br/>(certificat + chaîne de certification)
+    Serveur->>Client: CertificateVerify<br/>(signature prouvant la possession<br/>de la clé privée du certificat)
+    Serveur->>Client: Finished<br/>(MAC vérifiant l'intégrité<br/>de tout l'échange)
+
+    Note over Client: Vérifie le certificat avec<br/>la clé publique de l'autorité<br/>de certification<br/>Vérifie la signature CertificateVerify<br/>Vérifie le MAC Finished<br/>Dérive les clés de session
+
+    Client->>Serveur: Finished<br/>(MAC vérifiant l'intégrité<br/>de tout l'échange)
+
+    Note over Client,Serveur: Les clés de session sont établies<br/>La communication chiffrée peut commencer
+
+    Client->>Serveur: Application Data (chiffré)
 ```
 
-Faire le descriptif de chaque étape dans le diagram mermaid.
+Le déroulé d'un handshake TLS 1.3 se fait comme suit :
+
+1. Le client commence par générer une paire de clés temporaire en utilisant l'un des groupes supportés. Il envoie ensuite un `ClientHello` contenant les `supported_groups` (les algorithmes d'échange de clés qu'il supporte), les `signature_algorithms` (les algorithmes de signature qu'il accepte pour l'authentification du serveur) et son `key_share` (sa partie publique de la clé temporaire).
+
+2. Le serveur reçoit le `ClientHello`, sélectionne les paramètres qu'il souhaite utiliser parmi ceux proposés, génère à son tour un `key_share` et répond avec un `ServerHello` contenant la version retenue et son propre `key_share`.
+
+3. Juste après le `ServerHello`, le serveur envoie les `EncryptedExtensions` contenant des paramètres additionnels comme les protocoles ALPN ou les extensions spécifiques. Tous les messages suivants sont maintenant chiffrés avec une clé dérivée du `key_share` du client et du serveur.
+
+4. Le serveur envoie ensuite son `Certificate` qui contient son certificat ainsi que toute la chaîne de certification jusqu'à l'autorité racine. Cela permet au client de vérifier l'authenticité du serveur.
+
+5. Le serveur envoie un `CertificateVerify` qui est une signature cryptographique générée avec la clé privée associée au certificat. Ce message prouve que le serveur possède bien la clé privée correspondant au certificat envoyé.
+
+6. Le serveur termine sa partie du handshake en envoyant un `Finished` contenant un MAC qui vérifie l'intégrité de tous les messages échangés jusqu'ici. Ce message permet de s'assurer que l'échange n'a pas été altéré par un tiers.
+
+7. Le client vérifie la validité du certificat grâce à la clé publique de l'autorité de certification qu'il possède dans son magasin de certificats, vérifie la signature du `CertificateVerify`, puis vérifie le MAC du `Finished`. Il dérive ensuite les clés de session à partir des deux `key_share`.
+
+8. Le client envoie à son tour un message `Finished` pour confirmer au serveur que l'échange est intègre. À partir de ce moment, les deux interlocuteurs disposent des mêmes clés de session et peuvent commencer à échanger des données applicatives chiffrées.
+
+L'avantage de TLS 1.3 par rapport à son prédécesseur est que l'échange nécessite un seul round-trip (1-RTT) après le `ClientHello`, contre deux pour TLS 1.2. De plus, contrairement à TLS 1.2 où le cipher précisait l'algorithme asymétrique, TLS 1.3 utilise les champs `supported_groups` pour l'échange de clés et `signature_algorithms` pour l'authentification, ce qui permet une bien plus grande flexibilité.
 
 ## Impact des ordinateurs quantiques sur les algorithmes actuels
 
