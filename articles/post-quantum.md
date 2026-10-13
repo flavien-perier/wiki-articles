@@ -1,6 +1,6 @@
 ---
 title: Cryptographie post-quantique
-type: WIP
+type: WIKI
 categories:
   - system
   - security
@@ -52,6 +52,33 @@ Le but d'un échange de clés est de créer un canal de communication sécurisé
 Cette méthode peut être appliquée quel que soit le support, mais elle est à la base de toutes les communications chiffrées sur internet.
 
 Voici le déroulé d'un échange de clés :
+
+```mermaid
+sequenceDiagram
+    participant Alice
+    participant Bob
+
+    Note over Alice: Génère une paire de clés<br/>clé privée / clé publique
+    Note over Bob: Génère une paire de clés<br/>clé privée / clé publique
+
+    Alice->>Bob: Envoie sa clé publique
+    Bob->>Alice: Envoie sa clé publique
+
+    Note over Alice: Génère un secret aléatoire (Sa)
+    Note over Bob: Génère un secret aléatoire (Sb)
+
+    Alice->>Bob: Envoie Sa chiffré avec<br/>la clé publique de Bob
+    Bob->>Alice: Envoie Sb chiffré avec<br/>la clé publique d'Alice
+
+    Note over Alice: Déchiffre le message reçu<br/>avec sa clé privée et obtient Sb
+    Note over Bob: Déchiffre le message reçu<br/>avec sa clé privée et obtient Sa
+
+    Note over Alice: Calcule le secret final : Sa + Sb
+    Note over Bob: Calcule le secret final : Sb + Sa
+
+    Note over Alice,Bob: Ils disposent du même secret partagé<br/>Les échanges suivants sont chiffrés<br/>avec un algorithme symétrique<br/>dont la clé est le secret obtenu
+```
+
 - Au préalable Alice et Bob disposent tous deux d'une paire de clés générée dans un algorithme asymétrique de leur choix : clé privée / clé publique.
 - Ils vont échanger leur clé publique.
 - Chacun de son côté va générer un secret qui va correspondre à un nombre ou une chaîne aléatoire.
@@ -99,6 +126,8 @@ En TLS 1.3, le cipher ne contient plus quel algorithme asymétrique on veut util
 
 ### Explication du protocole TLS 1.3
 
+Le déroulé d'un handshake TLS 1.3 se fait comme suit :
+
 ```mermaid
 sequenceDiagram
     participant Client
@@ -125,23 +154,14 @@ sequenceDiagram
     Client->>Serveur: Application Data (chiffré)
 ```
 
-Le déroulé d'un handshake TLS 1.3 se fait comme suit :
-
-1. Le client commence par générer une paire de clés temporaire en utilisant l'un des groupes supportés. Il envoie ensuite un `ClientHello` contenant les `supported_groups` (les algorithmes d'échange de clés qu'il supporte), les `signature_algorithms` (les algorithmes de signature qu'il accepte pour l'authentification du serveur) et son `key_share` (sa partie publique de la clé temporaire).
-
-2. Le serveur reçoit le `ClientHello`, sélectionne les paramètres qu'il souhaite utiliser parmi ceux proposés, génère à son tour un `key_share` et répond avec un `ServerHello` contenant la version retenue et son propre `key_share`.
-
-3. Juste après le `ServerHello`, le serveur envoie les `EncryptedExtensions` contenant des paramètres additionnels comme les protocoles ALPN ou les extensions spécifiques. Tous les messages suivants sont maintenant chiffrés avec une clé dérivée du `key_share` du client et du serveur.
-
-4. Le serveur envoie ensuite son `Certificate` qui contient son certificat ainsi que toute la chaîne de certification jusqu'à l'autorité racine. Cela permet au client de vérifier l'authenticité du serveur.
-
-5. Le serveur envoie un `CertificateVerify` qui est une signature cryptographique générée avec la clé privée associée au certificat. Ce message prouve que le serveur possède bien la clé privée correspondant au certificat envoyé.
-
-6. Le serveur termine sa partie du handshake en envoyant un `Finished` contenant un MAC qui vérifie l'intégrité de tous les messages échangés jusqu'ici. Ce message permet de s'assurer que l'échange n'a pas été altéré par un tiers.
-
-7. Le client vérifie la validité du certificat grâce à la clé publique de l'autorité de certification qu'il possède dans son magasin de certificats, vérifie la signature du `CertificateVerify`, puis vérifie le MAC du `Finished`. Il dérive ensuite les clés de session à partir des deux `key_share`.
-
-8. Le client envoie à son tour un message `Finished` pour confirmer au serveur que l'échange est intègre. À partir de ce moment, les deux interlocuteurs disposent des mêmes clés de session et peuvent commencer à échanger des données applicatives chiffrées.
+- Le client commence par générer une paire de clés temporaire en utilisant l'un des groupes supportés. Il envoie ensuite un `ClientHello` contenant les `supported_groups` (les algorithmes d'échange de clés qu'il supporte), les `signature_algorithms` (les algorithmes de signature qu'il accepte pour l'authentification du serveur) et son `key_share` (sa partie publique de la clé temporaire).
+- Le serveur reçoit le `ClientHello`, sélectionne les paramètres qu'il souhaite utiliser parmi ceux proposés, génère à son tour un `key_share` et répond avec un `ServerHello` contenant la version retenue et son propre `key_share`.
+- Juste après le `ServerHello`, le serveur envoie les `EncryptedExtensions` contenant des paramètres additionnels comme les protocoles ALPN ou les extensions spécifiques. Tous les messages suivants sont maintenant chiffrés avec une clé dérivée du `key_share` du client et du serveur.
+- Le serveur envoie ensuite son `Certificate` qui contient son certificat ainsi que toute la chaîne de certification jusqu'à l'autorité racine. Cela permet au client de vérifier l'authenticité du serveur.
+- Le serveur envoie un `CertificateVerify` qui est une signature cryptographique générée avec la clé privée associée au certificat. Ce message prouve que le serveur possède bien la clé privée correspondant au certificat envoyé.
+- Le serveur termine sa partie du handshake en envoyant un `Finished` contenant un MAC qui vérifie l'intégrité de tous les messages échangés jusqu'ici. Ce message permet de s'assurer que l'échange n'a pas été altéré par un tiers.
+- Le client vérifie la validité du certificat grâce à la clé publique de l'autorité de certification qu'il possède dans son magasin de certificats, vérifie la signature du `CertificateVerify`, puis vérifie le MAC du `Finished`. Il dérive ensuite les clés de session à partir des deux `key_share`.
+- Le client envoie à son tour un message `Finished` pour confirmer au serveur que l'échange est intègre. À partir de ce moment, les deux interlocuteurs disposent des mêmes clés de session et peuvent commencer à échanger des données applicatives chiffrées.
 
 L'avantage de TLS 1.3 par rapport à son prédécesseur est que l'échange nécessite un seul round-trip (1-RTT) après le `ClientHello`, contre deux pour TLS 1.2. De plus, contrairement à TLS 1.2 où le cipher précisait l'algorithme asymétrique, TLS 1.3 utilise les champs `supported_groups` pour l'échange de clés et `signature_algorithms` pour l'authentification, ce qui permet une bien plus grande flexibilité.
 
