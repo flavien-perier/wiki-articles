@@ -45,7 +45,7 @@ Là aussi il existe de nombreux algorithmes qui permettent de hasher des éléme
 - MD5
 - sha
 
-### Explication d'un échange de clés de base
+### Explication d'un échange de clés basique
 
 Le but d'un échange de clés est de créer un canal de communication sécurisé entre deux interlocuteurs. Ici Alice et Bob.
 
@@ -153,15 +153,15 @@ Dans le cas des algorithmes symétriques, leur complexité est réduite à leur 
 
 L'algorithme de Grover impacte aussi les fonctions de hashage. Par exemple un hash en SHA-512 a une complexité équivalente à un SHA-256 pour un ordinateur quantique.
 
-## Quels sont les risques que cela présente
+## Quels sont les risques ?
 
 Le jour où une entreprise ou un gouvernement disposera d'un ordinateur quantique suffisamment puissant pour appliquer les algorithmes de Shor et de Grover à nos méthodes de chiffrement actuelles est noté le [Q-day](https://fr.wikipedia.org/wiki/Menace_quantique). C'est le moment où nous ne pourrons plus faire confiance dans des algorithmes comme RSA.
 
 - [Harvest now, decrypt later](https://fr.wikipedia.org/wiki/R%C3%A9colter_maintenant,_d%C3%A9chiffrer_plus_tard) : C'est une technique employée massivement par les services de renseignements. Il y a des types de canaux qui, même s'ils sont chiffrés aujourd'hui, peuvent avoir de la valeur dans le futur. Il peut donc être intéressant pour un attaquant de stocker de la donnée chiffrée dans l'espoir d'être en mesure de la décrypter plus tard. On peut prendre comme exemple l'[ambassade des États-Unis à Paris](https://fr.wikipedia.org/wiki/Ambassade_des_%C3%89tats-Unis_en_France) qui dispose d'une station d'écoute sur son toit pour, entre autres, espionner les communications entre l'Élysée et Matignon. La France ne réagit pas car les communications sont chiffrées et les États-Unis font le pari qu'ils seront capables de décrypter ces données plus tard quand ils auront atteint la suprématie quantique. Il s'agit donc d'un risque à prendre en compte dès aujourd'hui.
-  - Un risque qui en découle pour les utilisateurs d'internet. Étant donné qu'on ne peut pas dire si notre navigation sur internet est enregistrée ou non à un instant t, cela signifie qu'on peut partir du principe qu'elle l'est au moins à certains moments. Quand on s'authentifie à un site web, le mot de passe transite en clair dans le tunnel TLS avant d'être hashé côté serveur pour le stockage. Le hashage côté serveur limite l'impact de l'algorithme de Grover, mais un attaquant qui a sauvegardé l'intégralité de l'échange TLS peut le décrypter avec un ordinateur quantique et retrouver le mot de passe en clair tel qu'il a été envoyé. Si un jour nous passons le Q-day, il serait bon de changer, par précaution; tous ses mots de passe.
+  - Un risque qui en découle pour les utilisateurs d'internet. Étant donné qu'on ne peut pas dire si notre navigation sur internet est enregistrée ou non à un instant t, cela signifie qu'on peut partir du principe qu'elle l'est au moins à certains moments. Quand on s'authentifie à un site web, le mot de passe transite en clair dans le tunnel TLS avant d'être hashé côté serveur pour le stockage. Le hashage côté serveur limite l'impact de l'algorithme de Grover, mais un attaquant qui a sauvegardé l'intégralité de l'échange TLS peut le décrypter avec un ordinateur quantique et retrouver le mot de passe en clair tel qu'il a été envoyé. Si un jour nous passons le Q-day, il serait bon de changer, par précaution, tous ses mots de passe.
 - Briser une autorité de certification : Avec un ordinateur quantique, il serait possible de retrouver la clé privée d'une autorité de certification à partir de sa clé publique. Une fois cette clé retrouvée l'attaquant pourrait facilement mettre en place des attaques de l'homme du milieu sans pouvoir être détecté. Il s'agit d'un risque qui n'a pas forcément besoin d'être anticipé. Il supprime juste la confiance qu'on peut avoir dans les certificats traditionnels à partir du moment où le Q-day est passé. Mais cela n'a aucun impact sur les données déjà chiffrées.
 
-## Quels algorithmes en remplacement
+## Quels algorithmes en remplacement ?
 
 En 2016, l'organisme de normalisation américain [NIST](https://www.nist.gov/) a lancé un grand concours dans lequel des mathématiciens, cryptographes ou laboratoires de recherche pouvaient proposer des algorithmes qui auraient pour but de remplacer les algorithmes de chiffrement asymétrique actuels. Ils ont reçu 82 soumissions et en 2024 ils ont normalisé les 3 plus adaptés. Les autres algorithmes ayant été éliminé soit car brisé mathématiquement, soit car trop compliqué à mettre en place ou demandant trop de puissance de calcul.
 
@@ -175,7 +175,7 @@ Il faut cependant garder une certaine méfiance envers ces algorithmes. Non pas 
 
 Pour les algorithmes symétriques, on peut continuer d'utiliser les algorithmes connus, il faut "simplement" augmenter leur complexité afin que même divisée par deux par un ordinateur quantique, la sécurité des secrets chiffrés ne soit pas mise à mal.
 
-## Contre-mesure applicable aujourd'hui
+## Que faire aujourd'hui ?
 
 Dans TLS 1.3 nous l'avons vu précédemment, le cipher ne précise plus l'algorithme asymétrique qui va être utilisé pour l'échange de clé. C'est maintenant les champs `signature_algorithms` et `supported_groups` qui contiennent l'information.
 
@@ -202,8 +202,8 @@ Comme vu précédemment, grâce aux évolutions récentes des protocoles que nou
 
 - SSH ne supporte actuellement pas les identity files avec des algorithmes post-quantiques... Quand ce sera disponible il faudra commencer à migrer ses clés d'authentification.
 - Les autorités de certifications n'utilisent pas encore d'algorithme post-quantique pour signer nos certificats... Et nos certificats ne peuvent pas être post-quantiques non plus.
-- Sur [ProtonMail](https://mail.proton.me/), il n'est pas encore possible de sécuriser son compte avec du chiffrement post-quantique. Il faut rester alerte et faire la transition quand cela devient possible. Le provider de mail [TutaNota](https://tuta.com/) est quant à lui bien compatible.
-- Les clés [YubiKey](https://www.yubico.com/get-yubikey/) ne supportent actuellement pas le chiffrement post-quantique. Étant donné qu'elles ne peuvent pas être mises à jour, au moment du Q-day elles devront être toutes détruites. Cependant en France on a [Thales qui fait des supports FIDO2](https://cpl.thalesgroup.com/fr/access-management/authenticators/fido-devices) qui sont compatibles.
+- Sur [ProtonMail](https://mail.proton.me/), il n'est pas encore possible de sécuriser son compte avec du chiffrement post-quantique. Il faut rester alerte et faire la transition quand cela va devenir possible. Le provider de mail [TutaNota](https://tuta.com/) est quant à lui déjà compatible.
+- Les clés [YubiKey](https://www.yubico.com/get-yubikey/) ne supportent actuellement pas le chiffrement post-quantique. Étant donné qu'elles ne peuvent pas être mises à jour, au moment du Q-day elles devront être physiquement détruites. Cependant en France on a [Thales qui fait des supports FIDO2](https://cpl.thalesgroup.com/fr/access-management/authenticators/fido-devices) qui sont compatibles.
 
 ## Le Q-day c'est pour quand ???
 

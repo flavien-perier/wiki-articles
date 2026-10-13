@@ -250,18 +250,25 @@ En France, les numéros de démarchage sont tenus de nous appeler avec des plage
 
 Cette méthode n'est sûrement pas aussi efficace qu'un service en ligne, mais a le mérite de garantir le respect de ses données tout en limitant la nuisance provoquée par ces appels.
 
-### Les réseaux sociaux
+### [Beeper](https://www.beeper.com/)
 
-Concernant les réseaux sociaux, il est à la fois évident que disposer de ces derniers sur son téléphone pose un problème pour la vie privée et que ne pas les avoir peut être parfois embarrassant dans la vie réelle. Sans être exhaustif, voici quelques conseils pour une meilleure gestion de ces réseaux sur smartphone :
+Beeper est une application de messagerie qui permet d'avoir tous ses comptes au même endroit. Il est donc possible de communiquer sur Messenger, Instagram, WhatsApp, Telegram... Et le tout dans une même interface.
 
-- Le premier, est de bien définir les réseaux qui nous sont utiles et ceux qui ne nous servent pas.
+Ça évite d'avoir à installer plusieurs applications de messagerie pour parler avec ses différents groupes d'amis, de collègues, de sport...
 
-- Il est préférable d'utiliser les réseaux sociaux dans un contexte isolé du reste du téléphone. C'est ce que proposent des applications telles que [Shelter](https://f-droid.org/packages/net.typeblog.shelter/) ou [Island](https://github.com/oasisfeng/island) (la seconde ne fonctionnant pas sur /e/). Ces programmes vont créer des contextes dans lesquels les applications ne pourront pas accéder aux fichiers, contacts... Ces environnements seront également désactivables de sorte qu'aucune application installée dans ce contexte ne puisse tourner en arrière-plan.
+Il faut néanmoins garder en tête que ça rajoute un intermédiaire (sauf pour les usages de Telegram ou Signal) et que ça réduit donc le niveau de sécurité des conversations qui sont faites avec cette app... Après si on veut des conversations sécurisées le mieux est d'avoir Signal à côté.
 
-- Enfin, quand c'est possible, il est préférable d'utiliser la version light des applications de réseaux sociaux. Ces versions sont développées pour de vieux appareils et font donc moins de choses. Après c'est à chacun de voir si le minimum est suffisant et si l'application est bien proposée pour un réseau social donné (typiquement la version lite de LinkedIn a été abandonnée).
-    - [Facebook lite](https://apkpure.com/fr/facebook-lite/com.facebook.lite)
-    - [Messenger lite](https://apkpure.com/fr/messenger-lite/com.facebook.mlite)
-    - [Instagram lite](https://apkpure.com/fr/instagram-lite/com.instagram.lite)
+### [Signal](https://signal.org/)
+
+Une messagerie instantanée chiffrée, open source et facile d'utilisation. Indispensable si vous avez des sujets professionnels ou associatifs à traiter en groupe.
+
+### [Shelter](https://f-droid.org/packages/net.typeblog.shelter/)
+
+Shelter est une application qui utilise les options de [MDM](https://fr.wikipedia.org/wiki/Mobile_device_management) d'Android afin de créer un contexte professionnel sur son téléphone et de pouvoir y installer des applications.
+
+Les applications installées dans ce contexte ne pourront pas accéder au carnet de contacts, les agendas, le compte Google... du téléphone de base. C'est donc une façon très pratique d'éviter que des applications dans lesquelles on a très peu confiance (les réseaux sociaux et LeBonCoin au hasard) de siphonner nos données.
+
+Une des options bien pensées de Shelter est de permettre de geler les applications. Le fait de geler une application fait qu'elle n'est plus considérée par le téléphone comme installée. Donc tant qu'elle n'est pas active, elle ne peut pas tourner en arrière-plan ou envoyer des notifications. C'est plutôt radical, mais étant donné que les concepteurs d'application sont de plus en plus inventifs pour nous siphonner nos données, c'est plutôt efficace.
 
 ### [NewPipe](https://newpipe.net/)
 
@@ -290,6 +297,18 @@ Une application permettant d'exploiter les différents capteurs présents dans u
 ### [TrackerControl](https://trackercontrol.org/)
 
 Cette application permet de faire une boucle VPN en local afin d'analyser tous les flux sortants. Cela permet de mettre en évidence quelles sont les applications qui envoient des informations vers de tierces entreprises et de bloquer ces flux non désirés.
+
+### [AirGuard](https://f-droid.org/fr/packages/de.seemoo.at_tracking_detection/)
+
+AirGuard est une application open source qui permet de détecter les trackers qui pourraient être autour de vous. Si quelqu'un décide de vous glisser un tracker dans votre sac à dos, cette application devrait être en mesure de vous signaler qu'un tracker vous suit depuis un moment. Apple propose bien [sa propre solution](https://play.google.com/store/apps/details?id=com.apple.trackerdetect) à installer sur Android pour détecter les trackers indésirables, mais elle ne peut malheureusement détecter que ceux de sa propre marque.
+
+AirGuard est en mesure de détecter les [Apple AirTag](https://www.apple.com/airtag/), les [Google Pixel Tag](https://store.google.com/ca/product/pixel_tag), ou encore les [Samsung SmartTag](https://www.samsung.com/fr/mobile-accessories/all-mobile-accessories/?smarttag) et quelques autres.
+
+### [OpenTagViewer](https://github.com/parawanderer/OpenTagViewer)
+
+OpenTagViewer est une application open source qui permet de se connecter à son compte Apple et de suivre ses propres AirTag. Le problème c'est qu'on ne peut pas associer de nouveaux appareils depuis son Android. Il est dans tous les cas nécessaire d'avoir un appareil Apple à portée de main.
+
+C'est dans le cadre de l'opinion, mais tant qu'à avoir un tracker, c'est dans la marque à la pomme que je fais le plus confiance par rapport à Apple et Samsung. Après on s'entend, il y a [Ugreen](https://fr.ugreen.com/) qui fait de bien meilleurs trackers que les AirTag : les [UGREEN FineTrack Duo](https://www.amazon.fr/dp/B0FRLWSGPW) (qui sont quand même compatibles avec le protocole de Google pour ceux qui ont confiance).
 
 ### [Termux](https://termux.com/)
 
