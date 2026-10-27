@@ -744,7 +744,7 @@ chmod 400 ~/.alias
 Un client open source permettant d'utiliser n'importe quel backend d'IA (ChatGPT, Gemini, Claude, Ollama...) pour effectuer des tâches de code. C'est un équivalent de Claude Code relativement compatible avec ce dernier dans l'ensemble (il interprète les fichiers Claude.md et utilise les agents de ce dernier).
 
 ```bash
-yay -S opencode-bin
+sudo pacman -S opencode
 ```
 
 Pour utiliser OpenCode avec un serveur Ollama local, il suffit de rajouter la configuration suivante :
