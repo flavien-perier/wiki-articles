@@ -109,6 +109,32 @@ Pour fournir des certificats à ses clients, l'autorité de certification a elle
 
 Quant aux clés privées de ces autorités de certification (ou clés primaires) elles sont gardées très précieusement dans des infrastructures hautement sécurisées (incluant notamment des [HSM](https://fr.wikipedia.org/wiki/Hardware_Security_Module)). En cas de compromission de la clé privée d'une certificate authority, c'est toute l'infrastructure du web moderne qui est compromise. Si un état ou une organisation venait à utiliser la clé privée d'une autorité de certification de manière abusive, il pourrait très facilement déployer des attaques de l'homme du milieu et espionner des communications a priori chiffrées.
 
+Quelques informations sur les autorités de certification :
+
+- Sur Linux la commande suivante donne le nombre d'autorité de certification :
+
+```bash
+% > ls /etc/ssl/certs | wc -l
+```
+
+Cette commande renvoie 366 fichiers sur mon OS.
+
+- Pour savoir quels algorithmes sont les plus utilisés :
+
+```bash
+while IFS= read -r -d '' f; do
+  alg=$(openssl x509 -in "$f" -noout -text 2>/dev/null |
+        sed -n 's/^[[:space:]]*Public Key Algorithm: //p' |
+        head -n 1)
+  [ -n "$alg" ] && printf '%s\n' "$alg"
+done | sort | uniq -c | sort -n
+```
+
+| Algorithme | Occurrence |
+|------------|-----------|
+| id-ecPublicKey | 124 |
+| rsaEncryption | 242 | 
+
 ### Rôle du cipher
 
 Dans un échange TLS, le cipher permet de définir quels sont les algorithmes qui vont être utilisés. Sur toutes les versions de SSL/TLS, il permet de définir l'algorithme symétrique et la fonction de hashage. Mais depuis TLS 1.2 il laisse aussi la possibilité de sélectionner un algorithme asymétrique. En effet TLS 1.2 laisse la possibilité de créer une paire de clés temporaire. Ainsi la paire de clés de base du serveur (celle signée par l'autorité de certification) ne sert plus qu'à faire des opérations de signature et la paire de clés temporaire ne sert quant à elle plus qu'à faire des opérations de chiffrement. Cette mécanique n'apparaît plus dans TLS 1.3 (2018), car il s'agit aujourd'hui du mode par défaut. La clé de chiffrement est maintenant toujours différente de la clé de signature.
@@ -191,7 +217,16 @@ Les 3 algorithmes restant sont donc :
 - [FIPS204](https://csrc.nist.gov/pubs/fips/204/final) ou ML-DSA anciennement appelé CRYSTALS-Dilithium : Pour la partie signature.
 - [FIPS205](https://csrc.nist.gov/pubs/fips/205/final) ou SLH-DSA anciennement appelé SPHINCS+ : Un autre algorithme de signature.
 
-Il faut cependant garder une certaine méfiance envers ces algorithmes. Non pas qu'ils ne soient pas fiables (il y a de grande chance qu'ils le soient), mais que comme dit précédemment, sur 82 algorithmes initialement présentés de nombreux ont été mathématiquement brisés. On a actuellement moins de recul sur ces algorithmes post-quantique que sur les algorithmes de chiffrement asymétrique plus traditionnel.
+Plusieurs autres algorithmes sont actuellement en cours de normalisation.
+
+Il faut cependant garder une certaine méfiance envers ces algorithmes. Non pas qu'ils ne soient pas fiables (il y a de grande chance qu'ils le soient), mais que comme dit précédemment, sur 82 algorithmes initialement présentés de nombreux ont été mathématiquement brisés. On a actuellement moins de recul sur ces algorithmes post-quantique que sur les algorithmes de chiffrement asymétrique plus traditionnels.
+
+Ces algorithmes sont basés sur un type de problème mathématique nommé réseaux euclidiens. Les clés ainsi générées sont beaucoup plus lourdes que celles utilisées dans des méthodes de chiffrement plus "traditionnelles".
+
+| | ECC P-256 | RSA-2048 | ML-KEM-768 | ML-DSA-65 | SLH-DSA-128s |
+|-|-----------|----------|------------|-----------|--------------|
+| Clé publique | 64 o | 256 o | 1 184 o | 1 952 o | 32 o |
+| Signature / ciphertext | 64 o | 256 o | 1 088 o | 3 309 o | ~7 856 o |
 
 Pour les algorithmes symétriques, on peut continuer d'utiliser les algorithmes connus, il faut "simplement" augmenter leur complexité afin que même divisée par deux par un ordinateur quantique, la sécurité des secrets chiffrés ne soit pas mise à mal.
 
@@ -199,14 +234,18 @@ Pour les algorithmes symétriques, on peut continuer d'utiliser les algorithmes 
 
 Dans TLS 1.3 nous l'avons vu précédemment, le cipher ne précise plus l'algorithme asymétrique qui va être utilisé pour l'échange de clé. C'est maintenant les champs `signature_algorithms` et `supported_groups` qui contiennent l'information.
 
-Aujourd'hui le plus adapté est d'utiliser une mécanique hybride en utilisant à la fois une clé elliptique et à la fois ml-kem. Il est également possible d'utiliser ml-dsa pour la partie signature.
+Aujourd'hui le plus adapté est d'utiliser une mécanique hybride en utilisant à la fois une clé elliptique et à la fois ml-kem.
+
+Pour la partie signature, il est possible d'utiliser une clé Dilithium (ml-dsa), il n'est cependant pas possible de la faire signer par une autorité de certification qui serait elle-même résistante d'un point de vue post-quantique.
 
 Voici un exemple de configuration valable :
 
-- `signature_algorithms`: `mldsa44`
-- `supported_groups`: `SecP256r1MLKEM768`
+- `signature_algorithms`: `ml_dsa65`
+- `supported_groups`: `X25519MLKEM768`
 
-Petite note, il existe plusieurs variantes de ML-KEM et ML-DSA :
+Petite note sur le nommage : `X25519MLKEM768` est un groupe hybride normalisé par l'IETF dans la [RFC 9846](https://www.rfc-editor.org/info/rfc9846), qui combine X25519 et ML-KEM-768. Il existe des variantes avec d'autres courbes comme `SecP256r1MLKEM768`, mais c'est la version X25519 qui s'impose comme le standard de facto.
+
+Il existe plusieurs variantes de ML-KEM et ML-DSA :
 
 | Catégorie NIST | ML-KEM | ML-DSA |
 |----------------|--------|--------|
@@ -220,9 +259,9 @@ Ce qui signifie que dans l'exemple précédent l'algorithme de signature utilis�
 
 Comme vu précédemment, grâce aux évolutions récentes des protocoles que nous utilisons, l'informatique grand public commence à être prêt pour pouvoir survivre au Q-day, mais il y a encore beaucoup d'étapes pour que tout soit prêt. Par exemple :
 
-- SSH ne supporte actuellement pas les identity files avec des algorithmes post-quantiques... Quand ce sera disponible il faudra commencer à migrer ses clés d'authentification.
+- SSH ne supporte actuellement pas les identity files avec des algorithmes post-quantiques... Quand ce sera disponible il faudra commencer à migrer ses clés d'authentification. En attendant, tout comme HTTP, le protocole SSH est capable de chiffrer sa session avec kyber (ml-kem).
 - Les autorités de certifications n'utilisent pas encore d'algorithme post-quantique pour signer nos certificats... Et nos certificats ne peuvent pas être post-quantiques non plus.
-- Sur [ProtonMail](https://mail.proton.me/), il n'est pas encore possible de sécuriser son compte avec du chiffrement post-quantique. Il faut rester alerte et faire la transition quand cela va devenir possible. Le provider de mail [TutaNota](https://tuta.com/) est quant à lui déjà compatible.
+- Sur [ProtonMail](https://mail.proton.me/), il n'est pas encore possible de sécuriser son compte avec du chiffrement post-quantique. Il faut rester alerte et faire la transition quand cela va devenir possible. Le fournisseur de mail [TutaNota](https://tuta.com/) est quant à lui déjà compatible.
 - Les clés [YubiKey](https://www.yubico.com/get-yubikey/) ne supportent actuellement pas le chiffrement post-quantique. Étant donné qu'elles ne peuvent pas être mises à jour, au moment du Q-day elles devront être physiquement détruites. Cependant en France on a [Thales qui fait des supports FIDO2](https://cpl.thalesgroup.com/fr/access-management/authenticators/fido-devices) qui sont compatibles.
 
 ## Le Q-day c'est pour quand ???
