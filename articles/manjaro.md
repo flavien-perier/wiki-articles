@@ -1948,7 +1948,12 @@ PROTECTED_FILETYPE=("pdf" "zip" "tar" "gz" "7z" "wav" "mp3" "mp4" "mkv" "mov")
 HISTORY_PREFIX_TO_CLEAN=("pacman" "yay" "flatpak" "clear" "ls" "ll" "rm" "mv" "mkdir" "rmdir" "touch" "tar" "7z" "zip" "unzip" "unrar")
 
 get-used-space() {
-   df | tr -s " " | cut -f3 -d " " | tail -n +2 | sed -z 's/\n/+/g;s/+$/\n/' | bc
+  LC_ALL=C df --local --block-size=1K \
+    --exclude-type=tmpfs \
+    --exclude-type=devtmpfs \
+    --exclude-type=overlay \
+    --output=source,used | \
+  grep -v "Filesystem" | sort | uniq | awk '{ total += $2 } END { printf "%.0f\n", total }'
 }
 
 root-clean() {
