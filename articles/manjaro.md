@@ -734,7 +734,7 @@ chmod 500 ~/bin
 # Create alias
 chmod 600 ~/.alias
 
-echo 'alias use-zsh="claude-zsh"' >> ~/.alias
+echo 'alias claude="claude-zsh"' >> ~/.alias
 
 chmod 400 ~/.alias
 ```
@@ -791,7 +791,7 @@ chmod 500 ~/bin
 # Create alias
 chmod 600 ~/.alias
 
-echo 'alias use-zsh="opencode-zsh"' >> ~/.alias
+echo 'alias opencode="opencode-zsh"' >> ~/.alias
 
 chmod 400 ~/.alias
 ```
