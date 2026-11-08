@@ -559,6 +559,7 @@ sudo pacman -S code
 code --install-extension ms-azuretools.vscode-docker
 code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
 
+code --install-extension JetBrains.intellij-server
 code --install-extension ms-vscode.hexeditor
 code --install-extension ms-python.python
 code --install-extension ms-toolsai.jupyter
