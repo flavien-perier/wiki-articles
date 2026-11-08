@@ -360,78 +360,86 @@ do
     fi
 done
 
-if [ $EXIT -eq 1 ]
+if [ "$EXIT" -eq 1 ]
 then
     exit 0
 fi
 
-# https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/start.sh
 if [ "$HOOK_NAME" == "prepare" ] && [ "$STATE_NAME" == "begin" ]
 then
-    echo "Start GPU vm $GUEST_NAME"
+    echo "Start GPU vm $GUEST_NAME" >&2
 
-    # Stop services
-    systemctl stop ollama
+    # Stop services using the GPU
+    systemctl stop ollama || exit 1
+    nvidia-smi -pm 0 || exit 1
+    systemctl stop nvidia-persistenced.service || exit 1
+    systemctl stop kmsconvt@tty1.service || exit 1
 
-    # Unbind VTconsoles
-    echo 0 > /sys/class/vtconsole/vtcon0/bind
+    # Unbind framebuffer consoles
+    for console in /sys/class/vtconsole/vtcon*
+    do
+        if grep -qi 'frame buffer' "$console/name"
+        then
+            echo 0 > "$console/bind" || exit 1
+        fi
+    done
 
-    # Unbind EFI-Framebuffer
-    echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind
+    # Unbind EFI framebuffer if present
+    if [ -L /sys/bus/platform/drivers/efi-framebuffer/efi-framebuffer.0 ]
+    then
+        echo efi-framebuffer.0 \
+            > /sys/bus/platform/drivers/efi-framebuffer/unbind || exit 1
+    fi
 
-    # Avoid a race condition by waiting a couple of seconds. This can be calibrated to be shorter or longer if required for your system
     sleep 5
 
-    # Unload all Nvidia drivers
-    modprobe -r nvidia_drm
-    modprobe -r nvidia_modeset
-    modprobe -r drm_kms_helper
-    modprobe -r nvidia
-    modprobe -r i2c_nvidia_gpu
-    modprobe -r drm
-    modprobe -r nvidia_uvm
+    # Unload Nvidia drivers
+    modprobe -r nvidia_uvm || exit 1
+    modprobe -r nvidia_drm || exit 1
+    modprobe -r nvidia_modeset || exit 1
+    modprobe -r nvidia || exit 1
 
-    # Unbind the GPU from display driver
-    virsh nodedev-detach $VIRSH_GPU_VIDEO
-    virsh nodedev-detach $VIRSH_GPU_AUDIO
+    # Libvirt handles PCI detach with managed="yes"
 
-    # Load VFIO kernel module
-    modprobe vfio
-    modprobe vfio_pci
-    modprobe vfio_iommu_type1
+    # Load VFIO kernel modules
+    modprobe vfio || exit 1
+    modprobe vfio_pci || exit 1
+    modprobe vfio_iommu_type1 || exit 1
 fi
 
-# https://raw.githubusercontent.com/eretl/fedora-single-gpu-passtrough/main/revert.sh
 if [ "$HOOK_NAME" == "release" ] && [ "$STATE_NAME" == "end" ]
 then
-    echo "Stop GPU vm $GUEST_NAME"
+    echo "Stop GPU vm $GUEST_NAME" >&2
 
-    # Unload all the vfio modules
-    modprobe -r vfio_pci
-    modprobe -r vfio_iommu_type1
-    modprobe -r vfio
+    # Libvirt handles PCI reattach with managed="yes"
 
-    # Reattach the gpu
-    virsh nodedev-reattach $VIRSH_GPU_VIDEO
-    virsh nodedev-reattach $VIRSH_GPU_AUDIO
+    # Load Nvidia drivers
+    modprobe nvidia || exit 1
+    modprobe nvidia_modeset || exit 1
+    modprobe nvidia_drm || exit 1
+    modprobe nvidia_uvm || exit 1
 
-    # Rebind VT consoles
-    echo 1 > /sys/class/vtconsole/vtcon0/bind
+    # Rebind EFI framebuffer if present and currently unbound
+    if [ -d /sys/bus/platform/devices/efi-framebuffer.0 ] &&
+       [ ! -L /sys/bus/platform/devices/efi-framebuffer.0/driver ]
+    then
+        echo efi-framebuffer.0 \
+            > /sys/bus/platform/drivers/efi-framebuffer/bind
+    fi
 
-    nvidia-xconfig --query-gpu-info > /dev/null 2>&1
-
-    # Re-Bind EFI-Framebuffer
-    echo "efi-framebuffer.0" > /sys/bus/platform/drivers/efi-framebuffer/bind
-
-    #Load nvidia driver
-    modprobe nvidia_drm
-    modprobe nvidia_modeset
-    modprobe drm_kms_helper
-    modprobe nvidia
-    modprobe i2c_nvidia_gpu
-    modprobe drm
+    # Rebind framebuffer consoles
+    for console in /sys/class/vtconsole/vtcon*
+    do
+        if grep -qi 'frame buffer' "$console/name"
+        then
+            echo 1 > "$console/bind"
+        fi
+    done
 
     # Start services
+    systemctl start nvidia-persistenced.service
+    nvidia-smi -pm 1
+    systemctl start kmsconvt@tty1.service
     systemctl start ollama
 fi' | tee /etc/libvirt/hooks/qemu
 chmod 750 /etc/libvirt/hooks/qemu
