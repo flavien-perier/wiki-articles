@@ -136,6 +136,90 @@ done | sort | uniq -c | sort -n
 | id-ecPublicKey | 124 |
 | rsaEncryption | 242 | 
 
+- Pour savoir quelles sont les CA sur son système et combien de clés a chacune d'entre elles :
+
+```bash
+find -L /etc/ssl/certs -maxdepth 1 -type f \( -name "*.pem" -o -name "*.crt" \) -print0 | \
+while IFS= read -r -d '' f; do
+  org=$(openssl x509 -in "$f" -noout -issuer -nameopt RFC2253 2>/dev/null | \
+        sed -n 's/.*O=\([^,]*\).*/\1/p' | sed 's/\\//g')
+  [ -n "$org" ] && printf '%s\n' "$org"
+done | sort | uniq -c | sort -nr
+```
+
+| Fournisseur | Nombre de certificats |
+|-------------|-----------------------|
+| SSL Corporation | 6 |
+| D-Trust GmbH | 6 |
+| DigiCert Inc | 5 |
+| TrustAsia Technologies | 4 |
+| GlobalSign | 4 |
+| Amazon | 4 |
+| TAIWAN-CA | 3 |
+| QuoVadis Limited | 3 |
+| Microsec Ltd. | 3 |
+| Google Trust Services LLC | 3 |
+| ACCV | 3 |
+| WISeKey | 2 |
+| Unizeto Technologies S.A. | 2 |
+| UniTrust | 2 |
+| T-Systems Enterprise Services GmbH | 2 |
+| The USERTRUST Network | 2 |
+| Telia Company AB | 2 |
+| Starfield Technologies | 2 |
+| Sectigo Limited | 2 |
+| SECOM Trust Systems CO. | 2 |
+| SECOM Trust Systems Co. | 2 |
+| OISTE Foundation | 2 |
+| Microsoft Corporation | 2 |
+| iTrusChina Co. | 2 |
+| Internet Security Research Group | 2 |
+| IdenTrust | 2 |
+| Hellenic Academic and Research Institutions Cert. Authority | 2 |
+| Hellenic Academic and Research Institutions CA | 2 |
+| GlobalSign nv-sa | 2 |
+| FNMT-RCM | 2 |
+| DigiCert | 2 |
+| Deutsche Telekom Security GmbH | 2 |
+| Cybertrust Japan Co. | 2 |
+| COMODO CA Limited | 2 |
+| Certainly | 2 |
+| Buypass AS-983163327 | 2 |
+| BEIJING CERTIFICATE AUTHORITY | 2 |
+| Atos | 2 |
+| Asseco Data Systems S.A. | 2 |
+| Turkiye Bilimsel ve Teknolojik Arastirma Kurumu - TUBITAK | 1 |
+| Telia Finland Oyj | 1 |
+| SwissSign AG | 1 |
+| NetLock Kft. | 1 |
+| NAVER BUSINESS PLATFORM Corp. | 1 |
+| Krajowa Izba Rozliczeniowa S.A. | 1 |
+| IZENPE S.A. | 1 |
+| Hongkong Post | 1 |
+| GUANG DONG CERTIFICATE AUTHORITY CO. | 1 |
+| GoDaddy.com | 1 |
+| eMudhra Technologies Limited | 1 |
+| Disig a.s. | 1 |
+| Dhimyotis | 1 |
+| Chunghwa Telecom Co. | 1 |
+| China Financial Certification Authority | 1 |
+| CERTSIGN SA | 1 |
+| ANF Autoridad de Certificacion | 1 |
+| Agence Nationale de Certification Electronique | 1 |
+| Actalis S.p.A./03358520967 | 1 |
+
+- Pour savoir combien on a de fournisseurs de certificats sur son système :
+
+```bash
+while IFS= read -r -d '' f; do
+  org=$(openssl x509 -in "$f" -noout -issuer -nameopt RFC2253 2>/dev/null | \
+        sed -n 's/.*O=\([^,]*\).*/\1/p' | sed 's/\\//g')
+  [ -n "$org" ] && printf '%s\n' "$org"
+done | sort | uniq | wc -l
+```
+
+Ce qui donne `58` certificats.
+
 ### Rôle du cipher
 
 Dans un échange TLS, le cipher permet de définir quels sont les algorithmes qui vont être utilisés. Sur toutes les versions de SSL/TLS, il permet de définir l'algorithme symétrique et la fonction de hashage. Mais depuis TLS 1.2 il laisse aussi la possibilité de sélectionner un algorithme asymétrique. En effet TLS 1.2 laisse la possibilité de créer une paire de clés temporaire. Ainsi la paire de clés de base du serveur (celle signée par l'autorité de certification) ne sert plus qu'à faire des opérations de signature et la paire de clés temporaire ne sert quant à elle plus qu'à faire des opérations de chiffrement. Cette mécanique n'apparaît plus dans TLS 1.3 (2018), car il s'agit aujourd'hui du mode par défaut. La clé de chiffrement est maintenant toujours différente de la clé de signature.
@@ -358,6 +442,7 @@ Comme vu précédemment, grâce aux évolutions récentes des protocoles que nou
 - Les autorités de certifications n'utilisent pas encore d'algorithme post-quantique pour signer nos certificats... Et nos certificats ne peuvent pas être post-quantiques non plus.
 - Sur [ProtonMail](https://mail.proton.me/), il n'est pas encore possible de sécuriser son compte avec du chiffrement post-quantique. Il faut rester alerte et faire la transition quand cela va devenir possible. Le fournisseur de mail [TutaNota](https://tuta.com/) est quant à lui déjà compatible.
 - Les clés [YubiKey](https://www.yubico.com/get-yubikey/) ne supportent actuellement pas le chiffrement post-quantique. Étant donné qu'elles ne peuvent pas être mises à jour, au moment du Q-day elles devront être physiquement détruites. Cependant en France on a [Thales qui fait des supports FIDO2](https://cpl.thalesgroup.com/fr/access-management/authenticators/fido-devices) qui sont compatibles.
+- Les VPN basés sur [WireGuard](https://www.wireguard.com/) ne supportent pas encore d'algorithmes de chiffrement post-quantique. En d'autres termes, on peut se croire protégé par son VPN sur un WiFi d'aéroport et se faire enregistrer son trafic qui sera déchiffré plusieurs années plus tard.
 
 ## Le Q-day c'est pour quand ???
 
