@@ -20,6 +20,7 @@ Ces algorithmes possèdent différentes propriétés :
 - La clé publique permet de chiffrer la donnée tandis que la clé privée permet de la déchiffrer.
 - À partir de la clé privée on peut retrouver la clé publique.
 - On peut signer une donnée à partir de la clé privée et vérifier l'authenticité de la signature grâce à la clé publique.
+- KEM (Key Encapsulation Mechanism) qui permet globalement à partir d'une clé public générer un secret et l'encapsuler de sorte qu'il puisse être lu que par la clé privée associée.
 
 Il existe plusieurs algorithmes qui permettent d'implémenter cette mécanique :
 
@@ -217,7 +218,7 @@ Les 3 algorithmes restant sont donc :
 - [FIPS204](https://csrc.nist.gov/pubs/fips/204/final) ou ML-DSA anciennement appelé CRYSTALS-Dilithium : Pour la partie signature.
 - [FIPS205](https://csrc.nist.gov/pubs/fips/205/final) ou SLH-DSA anciennement appelé SPHINCS+ : Un autre algorithme de signature.
 
-Plusieurs autres algorithmes sont actuellement en cours de normalisation.
+Deux autres algorithmes sont actuellement en cours de normalisation : FALCON (futur FIPS 206) pour la signature et HQC pour le chiffrement.
 
 Il faut cependant garder une certaine méfiance envers ces algorithmes. Non pas qu'ils ne soient pas fiables (il y a de grande chance qu'ils le soient), mais que comme dit précédemment, sur 82 algorithmes initialement présentés de nombreux ont été mathématiquement brisés. On a actuellement moins de recul sur ces algorithmes post-quantique que sur les algorithmes de chiffrement asymétrique plus traditionnels.
 
@@ -229,6 +230,100 @@ Ces algorithmes sont basés sur un type de problème mathématique nommé résea
 | Signature / ciphertext | 64 o | 256 o | 1 088 o | 3 309 o | ~7 856 o |
 
 Pour les algorithmes symétriques, on peut continuer d'utiliser les algorithmes connus, il faut "simplement" augmenter leur complexité afin que même divisée par deux par un ordinateur quantique, la sécurité des secrets chiffrés ne soit pas mise à mal.
+
+### Devenir des candidatures du NIST
+
+Sur les 82 dossiers reçus par le NIST fin 2017, seuls 69 ont été admis au premier tour : 20 algorithmes de signature et 49 algorithmes de chiffrement ou d'échange de clés (KEM). Les 13 autres dossiers n'étaient pas complets ou pas conformes aux règles du concours, ce qui ne dit rien de leur qualité cryptographique ([NIST IR 8240][R1]).
+
+Le concours s'est ensuite déroulé en plusieurs tours :
+
+- Janvier 2019 : 26 algorithmes passent au deuxième tour ([annonce][A1]).
+- Juillet 2020 : 15 algorithmes passent au troisième tour, 7 finalistes et 8 alternatives ([annonce][A2]).
+- Juillet 2022 : Kyber, Dilithium, FALCON et SPHINCS+ sont sélectionnés pour être normalisés. BIKE, Classic McEliece, HQC et SIKE passent au quatrième tour ([annonce][A3]).
+- Mars 2025 : HQC est sélectionné comme second algorithme de chiffrement ([annonce][A4]).
+
+Pour lire le tableau suivant il faut garder plusieurs choses en tête :
+
+- Un algorithme non retenu n'est pas forcément un algorithme cassé. NewHope, FrodoKEM, NTRU, NTRU Prime, SABER, Picnic, BIKE ou Classic McEliece ont été écartés au profit de concurrents jugés plus performants ou mieux étudiés. À l'inverse, SIKE ou Rainbow ont bel et bien été cassés.
+- Plusieurs candidats ont fusionné entre le premier et le deuxième tour : HILA5 et Round2 sont devenus Round5, LAKE, LOCKER et Ouroboros-R sont devenus ROLLO, LEDAkem et LEDApkc sont devenus LEDAcrypt, NTRUEncrypt et NTRU-HRSS-KEM sont devenus NTRU. NTS-KEM a quant à lui rejoint Classic McEliece en 2020. Une fusion n'est pas un rejet, c'est donc le devenir de l'algorithme fusionné qui est indiqué.
+- Les dates sont celles des annonces du NIST et pas celles de la découverte des attaques. Pour les 5 algorithmes retirés pendant le premier tour (RVB, HK17, SRTPI, RankSign et Edon-K), il s'agit de la date d'enregistrement du retrait par le NIST ([historique du premier tour][HIST]).
+- Le NIST n'a pas justifié individuellement tous ses rejets du premier tour. Son rapport explique surtout pourquoi les candidats ont été retenus, mais une [présentation de mai 2019][MOODY] donne des raisons pour plusieurs d'entre eux. Quand la raison commence par "Selon le NIST", elle vient directement de l'institut. Quand elle est notée "Raison non précisée", les problèmes techniques mentionnés viennent des commentaires publics et ne doivent pas être pris pour l'explication officielle du rejet.
+
+État au 14 novembre 2026 ([page NIST du processus][CURRENT]) :
+
+| Algorithme | Usage | Devenir | Raison |
+|------------|-------|---------|--------|
+| BIG QUAKE | Chiffrement / KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée. Rien n'indique qu'il ait été cassé ([IR 8240][R1]). |
+| BIKE | KEM | Non retenu après le tour 4 ([11/03/2025][A4]) | Selon le NIST : l'analyse de son taux d'échec de décapsulation est moins mûre que celle de HQC, avec le risque de devoir encore modifier l'algorithme. Il n'est pas cassé ([IR 8545][R4]). |
+| CFPKM | KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Des commentaires montrent qu'on peut retrouver le secret partagé à partir de la clé publique et du chiffré ([présentation NIST][MOODY], [commentaires][C-CFPKM]). |
+| Classic McEliece | KEM | Non retenu après le tour 4 ([11/03/2025][A4]) | Selon le NIST : clés publiques très grandes, adoption large peu probable et risque de divergence avec la normalisation ISO en cours. Le NIST reste confiant dans sa sécurité et pourrait le réévaluer plus tard ([IR 8545][R4]). |
+| Compact LWE | KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Des attaques par réduction de réseau permettent de retrouver le message, y compris après une modification proposée par les auteurs ([présentation NIST][MOODY], [commentaires][C-Compact-LWE]). |
+| CRYSTALS-DILITHIUM | Signature | Sélectionné le [05/07/2022][A3], devenu ML-DSA (FIPS 204) le [13/08/2024][FINAL2024] | Retenu comme algorithme de signature principal ([annonce][A3]). |
+| CRYSTALS-KYBER | KEM | Sélectionné le [05/07/2022][A3], devenu ML-KEM (FIPS 203) le [13/08/2024][FINAL2024] | Retenu pour son bon compromis entre performances et taille des données échangées ([annonce][A3]). |
+| DAGS | Chiffrement / KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Des attaques algébriques exploitent la structure des codes utilisés et retrouvent les secrets pour les paramètres soumis ([présentation NIST][MOODY], [commentaires][C-DAGS]). |
+| Ding Key Exchange | Échange de clés | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée ([IR 8240][R1]). |
+| DME | KEM (une version signature était envisagée mais n'a pas été soumise) | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Les commentaires évoquent des attaques par décomposition et une faiblesse du bourrage, corrigée ensuite par les auteurs ([présentation NIST][MOODY], [commentaires][C-DME]). |
+| DRS | Signature | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Une attaque statistique de Ducas et Yu réduit fortement sa sécurité réelle, sans pour autant le casser complètement ([présentation NIST][MOODY], [commentaires][C-DRS]). |
+| DualModeMS | Signature | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez efficace ([présentation NIST][MOODY]). |
+| Edon-K | KEM | Retiré le 20/02/2018 ([historique][HIST]) | Retiré par ses auteurs après une attaque qui permet de retrouver le secret partagé. Un script retrouve les secrets des exemples de test en moins d'une minute ([commentaires][C-Edon-K]). |
+| EMBLEM et R.EMBLEM | Chiffrement / KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée. Les commentaires signalent des écarts entre la spécification et l'implémentation ([commentaires][C-EMBLEM-and-R-EMBLEM]). |
+| FALCON | Signature | Sélectionné le [05/07/2022][A3], FIPS 206 en cours de rédaction ([état des normes][CURRENT]) | Retenu pour les usages qui ont besoin de signatures plus petites que celles de Dilithium ([annonce][A3]). |
+| FrodoKEM | KEM | Non retenu après le tour 3 ([05/07/2022][A3]) | Selon le NIST : bien moins performant que les KEM basés sur des réseaux structurés, et le NIST préférait étudier des KEM non basés sur les réseaux pour diversifier. Ses choix de sécurité sont jugés conservateurs, il n'est pas cassé ([IR 8413][R3]). |
+| GeMSS | Signature | Non retenu après le tour 3 ([05/07/2022][A3]) | Selon le NIST : une attaque majeure de récupération de clé (MinRank). Le corriger aurait trop dégradé ses performances ([IR 8413][R3]). |
+| Giophantus | Chiffrement | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Une attaque permet de distinguer les messages chiffrés, ce qui n'est pas pour autant un cassage complet ([présentation NIST][MOODY], [commentaires][C-Giophantus]). |
+| Gravity-SPHINCS | Signature | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée. Une attaque par injection de faute a été documentée, mais elle ne remet pas en cause sa sécurité lors d'une utilisation normale ([commentaires][C-Gravity-SPHINCS]). |
+| Guess Again | Chiffrement / KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Un script retrouve le message à partir du chiffré seul, sans clé privée ni même clé publique ([présentation NIST][MOODY], [commentaires][C-guess-again]). |
+| Gui | Signature | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée. Une attaque par collision sur les paramètres de niveau 1 a poussé les auteurs à les modifier ([commentaires][C-Gui]). |
+| HILA5 | Chiffrement / KEM | Fusionné avec Round2 pour devenir Round5, non retenu après le tour 2 ([22/07/2020][A2]) | Selon le NIST, pour Round5 : spécification trop complexe, pas d'offre de licence sans redevances et confiance dans une seule des trois méthodes de génération de la matrice publique ([IR 8309][R2]). |
+| HiMQ-3 | Signature | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée. Des commentaires contestent une preuve de sécurité et revoient à la baisse la résistance de certains paramètres ([commentaires][C-HiMQ-3]). |
+| HK17 | Échange de clés / KEM | Retiré le 09/01/2018 ([historique][HIST]) | Retiré par son auteur après des attaques algébriques de récupération de clé, les corrections nécessaires étant trop importantes pour le premier tour ([commentaires][C-HK17]). |
+| HQC | KEM | Sélectionné le [11/03/2025][A4], normalisation en cours | Retenu comme KEM basé sur des codes correcteurs, donc sur d'autres mathématiques que ML-KEM. Son analyse est jugée plus mûre que celle de BIKE ([IR 8545][R4]). |
+| KCL (anciennement OKCN/AKCN/CNKE) | Échange de clés / KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée ([IR 8240][R1]). |
+| KINDI | Chiffrement / KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée ([IR 8240][R1]). |
+| LAC | KEM | Non retenu après le tour 2 ([22/07/2020][A2]) | Selon le NIST : pas assez de confiance dans l'utilisation de codes correcteurs pour gérer les échecs de déchiffrement, après plusieurs attaques et correctifs ([IR 8309][R2]). |
+| LAKE | Chiffrement / KEM | Fusionné dans ROLLO, non retenu après le tour 2 ([22/07/2020][A2]) | Selon le NIST, pour ROLLO : de nouvelles attaques algébriques affaiblissent fortement les paramètres et on a trop peu de recul sur les nouveaux paramètres proposés ([IR 8309][R2]). |
+| LEDAkem | KEM | Fusionné dans LEDAcrypt, non retenu après le tour 2 ([22/07/2020][A2]) | Selon le NIST, pour LEDAcrypt : une attaque exploite la structure de la clé privée sur une grande classe de clés faibles. La correction aurait trop changé le schéma, au point de le rapprocher de BIKE ([IR 8309][R2]). |
+| LEDApkc | Chiffrement | Fusionné dans LEDAcrypt, non retenu après le tour 2 ([22/07/2020][A2]) | Même raison que LEDAkem ([IR 8309][R2]). |
+| Lepton | Chiffrement | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Une analyse montre une sécurité bien inférieure à celle annoncée, ce que reconnaissent les auteurs ([présentation NIST][MOODY], [commentaires][C-Lepton]). |
+| LIMA | Chiffrement / KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée. Une erreur d'analyse a été signalée puis corrigée en 2018 ([commentaires][C-LIMA]). |
+| Lizard | Chiffrement / KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée. Une erreur dans la documentation a été signalée puis corrigée ([commentaires][C-Lizard]). |
+| LOCKER | Chiffrement / KEM | Fusionné dans ROLLO, non retenu après le tour 2 ([22/07/2020][A2]) | Même raison que LAKE ([IR 8309][R2]). |
+| LOTUS | KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée. Une attaque contre l'implémentation de LOTUS128 a été signalée puis corrigée ([commentaires][C-LOTUS]). |
+| LUOV | Signature | Non retenu après le tour 2 ([22/07/2020][A2]) | Selon le NIST : une attaque différentielle contre sa principale innovation (le "lifting") affaiblit fortement les paramètres soumis ([IR 8309][R2]). |
+| McNie | Chiffrement | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Des attaques réduisent ses estimations de sécurité, ce que reconnaissent les auteurs ([présentation NIST][MOODY], [commentaires][C-McNie]). |
+| Mersenne-756839 | Chiffrement / KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée ([IR 8240][R1]). |
+| MQDSS | Signature | Non retenu après le tour 2 ([22/07/2020][A2]) | Selon le NIST : une attaque de falsification oblige à ajouter environ 40 % de tours et à grossir les clés de 50 %, ce qui le rend non compétitif face à Picnic et SPHINCS+ ([IR 8309][R2]). |
+| NewHope | KEM | Non retenu après le tour 2 ([22/07/2020][A2]) | Selon le NIST : Kyber est un peu plus efficace et plus flexible. NewHope n'est pas cassé, il a simplement été départagé par un concurrent ([IR 8309][R2]). |
+| NTRUEncrypt | Chiffrement / KEM | Fusionné avec NTRU-HRSS-KEM pour devenir NTRU, non retenu après le tour 3 ([05/07/2022][A3]) | Selon le NIST, pour NTRU : Kyber est préféré, notamment pour sa génération de clés plus rapide. Pas de cassage ([IR 8413][R3]). |
+| NTRU-HRSS-KEM | KEM | Fusionné avec NTRUEncrypt pour devenir NTRU, non retenu après le tour 3 ([05/07/2022][A3]) | Même raison que NTRUEncrypt : le NIST ne voulait pas normaliser plusieurs KEM similaires sur des réseaux structurés ([IR 8413][R3]). |
+| NTRU Prime | KEM | Non retenu après le tour 3 ([05/07/2022][A3]) | Selon le NIST : l'avantage de sécurité revendiqué pour son choix d'anneau n'est pas assez démontré, et le NIST préférait diversifier avec des KEM non basés sur les réseaux. Pas de cassage ([IR 8413][R3]). |
+| NTS-KEM | KEM | Fusionné avec Classic McEliece en février 2020, non retenu le [11/03/2025][A4] | Les deux spécifications étaient très proches. Même raison que Classic McEliece ([IR 8309][R2], [IR 8545][R4]). |
+| Odd Manhattan | KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée. Un bug de décapsulation permettait une attaque contre l'implémentation, corrigé en novembre 2018 ([commentaires][C-Odd-Manhattan]). |
+| Ouroboros-R | Chiffrement / KEM | Fusionné dans ROLLO, non retenu après le tour 2 ([22/07/2020][A2]) | Même raison que LAKE ([IR 8309][R2]). |
+| Picnic | Signature | Non retenu après le tour 3 ([05/07/2022][A3]) | Selon le NIST : SPHINCS+ joue un rôle comparable avec une sécurité mieux étudiée, et le NIST ne pouvait pas évaluer avec assez de confiance la sécurité de LowMC, utilisé par Picnic ([IR 8413][R3]). |
+| Post-quantum RSA-Encryption | Chiffrement | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : beaucoup trop inefficace ([présentation NIST][MOODY]). |
+| Post-quantum RSA-Signature | Signature | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : beaucoup trop inefficace ([présentation NIST][MOODY]). |
+| pqNTRUSign | Signature | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée. Les commentaires relèvent des lacunes dans la preuve de sécurité et des risques de fuite lors de signatures répétées ([commentaires][C-pqNTRUsign]). |
+| pqsigRM | Signature | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Des fuites statistiques permettent de retrouver une clé équivalente pour certains paramètres ([présentation NIST][MOODY], [commentaires][C-pqsigRM]). |
+| QC-MDPC KEM | KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée ([IR 8240][R1]). |
+| qTESLA | Signature | Non retenu après le tour 2 ([22/07/2020][A2]) | Selon le NIST : après le retrait de 10 jeux de paramètres sur 12 suite à des doutes sur leur sécurité, les deux restants ont des clés bien plus grandes et sont plus lents que FALCON et Dilithium ([IR 8309][R2]). |
+| RaCoSS | Signature | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Des attaques permettent de falsifier des signatures sans connaître la clé secrète ([présentation NIST][MOODY], [commentaires][C-RaCoSS]). |
+| Rainbow | Signature | Non retenu après le tour 3 ([05/07/2022][A3]) | Selon le NIST : des attaques de récupération de clé, dont une rend la récupération de clé de Rainbow-I réalisable en pratique. Le corriger aurait demandé une refonte complète ([IR 8413][R3]). |
+| Ramstake | KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée. Une attaque temporelle publiée en janvier 2019 retrouve la clé secrète de l'implémentation en moins de deux minutes ([commentaires][C-Ramstake]). |
+| RankSign | Signature | Retiré le 04/04/2018 ([historique][HIST]) | Retiré par ses auteurs après une attaque qui casse les paramètres proposés ([commentaires][C-RankSign]). |
+| RLCE-KEM | KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Une attaque casse une partie des paramètres proposés ([présentation NIST][MOODY], [commentaires][C-RLCE-KEM]). |
+| Round2 | Chiffrement / KEM | Fusionné avec HILA5 pour devenir Round5, non retenu après le tour 2 ([22/07/2020][A2]) | Même raison que HILA5 ([IR 8309][R2]). |
+| RQC | Chiffrement / KEM | Non retenu après le tour 2 ([22/07/2020][A2]) | Selon le NIST : de nouvelles attaques algébriques font passer tous ses paramètres sous les 128 bits de sécurité. Les nouveaux paramètres font plus que doubler la taille des clés ([IR 8309][R2]). |
+| RVB | Chiffrement | Retiré le 08/01/2018 ([historique][HIST]) | Retiré après une attaque par réduction de réseau qui retrouve la clé secrète à partir de la clé publique ([commentaires][C-RVB]). |
+| SABER | KEM | Non retenu après le tour 3 ([05/07/2022][A3]) | Selon le NIST : performances et sécurité comparables à Kyber, mais basé sur un problème mathématique (MLWR) moins étudié. Le NIST ne voulait normaliser qu'un seul KEM sur réseaux structurés ([IR 8413][R3]). |
+| SIKE | KEM | Cassé en 2022, élimination actée dans le rapport du [11/03/2025][A4] | Une attaque retrouve efficacement la clé secrète à partir de la clé publique. Les auteurs reconnaissent le cassage et recommandent de ne plus l'utiliser ([IR 8545][R4]). |
+| SPHINCS+ | Signature | Sélectionné le [05/07/2022][A3], devenu SLH-DSA (FIPS 205) le [13/08/2024][FINAL2024] | Retenu pour diversifier : sa sécurité repose sur les fonctions de hashage et non sur les réseaux euclidiens ([annonce][A3]). |
+| SRTPI | Chiffrement (son compagnon TPSig gère la signature) | Retiré le 09/01/2018 ([historique][HIST]) | Retiré après des attaques : sa structure affine permet une attaque à textes clairs choisis et la linéarité de TPSig permet de falsifier des signatures ([commentaires][C-SRTPI]). |
+| Three Bears | KEM | Non retenu après le tour 2 ([22/07/2020][A2]) | Selon le NIST : basé sur un problème trop récent (I-MLWE) et pas assez analysé par la communauté. Pas de cassage ([IR 8309][R2]). |
+| Titanium | Chiffrement / KEM | Non retenu après le tour 1 ([30/01/2019][A1]) | Raison non précisée ([commentaires][C-Titanium]). |
+| WalnutDSA | Signature | Non retenu après le tour 1 ([30/01/2019][A1]) | Selon le NIST : pas assez de confiance dans sa sécurité. Plusieurs attaques pratiques permettent de falsifier des signatures ou de retrouver la clé ([présentation NIST][MOODY], [commentaires][C-WalnutDSA]). |
+
+Ce tableau ne prétend pas reconstituer les délibérations internes du NIST. Une attaque publiée après une décision ne peut pas être présentée comme la raison de cette décision, et les commentaires hébergés par le NIST restent les propos de leurs auteurs.
 
 ## Que faire aujourd'hui ?
 
@@ -291,4 +386,51 @@ En attendant pour les administrateurs système et les développeurs il est néce
 - [USI event : La lévitation quantique: Julien Bobroff](https://www.youtube.com/watch?v=6kg2yV_3B1Q&list=PL_wN0FeVwhX5VSlQBioX21WNgRUoTTS5F)
 - [RFC 9846 : TLS 1.3](https://www.rfc-editor.org/info/rfc9846/) 
 - [Wikipedia : cryptographie post-quantique](https://fr.wikipedia.org/wiki/Cryptographie_post-quantique)
+- [NIST : liste des candidatures du premier tour](https://csrc.nist.gov/Projects/post-quantum-cryptography/post-quantum-cryptography-standardization/Round-1-Submissions)
+- [NIST IR 8240 : rapport sur le premier tour](https://nvlpubs.nist.gov/nistpubs/ir/2019/NIST.IR.8240.pdf)
+- [NIST IR 8309 : rapport sur le deuxième tour](https://nvlpubs.nist.gov/nistpubs/ir/2020/NIST.IR.8309.pdf)
+- [NIST IR 8413 : rapport sur le troisième tour](https://nvlpubs.nist.gov/nistpubs/ir/2022/NIST.IR.8413-upd1.pdf)
+- [NIST IR 8545 : rapport sur le quatrième tour](https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=959556)
 
+[CAT]: https://csrc.nist.gov/Projects/post-quantum-cryptography/post-quantum-cryptography-standardization/Round-1-Submissions
+[R1]: https://nvlpubs.nist.gov/nistpubs/ir/2019/NIST.IR.8240.pdf
+[R2]: https://nvlpubs.nist.gov/nistpubs/ir/2020/NIST.IR.8309.pdf
+[R3]: https://nvlpubs.nist.gov/nistpubs/ir/2022/NIST.IR.8413-upd1.pdf
+[R4]: https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=959556
+[A1]: https://www.nist.gov/news-events/news/2019/01/nist-reveals-26-algorithms-advancing-post-quantum-crypto-semifinals
+[A2]: https://www.nist.gov/news-events/news/2020/07/pqc-standardization-process-third-round-candidate-announcement
+[A3]: https://www.nist.gov/news-events/news/2022/07/nist-announces-first-four-quantum-resistant-cryptographic-algorithms
+[A4]: https://csrc.nist.gov/news/2025/hqc-announced-as-a-4th-round-selection
+[HIST]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/history-pqc-round-1-updates.pdf
+[MOODY]: https://csrc.nist.gov/csrc/media/presentations/round-2-of-the-nist-pqc-competition-what-was-nist/images-media/pqcrypto-may2019-moody.pdf
+[CURRENT]: https://csrc.nist.gov/Projects/Post-Quantum-Cryptography/Post_Quantum_Cryptography-Standardization
+[FINAL2024]: https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards
+[C-CFPKM]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/CFPKM-official-comment.pdf
+[C-Compact-LWE]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/Compact-LWE-official-comment.pdf
+[C-DAGS]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/DAGS-official-comment.pdf
+[C-DME]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/DME-official-comment.pdf
+[C-DRS]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/DRS-official-comment.pdf
+[C-Edon-K]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/Edon-K-official-comment.pdf
+[C-EMBLEM-and-R-EMBLEM]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/EMBLEM-and-R-EMBLEM-official-comment.pdf
+[C-Giophantus]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/Giophantus-official-comment.pdf
+[C-Gravity-SPHINCS]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/Gravity-SPHINCS-official-comment.pdf
+[C-guess-again]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/guess-again-official-comment.pdf
+[C-Gui]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/Gui-official-comment.pdf
+[C-HiMQ-3]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/HiMQ-3-official-comment.pdf
+[C-HK17]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/HK17-official-comment.pdf
+[C-Lepton]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/Lepton-official-comment.pdf
+[C-LIMA]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/LIMA-official-comment.pdf
+[C-Lizard]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/Lizard-official-comment.pdf
+[C-LOTUS]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/LOTUS-official-comment.pdf
+[C-McNie]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/McNie-official-comment.pdf
+[C-Odd-Manhattan]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/Odd-Manhattan-official-comment.pdf
+[C-pqNTRUsign]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/pqNTRUsign-official-comment.pdf
+[C-pqsigRM]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/pqsigRM-official-comment.pdf
+[C-RaCoSS]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/RaCoSS-official-comment.pdf
+[C-Ramstake]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/Ramstake-official-comment.pdf
+[C-RankSign]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/RankSign-official-comment.pdf
+[C-RLCE-KEM]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/RLCE-KEM-official-comment.pdf
+[C-RVB]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/RVB-official-comment.pdf
+[C-SRTPI]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/SRTPI-official-comment.pdf
+[C-Titanium]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/Titanium-official-comment.pdf
+[C-WalnutDSA]: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/official-comments/WalnutDSA-official-comment.pdf
