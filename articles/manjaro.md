@@ -489,6 +489,7 @@ end' | tee ~/.config/fish/conf.d/sdkman.fish
 # Install GraalVM 25
 sdk install java 25-graal
 sdk install maven
+sdk install mvnd
 sdk install gradle
 sdk use java 25-graal
 ```
@@ -595,6 +596,12 @@ Pour améliorer son usage de Claude Code, il peut être intéressant de rajouter
 claude plugin install kotlin-lsp@claude-plugins-official
 claude plugin install jdtls-lsp@claude-plugins-official
 claude plugin install typescript-lsp@claude-plugins-official
+claude plugin install rust-analyzer-lsp@claude-plugins-official
+claude plugin install gopls-lsp@claude-plugins-official
+claude plugin install pyright-lsp@claude-plugins-official
+
+sudo pacman -S typescript-language-server rust-analyzer gopls pyright
+yay -S kotlin-lsp-bin jdtls
 ```
 
 - Les [MCP](https://modelcontextprotocol.io/) (Model Context Protocol) : Il s'agit d'un standard défini par Anthropic permettant à un agent IA de piloter un outil. Dans une entreprise, il peut par exemple être intéressant de laisser la possibilité à un agent de contrôler son serveur GitLab :
@@ -634,74 +641,80 @@ echo '{
     "flavien.io configuration"
   ],
 
+  "spinnerTipsEnabled": true,
+
+  "env": {
+    "CLAUDE_CODE_NO_FLICKER": "1"
+  },
+
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
-    "excludedCommands": ["git", "docker", "podman"],
+    "failIfUnavailable": true,
     "network": {
-      "allowUnixSockets": [
-        "/var/run/docker.sock"
-      ],
-      "allowLocalBinding": true
+      "allowLocalBinding": true,
+      "allowedDomains": [ 
+        "figma.com",
+        "*.figma.com",
+        "registry.npmjs.org",
+        "registry.yarnpkg.com",
+        "repo.maven.apache.org",
+        "proxy.golang.org",
+        "sum.golang.org"
+      ]
+    },
+    "excludedCommands": [
+      "git *",
+      "docker *",
+      "podman *"
+    ],
+    "filesystem": {
+      "allowWrite": [
+        "~/.m2",
+        "~/.npm"
+      ]
     }
-  },
-
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|MultiEdit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [[ -n \"$CLAUDE_TOOL_FILE_PATH\" ]] && git rev-parse --git-dir >/dev/null 2>&1; then git add \"$CLAUDE_TOOL_FILE_PATH\" 2>/dev/null || true; fi"
-          }
-        ]
-      }
-    ]
   },
 
   "permissions": {
     "allow": [
-      "Read",
+      "Bash(cd:*)",
       "Bash(ls:*)",
-      "Bash(git:*)",
       "Bash(tree:*)",
       "Bash(find:*)",
+      "Bash(touch:*)",
+      "Bash(wc:*)",
+      "Bash(echo:*)",
+      "Bash(printf:*)",
       "Bash(grep:*)",
-      "Bash(rg:*)",
+      "Bash(awk:*)",
+      "Bash(sed:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(jq:*)",
       "Bash(head:*)",
       "Bash(tail:*)",
-      "Bash(mkdir:*)",
-      "Bash(rmdir:*)",
-      "Bash(touch:*)",
-      "Bash(docker compose up:*)",
-      "Bash(docker compose down:*)",
-      "Bash(docker compose build:*)",
-      "Bash(docker compose logs:*)",
-      "Bash(docker run:*)",
-      "Bash(docker exec:*)",
-      "Bash(docker build:*)",
-      "Bash(docker buildx:*)",
-      "Bash(docker logs:*)",
-      "Bash(podman run:*)",
-      "Bash(podman exec:*)",
-      "Bash(podman build:*)",
-      "Bash(podman logs:*)",
+      "Bash(git:*)",
+      "Bash(docker:*)",
       "Bash(java:*)",
       "Bash(mvn:*)",
+      "Bash(mvnd:*)",
       "Bash(node:*)",
       "Bash(npm:*)",
+      "Bash(pnpm:*)",
+      "Bash(yarn:*)",
       "Bash(python:*)",
       "Bash(python3:*)",
-      "Bash(cargo:*)"
+      "Bash(cargo:*)",
+      "Bash(go:*)"
     ],
     "ask": [
-      "Bash(curl:*)",
-      "Bash(wget:*)"
+      "Bash(dangerouslyDisableSandbox:true)"
     ],
     "deny": [
-      "Read(./.env)",
-      "Bash(cat:*)",
+      "Read(//**/.env)",
+      "Read(//**/.env.*)",
+      "Read(~/.ssh/**)",
       "Bash(sudo:*)",
       "Bash(pacman:*)",
       "Bash(yay:*)",
@@ -795,19 +808,6 @@ chmod 600 ~/.alias
 echo 'alias opencode="opencode-zsh"' >> ~/.alias
 
 chmod 400 ~/.alias
-```
-
-### [RTK](https://github.com/rtk-ai/rtk)
-
-RTK est une lib permettant de compresser les requêtes envoyées par ClaudeCode ou OpenCode.
-
-Pour fonctionner ce système modifie les outputs des commandes shell pour récupérer uniquement les informations essentielles. De cette façon, rtk permet d'économiser beaucoup de token.
-
-```bash
-yay -S rtk-bin
-
-rtk init --global # Install on ClaudeCode
-rtk init --global --opencode # Install on OpenCode
 ```
 
 ### Android ADB
