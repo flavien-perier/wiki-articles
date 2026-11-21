@@ -378,7 +378,7 @@ then
     # Unbind framebuffer consoles
     for console in /sys/class/vtconsole/vtcon*
     do
-        if grep -qi 'frame buffer' "$console/name"
+        if grep -qi "frame buffer" "$console/name"
         then
             echo 0 > "$console/bind" || exit 1
         fi
@@ -430,7 +430,7 @@ then
     # Rebind framebuffer consoles
     for console in /sys/class/vtconsole/vtcon*
     do
-        if grep -qi 'frame buffer' "$console/name"
+        if grep -qi "frame buffer" "$console/name"
         then
             echo 1 > "$console/bind"
         fi
